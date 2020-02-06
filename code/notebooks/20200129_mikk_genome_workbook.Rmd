@@ -1,0 +1,48 @@
+---
+title: "MIKK Panel genome analysis workbook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+# Plan
+
+*20200203*
+
+From meeting with Tom Fitzgerald on 26 November 2019:
+
+• Introgression:
+  - Create giant population VCF - choose the datasets. Just a case of merging some VCFs.
+    - Get some Indonesian medaka
+• LD decay:
+  - LD plots - per chromosome.
+  - Heatmap per chromosome?
+• Fst plot  
+
+# Setup
+
+## Create directory structure and clone repo
+
+Working directory here: `/hps/research1/birney/users/ian/mikk_paper`
+
+```{bash}
+# move to working directory
+homehps
+cd mikk_paper
+# clone git repository
+git clone https://github.com/Ian-Brettell/mikk_genome.git
+# create directory for VCFs
+mkdir vcfs
+```
+
+## Pull across MIKK Panel VCF
+
+```{r}
+cp /nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf* vcfs
+```
+
+
+
+
+
+
