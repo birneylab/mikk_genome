@@ -41,8 +41,65 @@ mkdir vcfs
 cp /nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf* vcfs
 ```
 
+## Key file for cram ID to line ID
+
+`mikk_genome/data/20200206_cram_id_to_line_id.txt`
+
+```{bash}
+
+```
+
+## Remove duplicates and non-panel lines
+
+```{bash}
+# Find sib lines
+cat data/20200206_cram_id_to_line_id.txt | cut -f2 | cut -f1 -d"_" | sort | uniq -d
+```
+
+Note the following sibling pairs:
+
+* 23_1 and _2
+* 72_1 and _2
+* 14_1 and _2
+* 39_1 and _2
+* 40_1 and _2
+* 59_1 and _2
+* 106_1 and _2
+* 131_2 and _4
+* 7_1 and _2
+* 15_1 and _2
+* 134_1, _2 and _3
+* 141_3 and _4
 
 
+-106
+-11
+-117
+-131
+-132
+-134
+-135
+-138
+-14
+-140
+-141
+-15
+-23
+-32
+-39
+-4
+-40
+-49
+-59
+-69
+-7
+-71
+-72
+-80
+-84
 
 
+Only take _1 sibling from pair, unless what is ecluded is the only survivor based on `mikk_behaviour/data/panel_1/20200109_panel_lines.txt`.
+
+*Query* whether we keep the lines that may have died out? Ask Felix.
 
