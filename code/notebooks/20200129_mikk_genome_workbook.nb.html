@@ -1801,11 +1801,48 @@ mkdir vcfs</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="key-file-for-cram-id-to-line-id" class="section level2">
+<h2>Key file for cram ID to line ID</h2>
+<p><code>mikk_genome/data/20200206_cram_id_to_line_id.txt</code></p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="remove-duplicates-and-non-panel-lines" class="section level2">
+<h2>Remove duplicates and non-panel lines</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgYmFzaFxuIyBGaW5kIHNpYiBsaW5lc1xuY2F0IGRhdGEvMjAyMDAyMDZfY3JhbV9pZF90b19saW5lX2lkLnR4dCB8IGN1dCAtZjIgfCBjdXQgLWYxIC1kXCJfXCIgfCBzb3J0IHwgdW5pcSAtZFxuYGBgIn0= -->
+<pre class="bash"><code># Find sib lines
+cat data/20200206_cram_id_to_line_id.txt | cut -f2 | cut -f1 -d&quot;_&quot; | sort | uniq -d</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Note the following sibling pairs:</p>
+<ul>
+<li>23_1 and _2</li>
+<li>72_1 and _2</li>
+<li>14_1 and _2</li>
+<li>39_1 and _2</li>
+<li>40_1 and _2</li>
+<li>59_1 and _2</li>
+<li>106_1 and _2</li>
+<li>131_2 and _4</li>
+<li>7_1 and _2</li>
+<li>15_1 and _2</li>
+<li>134_1, _2 and _3</li>
+<li>141_3 and _4</li>
+</ul>
+<p>-106 -11 -117 -131 -132 -134 -135 -138 -14 -140 -141 -15 -23 -32 -39 -4 -40 -49 -59 -69 -7 -71 -72 -80 -84</p>
+<p>Only take _1 sibling from pair, unless what is ecluded is the only survivor based on <code>mikk_behaviour/data/panel_1/20200109_panel_lines.txt</code>.</p>
+<p><em>Query</em> whether we keep the lines that may have died out? Ask Felix.</p>
 <!-- rnb-text-end -->
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiTUlLSyBQYW5lbCBnZW5vbWUgYW5hbHlzaXMgd29ya2Jvb2siCm91dHB1dDogaHRtbF9ub3RlYm9vawplZGl0b3Jfb3B0aW9uczogCiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQotLS0KCiMgUGxhbgoKKjIwMjAwMjAzKgoKRnJvbSBtZWV0aW5nIHdpdGggVG9tIEZpdHpnZXJhbGQgb24gMjYgTm92ZW1iZXIgMjAxOToKCuKAoiBJbnRyb2dyZXNzaW9uOgogIC0gQ3JlYXRlIGdpYW50IHBvcHVsYXRpb24gVkNGIC0gY2hvb3NlIHRoZSBkYXRhc2V0cy4gSnVzdCBhIGNhc2Ugb2YgbWVyZ2luZyBzb21lIFZDRnMuCiAgICAtIEdldCBzb21lIEluZG9uZXNpYW4gbWVkYWthCuKAoiBMRCBkZWNheToKICAtIExEIHBsb3RzIC0gcGVyIGNocm9tb3NvbWUuCiAgLSBIZWF0bWFwIHBlciBjaHJvbW9zb21lPwrigKIgRnN0IHBsb3QgIAoKIyBTZXR1cAoKIyMgQ3JlYXRlIGRpcmVjdG9yeSBzdHJ1Y3R1cmUgYW5kIGNsb25lIHJlcG8KCldvcmtpbmcgZGlyZWN0b3J5IGhlcmU6IGAvaHBzL3Jlc2VhcmNoMS9iaXJuZXkvdXNlcnMvaWFuL21pa2tfcGFwZXJgCgpgYGB7YmFzaH0KIyBtb3ZlIHRvIHdvcmtpbmcgZGlyZWN0b3J5CmhvbWVocHMKY2QgbWlra19wYXBlcgojIGNsb25lIGdpdCByZXBvc2l0b3J5CmdpdCBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vSWFuLUJyZXR0ZWxsL21pa2tfZ2Vub21lLmdpdAojIGNyZWF0ZSBkaXJlY3RvcnkgZm9yIFZDRnMKbWtkaXIgdmNmcwpgYGAKCiMjIFB1bGwgYWNyb3NzIE1JS0sgUGFuZWwgVkNGCgpgYGB7cn0KY3AgL25mcy9yZXNlYXJjaDEvYmlybmV5L3Byb2plY3RzL21lZGFrYS9pbmJyZWRfcGFuZWwvbWVkYWthLWFsaWdubWVudHMtcmVsZWFzZS05NC92Y2YvbWVkYWthX2luYnJlZF9wYW5lbF9lbnNlbWJsX25ld19yZWZlcmVuY2VfcmVsZWFzZV85NC52Y2YqIHZjZnMKYGBgCgoKCgoKCg==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiTUlLSyBQYW5lbCBnZW5vbWUgYW5hbHlzaXMgd29ya2Jvb2siCm91dHB1dDogaHRtbF9ub3RlYm9vawplZGl0b3Jfb3B0aW9uczogCiAgY2h1bmtfb3V0cHV0X3R5cGU6IGlubGluZQotLS0KCiMgUGxhbgoKKjIwMjAwMjAzKgoKRnJvbSBtZWV0aW5nIHdpdGggVG9tIEZpdHpnZXJhbGQgb24gMjYgTm92ZW1iZXIgMjAxOToKCuKAoiBJbnRyb2dyZXNzaW9uOgogIC0gQ3JlYXRlIGdpYW50IHBvcHVsYXRpb24gVkNGIC0gY2hvb3NlIHRoZSBkYXRhc2V0cy4gSnVzdCBhIGNhc2Ugb2YgbWVyZ2luZyBzb21lIFZDRnMuCiAgICAtIEdldCBzb21lIEluZG9uZXNpYW4gbWVkYWthCuKAoiBMRCBkZWNheToKICAtIExEIHBsb3RzIC0gcGVyIGNocm9tb3NvbWUuCiAgLSBIZWF0bWFwIHBlciBjaHJvbW9zb21lPwrigKIgRnN0IHBsb3QgIAoKIyBTZXR1cAoKIyMgQ3JlYXRlIGRpcmVjdG9yeSBzdHJ1Y3R1cmUgYW5kIGNsb25lIHJlcG8KCldvcmtpbmcgZGlyZWN0b3J5IGhlcmU6IGAvaHBzL3Jlc2VhcmNoMS9iaXJuZXkvdXNlcnMvaWFuL21pa2tfcGFwZXJgCgpgYGB7YmFzaH0KIyBtb3ZlIHRvIHdvcmtpbmcgZGlyZWN0b3J5CmhvbWVocHMKY2QgbWlra19wYXBlcgojIGNsb25lIGdpdCByZXBvc2l0b3J5CmdpdCBjbG9uZSBodHRwczovL2dpdGh1Yi5jb20vSWFuLUJyZXR0ZWxsL21pa2tfZ2Vub21lLmdpdAojIGNyZWF0ZSBkaXJlY3RvcnkgZm9yIFZDRnMKbWtkaXIgdmNmcwpgYGAKCiMjIFB1bGwgYWNyb3NzIE1JS0sgUGFuZWwgVkNGCgpgYGB7cn0KY3AgL25mcy9yZXNlYXJjaDEvYmlybmV5L3Byb2plY3RzL21lZGFrYS9pbmJyZWRfcGFuZWwvbWVkYWthLWFsaWdubWVudHMtcmVsZWFzZS05NC92Y2YvbWVkYWthX2luYnJlZF9wYW5lbF9lbnNlbWJsX25ld19yZWZlcmVuY2VfcmVsZWFzZV85NC52Y2YqIHZjZnMKYGBgCgojIyBLZXkgZmlsZSBmb3IgY3JhbSBJRCB0byBsaW5lIElECgpgbWlra19nZW5vbWUvZGF0YS8yMDIwMDIwNl9jcmFtX2lkX3RvX2xpbmVfaWQudHh0YAoKYGBge2Jhc2h9CgpgYGAKCiMjIFJlbW92ZSBkdXBsaWNhdGVzIGFuZCBub24tcGFuZWwgbGluZXMKCmBgYHtiYXNofQojIEZpbmQgc2liIGxpbmVzCmNhdCBkYXRhLzIwMjAwMjA2X2NyYW1faWRfdG9fbGluZV9pZC50eHQgfCBjdXQgLWYyIHwgY3V0IC1mMSAtZCJfIiB8IHNvcnQgfCB1bmlxIC1kCmBgYAoKTm90ZSB0aGUgZm9sbG93aW5nIHNpYmxpbmcgcGFpcnM6CgoqIDIzXzEgYW5kIF8yCiogNzJfMSBhbmQgXzIKKiAxNF8xIGFuZCBfMgoqIDM5XzEgYW5kIF8yCiogNDBfMSBhbmQgXzIKKiA1OV8xIGFuZCBfMgoqIDEwNl8xIGFuZCBfMgoqIDEzMV8yIGFuZCBfNAoqIDdfMSBhbmQgXzIKKiAxNV8xIGFuZCBfMgoqIDEzNF8xLCBfMiBhbmQgXzMKKiAxNDFfMyBhbmQgXzQKCgotMTA2Ci0xMQotMTE3Ci0xMzEKLTEzMgotMTM0Ci0xMzUKLTEzOAotMTQKLTE0MAotMTQxCi0xNQotMjMKLTMyCi0zOQotNAotNDAKLTQ5Ci01OQotNjkKLTcKLTcxCi03MgotODAKLTg0CgoKT25seSB0YWtlIF8xIHNpYmxpbmcgZnJvbSBwYWlyLCB1bmxlc3Mgd2hhdCBpcyBlY2x1ZGVkIGlzIHRoZSBvbmx5IHN1cnZpdm9yIGJhc2VkIG9uIGBtaWtrX2JlaGF2aW91ci9kYXRhL3BhbmVsXzEvMjAyMDAxMDlfcGFuZWxfbGluZXMudHh0YC4KCipRdWVyeSogd2hldGhlciB3ZSBrZWVwIHRoZSBsaW5lcyB0aGF0IG1heSBoYXZlIGRpZWQgb3V0PyBBc2sgRmVsaXguCgo=</div>
 
 
 
