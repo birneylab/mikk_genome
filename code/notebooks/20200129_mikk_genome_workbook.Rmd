@@ -118,3 +118,40 @@ cat ~/Documents/Repositories/mikk_genome/data/20200210_panel_lines_full.txt cut 
 - 72
 - 80
 
+List with no sibling lines here: `mikk_genome/data/20200227_panel_lines_no-sibs.txt`. 64 lines total.
+
+Excluded IDs here: `mikk_genome/data/20200227_panel_lines_excluded.txt`. 16 lines total.
+
+Replace all dashes with underscores to match cram2line key file
+```{bash}
+sed 's/-/_/g' data/20200227_panel_lines_no-sibs.txt > data/20200227_panel_lines_no-sibs_us.txt  
+```
+
+Extract the lines to keep from the key file.
+```{bash}
+awk  'FNR==NR {f1[$0]; next} $2 in f1' data/20200227_panel_lines_no-sibs_us.txt data/20200206_cram_id_to_line_id.txt > data/20200227_cram2line_no-sibs.txt
+```
+
+Has 66 lines instead of 63 (because we're missing 130-2), so there must be duplicates. Find out which ones:
+
+```{bash}
+cat data/20200227_cram2line_no-sibs.txt | cut -f2 | cut -f1 -d"_" | sort | uniq -d
+```
+
+32
+71
+84
+
+Manually removed (`data/20200227_duplicates_excluded.txt`):
+
+• 24271_7#5	32_2
+• 24271_8#4	71_1
+• 24259_1#1	84_2
+
+Final version: `data/20200227_cram2line_no-sibs.txt`
+
+
+
+
+
+
