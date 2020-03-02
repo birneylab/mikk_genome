@@ -150,6 +150,14 @@ Manually removed (`data/20200227_duplicates_excluded.txt`):
 
 Final version: `data/20200227_cram2line_no-sibs.txt`
 
+Final version, cram IDs only:
+
+# Create filtered VCF
+
+## 
+```{bash}
+
+```
 
 
 
