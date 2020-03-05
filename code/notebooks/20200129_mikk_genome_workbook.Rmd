@@ -154,12 +154,85 @@ Final version, cram IDs only:
 
 # Create filtered VCF
 
-## 
-```{bash}
+## Rename samples using BCFTOOLS
 
+```{bash}
+# create list of CRAM IDs in VCF
+bcftools query -l vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf > tmp.txt
+# confirm that it's in the same order as the column in the line IDs file
+cut -f1 mikk_genome/data/20200206_cram_id_to_line_id.txt | tail -n+2 > tmp2.txt
+# bash script to compare
+file1="tmp.txt"
+file2="tmp2.txt"
+
+if cmp -s "$file1" "$file2"; then
+    printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
+else
+    printf 'The file "%s" is different from "%s"\n' "$file1" "$file2"
+fi
+# clean up
+rm tmp*
+
+# create file with no header
+tail -n+2 mikk_genome/data/20200206_cram_id_to_line_id.txt > mikk_genome/data/20200203_cram2line_no-header.txt
+# replace tab with space
+sed 's/\t/ /g' mikk_genome/data/20200203_cram2line_no-header.txt > tmp.txt
+mv tmp.txt mikk_genome/data/20200203_cram2line_no-header.txt
+
+# Rename samples with BCFTOOLS
+bcftools reheader --output-file vcfs/panel_line-ids.vcf --samples mikk_genome/data/20200203_cram2line_no-header.txt vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf
+# test
+bcftools query -l  vcfs/panel_line-ids.vcf
+#[E::bcf_hdr_add_sample] Duplicated sample name '84_2'
+#[E::bcf_hdr_add_sample] Duplicated sample name '141_3'
+#[E::bcf_hdr_add_sample] Duplicated sample name '32_2'
+#[E::bcf_hdr_add_sample] Duplicated sample name '71_1'
+#Failed to open vcfs/panel_line-ids.vcf: could not parse header
+
+# create no-sibs file with CRAM ID only
+cut -f1 mikk_genome/data/20200227_cram2line_no-sibs.txt > mikk_genome/data/20200227_cram2line_no-sibs_cram-only.txt
+# pull out only samples to be included, then recode
+bcftools view --output-file vcfs/panel_no-sibs.vcf --samples-file mikk_genome/data/20200227_cram2line_no-sibs_cram-only.txt vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf
+# SUCCESS
+# recode
+bcftools reheader --output vcfs/panel_no-sibs_line-ids.vcf --samples mikk_genome/data/20200227_cram2line_no-sibs.txt vcfs/panel_no-sibs.vcf
+# compress
+## option 1: bgzip vcfs/panel_no-sibs_line-ids.vcf
+## option 2:
+bcftools view --output-type z --output-file vcfs/panel_no-sibs_line-ids.vcf.gz vcfs/panel_no-sibs_line-ids.vcf
+# create index
+bcftools index --tbi vcfs/panel_no-sibs_line-ids.vcf.gz
 ```
 
+## Split by chromosome
 
+### Get reference
+
+```{bash}
+mkdir refs
+
+cp /nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/ref/Oryzias_latipes.ASM223467v1* refs/
+```
+
+### Split by chromosome
+```{bash}
+mkdir vcfs/split_by_chr
+
+for i in $(seq 1 24); do
+  bsub -o log/split_by_chr_$i.out -e log/split_by_chr_$i.err \
+  "bcftools filter \
+    --regions $i \
+    --output-type z \
+    --output vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
+    vcfs/panel_no-sibs_line-ids.vcf.gz";
+  done  
+```
+
+## Recode into 012 genotypes
+
+```{r}
+
+```
 
 
 
