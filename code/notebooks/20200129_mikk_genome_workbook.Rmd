@@ -83,7 +83,7 @@ Note the following duplicates:
 -80
 -84
 
-Only take _1 sibling from pair, unless what is ecluded is the only survivor based on `mikk_behaviour/data/panel_1/20200109_panel_lines.txt`.
+Only take _1 sibling from pair, unless what is excluded is the only survivor based on `mikk_behaviour/data/panel_1/20200109_panel_lines.txt`.
 
 *Query* whether we keep the lines that may have died out? Ask Felix.
 
@@ -204,6 +204,27 @@ bcftools view --output-type z --output-file vcfs/panel_no-sibs_line-ids.vcf.gz v
 bcftools index --tbi vcfs/panel_no-sibs_line-ids.vcf.gz
 ```
 
+## Get stats on no-sibs VCF
+
+```{bash}
+mkdir stats
+bcftools stats vcfs/panel_no-sibs_line-ids.vcf.gz > stats/20200305_panel_no-sibs.txt
+```
+
+• number of samples:      63
+• number of records:      **29,161,024**
+• number of no-ALTs:      0
+• number of SNPs:         **24,031,673**
+• number of MNPs:         0
+• number of indels:       5575994
+• number of others:       449159
+• number of multiallelic sites:   *2957366*
+• number of multiallelic SNP sites:       1434908
+
+• ts: 12640470
+• tv: 11886484  
+• ts/tv: 1.06 
+
 ## Split by chromosome
 
 ### Get reference
@@ -225,14 +246,1609 @@ for i in $(seq 1 24); do
     --output-type z \
     --output vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
     vcfs/panel_no-sibs_line-ids.vcf.gz";
-  done  
+done  
 ```
 
-## Recode into 012 genotypes
+### Get stats per chromosome
+
+```{bash}
+mkdir stats/by_chr
+
+for i in $(seq 1 24); do
+  bsub -o log/stats_by_chr_$i.out -e log/stats_by_chr_$i.err \
+  "bcftools stats \
+    vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz > stats/by_chr/$i.txt";
+done 
+```
+
+
+
+## Run LD
+
+### VCFtools
+
+```{bash}
+mkdir ld
+mkdir ld/20200305_panel_maf-0.03_window-50kb
+
+for i in $(seq 1 24); do
+  bsub -M 30000 -n 8 -o log/ld_$i.out -e log/ld_$i.err \
+  "vcftools \
+    --gzvcf vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
+    --geno-r2 \
+    --ld-window-bp 50000 \
+    --maf 0.03 \
+    --out ld/20200305_panel_maf-0.03_window-50kb/$i";
+done  
+
+# creates huge files (~10G). Take random 1M lines
+## create set up directory
+mkdir ld/20200305_panel_maf-0.03_window-50kb_thinned
+## 
+for i in $(seq 1 24); do
+  bsub -o log/ld_trim_$i.out -e log/ld_trim_$i.err \
+  "head -1 > ld/20200305_panel_maf-0.03_window-50kb_thinned/$i\_1m.txt && \
+  shuf -n 1000000 ld/20200305_panel_maf-0.03_window-50kb/$i.geno.ld >> ld/20200305_panel_maf-0.03_window-50kb_thinned/$i\_1m.txt";
+done
+
+head -1 > ld/20200305_panel_maf-0.03_window-50kb_thinned/24_1m.txt
+shuf -n 1000000 ld/20200305_panel_maf-0.03_window-50kb/24.geno.ld >> ld/20200305_panel_maf-0.03_window-50kb_thinned/24_1m.txt
+```
+
+### Plink
+
+```{bash}
+#Try with plink and --thin argument
+mkdir ld/20200305_panel_maf-0.03_window-50kb_plink
+
+/nfs/software/birney/plink \
+  --vcf vcfs/split_by_chr/panel_no-sibs_chr-24.vcf.gz \
+  --double-id \
+  --thin 0.025 \
+  --snps-only \
+  --geno 0.3 \
+  --r2 \
+  --ld-window-r2 0 \
+  --ld-window 999999 \
+  --ld-window-kb 50000 \
+  --chr-set 24 \
+  --out ld/20200305_panel_maf-0.03_window-50kb_plink/test
+# works
+
+# TRUE
+for i in $(seq 24 24); do
+  bsub -M 30000 -o log/ld_plink_$i.out -e log/ld_plink_$i.err \
+  "/nfs/software/birney/plink \
+    --vcf vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
+    --double-id \
+    --thin 0.025 \
+    --snps-only \
+    --geno 0.3 \
+    --r2 \
+    --ld-window-r2 0 \
+    --ld-window 999999 \
+    --ld-window-kb 50000 \
+    --chr-set 24 \
+    --out ld/20200305_panel_maf-0.03_window-50kb_plink/$i";
+done  
+```
+
+--double-id removes the issue of the line IDs having underscores in them. 
+--thin 0.025 takes only 0.025 of the variants
+--snps-only takes only SNPs
+--geno 0.3 filters out variants with missing call rates above 0.3
+--r2 gets the R^2
+--ld-window-r2 0 includes all pairs of variants, including those with R^2 less than 0.2
+--ld-window 999999 sets the maximum number of variants allowed between a pair of variants
+--ld-window-kb 50000 sets the distance of the comparison window
+--chr-set 24 tells plink that the chromosome number is 24 so that it doesn't get confused that they're not human.
+
+## Find missing sites
+
+```{bash}
+for i in $(seq 1 24); do
+  bsub -M 20000 -n 4 -o log/missing_$i.out -e log/missing_$i.err \
+  "vcftools \
+    --gzvcf vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
+    --missing-site \
+    --out missing/$i";
+done
+```
+
+## Rename full run
+
+### Create new cram2lineid file with duplicates edited
+
+```{bash}
+# Find duplicates
+cut -f2 mikk_genome/data/20200206_cram_id_to_line_id.txt | sort | uniq -cd
+```
+
+• 2 141_3
+• 2 32_2
+• 2 71_1
+• 2 84_2
+
+Edited them as follows:
+
+• 2 141_3-2
+• 2 32_2-2
+• 2 71_1-2
+• 2 84_2-2
+
+Saved here: `mikk_genome/data/20200305_cram2line_full_dupes-edited.txt`
+
+### Rename full VCF
+
+```{bash}
+# rehead
+bcftools reheader \
+  --output vcfs/full-run_line-ids.vcf \
+  --samples mikk_genome/data/20200305_cram2line_full_dupes-edited.txt \
+  vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf
+  
+# compress
+bcftools view \
+  --output-type z \
+  --output-file vcfs/full-run_line-ids.vcf.gz \
+  vcfs/full-run_line-ids.vcf
+  
+# index
+bcftools index \
+  --tbi vcfs/full-run_line-ids.vcf.gz
+```
+
+*20200602*
+
+# Get LD plots using R.
+
+## Import data
 
 ```{r}
+data_files <- list.files("~/Documents/Data/20200305_panel_maf-0.03_window-50kb_thinned",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200305_panel_maf-0.03_window-50kb_thinned")
+data_files_trunc <- gsub("_1m.txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = F)
+  names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+```
+
+## Get distance measure
+
+```{r}
+data_list <- lapply(data_list, function(chr){
+  chr$distance_kb <- abs(chr$snp_1 - chr$snp_2) / 1000
+  return(chr)
+})
+```
+
+## Collapse into single DF
+
+```{r}
+data_df <- dplyr::bind_rows(data_list)
+```
+
+## Plot by chr
+
+```{r}
+# TEST
+test_df <- dplyr::sample_n(data_df, 10000)
+
+test_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+
 
 ```
+
+```{r}
+# TRUE
+data_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+
+```{r}
+ggsave(filename = paste("20200602_ld_decay_subset_allchr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 15,
+       height = 15,
+       units = "cm",
+       dpi = 500)
+```
+
+
+## Find out what the SNPs have in common 
+
+```{r}
+# Distribution of counts in whole dataset
+hist(data_df$count)
+```
+```{r}
+# how many?
+length(which(data_df$count == 63))
+```
+
+# Plot just those
+
+```{r}
+# TRUE
+data_df %>% 
+  dplyr::filter(count == 63) %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+
+```{r}
+ggsave(filename = paste("20200603_ld_decay_subset_allchr_allsmpls", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 20,
+       units = "cm",
+       dpi = 500)
+```
+
+## Take a look at those with r^2 of 1 greater than 20kb away
+
+```{r}
+full_call_df <- data_df %>% 
+  dplyr::filter(count == 63 & r2 == 1 & distance_kb > 20)
+full_call_df_cnt <- full_call_df %>% 
+  dplyr::count(chr)
+
+# Plot
+full_call_df_cnt %>% 
+  ggplot(aes(chr, n, fill = factor(chr))) + 
+  geom_col() +
+  theme_bw() +
+  guides(fill = F)
+```
+```{r}
+View(full_call_df %>% dplyr::filter(distance > 20))
+```
+
+Looking at individual SNPs in the VCF using grep, most of them have low MAFs (3 < x < 5). Run LD calcs again using threshold of 5%.
+
+```{bash}
+mkdir ld/20200305_panel_maf-0.05_window-50kb
+
+for i in $(seq 1 24); do
+  bsub -M 30000 -n 8 -o log/ld_$i.out -e log/ld_$i.err \
+  "vcftools \
+    --gzvcf vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
+    --geno-r2 \
+    --ld-window-bp 50000 \
+    --maf 0.05 \
+    --out ld/20200305_panel_maf-0.05_window-50kb/$i";
+done  
+```
+
+## Filter files on cluster for only those with full calls
+
+```{bash}
+mkdir ld/20200305_panel_maf-0.03_window-50kb_full-calls
+
+for i in $(find ld/20200305_panel_maf-0.03_window-50kb/23.geno.ld); do
+  name=$(basename $i | cut -f1 -d".");
+  awk_subscript=$(echo "awk '\$4 == 63' $i >> ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt");
+  script=$(echo "head -1 $i > ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt; $awk_subscript");
+  bsub -M 30000 -o log/ld_full-calls_$name.out -e log/ld_full-calls_$name.err $(printf $script);
+done
+# Can't do it like this - has a problem with the awk script. Have to do it in one job:
+
+for i in $(find ld/20200305_panel_maf-0.03_window-50kb/*); do
+  name=$(basename $i | cut -f1 -d".");
+  head -1 $i > ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt;
+  awk '$4 == 63' $i >> ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt
+done  
+```
+
+## Run R script to create plots
+
+R script here: `mikk_genome/code/scripts/20200602_ld_decay_plot.R`
+
+```{bash}
+for i in $(find ld/20200305_panel_maf-0.03_window-50kb_full-calls/* | head -1); do
+  date_today=$(date +'%Y%m%d');
+  name=$(basename $i | cut -f1 -d".");
+  bsub -M 50000 -o log/$date_today\_$name\_plotld.out -e log/$date_today\_$name\_plotld.err "Rscript --vanilla mikk_genome/code/scripts/20200602_ld_decay_plot.R $i plots/ $date_today";
+done
+# Can't handle it with 50MB memory
+```
+
+### Try with new MAF 0.05 calls
+
+```{bash}
+for i in $(find ld/20200305_panel_maf-0.05_window-50kb_full-calls/* | head -1); do
+  date_today=$(date +'%Y%m%d');
+  name=$(basename $i | cut -f1 -d".");
+  bsub -M 50000 -o log/$date_today\_plotld_$name.out -e log/$date_today\_plotld_$name.err "Rscript --vanilla mikk_genome/code/scripts/20200602_ld_decay_plot.R $i plots/ $date_today";
+done
+# STILL has the line at R^2 == 1!!
+```
+
+*20200707*
+
+Try all again, this time removing indels.
+
+#### Setup
+
+```{bash}
+mkdir ld/20200707_panel_maf-0.05_window-50kb
+```
+
+
+#### Get LD stats using `VCFTools`
+
+```{bash}
+for i in $(find vcfs/split_by_chr/*); do
+  date_today=$(date +'%Y%m%d');
+  chr=$(basename $i | awk -F'-' '{print $3}' | sed 's/.vcf.gz//');
+  bsub -M 30000 -o log/$date_today\_ld_$chr.out -e log/$date_today\_ld_$chr.err \
+  "vcftools \
+    --gzvcf $i \
+	  --ld-window-bp 50000 \
+	  --maf 0.05 \
+	  --max-alleles 2 \
+	  --min-alleles 2 \
+	  --remove-indels \
+	  --geno-r2 \
+	  --out ld/20200707_panel_maf-0.05_window-50kb/$chr";
+done
+```
+
+### Create new VCF with only sites that have no missing genotypes
+
+```{bash}
+# needs --recode flag!!
+vcftools \
+  --gzvcf vcfs/panel_no-sibs_line-ids.vcf.gz \
+  --max-missing 1 \
+  --recode \
+  --stdout > vcfs/panel_no-sibs_line-ids_no-missing.vcf
+## compress
+bcftools view --output-type z --output-file vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz vcfs/panel_no-sibs_line-ids_no-missing.vcf
+# create index
+bcftools index --tbi vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz
+```
+
+• number of samples:	              63
+• number of records:	              **20,086,433**
+• number of no-ALTs:	              0
+• number of SNPs:	                  **16,956,405**
+• number of MNPs:	                  0
+• number of indels:	                3329681
+• number of others:	                0
+• number of multiallelic sites:	    1333182
+• number of multiallelic SNP sites:	260770
+
+### Rerun LD stats with max MAF of 99 (to exclude variants where the whole panel is 1/1 for the ALT)
+
+```{bash}
+# make directory
+mkdir ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99/
+# run
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -M 30000 -o log/$date_today\_ld_maf-max_$chr.out -e log/$date_today\_ld_maf-max_$chr.err \
+  "vcftools \
+    --gzvcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+	  --ld-window-bp 50000 \
+	  --chr $i \
+	  --maf 0.05 \
+	  --max-maf 0.99 \
+	  --max-alleles 2 \
+	  --min-alleles 2 \
+	  --remove-indels \
+	  --geno-r2 \
+	  --out ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99/$i";
+done
+```
+
+#### Thin
+
+```{bash}
+## create set up directory
+mkdir ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned/
+## Extract random 1M pairs
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -o log/$date_today\_ld_trim_$i.out -e log/$date_today\_ld_trim_$i.err \
+  "head -1 ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99/$i.geno.ld > ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned/$i\_1m.txt && \
+  shuf -n 1000000 ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99/$i.geno.ld >> ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned/$i\_1m.txt";
+done
+## send to local
+scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned/ ~/Documents/Data/20200707_mikk_ld
+```
+
+## Import data
+
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.99_thinned")
+data_files_trunc <- gsub("_1m.txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+```
+
+## Get distance measure
+
+```{r}
+data_list <- lapply(data_list, function(chr){
+  chr$distance_kb <- abs(chr$snp_1 - chr$snp_2) / 1000
+  return(chr)
+})
+```
+
+## Collapse into single DF
+
+```{r}
+data_df <- dplyr::bind_rows(data_list)
+```
+
+## Plot by chr
+
+```{r}
+# TEST
+test_df <- dplyr::sample_n(data_df, 10000)
+
+test_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+
+
+```
+
+```{r}
+# TRUE
+data_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+
+```{r}
+ggsave(filename = paste("20200708_ld_decay_subset_allchr_max_maf_0.99", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 15,
+       height = 15,
+       units = "cm",
+       dpi = 500)
+```
+
+Looks better - with reduced density up the top for some chromosomes - but for others there are still strong lines with an r^2 of 1. 
+
+Try setting the max MAF at 0.5. 
+
+### Rerun LD stats with max MAF of 0.5 
+
+```{bash}
+# make directory
+mkdir ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50/
+# run
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -M 30000 -o log/$date_today\_ld_maf-max_$chr.out -e log/$date_today\_ld_maf-max_$chr.err \
+  "vcftools \
+    --gzvcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+	  --ld-window-bp 50000 \
+	  --chr $i \
+	  --maf 0.05 \
+	  --max-maf 0.50 \
+	  --max-alleles 2 \
+	  --min-alleles 2 \
+	  --remove-indels \
+	  --geno-r2 \
+	  --out ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50/$i";
+done
+```
+
+#### Thin
+
+```{bash}
+## create set up directory
+mkdir ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned/
+## Extract random 1M pairs
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -o log/$date_today\_ld_trim_$i.out -e log/$date_today\_ld_trim_$i.err \
+  "head -1 ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50/$i.geno.ld > ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned/$i\_1m.txt && \
+  shuf -n 1000000 ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50/$i.geno.ld >> ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned/$i\_1m.txt";
+done
+## send to local
+scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned/ ~/Documents/Data/20200707_mikk_ld
+```
+
+## Import data
+
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned")
+data_files_trunc <- gsub("_1m.txt", "", data_files_trunc)
+ 
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+```
+
+## Get distance measure
+
+```{r}
+data_list <- lapply(data_list, function(chr){
+  chr$distance_kb <- abs(chr$snp_1 - chr$snp_2) / 1000
+  return(chr)
+})
+```
+
+## Collapse into single DF
+
+```{r}
+data_df <- dplyr::bind_rows(data_list)
+```
+
+## Plot 
+
+```{r}
+# TRUE
+data_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+```{r}
+ggsave(filename = paste("20200709_ld_decay_subset_allchr_max-maf-0.50", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 15,
+       height = 15,
+       units = "cm",
+       dpi = 500)
+```
+
+### Rerun LD stats with min MAF of 0.1 and max MAF of 0.9 
+
+```{bash}
+# make directory
+mkdir ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/
+# run
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -M 30000 -o log/$date_today\_ld_maf-max_$chr.out -e log/$date_today\_ld_maf-max_$chr.err \
+  "vcftools \
+    --gzvcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+	  --ld-window-bp 50000 \
+	  --chr $i \
+	  --maf 0.10 \
+	  --max-maf 0.90 \
+	  --max-alleles 2 \
+	  --min-alleles 2 \
+	  --remove-indels \
+	  --geno-r2 \
+	  --out ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/$i";
+done
+```
+
+#### Thin
+
+```{bash}
+## create set up directory
+mkdir ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/
+## Extract random 1M pairs
+for i in $(seq 1 24); do
+  date_today=$(date +'%Y%m%d');
+  bsub -o log/$date_today\_ld_trim_$i.out -e log/$date_today\_ld_trim_$i.err \
+  "head -1 ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/$i.geno.ld > ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/$i\_1m.txt && \
+  shuf -n 1000000 ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/$i.geno.ld >> ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/$i\_1m.txt";
+done
+## send to local
+scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/ ~/Documents/Data/20200707_mikk_ld
+
+
+### NOTE: weird double header in chr14 file. Remove
+head -1 ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt > ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt.tmp
+grep -F -v "R^2" ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt >> ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt.tmp && mv ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt.tmp ~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/14_1m.txt
+```
+
+## Import data
+
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned")
+data_files_trunc <- gsub("_1m.txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+#  df$snp_1 <- as.integer(df$snp_1)
+#  df$snp_2 <- as.integer(df$snp_2)
+#  df$chr <- as.integer(df$chr)
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+```
+
+## Get distance measure
+
+```{r}
+data_list <- lapply(data_list, function(chr){
+  chr$distance_kb <- abs(chr$snp_1 - chr$snp_2) / 1000
+#  chr$chr <- as.integer(chr$chr)
+  return(chr)
+})
+```
+
+## Collapse into single DF
+
+```{r}
+data_df <- dplyr::bind_rows(data_list)
+```
+
+## Plot by chr
+
+```{r}
+# TEST
+test_df <- dplyr::sample_n(data_df, 10000)
+
+test_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+
+
+```
+
+```{r}
+# TRUE
+data_df %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.005) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+
+```{r}
+ggsave(filename = paste("20200715_ld_decay_subset_allchr_min-maf-0.10_max-maf-0.90", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 15,
+       height = 15,
+       units = "cm",
+       dpi = 500)
+```
+
+## Get MAF stats
+
+### Create VCF with MAF
+
+```{bash}
+# No missing
+bcftools +fill-tags \
+  vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  --output-type z \
+  --output vcfs/panel_no-sibs_line-ids_no-missing_with-maf.vcf.gz \
+  -- \
+  --tags MAF
+## Count of variants: 20,086,433  
+# No missing, biallelic SNPs only
+bcftools view \
+  --min-alleles 2 \
+  --max-alleles 2\
+  --types snps \
+  --output-type z \
+  --output vcfs/panel_no-sibs_line-ids_no-missing_with-maf_bi-snps.vcf.gz \
+  vcfs/panel_no-sibs_line-ids_no-missing_with-maf.vcf.gz
+## Count of variants: 16,035,052
+```
+
+### Extract relevant fields
+
+```{bash}
+# make directory
+mkdir maf
+# get stats
+bcftools query \
+  --format '%CHROM\t%POS\t%INFO/MAF\n' \
+  --output maf/20200707_maf.txt \
+  vcfs/panel_no-sibs_line-ids_no-missing_with-maf_bi-snps.vcf.gz
+  
+# send to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/maf/20200707_maf.txt ~/Documents/Data/20200707_mikk_ld
+```
+
+### Import to R
+
+```{r}
+maf_dat <- read.table("~/Documents/Data/20200707_mikk_ld/20200707_maf.txt", 
+                  header = F, sep = "\t")
+colnames(maf_dat) <- c("chr", "pos", "maf")
+```
+
+### Plot
+
+```{r}
+maf_dat %>% 
+  ggplot() +
+  geom_histogram(aes(x = maf,
+                     y=..count../1000000),
+                 bins = 40,
+                 fill = "#2A9D8F",
+                 colour = "#264653") +
+  theme_bw() +
+  guides(fill = F) +
+  xlab("Minor allele frequencies") +
+  ylab("Count (in millions of sites)") 
+```
+
+```{r}
+ggsave(filename = paste("20200707_maf_freqs", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+## Visualise using Haploview
+
+### Make Plink dataset with no-missing VCF
+
+**NOTE** Lessons from the start of the PhD:
+
+• Need to first recode SNPs into the 1234 format.
+• Then recode that into Haploview format.
+• Replace asterisks with 0 in PED file
+
+```{bash}
+# make directory for outputs
+mkdir plink
+# run over VCF with no missing sites
+plink \
+  --vcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  --maf 0.05 \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --allele1234 \
+  --out plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234
+# recode for HV
+plink \
+  --bfile plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234 \
+  --recode HV \
+  --maf 0.05 \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --out plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234_hv
+
+# replace * with 0
+for i in $(find plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234_hv*.ped); do sed -i 's/\*/0/g' $i; done
+
+# send to local to play with
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234_hv.chr* ~/Documents/Data/20200707_mikk_ld/20200707_plink
+# Too many comparisons makes Haploview crash. Try thinning.
+## First send bfiles to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234.* ~/Documents/Data/20200707_mikk_ld/20200709_plink
+# recode for HV (on local)
+plink \
+  --bfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234 \
+  --recode HV \
+  --maf 0.05 \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --thin 0.05 \
+  --out ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05
+# replace * with 0
+for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05*.ped); do sed -i '.bak' 's/\*/0/g' $i; done  
+# run Haploview
+java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
+  -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05.chr-24.ped \
+  -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05.chr-24.info \
+  -maxDistance 1000 
+# still crashes. Try with 0.025
+mkdir ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025
+
+plink \
+  --bfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200707_panel_no-sibs_line-ids_no-missing_maf-0.05_1234 \
+  --recode HV \
+  --maf 0.05 \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --thin 0.025 \
+  --out ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025
+# replace * with 0
+for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025*.ped); do sed -i '.bak' 's/\*/0/g' $i; done   
+# run Haploview
+java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
+  -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-24.ped \
+  -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-24.info \
+  -maxDistance 1000 
+# Creates plot, but crashes when saving it.
+```
+
+### Try `gaston` package
+
+#### Make new BED 
+```{bash}
+mkdir plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05
+  
+# make BED  
+plink \
+  --vcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  --maf 0.05 \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05
+  
+# recode for 012
+plink \
+  --bfile plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05 \
+  --recode A \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012
+  
+# recode for 012 transposed
+plink \
+  --bfile plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05 \
+  --recode A-transpose \
+  --chr 1-24 \
+  --allow-extra-chr \
+  --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012  
+  
+# send to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012.raw ~/Documents/Data/20200707_mikk_ld/20200714_plink
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012.traw ~/Documents/Data/20200707_mikk_ld/20200714_plink
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05.bim ~/Documents/Data/20200707_mikk_ld/20200714_plink
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05.fam ~/Documents/Data/20200707_mikk_ld/20200714_plink
+```
+
+### Read in data
+```{r}
+library(gaston)
+library(tidyverse)
+
+mikk <- read.table("~/Documents/Data/20200707_mikk_ld/20200714_plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012.traw",
+                   header = T)
+
+# BIM
+mikk.bim <- read.table("~/Documents/Data/20200707_mikk_ld/20200714_plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05.bim",
+                       header = F,
+                       col.names = c("chr", "id", "dist", "pos", "A1", "A2"))
+
+# FAM
+mikk.fam <- read.table("~/Documents/Data/20200707_mikk_ld/20200714_plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05.fam",
+                       header = F,
+                       col.names = c("famid", "id", "father", "mother", "sex", "pheno"))
+
+```
+
+### Preprocessing
+
+```{r}
+# rename sample IDs
+mikk.gen <- mikk
+colnames(mikk.gen)[7:ncol(mikk.gen)] <-  mikk.fam$id
+# remove unneeded columns
+mikk.gen <- mikk.gen[, c(1, 7:ncol(mikk.gen))]
+# split by chromosome
+mikk.gen_lst <- split(mikk.gen, f = mikk.gen$CHR)
+# remove CHR column
+mikk.gen_lst <- lapply(mikk.gen_lst, function(chr){
+  chr$CHR <- NULL
+  return(chr)
+})
+
+# split BIM by chr as well
+## get counts
+#mikk.bim %>% group_by(chr) %>% count
+## split by chr
+mikk.bim_lst <- split(mikk.bim, f = mikk.bim$chr)
+```
+
+### Test
+
+```{r}
+set.seed(45)
+targ_ind <- sort(sample(nrow(mikk.gen_lst$`8`), 1000))
+# pull out 50 SNPs
+mikk.gen_8 <- mikk.gen_lst$`8`[targ_ind, ]
+mikk.gen_8 <- t(as.matrix(mikk.gen_8))
+mikk.bim_8 <- mikk.bim_lst$`8`[targ_ind, ]
+# create bed matrix
+x <- as.bed.matrix(mikk.gen_8, bim = mikk.bim_8)
+# compute LD
+ld.x <- gaston::LD(x, c(1,ncol(x)))
+# replace NaNs with 0
+ld.x[which(is.na(ld.x))] <- 0
+# plot
+LD.plot( ld.x,
+         snp.positions = x@snps$pos, 
+         max.dist = 1000000,
+         write.ld = NULL,
+         write.snp.id = F,
+         pdf.file = "~/Documents/Docs/medaka pics/20200602_mikk_genome/20200714_test.pdf")
+```
+WORKS!
+
+Run on all chrs
+
+```{r}
+# get vector of seeds 
+set.seed(5)
+seeds <- sample(seq(1, 100), 24)
+# run over list
+counter <- 0
+lapply(mikk.gen_lst, function(chr){
+  counter <<- counter + 1
+  # get seed
+  set.seed(seeds[counter])
+  targ_ind <- sort(sample(nrow(mikk.gen_lst[[counter]]), 1000))
+  # pull out 50 SNPs
+  mikk.gen <- mikk.gen_lst[[counter]][targ_ind, ]
+  mikk.gen <- t(as.matrix(mikk.gen))
+  mikk.bim <- mikk.bim_lst[[counter]][targ_ind, ]
+  # create bed matrix
+  x <- as.bed.matrix(mikk.gen, bim = mikk.bim)
+  # compute LD
+  ld.x <- gaston::LD(x, c(1,ncol(x)))
+  # replace NaNs with 0
+  ld.x[which(is.na(ld.x))] <- 0
+  # plot
+  LD.plot(ld.x,
+          snp.positions = x@snps$pos, 
+          max.dist = 1000000,
+          write.ld = NULL,
+          write.snp.id = F,
+          pdf.file = paste("~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+                           gsub("-", "", Sys.Date()),
+                           "_chr",
+                           counter,
+                           ".pdf",
+                           sep = ""))
+})
+
+```
+
+### Get BED matrix for each chr
+
+```{r}
+set.seed(5)
+seeds <- sample(seq(1, 100), 24)
+
+counter <- 0
+mikk_bed_lst <- lapply(mikk.gen_lst, function(chr){
+  counter <<- counter + 1
+  # turn chr into list
+  chr <- list()
+  
+  # get bed matrix
+  ## set up GEN and BIM files
+  mikk.gen <- mikk.gen_lst[[counter]]
+  mikk.gen <- t(as.matrix(mikk.gen))
+  mikk.bim <- mikk.bim_lst[[counter]]
+  ## form BED matrix
+  x <- gaston::as.bed.matrix(mikk.gen, bim = mikk.bim)  
+  chr[["bed_mat"]] <- x 
+
+  # get LD matrix
+  ## get seed
+  set.seed(seeds[counter])
+  targ_ind <- sort(sample(nrow(mikk.gen_lst[[counter]]), 1000))
+  chr[["target_snps_indexes"]] <- targ_ind
+  ## pull out select SNPs
+  mikk.gen <- mikk.gen_lst[[counter]][targ_ind, ]
+  mikk.gen <- t(as.matrix(mikk.gen))
+  mikk.bim <- mikk.bim_lst[[counter]][targ_ind, ]
+  # create bed matrix
+  x <- as.bed.matrix(mikk.gen, bim = mikk.bim)
+  # compute LD
+  ld.x <- gaston::LD(x, c(1,ncol(x)))
+  chr[["LD"]] <- ld.x
+  return(chr)
+#  # replace NaNs with 0
+#  ld.x[which(is.na(ld.x))] <- 0
+})
+```
+
+### Pull out all SNPS
+
+```{r}
+all_snps <- lapply(mikk_bed_lst, function(x){
+  x <- x$bed_mat@snps
+  return(x)
+})
+all_snps <- dplyr::bind_rows(all_snps)
+# 444 have missing values:
+length(which(is.na(all_snps$maf)))
+# remove
+all_snps <- all_snps[which(!is.na(all_snps$maf)), ]
+# which ones have N2 == 63?
+View(all_snps[which(all_snps$N2 == 63), ])
+unique(all_snps$chr[which(all_snps$N2 == 63)])
+# just in Chr 24. Check out distribution
+hist(all_snps$N2[all_snps$chr == 24])
+# how many have a MAF < 0.05?
+length(which(all_snps$maf < 0.05))
+# Nearly 10%! 
+# Split back and get indexes so we can remove them before running the LD plots again
+all_snps_lst <- split(all_snps, f = all_snps$chr)
+snps_to_remove <- lapply(all_snps_lst, function(x){
+  which(x$maf < 0.05)
+})
+# Only in chrs 23 and 24.
+# This looks pretty weird too...
+View(all_snps[all_snps$maf < 0.05, ])
+
+# Try calculating maf manually to see if it's correct
+all_snps$maf_manual <- ifelse(all_snps$N1 == 63,
+                              0.5,
+                              ifelse(all_snps$N0 > all_snps$N2,
+                                     ((all_snps$N2*2) + all_snps$N1) / 126,
+                                     ((all_snps$N0*2) + all_snps$N1) / 126))
+# how many are different?
+length(which(all_snps$maf_manual != all_snps$maf))
+View(all_snps[which(all_snps$maf_manual != all_snps$maf), ])
+# just check that all add up to 63
+which(all_snps$N0 + all_snps$N1 + all_snps$N2 != 63)
+# Yep.
+# any still under 0.05?
+which(all_snps$maf_manual < 0.05)
+# dammit. Which ones?
+unique(all_snps$chr[which(all_snps$maf_manual < 0.05)])
+# Just in chr 24. Weird. Must be caused by Plink not handling 24 autosomes.
+```
+
+### Make MAF plot with just these
+
+### Plot
+
+```{r}
+all_snps %>% 
+  ggplot() +
+  geom_histogram(aes(x = maf_manual,
+                     y=..count../1000000),
+                 bins = 40,
+                 fill = "#f4a261",
+                 colour = "#e76f51") +
+  theme_bw() +
+  guides(fill = F) +
+  xlab("Minor allele frequencies") +
+  ylab("Count (in millions of sites)") 
+```
+
+### Pull out entries with LD of 1
+
+#### TEST
+```{r}
+# get data frame of matrix indices with R^2 of 1
+test <- data.frame(which(mikk_bed_lst[["1"]][["LD"]] == 1, arr.ind = T))
+# remove diagonals
+test <- test[which(test$row != test$col), ]
+# get indices for full snp list
+snp_1_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$row]
+snp_2_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$col]
+# get distances between those snps
+high_ld_df <- data.frame(snp_1_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_1_ind],
+                         snp_2_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_2_ind],
+                         snp_1_maf = mikk_bed_lst[["1"]]$bed_mat@snps$maf[snp_1_ind],
+                         snp_2_maf = mikk_bed_lst[["1"]]$bed_mat@snps$maf[snp_2_ind])
+high_ld_df$distance_kb <- abs((high_ld_df$snp_2_pos - high_ld_df$snp_1_pos)/1e6)
+```
+
+#### TRUE
+```{r}
+high_ld_lst <- lapply(mikk_bed_lst, function(x){
+  # get data frame of matrix indices with R^2 of 1
+  test <- data.frame(which(x[["LD"]] > 0.9, arr.ind = T))  
+  # remove diagonals
+  test <- test[which(test$row != test$col), ]
+  # get count
+  x[["high_ld_count"]] <- test
+  # get indices for full snp list
+  snp_1_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$row]
+  snp_2_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$col]  
+  # get distances between those snps
+  high_ld_df <- data.frame(snp_1_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_1_ind],
+                           snp_2_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_2_ind],
+                           snp_1_maf = mikk_bed_lst[["1"]]$bed_mat@snps$maf[snp_1_ind],
+                           snp_2_maf = mikk_bed_lst[["1"]]$bed_mat@snps$maf[snp_2_ind])
+  high_ld_df$distance_kb <- abs((high_ld_df$snp_2_pos - high_ld_df$snp_1_pos)/1e6)
+  x[["high_ld_df"]] <- high_ld_df
+  return(x)
+})
+```
+
+#### Create DFs for LD decay
+
+##### TEST
+```{r}
+test <- data.frame(high_ld_lst$`17`$LD)
+colnames(test) <- high_ld_lst$`17`$bed_mat@snps$pos[high_ld_lst$`17`$target_snps_indexes]
+test$snp_1_pos <- high_ld_lst$`17`$bed_mat@snps$pos[high_ld_lst$`17`$target_snps_indexes]
+test2 <- pivot_longer(test,
+                      cols = -snp_1_pos,
+                      names_to = "snp_2_pos",
+                      values_to = "r2")
+test2$snp_1_pos <- as.integer(test2$snp_1_pos)
+test2$snp_2_pos <- as.integer(test2$snp_2_pos)
+test2$distance_kb <- abs((test2$snp_1_pos - test2$snp_2_pos)/1000000)
+# remove diagonals
+test2 <- test2[test2$distance_kb != 0, ]
+```
+
+##### TRUE
+```{r}
+counter <- 0
+ld_df_lst <- lapply(high_ld_lst, function(x){
+  counter <<- counter + 1
+  test <- data.frame(x$LD)
+  colnames(test) <- x$bed_mat@snps$pos[x$target_snps_indexes]
+  test$snp_1_pos <- x$bed_mat@snps$pos[x$target_snps_indexes]
+  test2 <- pivot_longer(test,
+                        cols = -snp_1_pos,
+                        names_to = "snp_2_pos",
+                        values_to = "r2")
+  test2$snp_1_pos <- as.integer(test2$snp_1_pos)
+  test2$snp_2_pos <- as.integer(test2$snp_2_pos)
+  test2$distance_kb <- abs((test2$snp_1_pos - test2$snp_2_pos)/1000)
+  # remove diagonals
+  test2 <- test2[test2$distance_kb != 0, ]  
+  # get chr
+  test2$chr <- factor(names(high_ld_lst)[counter], levels = seq(1, 24))
+  # put in order
+  test2 <- test2 %>% dplyr::select(chr, snp_1_pos, snp_2_pos, distance_kb, r2)
+  # assign
+  x[["r2_df"]] <- test2
+  return(x)
+})
+```
+
+#### Plot
+
+```{r}
+# Extract into data frame
+ld_df <- lapply(ld_df_lst, function(x){
+  x <- x$r2_df
+  return(x)
+})
+ld_df <- dplyr::bind_rows(ld_df)
+# remove comparisons beyond 50kb
+ld_df_50kb <- ld_df[ld_df$distance_kb < 50, ]
+
+# Plot
+ld_df_50kb %>% 
+  ggplot(aes(distance_kb, r2)) +
+  geom_point(size = 0.1, alpha = 0.5) +
+  geom_smooth(size = 0.5) +
+  theme_bw() +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  xlab("Distance between SNPs (kb)") +
+  ylab(parse(text = "r^2"))
+```
+
+### Do LD plots again, excluding MAF < 0.10
+
+```{r}
+# get vector of seeds 
+set.seed(5)
+seeds <- sample(seq(1, 100), 24)
+# run over list
+counter <- 0
+ld_plot_lst <- lapply(mikk.gen_lst, function(chr){
+  chr <- list()
+  counter <<- counter + 1
+  
+  # create BED MAT from full files
+  mikk.gen <- mikk.gen_lst[[counter]]
+  mikk.gen <- t(as.matrix(mikk.gen))
+  mikk.bim <- mikk.bim_lst[[counter]]
+  x <- as.bed.matrix(mikk.gen, bim = mikk.bim)
+  chr[["bed_mat_full"]] <- x
+  
+  # get indexes to keep
+  filt_ind <- which(x@snps$maf > 0.10)
+  
+  # filter from original files and make BED again
+  mikk.gen_filt <- mikk.gen_lst[[counter]][filt_ind, ]
+  mikk.gen_filt <- t(as.matrix(mikk.gen_filt))  
+  mikk.bim_filt <- mikk.bim_lst[[counter]][filt_ind, ]
+  x <- as.bed.matrix(mikk.gen_filt, bim = mikk.bim_filt)
+  chr[["bed_mat_filt"]] <- x  
+  
+  # get seed
+  set.seed(seeds[counter])
+  # made GEN file again
+  mikk.gen_filt <- mikk.gen_lst[[counter]][filt_ind, ]
+  # get sample indices
+  targ_ind <- sort(sample(nrow(mikk.gen_filt), 1000))
+  # pull out sample SNPs
+  mikk.gen_samp <- mikk.gen_filt[targ_ind, ]
+  mikk.gen_samp <- t(as.matrix(mikk.gen_samp))
+  mikk.bim_samp <- mikk.bim_filt[targ_ind, ]
+  # create bed matrix
+  x <- as.bed.matrix(mikk.gen_samp, bim = mikk.bim_samp)
+  chr[["bed_mat_samp"]] <- x
+  # compute LD
+  ld.x <- gaston::LD(x, c(1,ncol(x)))
+  # replace NaNs with 0
+  ld.x[which(is.na(ld.x))] <- 0
+
+  # plot
+#  LD.plot(ld.x,
+#          snp.positions = x@snps$pos, 
+#          max.dist = 1000000,
+#          write.ld = NULL,
+#          write.snp.id = F,
+#          pdf.file = paste("~/Documents/Docs/medaka pics/20200602_mikk_genome/20200715_ld_maf-0.10/",
+#                           "20200715_chr",
+#                           counter,
+#                           ".pdf",
+#                           sep = ""))
+  return(chr)
+})
+```
+
+## Get mean R^2
+
+```{r}
+file_in <- "~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90_thinned/10_1m.txt"
+# Read in data
+data <- read.delim(file_in,
+                   sep = "\t",
+                   header = F,
+                   skip = 1)
+
+# Set column names
+colnames(data) <- c("chr", "snp_1", "snp_2", "count", "r2")
+
+# Create distance variables
+data$distance <- abs(data$snp_1 - data$snp_2)
+data$distance_kb <- abs(data$snp_1 - data$snp_2) / 1000
+
+# Create bins
+data$bin_dist_kb <- ggplot2::cut_interval(data$distance_kb, n = 50, labels = F)
+data$bin_dist <- ggplot2::cut_interval(data$distance, n = 500)
+
+# Get boundaries
+data$bin <- ggplot2::cut_interval(data$distance, n = 500)
+
+# Extract first boundaries
+data$bin_bdr <- as.numeric(stringr::str_split(data$bin, ",", simplify = T)[,1 ] %>% 
+  stringr::str_replace_all("\\(", "") %>% 
+  stringr::str_replace_all("\\[", ""))
+
+# Group by bin and get means
+test <- data %>% 
+  dplyr::group_by(bin_bdr) %>% 
+  dplyr::summarise(mean = mean(r2, na.rm = T))
+
+
+
+# Plot
+ggplot(test) +
+  geom_line(aes(bin_bdr, mean))
+```
+
+### Run script over full file
+
+Script here: `code/scripts/20200715_r2_decay_mean.R`
+
+```{bash}
+mkdir ld/20200715_mean_r2
+
+# TEST
+Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean.R \
+  ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/18.geno.ld \
+  ld/20200715_mean_r2
+# WORKS  
+
+# TRUE  
+for i in $(find ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/*); do
+  name=$(basename $i | cut -f1 -d".");
+  bsub -M 50000 -n 4 -o log/20200715_$name\_mean-r2.out -e log/20200715_$name\_mean-r2.err "Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean.R $i ld/20200715_mean_r2";
+done
+
+# Pull to local
+scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200715_mean_r2/ ~/Documents/Data/20200707_mikk_ld/
+```
+
+### Read in data
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200715_mean_r2/",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200715_mean_r2/")
+data_files_trunc <- gsub(".txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  #names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+
+# bind into DF
+r2_df <- dplyr::bind_rows(data_list, .id = "chr")
+r2_df$chr <- factor(r2_df$chr, levels = seq(1, 24))
+
+# get kb measure
+r2_df$bin_bdr_kb <- r2_df$bin_bdr / 1000
+```
+
+#### Plot
+```{r}
+r2_df %>% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (bp)") +
+  ylab(bquote(.("Mean r")^2)) +
+  labs(colour = "Chromosome")
+```
+
+```{r}
+ggsave(filename = paste("20200715_mean-r2", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+#### Facet
+```{r}
+r2_df %>% ggplot() +
+  geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (Kb)") +
+  ylab(bquote(.("Mean r")^2)) +
+  facet_wrap(~chr, nrow = 6, ncol = 4) +
+  guides(colour = F)
+```
+
+```{r}
+ggsave(filename = paste("20200715_mean-r2_facet", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+### Do again, but with max distance of 1000 bp and 50 bins
+
+```{bash}
+mkdir ld/20200715_mean_r2_1kb-max
+# TRUE  
+for i in $(find ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/*); do
+  name=$(basename $i | cut -f1 -d".");
+  bsub -M 30000 -n 4 -o log/20200715_$name\_mean-r2_1kb-max.out -e log/20200715_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean_1kb-lim.R $i ld/20200715_mean_r2_1kb-max";
+done
+
+# Pull to local
+scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200715_mean_r2_1kb-max/ ~/Documents/Data/20200707_mikk_ld/
+```
+ 
+## Get heterozygosity stats
+
+```{bash}
+vcftools \
+    --gzvcf vcfs/panel_no-sibs_line-ids.vcf.gz \
+    --het \
+    --out het/20200602
+```
+
+### Read in data
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200715_mean_r2_1kb-max/",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200715_mean_r2_1kb-max/")
+data_files_trunc <- gsub(".txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  #names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+
+# bind into DF
+r2_df <- dplyr::bind_rows(data_list, .id = "chr")
+r2_df$chr <- factor(r2_df$chr, levels = seq(1, 24))
+
+# get kb measure
+r2_df$bin_bdr_kb <- r2_df$bin_bdr / 1000
+```
+
+#### Plot
+```{r}
+r2_df %>% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (bp)") +
+  ylab(bquote(.("Mean r")^2)) +
+  labs(colour = "Chromosome")
+```
+
+
+```{r}
+ggsave(filename = paste("20200715_mean-r2_1kb-lim", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+#### No guides
+```{r}
+r2_df %>% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (bp)") +
+  ylab(bquote(.("Mean r")^2)) +
+  guides(colour = F)
+```
+
+
+```{r}
+ggsave(filename = paste("20200715_mean-r2_1kb-lim_no-guide", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/",
+       width = 20,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+### Get counts of SNPs when MAF < 0.10
+
+```{r}
+sum(unlist(lapply(ld_plot_lst, function(x) nrow(x[["bed_mat_filt"]]@snps))))
+```
+
+*20200715* Birney Group meeting
+
+Get human LD plot – contrast. Major one we want to make. And it’s not quite as good as Drosophila and accept that. 
+
+Tracking down these LD blocks. Investigate individually. Find explanation for one. Describe the reason why. 
+
+For these variants in the blocks, the samples will split be ancestry. As we raise the MAF, we hide the unbalanced scenarios. Take SNPs in blocks. Make a matrix. SNPs by samples, then cluster. Try Hclust. Hopefully we have some on one side of the tree, some on the other. Tree won’t look balanced, but hopefully we have a sample on each side. 
+
+The other thing they could be is introgression from Northern medaka line. Came in and refuses to recombine with Southern medaka.
+
+Could be regions of persistent heterozygosity? Sample regions of persistent heterozygosity and make bandage plots for them. 
+
+Let Felix know that it’s working out.
+
+# ABBA BABA
+
+## Get Stickleback data
+
+* Ensembl page here: <https://asia.ensembl.org/Gasterosteus_aculeatus/Info/Index>.
+* FTP for Release 100 here: <ftp://ftp.ensembl.org/pub/release-100/fasta/gasterosteus_aculeatus/dna/>.
+* FASTA here: <ftp://ftp.ensembl.org/pub/release-100/fasta/gasterosteus_aculeatus/dna/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz>
+
+### Download to cluster
+
+```{bash}
+wget ftp://ftp.ensembl.org/pub/release-100/fasta/gasterosteus_aculeatus/dna/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz
+```
+
+
+
+## Clone repo
+
+```{bash}
+# On local
+cd ~/Documents/Repositories  
+git clone https://github.com/simonhmartin/genomics_general
+```
+
 
 
 
