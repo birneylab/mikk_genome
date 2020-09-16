@@ -5864,9 +5864,7 @@ freq_table <- read.table("~/Documents/Data/20200910_abbababa_test/all_with-split
                          as.is = T)
   
 run_abbababa <- function(data, P1, P2){
-  # source required sub-functions
-  source("~/Documents/Repositories/mikk_genome/code/scripts/20200916_abbababa_functions.R")
-
+  
   # set popns and remove NAs
   P3 <- "mikk"
   P3a <- "mikk_a"
@@ -5912,7 +5910,7 @@ run_abbababa <- function(data, P1, P2){
   
   D_Z <- D / D_err
   
-  out_list[["Genome-wide D"]][["Z score"]]
+  out_list[["Genome-wide D"]][["Z score"]] <- D_Z
   
   # Get admixture proportion
   out_list[["Admixture"]] <- list()
@@ -6057,86 +6055,9 @@ test_perchr <- test_function(data = freq_table,
 test <- run_abbababa(data = freq_table,
                      P1 = "hni",
                      P2 = "hdrr")
-```
 
-
-### From ENA
-
-O. latipes taxon: <https://www.ebi.ac.uk/ena/browser/view/Taxon:8090>
-Contains 8 assemblies for HdrR, HNI and HSOK. Probably already included in the final FASTAs?
-
-```{bash}
-cd vcfs
-wget ftp://ftp.sra.ebi.ac.uk/vol1/ERZ017/ERZ017166/Hni_Hsok_Kaga_Nilan_SNPs_chr_only.vcf.gz
-wget ftp://ftp.sra.ebi.ac.uk/vol1/ERZ017/ERZ017166/Hni_Hsok_Kaga_Nilan_SNPs_chr_only.vcf.gz.tbi
+# Turn into data frame
 
 ```
 
-Also there's a VCF here: <https://www.ebi.ac.uk/birney-srv/medaka-ref-panel/sequences/>
-Aligned to this reference:
-```{bash}
-wget -P refs/ http://www.ebi.ac.uk/birney-srv/medaka-ref-panel/sequences/oryLat2_corr_unfiltered.fa.gz
-
-```
-
-Need to liftover the VCF. Try `flo`: <https://github.com/wurmlab/flo>
-
-```{bash}
-# On local
-cd ~/Documents/Repositories  
-# Donwload flo
-wget -c https://github.com/yeban/flo/archive/master.tar.gz -O flo.tar.gz
-tar xvf flo.tar.gz
-mv flo-master flo
-# charnge WD
-mkdir flo_medaka  
-cd flo_medaka  
-# copy example config file
-cp ../flo/opts_example.yaml ./flo_opts.yaml
-# install dependencies
-./flo/scripts/install.sh
-
-# Download old and new FASTAs 
-wget http://www.ebi.ac.uk/birney-srv/medaka-ref-panel/sequences/oryLat2_corr_unfiltered.fa.gz
-wget ftp://ftp.ensembl.org/pub/release-100/fasta/oryzias_latipes/dna/Oryzias_latipes.ASM223467v1.dna.toplevel.fa.gz
-
-gunzip oryLat2_corr_unfiltered.fa.gz
-gunzip Oryzias_latipes.ASM223467v1.dna.toplevel.fa.gz
-
-# Edit .yaml config file
-atom flo_opts.yaml 
-# Edited lines 16, 17, and 21 to read:
-#:source_fa: 'oryLat2_corr_unfiltered.fa'
-#:target_fa: 'Oryzias_latipes.ASM223467v1.dna.toplevel.fa'
-#:processes: '4'
-
-# Run flo
-rake -f ../flo/Rakefile
-```
-
-
-## Try biomaRt
-
-```{r}
-library(biomaRt)
-listMarts()
-# Connect to SNP database
-ensembl <- useMart("ENSEMBL_MART_SNP")
-# Doesn't seem to have medaka assemblies...
-```
-
-# Play with `minigraph`
-
-## Download HNI and HSOK references
-
-Ensembl pages here:
-
-
-```{bash}
-cd refs
-# HNI
-wget ftp://ftp.ensembl.org/pub/release-100/fasta/oryzias_latipes_hni/dna/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa.gz
-# HSOK
-wget ftp://ftp.ensembl.org/pub/release-100/fasta/oryzias_latipes_hsok/dna/Oryzias_latipes_hsok.ASM223469v1.dna.toplevel.fa.gz
-```
 
