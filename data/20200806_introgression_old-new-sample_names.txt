@@ -1,0 +1,3 @@
+bams/20200728_stickle2hdrr_asm20_sorted.bam stickleback
+bams/20200806_hni2hdrr_asm20_sorted.bam hni
+bams/20200806_hsok2hdrr_asm20_sorted.bam hsok
