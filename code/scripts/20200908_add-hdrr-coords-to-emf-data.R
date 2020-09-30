@@ -43,9 +43,15 @@ seq_dat <- readr::read_delim(file_seq,
 
 # Re-jig names so they're in the same vector and get names and cols for the DATA file
 
+org_names <- ifelse(grepl("ancestral", seq_dat$X2), seq_dat$X3, seq_dat$X2)
+
+# Get indices
+
+# add target ancestor
+keep_anc <- which(seq_dat$X3 %in% mrca_label_trim)
 # add target HdrR
 keep_hdrr <- which(seq_dat$X2 == "oryzias_latipes" & seq_dat$X4 == seq_start & seq_dat$X5 == seq_end)
-# add target others"
+# add target others
 target_species <- c("oryzias_latipes_hni",
                     "oryzias_latipes_hsok",
                     "oryzias_javanicus",
@@ -64,10 +70,10 @@ other_inds <- unlist(sapply(target_species, function(x){
   return(target_ind)
 }))
 
-target_indices <- c(keep_hdrr, other_inds)
+target_indices <- c(keep_anc, keep_hdrr, other_inds)
 target_indices <- unname(target_indices)
 
-target_names <- seq_dat$X2[target_indices]
+target_names <- org_names[target_indices]
 
 # Read in DATA file
 

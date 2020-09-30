@@ -150,17 +150,17 @@ run_abbababa <- function(data, P1, P2){
   out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower,
                                                            "upper" = f_CI_upper)
 
-  # Get per-chromosome D
+  # Get per-chromosome stats
   chrom_names <- unique(freq_table$chr)
   chrom_indices <- lapply(chrom_names, function(chrom) which(freq_table$chr == chrom))
   names(chrom_indices) <- chrom_names
 
-  out_list[["Per-chromosome D"]] <- lapply(chrom_names, function(chrom){
+  out_list[["Per-chromosome"]] <- lapply(chrom_names, function(chrom){
     per_chr_out <- list()
     # get D stat
     D_by_chrom <- D.stat(freq_table[chrom_indices[[chrom]], P1],
-                                           freq_table[chrom_indices[[chrom]], P2],
-                                           freq_table[chrom_indices[[chrom]], P3])
+                         freq_table[chrom_indices[[chrom]], P2],
+                         freq_table[chrom_indices[[chrom]], P3])
 
     per_chr_out[["D statistic"]] <- D_by_chrom
 
@@ -189,11 +189,38 @@ run_abbababa <- function(data, P1, P2){
 
     per_chr_out[["Z score"]] <- D_Z_by_chrom
 
+    # Get admixture
+    per_chr_out[["Admixture"]] <- list()
+
+    f_by_chrom <- f.stat(freq_table[chrom_indices[[chrom]],P1],
+                         freq_table[chrom_indices[[chrom]],P2],
+                         freq_table[chrom_indices[[chrom]],P3a],
+                         freq_table[chrom_indices[[chrom]],P3b])
+
+    per_chr_out[["Admixture"]][["f statistic"]] <- f_by_chrom
+
+    f_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
+                                      FUN=f.stat,
+                                      freq_table[chrom_indices[[chrom]],P1],
+                                      freq_table[chrom_indices[[chrom]],P2],
+                                      freq_table[chrom_indices[[chrom]],P3a],
+                                      freq_table[chrom_indices[[chrom]],P3b])
+
+    per_chr_out[["Admixture"]][["Standard deviation"]] <- f_sd_by_chrom
+
+    f_err_by_chrom <- f_sd_by_chrom / sqrt(length(block_indices_by_chrom))
+
+    f_CI_lower_by_chrom <- f - 1.96*f_err_by_chrom
+    f_CI_upper_by_chrom <- f + 1.96*f_err_by_chrom
+
+    per_chr_out[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower_by_chrom,
+                                                                "upper" = f_CI_upper_by_chrom)
+
     # Return list
     return(per_chr_out)
   })
 
-  names(out_list[["Per-chromosome D"]]) <- chrom_names
+  names(out_list[["Per-chromosome"]]) <- chrom_names
 
   # return output
   return(out_list)

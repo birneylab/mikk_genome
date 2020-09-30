@@ -31,6 +31,6 @@ list_out <- run_abbababa(data = freq_table,
 
 # Save list
 
-bname_out <- paste("p1-", P1, "_p2-", P2, ".rds", sep = "")
+bname_out <- paste(P1, "_", P2, ".RData", sep = "")
 file_out <- file.path(dir_out, bname_out)
-save(list_out, file = file_out)
+saveRDS(list_out, file = file_out)
