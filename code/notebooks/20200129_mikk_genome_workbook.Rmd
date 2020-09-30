@@ -4923,6 +4923,15 @@ for i in $(find emfs/47_fish.epo.[0-9]*); do
   name=$(basename $i | cut -f3,4 -d'.');
   bsub "zcat $i > emfs/unzipped/$name";
 done
+
+
+# NOTE that file 17_1 is in a completely different format, with CIGAR strings instead of the normal SEQ, TREE, ID and DATA segments.
+# want to remove all lines starting with $VAR, a space (make it two to be safe), and all consecutive blank lines (leaving single blank lines) 
+
+# remove all lines starting with $VAR or two spaces, and all consecutive blank lines
+sed '/\$VAR1/d; /\ \ /d' emfs/unzipped/17_1.emf | uniq -u > emfs/unzipped/tmp.txt
+# replace old file
+mv emfs/unzipped/tmp.txt emfs/unzipped/17_1.emf
 ```
 
 ## Exploration
@@ -5003,6 +5012,62 @@ for i in $(find emfs/unzipped/* | awk 'NR==41,NR==59' ); do
       -o log/$bname_short\_$j.out \
       -e log/$bname_short\_$j.out \
       "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $bname_short"
+  done;  
+done
+
+# 20200922 amending due to misalignment for the 10_2.emf file
+# e.g. head -1 emfs/segmented/10_2/*.seq.txt gives
+# ==> emfs/segmented/10_2/10_14744774_14768698_1.seq.txt <==
+# SEQ oryzias_latipes 10 20304438 20354944 1 (chr_length=31218526)
+# grep "^SEQ oryzias_latipes " $i | grep -n  "20304438 20354944" gives
+# 114
+for i in $(find emfs/unzipped/* ); do
+  # get basename
+  bname=$(basename $i);
+  bname_short=$(echo ${bname::-4} );
+  # get chromosome
+  chr=$(echo $bname | cut -f1 -d"_" );
+  # make directory for each EMF file
+  new_path=$(echo emfs/segmented/$bname_short );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi
+  # get segment count
+  segment_count=$(grep "^DATA" $i | wc -l );
+  # get segment start and end for each file
+  for j in $(seq 1 $segment_count ); do
+    bsub \
+      -o log/20200922_$bname_short\_$j.out \
+      -e log/20200922_$bname_short\_$j.out \
+      "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $new_path "
+  done;  
+done
+
+find emfs/segmented/*/*.data.txt | wc -l
+# Creates 9338 files
+find emfs/segmented/*/*_1.data.txt | wc -l
+# 4552 forward strand
+# 4786 reverse strand
+
+for i in $(find emfs/unzipped/10_2* ); do
+  # get basename
+  bname=$(basename $i);
+  bname_short=$(echo ${bname::-4} );
+  # get chromosome
+  chr=$(echo $bname | cut -f1 -d"_" );
+  # make directory for each EMF file
+  new_path=$(echo emfs/segmented/$bname_short );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi
+  # get segment count
+  segment_count=$(grep "^DATA" $i | wc -l );
+  # get segment start and end for each file
+  for j in $(seq 1 $segment_count ); do
+    bsub \
+      -o log/20200922_$bname_short\_$j.out \
+      -e log/20200922_$bname_short\_$j.out \
+      "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $new_path "
   done;  
 done
 ```
@@ -5107,11 +5172,18 @@ mrca_label <- c(phylo_tree$tip.label, phylo_tree$node.label)[node_number]
 ```{bash}
 mkdir emfs/cleaned
 
+# Find which ones have multiple columns for HdrR
+grep "Hit count: 2" log/20200922_10_2*
+#log/20200922_10_2_43.out:Hit count: 2
+#log/20200922_10_2_64.out:Hit count: 2
+
+file_in <- "emfs/segmented/10_2/10_16101474_16156360_1"
+
 # TEST
 Rscript --vanilla mikk_genome/code/scripts/20200908_add-hdrr-coords-to-emf-data.R emfs/segmented/10_1/10_10031232_10089050_-1
 
-# Note this only takes the sequences on the forward strand - still gets 4523 segments 
-for i in $(find emfs/segmented/*/*_1.data.txt | head -1 ); do
+# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments 
+for i in $(find emfs/segmented/*/*_1.data.txt ); do
   # make new directory
   chr_file=$(echo $i | cut -f3 -d"/" );
   new_path=$(echo emfs/cleaned/$chr_file );
@@ -5123,15 +5195,17 @@ for i in $(find emfs/segmented/*/*_1.data.txt | head -1 ); do
   bname_short=$(basename $bname );
   bsub \
     -M 10000 \
-    -o log/20200909_$chr_file\_$bname_short.out \
-    -e log/20200909_$chr_file\_$bname_short.err \
+    -o log/20200925_$chr_file\_$bname_short.out \
+    -e log/20200925_$chr_file\_$bname_short.err \
     "Rscript --vanilla mikk_genome/code/scripts/20200908_add-hdrr-coords-to-emf-data.R $bname $new_path";
 done
 
-# 917 exited with error codes (3606 successful):
-grep "Exited with exit code" log/20200909*.out | wc -l
-# get error files
-grep "Exited with exit code" log/20200909*.out | cut -f1 -d":" | cut -f1 -d"."
+# 114 exited with error codes (4438 successful):
+grep "Execution halted" log/20200925*err
+# All of those errors are from file 17_1, which are caused by differences in the length of the purported segment (based on the SEQ data), and the number of rows in the data frame once the '-' entries are filtered out, e.g.:
+# file_in <- "emfs/segmented/17_1/17_8966018_9533915_1").
+# Not much we can do about that. Move on.
+
 ```
 
 Proceed with those for the time being...
@@ -5234,8 +5308,8 @@ for i in $(find emfs/cleaned/* -type d ); do
   # consolidate into one file
   bsub \
     -M 20000 \
-    -o log/20200911_$chr.out \
-    -e log/20200911_$chr.err \
+    -o log/20200925_consol_$chr.out \
+    -e log/20200925_consol_$chr.err \
     "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated/$chr.txt "; 
 done  
 
@@ -5245,8 +5319,8 @@ mkdir emfs/final
 for i in $(find emfs/consolidated/* | cut -f3 -d"/" | cut -f1 -d"_" | sort | uniq ); do
   bsub \
     -M 20000 \
-    -o log/20200911_full_chr_$i.out \
-    -e log/20200911_full_chr_$i.err \
+    -o log/20200925_full_chr_$i.out \
+    -e log/20200925_full_chr_$i.err \
     "Rscript --vanilla mikk_genome/code/scripts/20200911_consolidate_chr_files.R $i emfs/consolidated emfs/final ";
 done
 ```
@@ -5403,8 +5477,8 @@ for i in $( seq 1 24 ); do
   af_file=$( echo maf/20200910_split-by-chr/$i.txt );
   bsub \
     -M 30000 \
-    -o log/20200911_frq_tbl_$i.out \
-    -e log/20200911_frq_tbl_$i.err \
+    -o log/20200925_frq_tbl_$i.out \
+    -e log/20200925_frq_tbl_$i.err \
     "Rscript --vanilla mikk_genome/code/scripts/20200911_combine_final_and_af_data.R $i $dat_file $af_file abba_baba_mikk/freq_tables ";
 done
 ```
@@ -5654,7 +5728,7 @@ for i in $( seq 1 2 ); do
 done  
 ```
 
-Combine chr files into single file directly on cluster
+Combine chr files into single file *directly on cluster*
 
 ```{r}
 group_a <- list.files("abba_baba_mikk/freq_tables_mikk_1",
@@ -6056,8 +6130,756 @@ test <- run_abbababa(data = freq_table,
                      P1 = "hni",
                      P2 = "hdrr")
 
-# Turn into data frame
+# Save list
+save(test, file = "~/Documents/Data/20200910_abbababa_test/p1-hni_p2_hdrr.rds")
+
 
 ```
 
+#### Run over each species using different combinations of P1 and P2
+
+##### Try on local
+
+```{r}
+# TEST
+mela_p2s <- c("hdrr", "hni", "hsok", "javanicus")
+melastigma <- lapply(c("hdrr", "hni", "hsok", "javanicus"), function(P2){
+  out <- run_abbababa(data = freq_table,
+                      P1 = "melastigma",
+                      P2 = P2)
+  return(out)
+})
+
+names(melastigma) <- mela_p2s
+
+p1s <- c("hni", "hsok", "javanicus", "melastigma")
+p2s <- c("hdrr", "hni", "hsok", "javanicus", "melastigma")
+
+all <- lapply(p1s, function(p1){
+  p2_list <- lapply(p2s, function(p2){
+    if (p1 != p2){
+      out <- run_abbababa(data = freq_table,
+                          P1 = p1,
+                          P2 = p2)
+      return(out)
+    }
+  })
+  names(p2_list) <- p2s
+  return(p2_list)
+})
+names(all) <- p1s
+
+# Take ages, but works
+
+# Remove empty rows
+final_list <- lapply(all, function(p1){
+  out <- p1[lapply(p1, length) > 0]
+  return(out)
+})
+
+# Reduce down to DF
+final_df <- lapply(final_list, function(p1){
+  out <- lapply(p1, function(p2){
+    # Get D stats
+    g_wide_d <- p2[["Genome-wide D"]][["D statistic"]]
+    per_chr_d <- sapply(p2[["Per-chromosome D"]],
+                        function(x) x[["D statistic"]])
+    # Get Z scores
+    g_wide_z <- p2[["Genome-wide D"]][["Z score"]]
+    per_chr_z <- sapply(p2[["Per-chromosome D"]],
+                        function(x) x[["Z score"]])
+    # Get admixture
+    admix_f <- p2[["Admixture"]][["f statistic"]]
+    # Create data frame
+    df_out <- data.frame("chr" = c("genome_wide", names(per_chr_d)),
+                         "d_stat" = c(g_wide_d, per_chr_d),
+                         "z_score" = c(g_wide_z, per_chr_z),
+                         "admix_f" = c(admix_f, rep(NA, length(per_chr_z))))
+    return(df_out)
+  })
+  # bind rows into single DF
+  out <- dplyr::bind_rows(out, .id = "p2")
+  return(out)
+})
+
+final_df <- dplyr::bind_rows(final_df, .id = "p1")
+
+```
+
+
+### Plot
+
+```{r}
+# Admixture
+final_df %>% ggplot() +
+  geom_col(aes(p2, admix_f, fill = p1),
+           position = "dodge")
+```
+```{r}
+# Z score per chromosome
+final_df %>% ggplot() +
+  geom_col(aes(p2, z_score, fill = p1),
+           position = "dodge") +
+  facet_wrap(~chr)
+```
+#### Adapt `run_abbababa` function to get *f-statistic* per chromosome
+
+```{r}
+run_abbababa <- function(data, P1, P2){
+  
+  # set popns and remove NAs
+  P3 <- "mikk"
+  P3a <- "mikk_a"
+  P3b <- "mikk_b"
+  pops <- c(P1, P2, P3, P3a, P3b)
+
+  # Select only those populations and remove NAs
+  freq_table <- data %>%
+    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
+    tidyr::drop_na()
+  
+  # Create output list
+  out_list <- list()
+  
+  # Add populations
+  out_list[["Populations"]] <- list("P1" = P1,
+                                    "P2" = P2,
+                                    "P3" = "mikk")
+  
+  # Get genome-wide D stat
+  out_list[["Genome-wide D"]] <- list()
+  
+  D <- D.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3])
+  out_list[["Genome-wide D"]][["D statistic"]] <- D
+  
+  block_indices <- get_block_indices(block_size=1e6, # Block jackknife to obtain SD and Z-score
+                                     positions=freq_table$pos,
+                                     chromosomes=freq_table$chr)
+  
+  block_indices <- block_indices[lapply(block_indices, length) > 0 ]  # remove empty entries
+  
+  n_blocks <- length(block_indices)
+
+  out_list[["Genome-wide D"]][["Number of blocks"]] <- n_blocks  
+  
+  D_sd <- get_jackknife_sd(block_indices=block_indices, # get D SD
+                         FUN=D.stat,
+                         freq_table[,P1], freq_table[,P2], freq_table[,P3])
+  
+  out_list[["Genome-wide D"]][["Standard deviation"]] <- D_sd
+  
+  D_err <- D_sd/sqrt(n_blocks)
+  
+  D_Z <- D / D_err
+  
+  out_list[["Genome-wide D"]][["Z score"]] <- D_Z
+  
+  # Get admixture proportion
+  out_list[["Admixture"]] <- list()
+  
+  f <- f.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
+  
+  out_list[["Admixture"]][["f statistic"]] <- f
+  
+  f_sd <- get_jackknife_sd(block_indices=block_indices,
+                         FUN=f.stat,
+                         freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
+  
+  out_list[["Admixture"]][["Standard deviation"]] <- f_sd
+  
+  f_err <- f_sd/sqrt(n_blocks)
+
+  f_CI_lower <- f - 1.96*f_err
+  f_CI_upper <- f + 1.96*f_err
+  
+  out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower, 
+                                                           "upper" = f_CI_upper)
+  
+  # Get per-chromosome states
+  chrom_names <- unique(freq_table$chr)
+  chrom_indices <- lapply(chrom_names, function(chrom) which(freq_table$chr == chrom))
+  names(chrom_indices) <- chrom_names
+  
+  out_list[["Per-chromosome"]] <- lapply(chrom_names, function(chrom){
+    per_chr_out <- list()
+    # get D stat
+    D_by_chrom <- D.stat(freq_table[chrom_indices[[chrom]], P1],
+                         freq_table[chrom_indices[[chrom]], P2],
+                         freq_table[chrom_indices[[chrom]], P3])
+    
+    per_chr_out[["D statistic"]] <- D_by_chrom
+    
+    # number of SNPs
+    per_chr_out[["Number of SNPs"]] <- length(chrom_indices[[chrom]])
+    
+    # get block indices
+    block_indices_by_chrom <- get_block_indices(block_size=1e6,
+                                       positions=freq_table$pos[freq_table$chr == chrom])
+    # remove empty blocks
+    block_indices_by_chrom <- block_indices_by_chrom[lapply(block_indices_by_chrom, length) > 0 ]
+    
+    # Get SD
+    D_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
+                                      FUN=D.stat,
+                                      freq_table[chrom_indices[[chrom]], P1],
+                                      freq_table[chrom_indices[[chrom]], P2],
+                                      freq_table[chrom_indices[[chrom]], P3])
+    
+    per_chr_out[["Standard error"]] <- D_sd_by_chrom
+    
+    # Get Z score
+    D_err_by_chrom <- D_sd_by_chrom / sqrt(length(block_indices_by_chrom))
+    
+    D_Z_by_chrom <- D_by_chrom / D_err_by_chrom
+    
+    per_chr_out[["Z score"]] <- D_Z_by_chrom
+    
+    # Get admixture
+    per_chr_out[["Admixture"]] <- list()
+    
+    f_by_chrom <- f.stat(freq_table[chrom_indices[[chrom]],P1],
+                         freq_table[chrom_indices[[chrom]],P2], 
+                         freq_table[chrom_indices[[chrom]],P3a], 
+                         freq_table[chrom_indices[[chrom]],P3b])
+    
+    per_chr_out[["Admixture"]][["f statistic"]] <- f_by_chrom
+    
+    f_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
+                                      FUN=f.stat,
+                                      freq_table[chrom_indices[[chrom]],P1],
+                                      freq_table[chrom_indices[[chrom]],P2], 
+                                      freq_table[chrom_indices[[chrom]],P3a], 
+                                      freq_table[chrom_indices[[chrom]],P3b])
+    
+    per_chr_out[["Admixture"]][["Standard deviation"]] <- f_sd_by_chrom
+    
+    f_err_by_chrom <- f_sd_by_chrom / sqrt(length(block_indices_by_chrom))
+
+    f_CI_lower_by_chrom <- f - 1.96*f_err_by_chrom
+    f_CI_upper_by_chrom <- f + 1.96*f_err_by_chrom
+    
+    per_chr_out[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower_by_chrom, 
+                                                                "upper" = f_CI_upper_by_chrom)    
+    
+    # Return list
+    return(per_chr_out)    
+  })
+  
+  names(out_list[["Per-chromosome"]]) <- chrom_names
+  
+  # return output
+  return(out_list)
+}
+
+test_p1_hni_p2_hdrr <- run_abbababa(data = freq_table,
+                                    P1 = "hni",
+                                    P2 = "hdrr")
+
+# Pull out per-chromosome 
+sapply(test_p1_hni_p2_hdrr$`Per-chromosome`, function(x) x$Admixture$`f statistic`)
+
+
+```
+
+##### Run over all
+
+```{r}
+p1s <- c("hdrr", "hni", "hsok", "javanicus", "melastigma")
+p2s <- p1s
+
+full_ab_list <- lapply(p1s, function(p1){
+  p2_list <- lapply(p2s, function(p2){
+    if (p1 != p2){
+      out <- run_abbababa(data = freq_table,
+                          P1 = p1,
+                          P2 = p2)
+      return(out)
+    }
+  })
+  names(p2_list) <- p2s
+  return(p2_list)
+})
+names(full_ab_list) <- p1s
+
+saveRDS(full_ab_list, file = "~/Documents/Repositories/mikk_genome/data/20200917_abba_out.RData")
+
+test <- readRDS("~/Documents/Repositories/mikk_genome/data/20200917_abba_out.RData")
+```
+
+##### Run on cluster
+
+```{bash}
+mkdir abba_baba_mikk/20200925
+
+for i in $(echo hdrr hni hsok javanicus melastigma ); do
+  for j in $(echo hdrr hni hsok javanicus melastigma ); do
+    # don't run if they are the same
+    if [ $i != $j ]; then
+      p1=$i;
+      p2=$j;
+      dat_file=$(echo abba_baba_mikk/freq_tables/all_with-split-mikk.txt);
+      dir_out=$(echo abba_baba_mikk/20200925 );
+      bsub \
+        -M 10000 \
+        -o log/20200925_abbababa_$p1\_$p2.out \
+        -e log/20200925_abbababa_$p1\_$p2.err \
+        "Rscript --vanilla mikk_genome/code/scripts/20200916_run_abbababa.R $p1 $p2 $dat_file $dir_out "
+    fi  
+  done;
+done  
+```
+
+### Combine into one list *directly on cluster*
+
+```{r}
+# get files
+files <- list.files("abba_baba_mikk/20200925",
+                    full.names = T)
+
+# get population names
+pop_names <- basename(files) %>% 
+  stringr::str_split(., "\\.", simplify = T) %>%
+  subset(select = 1) %>% 
+  stringr::str_split("_", simplify = T)
+
+# load into list
+final_list <- lapply(unique(pop_names[, 1]), function(P1){
+  p1_inds <- which(pop_names[, 1] %in% P1 )
+  P2 <- lapply(p1_inds, function(file_ind){
+    readRDS(files[file_ind])
+  })
+  names(P2) <- pop_names[p1_inds, 2]
+  return(P2)
+})
+names(final_list) <- unique(pop_names[, 1])
+
+# save
+saveRDS(final_list, "abba_baba_mikk/20200925_all/all.RDS")
+```
+
+#### Send to local
+
+```{bash}
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/abba_baba_mikk/20200925_all/all.RDS ~/Documents/Data/20200910_abbababa_test/20200925.RDS
+```
+
+
+#### Turn lists into data frames
+```{r}
+# Load data
+final_list <- readRDS("~/Documents/Data/20200910_abbababa_test/20200925.RDS")
+
+# Reduce down to DF
+final_df <- lapply(final_list, function(p1){
+  out <- lapply(p1, function(p2){
+    # Get D stats
+    g_wide_d <- p2[["Genome-wide D"]][["D statistic"]]
+    per_chr_d <- sapply(p2[["Per-chromosome"]],
+                        function(x) x[["D statistic"]])
+    # Get Z scores
+    g_wide_z <- p2[["Genome-wide D"]][["Z score"]]
+    per_chr_z <- sapply(p2[["Per-chromosome"]],
+                        function(x) x[["Z score"]])
+    # Get admixture
+    admix_f <- p2[["Admixture"]][["f statistic"]]
+    per_chr_f <- sapply(p2[["Per-chromosome"]],
+                        function(x) x[["Admixture"]][["f statistic"]])
+    # Create data frame
+    df_out <- data.frame("chr" = c("all", names(per_chr_d)),
+                         "d_stat" = c(g_wide_d, per_chr_d),
+                         "z_score" = c(g_wide_z, per_chr_z),
+                         "admix_f" = c(admix_f, per_chr_f))
+    return(df_out)
+  })
+  # bind rows into single DF
+  out <- dplyr::bind_rows(out, .id = "p2")
+  return(out)
+})
+
+final_df <- dplyr::bind_rows(final_df, .id = "p1")
+
+# tidy up factors, etc for data
+final_df$chr <- factor(final_df$chr, levels = c(seq(1, 24), "all"))
+## capitalise species/line names
+final_df <- final_df %>% 
+  dplyr::mutate(across(c("p1", "p2"),
+                       ~dplyr::if_else(.x %in% c("hni", "hsok"),
+                                       str_to_upper(.x),
+                                       dplyr::if_else(.x == "hdrr",
+                                                      "HdrR",
+                                                      .x)))) %>% 
+  dplyr::rename(P1 = p1,
+                P2 = p2)
+
+```
+
+
+
+
+### Get correlations between javanicus and melastigma
+```{r}
+final_df %>% 
+  dplyr::filter(p1 %in% c("javanicus", "melastigma") & p2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+  tidyr::pivot_wider(id_cols = c("p2", "chr"),
+                     names_from = p1,
+                     values_from = admix_f) %>% 
+  ggplot() +
+    geom_point(aes(melastigma,
+                   javanicus,
+                   colour = chr,
+                   shape = p2))
+```
+
+
+Plot
+
+```{r}
+final_df %>% 
+  dplyr::filter(chr == "all") %>% 
+  ggplot() +
+    geom_col(aes(p2, admix_f, fill = p1),
+             position = "dodge")
+```
+Looks like *javanicus* is the most unlike MIKK. Use them as the outgroup
+```{r}
+final_df %>% 
+  dplyr::filter(chr == "genome_wide",
+                p1 == "javanicus") %>% 
+  ggplot() +
+    geom_col(aes(p2, admix_f, fill = p2)) +
+  guides(fill = F)
+```
+Facet by chromosome
+```{r}
+final_df %>% 
+  dplyr::filter(p1 == "javanicus") %>% 
+  ggplot() +
+    geom_col(aes(p2, admix_f, fill = p2)) +
+  guides(fill = F) +
+  facet_wrap(~chr)
+```
+
+### Get data using closest ancestor to HdrR, HNI, and HSOK
+
+```{bash}
+# CLEAN
+mkdir emfs/cleaned_jap-med-only
+
+for i in $(find emfs/segmented/*/*_1.data.txt ); do # takes only forward strand sequences
+  # make new directory
+  chr_file=$(echo $i | cut -f3 -d"/" );
+  new_path=$(echo emfs/cleaned_jap-med-only/$chr_file );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi  
+  # create name for new file
+  bname=$(echo $i | sed 's/.data.txt//g' );
+  bname_short=$(basename $bname );
+  bsub \
+    -M 10000 \
+    -o log/20200929_clean_jap_$chr_file\_$bname_short.out \
+    -e log/20200929_clean_jap_$chr_file\_$bname_short.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200921_add-hdrr-coords-to-emf-data_jap-med.R $bname $new_path";
+done
+
+# how many successfully completed? 
+grep "Execution halted" log/20200929*
+# All except for 17_1
+```
+
+Consolidate
+```{bash}
+mkdir emfs/consolidated_jap-med-only
+
+# run for each sub-chr (e.g. 10_1, 10_2)
+
+for i in $(find emfs/cleaned_jap-med-only/* -type d ); do
+  # get chromosome
+  chr=$(echo $i | cut -f3 -d"/" );
+  # consolidate into one file
+  bsub \
+    -M 20000 \
+    -o log/20200928_consol_$chr.out \
+    -e log/20200928_consol_$chr.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated_jap-med-only/$chr.txt "; 
+done  
+
+# combine for each chr
+mkdir emfs/final_jap-med-only
+
+for i in $(find emfs/consolidated_jap-med-only/* | cut -f3 -d"/" | cut -f1 -d"_" | sort | uniq ); do
+  dir_in=$(echo emfs/consolidated_jap-med-only );
+  dir_out=$(echo emfs/final_jap-med-only );
+  bsub \
+    -M 20000 \
+    -o log/20200928_full_chr_$i.out \
+    -e log/20200928_full_chr_$i.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200928_consolidate_chr_files_jap-med.R  $i $dir_in $dir_out ";
+done
+```
+
+Add MIKK frequencies
+
+```{bash}
+mkdir abba_baba_mikk/freq_tables_jap-med-only
+
+for i in $( seq 1 24 ); do
+  dat_file=$( echo emfs/final_jap-med-only/$i.txt );
+  af_file=$( echo maf/20200910_split-by-chr/$i.txt );
+  dir_out=$( echo abba_baba_mikk/freq_tables_jap-med-only );
+  bsub \
+    -M 30000 \
+    -o log/20200928_frq_tbl_$i.out \
+    -e log/20200928_frq_tbl_$i.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200929_combine_final_and_af_data_jap-med.R $i $dat_file $af_file $dir_out ";
+done
+```
+
+Combine chr files into single file - *run directly on cluster*
+
+```{r}
+files <- list.files("abba_baba_mikk/freq_tables_jap-med-only",
+                    pattern = "[0-9]",
+                    full.names = T)
+# read in data
+dat_list <- lapply(files, function(x){
+  # read in data
+  df <- readr::read_tsv(x,
+                        col_types = "iiccdiii")
+  return(df)
+})
+
+# bind together and sort
+final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+# write table
+write.table(final_df, "abba_baba_mikk/freq_tables_jap-med-only/all.txt", quote = F, sep = "\t", row.names = F)
+```
+
+Do the same for split MIKK
+
+```{bash}
+mkdir abba_baba_mikk/freq_tables_mikk_1_jap-med-only
+mkdir abba_baba_mikk/freq_tables_mikk_2_jap-med-only
+
+for i in $( seq 1 2 ); do
+  for j in $( seq 1 24 ); do
+    dat_file=$( echo emfs/final_jap-med-only/$j.txt );
+    af_file=$( echo maf/20200915_split-by-chr_$i/$j.txt );
+    dir_out=$( echo abba_baba_mikk/freq_tables_mikk_$i\_jap-med-only );
+    bsub \
+      -M 30000 \
+      -o log/20200929_frq_tbl_split_$i\_$j.out \
+      -e log/20200929_frq_tbl_split_$i\_$j.err \
+      "Rscript --vanilla mikk_genome/code/scripts/20200929_combine_final_and_af_data_jap-med.R $j $dat_file $af_file $dir_out ";
+  done;
+done  
+```
+
+Combine chr files into single file *directly on cluster*
+
+```{r}
+group_a <- list.files("abba_baba_mikk/freq_tables_mikk_1_jap-med-only",
+                      pattern = "[0-9]",
+                      full.names = T)
+
+group_b <- list.files("abba_baba_mikk/freq_tables_mikk_2_jap-med-only",
+                      pattern = "[0-9]",
+                      full.names = T)
+
+# read in data
+dat_list_a <- lapply(group_a, function(x){
+  # read in data
+  df <- readr::read_tsv(x,
+                        col_types = "iiccdiii") %>% 
+    dplyr::rename(mikk_a = mikk)
+  return(df)
+})
+
+dat_list_b <- lapply(group_b, function(x){
+  # read in data
+  df <- readr::read_tsv(x,
+                        col_types = "iiccdiii") %>% 
+    dplyr::rename(mikk_b = mikk)
+  return(df)
+})
+
+# bind together and sort
+final_df_a <- dplyr::bind_rows(dat_list_a) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+final_df_b <- dplyr::bind_rows(dat_list_b) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+# read in previous final data
+final_df_prev <- readr::read_tsv("abba_baba_mikk/freq_tables_jap-med-only/all.txt",
+                                 col_types = "iiccdiii")
+
+# join
+final_df <- final_df_prev %>% 
+  dplyr::full_join(dplyr::select(final_df_a, chr, pos, mikk_a),
+                   by = c("chr", "pos")) %>% 
+  dplyr::full_join(dplyr::select(final_df_b, chr, pos, mikk_b),
+                   by = c("chr", "pos")) %>% 
+  dplyr::select(chr, pos, ancestral, derived, mikk, mikk_a, mikk_b, everything())
+
+# write table
+write.table(final_df, "abba_baba_mikk/freq_tables_jap-med-only/all_with-split-mikk.txt", quote = F, sep = "\t", row.names = F)
+```
+
+Run ABBA BABA
+
+```{bash}
+mkdir abba_baba_mikk/20200929
+
+for i in $(echo hdrr hni hsok ); do
+  for j in $(echo hdrr hni hsok ); do
+    # don't run if they are the same
+    if [ $i != $j ]; then
+      p1=$i;
+      p2=$j;
+      dat_file=$(echo abba_baba_mikk/freq_tables_jap-med-only/all_with-split-mikk.txt );
+      dir_out=$(echo abba_baba_mikk/20200929 );
+      bsub \
+        -M 10000 \
+        -o log/20200929_abbababa_$p1\_$p2.out \
+        -e log/20200929_abbababa_$p1\_$p2.err \
+        "Rscript --vanilla mikk_genome/code/scripts/20200916_run_abbababa.R $p1 $p2 $dat_file $dir_out "
+    fi  
+  done;
+done
+
+mkdir abba_baba_mikk/20200929_all
+```
+
+### Combine into one list *directly on cluster*
+
+```{r}
+library(tidyverse)
+
+# get files
+files <- list.files("abba_baba_mikk/20200929",
+                    full.names = T)
+
+# get population names
+pop_names <- basename(files) %>% 
+  stringr::str_split(., "\\.", simplify = T) %>%
+  subset(select = 1) %>% 
+  stringr::str_split("_", simplify = T)
+
+# load into list
+p1_names <- unique(pop_names[, 1]) # get unique names in P1(pop_names[, 1])
+# put lists into nested list by P1 then P2
+final_list <- lapply(p1_names, function(P1){
+  # get indices of all files matching the target P1
+  p1_inds <- which(pop_names[, 1] %in% P1 )
+  P2 <- lapply(p1_inds, function(file_ind){
+    readRDS(files[file_ind])
+  })
+  names(P2) <- pop_names[p1_inds, 2]
+  return(P2)
+})
+names(final_list) <- p1_names
+
+# save
+saveRDS(final_list, "abba_baba_mikk/20200929_all/all.RDS")
+```
+
+Convert both datasets (all Oryzias, and jap-med-only) into DFs
+
+```{bash}
+mkdir abba_baba_mikk/20200929_final
+
+for i in $(echo 20200925 20200929 ); do
+  if [ $i == "20200925" ]; then
+    out=$(echo oryzias_all );
+  else
+    out=$(echo oryzias_latipes );
+  fi
+  file_in=$(echo abba_baba_mikk/$i\_all/all.RDS );
+  file_out=$(echo abba_baba_mikk/20200929_final/20200929_abbababa_final_$out.txt );
+  bsub \
+    -o log/20200929_list_to_df_$out.out \
+    -e log/20200929_list_to_df_$out.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200929_convert_final_list_to_df.R $file_in $file_out "
+done
+
+# copy to repo
+cp abba_baba_mikk/20200929_final/* mikk_genome/data/
+```
+
+## Plots for digest
+
+### All Oryzias
+```{r}
+# Cut and pasted tree from emfs/README.47
+# If generating the tree directly, the tips remove the spaces between Genus and species, so manually edit using regex to find spaces and replace them with "_"
+# (?<=[a-z])( )(?=[a-z])
+phylo_tree <- ape::read.tree(file = "~/Documents/Repositories/mikk_genome/data/20200921_47-fish-epo_tree.txt")
+```
+
+```{r}
+# Colour all Oryzias
+ids <- phylo_tree$tip.label[grep("Oryzias", phylo_tree$tip.label)]
+# get indices of edges descending from MRCA (determined through trial and error)
+oryzias_nodes <- seq(26, 33)
+all_med_col <- ifelse(1:length(phylo_tree[["edge.length"]]) %in% oryzias_nodes, "#E84141", "black")
+# set colours for tip labels
+all_med_tip <- ifelse(phylo_tree$tip.label %in% ids, "#E84141", "black")
+# plot
+ape::plot.phylo(phylo_tree,
+                use.edge.length = T,
+                edge.color = all_med_col,
+                tip.color = all_med_tip,
+                font = 4)
+```
+
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka pics/20200921_introgression/tree_all_oryzias.png",
+    width=22,
+    height=25,
+    units = "cm",
+    res = 400)
+ape::plot.phylo(phylo_tree,
+                use.edge.length = T,
+                edge.color = all_med_col,
+                tip.color = all_med_tip,
+                font = 4)
+dev.off()
+```
+
+### All Oryzias latipes
+
+```{r}
+# Colour all Oryzias
+ids <- phylo_tree$tip.label[grep("Oryzias_latipes", phylo_tree$tip.label)]
+# get indices of edges descending from MRCA (determined through trial and error)
+oryzias_nodes <- seq(30, 33)
+all_med_col <- ifelse(1:length(phylo_tree[["edge.length"]]) %in% oryzias_nodes, "#E84141", "black")
+# set colours for tip labels
+all_med_tip <- ifelse(phylo_tree$tip.label %in% ids, "#E84141", "black")
+# plot
+ape::plot.phylo(phylo_tree,
+                use.edge.length = T,
+                edge.color = all_med_col,
+                tip.color = all_med_tip,
+                font = 4)
+```
+
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka pics/20200921_introgression/tree_all_oryzias_latipes.png",
+    width=22,
+    height=25,
+    units = "cm",
+    res = 400)
+ape::plot.phylo(phylo_tree,
+                use.edge.length = T,
+                edge.color = all_med_col,
+                tip.color = all_med_tip,
+                font = 4)
+dev.off()
+```
 
