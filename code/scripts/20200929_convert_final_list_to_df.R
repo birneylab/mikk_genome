@@ -29,11 +29,21 @@ final_df <- lapply(final_list, function(p1){
     admix_f <- p2[["Admixture"]][["f statistic"]]
     per_chr_f <- sapply(p2[["Per-chromosome"]],
                         function(x) x[["Admixture"]][["f statistic"]])
+    # Get confidence intervals
+    g_wide_ci_lower <- p2[["Admixture"]][["Confidence interval"]][["lower"]]
+    g_wide_ci_upper <- p2[["Admixture"]][["Confidence interval"]][["upper"]]
+    per_chr_ci_lower <- sapply(p2[["Per-chromosome"]],
+                               function(x) x[["Admixture"]][["Confidence interval"]][["lower"]])
+    per_chr_ci_upper <- sapply(p2[["Per-chromosome"]],
+                               function(x) x[["Admixture"]][["Confidence interval"]][["upper"]])
+
     # Create data frame
     df_out <- data.frame("chr" = c("all", names(per_chr_d)),
                          "d_stat" = c(g_wide_d, per_chr_d),
                          "z_score" = c(g_wide_z, per_chr_z),
-                         "admix_f" = c(admix_f, per_chr_f))
+                         "admix_f" = c(admix_f, per_chr_f),
+                         "f_ci_lower" = c(g_wide_ci_lower, per_chr_ci_lower),
+                         "f_ci_upper" = c(g_wide_ci_upper, per_chr_ci_upper))
     return(df_out)
   })
   # bind rows into single DF
