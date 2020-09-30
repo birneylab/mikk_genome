@@ -26,8 +26,6 @@ colnames(final_dat)[colnames(final_dat) == "oryzias_latipes"] <- "hdrr" # HdrR
 
 colnames(final_dat) <- gsub("oryzias_latipes_", "", colnames(final_dat)) # HNI and HSOK
 
-colnames(final_dat) <- gsub("oryzias_", "", colnames(final_dat)) # other medaka
-
 # join DFs
 joined_dat <- dplyr::inner_join(af_dat,
                                 dplyr::select(final_dat,
@@ -45,12 +43,12 @@ final_dat <- joined_dat %>%
                 mikk = dplyr::if_else(ancestral == ref,
                                       mikk,
                                       1 - mikk ),
-                mutate(across(hdrr:melastigma,
+                mutate(across(hdrr:hsok,
                               ~dplyr::if_else(.x == derived,
                                               1,
                                               0)))) %>%
   dplyr::select(chr, pos, ancestral, derived,
-                mikk, hdrr, hni, hsok, javanicus, melastigma)
+                mikk, hdrr, hni, hsok)
 
 # write table
 

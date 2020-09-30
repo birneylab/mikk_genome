@@ -18,6 +18,12 @@ file_data <- paste(file_in, ".data.txt", sep = "")
 file_tree <- paste(file_in, ".tree.txt", sep = "")
 file_seq <- paste(file_in, ".seq.txt", sep = "")
 
+# Get sequence start and end coords
+
+chr <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[1]
+seq_start <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[2]
+seq_end <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[3]
+
 # Get tree
 
 phylo_tree <- ape::read.tree(file = file_tree)
@@ -38,7 +44,33 @@ seq_dat <- readr::read_delim(file_seq,
 # Re-jig names so they're in the same vector and get names and cols for the DATA file
 
 org_names <- ifelse(grepl("ancestral", seq_dat$X2), seq_dat$X3, seq_dat$X2) # get names of organisms (relevant info in different column for ancestral seqs)
-target_indices <- sort(c(grep(mrca_label_trim, org_names), grep("oryzias_latipes", org_names))) # get indices
+
+# Get indices
+
+# add target ancestor
+keep_anc <- which(seq_dat$X3 %in% mrca_label_trim)
+# add target HdrR
+keep_hdrr <- which(seq_dat$X2 == "oryzias_latipes" & seq_dat$X4 == seq_start & seq_dat$X5 == seq_end)
+# add target others
+target_species <- c("oryzias_latipes_hni",
+                    "oryzias_latipes_hsok")
+# get their indices
+other_inds <- unlist(sapply(target_species, function(x){
+  target_ind <- which(seq_dat$X2 %in% x)
+  # if there are multiple hits, take the one on the forward strand
+  if (length(target_ind) > 1 ){
+    target_ind <- which(seq_dat$X2 %in% x & seq_dat$X6 == "1")
+    # if there are still multiple hits, take the first one
+    if (length(target_ind) > 1){
+      target_ind <- target_ind[1]
+    }
+  }
+  return(target_ind)
+}))
+
+target_indices <- c(keep_anc, keep_hdrr, other_inds)
+target_indices <- unname(target_indices) # unname because the names mess with fread(select = ...)
+
 target_names <- org_names[target_indices]
 
 # Read in DATA file
@@ -49,11 +81,6 @@ dat <- data.table::fread(file_data,
 colnames(dat) <- target_names # set column names
 dat <- dat[dat$oryzias_latipes != "-", ] # remove all rows with "-" in HdrR column
 
-# Get sequence start and end coords
-
-chr <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[1]
-seq_start <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[2]
-seq_end <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[3]
 
 # Add to data frame and re-order
 
