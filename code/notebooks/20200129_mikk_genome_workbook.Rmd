@@ -6800,8 +6800,8 @@ for i in $(echo 20200925 20200929 ); do
   file_in=$(echo abba_baba_mikk/$i\_all/all.RDS );
   file_out=$(echo abba_baba_mikk/20200929_final/20200929_abbababa_final_$out.txt );
   bsub \
-    -o log/20200929_list_to_df_$out.out \
-    -e log/20200929_list_to_df_$out.err \
+    -o log/20200930_list_to_df_$out.out \
+    -e log/20200930_list_to_df_$out.err \
     "Rscript --vanilla mikk_genome/code/scripts/20200929_convert_final_list_to_df.R $file_in $file_out "
 done
 
@@ -6882,4 +6882,229 @@ ape::plot.phylo(phylo_tree,
                 font = 4)
 dev.off()
 ```
+
+# Plot final
+
+## Read in data
+
+```{r}
+# Read in data
+dsets <- c("all", "latipes")
+final_df <- lapply(dsets, function(x){
+  file_name <- paste("~/Documents/Repositories/mikk_genome/data/20200929_abbababa_final_oryzias_",
+                     x,
+                     ".txt",
+                     sep = "")
+  file_name
+  out <- read.csv(file_name, header = T, sep = "\t")
+  return(out)
+})
+names(final_df) <- paste("oryzias", dsets, sep = "_")
+# combine into single DF
+final_df <- dplyr::bind_rows(final_df, .id = "dataset")
+
+# Set colours
+cols <- c("#F33A56", "#F6673A", "#F3B61F", "#55B6B0", "#631E68")
+names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
+
+# Factorise chr, P1 and P2 to get them in the right order
+chr_order <- c(seq(1,24), "all")
+fish_order <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
+
+final_df <- final_df %>% 
+  dplyr::mutate(across(c("P1", "P2"),
+                       ~factor(.x, levels = fish_order))) %>% 
+  dplyr::mutate(chr = factor(chr, levels = chr_order))
+
+```
+
+## Plot bars for genome-wide admixture
+
+```{r}
+final_df %>% 
+  dplyr::filter(dataset == "oryzias_all",
+                chr == "all",
+                P1 %in% c("melastigma", "javanicus"),
+                P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+  ggplot() +
+    geom_col(aes(P2, admix_f, fill = P1),
+             position = "dodge") +
+    scale_fill_manual(values = cols) +
+  labs(y = "Admixture F-statistic (genome-wide)") +
+  ylim(0, 1) +
+  theme_bw() + 
+  theme(panel.grid = element_blank()) + 
+  labs(title = test)
+  
+
+test <- expression(atop(paste("Comparing ",
+            italic("Oryzias melastigma"),
+            " and ",
+            italic("Oryzias javanicus")),
+      " as the P1 allopatric population",
+      sep = "\n"))
+
+test <- expression(paste("Comparing ",
+            italic("Oryzias melastigma"),
+            " and ",
+            italic("Oryzias javanicus"),
+            " as the P1 allopatric population",
+            sep = ""))
+
+test <- "First~line \n italic('wait, a second')"
+```
+```{r}
+ggsave(filename = paste("20200930_P1_mela_vs_java", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+
+Do the same but using HNI and HSOK as the 
+```{r}
+final_df %>% 
+  dplyr::filter(dataset == "oryzias_latipes",
+                chr == "all",
+                P1 %in% c("HNI", "HSOK"),
+                P2 %in% c("HdrR", "HNI", "HSOK")) %>%
+  dplyr::mutate(admix_f = replace(admix_f, P2 == "HNI", NA)) %>% # note I've made the values missing for the purposes of the plot
+  ggplot() +
+    geom_col(aes(P2, admix_f, fill = P1),
+             position = "dodge") +
+    scale_fill_manual(values = cols) +
+  labs(y = "Admixture F-statistic (genome-wide)") +
+  ylim(0, 1) +
+  theme_bw() + 
+  theme(panel.grid = element_blank()) + 
+  ggtitle("Comparing HNI and HSOK as the P1 allopatric population, with closer ancestor")
+```
+```{r}
+ggsave(filename = paste("20200930_P1_hsok_v_hni", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Get correlation between melastigma and javanicus
+
+```{r}
+cor_df <- final_df %>% 
+  dplyr::filter(dataset == "oryzias_all") %>% 
+  # filter for when P1 is another Oryzias, and P2 
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+  # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+  tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                     names_from = P1,
+                     values_from = admix_f)
+
+```
+
+```{r}
+cor_df %>% 
+  dplyr::filter(chr != "all") %>% 
+  ggplot(aes(melastigma,
+                   javanicus,
+                   colour = P2,
+                   label = chr)) +
+    geom_point() +
+    scale_colour_manual(values = cols) +
+    theme_bw() +
+    labs(x = "Oryzias melastigma", 
+       y = "Oryzias javanicus") +
+    theme(panel.grid = element_blank(),
+          axis.title = element_text(face = "italic"))
+```
+```{r}
+ggsave(filename = paste("20200930_P2_correlation", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 16.5,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
+
+## Get mean for mela and java, and facet plot
+
+```{r}
+cor_df$chr <- as.character(cor_df$chr)
+cor_df$chr <- ifelse(cor_df$chr == "all", "genome-wide", cor_df$chr)
+chr_order_plot <- c(seq(1,24), "genome-wide")
+cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
+
+cor_df %>%
+  dplyr::rowwise() %>% 
+  dplyr::mutate(mean_f = mean(c(javanicus, melastigma))) %>% 
+  ggplot() +
+    geom_col(aes(P2, mean_f, fill = P2)) +
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylim(0,1) +
+    ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+
+```{r}
+ggsave(filename = paste("20200930_f_stat_by_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+
+## Create another plot with wide D Z-score
+
+```{r}
+# Widen
+wide_d <- final_df %>% 
+  dplyr::filter(dataset == "oryzias_all") %>% 
+  # filter for when P1 is another Oryzias, and P2 
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+  # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+  tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                     names_from = P1,
+                     values_from = z_score)
+
+# Fix factors
+wide_d$chr <- as.character(wide_d$chr)
+wide_d$chr <- ifelse(wide_d$chr == "all", "genome-wide", wide_d$chr)
+chr_order_plot <- c(seq(1,24), "genome-wide")
+wide_d$chr <- factor(wide_d$chr, levels = chr_order_plot)
+```
+
+```{r}
+wide_d %>%
+  dplyr::rowwise() %>% 
+  dplyr::mutate(mean_z = mean(c(javanicus, melastigma))) %>% 
+  ggplot() +
+    geom_col(aes(P2, mean_z, fill = P2)) +
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylab(expression(paste("Mean z-score for ", italic("D"), " statistic"))) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+```{r}
+ggsave(filename = paste("20200930_z_score_for_d_by_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
 
