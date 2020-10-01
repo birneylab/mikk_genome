@@ -210,8 +210,8 @@ run_abbababa <- function(data, P1, P2){
 
     f_err_by_chrom <- f_sd_by_chrom / sqrt(length(block_indices_by_chrom))
 
-    f_CI_lower_by_chrom <- f - 1.96*f_err_by_chrom
-    f_CI_upper_by_chrom <- f + 1.96*f_err_by_chrom
+    f_CI_lower_by_chrom <- f_by_chrom - 1.96*f_err_by_chrom
+    f_CI_upper_by_chrom <- f_by_chrom + 1.96*f_err_by_chrom
 
     per_chr_out[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower_by_chrom,
                                                                 "upper" = f_CI_upper_by_chrom)
