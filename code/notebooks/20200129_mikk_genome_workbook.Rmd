@@ -5829,7 +5829,7 @@ print(paste("Admixture proportion = ", round(f,4)))
 # "Admixture proportion =  0.6281"
 ```
 
-This reveals that 62.81% of the genome is shared between HdrR and MIKK. This can be interprested as the average proportion of shared ancestry with HdrR in any single MIKK genome. 
+This reveals that 62.81% of the genome is shared between HdrR and MIKK. This can be interpreted as the average proportion of shared ancestry with HdrR in any single MIKK genome. 
 
 We can again use the block jackknife to estimate the standard deviation of f, and obtain a confidence interval. 
 
@@ -6883,6 +6883,36 @@ ape::plot.phylo(phylo_tree,
 dev.off()
 ```
 
+*20201002 do one with just Oryzias*
+
+```{r}
+# Read in
+phylo_tree <- ape::read.tree(file = "~/Documents/Repositories/mikk_genome/data/20201003_47-fish-epo_tree_oryzias_only.txt")
+# Set colours 
+phylo_cols <- c("#55b6b0", "#f33a56", "#f3b61f", "#f6673a", "#631e68")
+# Plot
+ape::plot.phylo(phylo_tree,
+                font = 4,
+                tip.color = phylo_cols,
+                direction = "downwards",
+                adj = 0.5,
+                srt = 90)
+```
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka pics/20200921_introgression/20201003_tree_oryzias.png",
+    width=2700,
+    height=1720,
+    units = "px",
+    res = 400)
+ape::plot.phylo(phylo_tree,
+                font = 4,
+                tip.color = phylo_cols)
+dev.off()
+```
+
+*end 20201002*
+
 # Plot final
 
 ## Read in data
@@ -6904,7 +6934,7 @@ names(final_df) <- paste("oryzias", dsets, sep = "_")
 final_df <- dplyr::bind_rows(final_df, .id = "dataset")
 
 # Set colours
-cols <- c("#F33A56", "#F6673A", "#F3B61F", "#55B6B0", "#631E68")
+cols <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0")
 names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
 
 # Factorise chr, P1 and P2 to get them in the right order
@@ -6926,32 +6956,24 @@ final_df %>%
                 chr == "all",
                 P1 %in% c("melastigma", "javanicus"),
                 P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
-  ggplot() +
-    geom_col(aes(P2, admix_f, fill = P1),
-             position = "dodge") +
+  ggplot(aes(P2, admix_f, fill = P1)) +
+    geom_col(position = "dodge") +
+    geom_errorbar(aes(ymin = f_ci_lower,
+                      ymax = f_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +
     scale_fill_manual(values = cols) +
-  labs(y = "Admixture F-statistic (genome-wide)") +
-  ylim(0, 1) +
-  theme_bw() + 
-  theme(panel.grid = element_blank()) + 
-  labs(title = test)
+    labs(y = "Admixture F-statistic (genome-wide)") +
+    ylim(0, 1) +
+    theme_bw() + 
+    theme(panel.grid = element_blank()) + 
+    labs(title = expression(paste("Comparing ",
+                                  italic("Oryzias melastigma"),
+                                  " and ",
+                                  italic("Oryzias javanicus"),
+                                  " as the P1 allopatric population",
+                                  sep = "")))
   
-
-test <- expression(atop(paste("Comparing ",
-            italic("Oryzias melastigma"),
-            " and ",
-            italic("Oryzias javanicus")),
-      " as the P1 allopatric population",
-      sep = "\n"))
-
-test <- expression(paste("Comparing ",
-            italic("Oryzias melastigma"),
-            " and ",
-            italic("Oryzias javanicus"),
-            " as the P1 allopatric population",
-            sep = ""))
-
-test <- "First~line \n italic('wait, a second')"
 ```
 ```{r}
 ggsave(filename = paste("20200930_P1_mela_vs_java", ".png", sep = ""),
@@ -6971,16 +6993,21 @@ final_df %>%
                 chr == "all",
                 P1 %in% c("HNI", "HSOK"),
                 P2 %in% c("HdrR", "HNI", "HSOK")) %>%
-  dplyr::mutate(admix_f = replace(admix_f, P2 == "HNI", NA)) %>% # note I've made the values missing for the purposes of the plot
-  ggplot() +
-    geom_col(aes(P2, admix_f, fill = P1),
-             position = "dodge") +
+  dplyr::mutate(admix_f = replace(admix_f, P2 == "HNI", NA),
+                f_ci_lower = replace(f_ci_lower, P2 == "HNI", NA),
+                f_ci_upper = replace(f_ci_upper, P2 == "HNI", NA)) %>% # note I've made the values missing for the purposes of the plot
+  ggplot(aes(P2, admix_f, fill = P1)) +
+    geom_col(position = "dodge") +
+    geom_errorbar(aes(ymin = f_ci_lower,
+                      ymax = f_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +
     scale_fill_manual(values = cols) +
-  labs(y = "Admixture F-statistic (genome-wide)") +
-  ylim(0, 1) +
-  theme_bw() + 
-  theme(panel.grid = element_blank()) + 
-  ggtitle("Comparing HNI and HSOK as the P1 allopatric population, with closer ancestor")
+    labs(y = "Admixture F-statistic (genome-wide)") +
+    ylim(0, 1) +
+    theme_bw() + 
+    theme(panel.grid = element_blank()) + 
+    ggtitle("Comparing HNI and HSOK as the P1 allopatric population, with closer ancestor")
 ```
 ```{r}
 ggsave(filename = paste("20200930_P1_hsok_v_hni", ".png", sep = ""),
@@ -7002,15 +7029,15 @@ cor_df <- final_df %>%
   # pivot to put the admixture_f stat for melastigma and javanicus in the same row
   tidyr::pivot_wider(id_cols = c("P2", "chr"),
                      names_from = P1,
-                     values_from = admix_f)
+                     values_from = c(admix_f, f_ci_lower, f_ci_upper))
 
 ```
 
 ```{r}
 cor_df %>% 
   dplyr::filter(chr != "all") %>% 
-  ggplot(aes(melastigma,
-                   javanicus,
+  ggplot(aes(admix_f_melastigma,
+             admix_f_javanicus,
                    colour = P2,
                    label = chr)) +
     geom_point() +
@@ -7039,11 +7066,19 @@ cor_df$chr <- ifelse(cor_df$chr == "all", "genome-wide", cor_df$chr)
 chr_order_plot <- c(seq(1,24), "genome-wide")
 cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
 
-cor_df %>%
+test <- cor_df %>%
   dplyr::rowwise() %>% 
-  dplyr::mutate(mean_f = mean(c(javanicus, melastigma))) %>% 
-  ggplot() +
-    geom_col(aes(P2, mean_f, fill = P2)) +
+  dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
+                mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) 
+
+test %>% 
+  ggplot(aes(P2, mean_f, fill = P2)) +
+    geom_col() +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +  
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -7087,9 +7122,15 @@ wide_d$chr <- factor(wide_d$chr, levels = chr_order_plot)
 ```{r}
 wide_d %>%
   dplyr::rowwise() %>% 
-  dplyr::mutate(mean_z = mean(c(javanicus, melastigma))) %>% 
+  dplyr::mutate(mean_z = mean(c(javanicus, melastigma)),
+                mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
   ggplot() +
     geom_col(aes(P2, mean_z, fill = P2)) +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +    
     guides(fill = F) +
     facet_wrap(~chr) +
     ylab(expression(paste("Mean z-score for ", italic("D"), " statistic"))) +
@@ -7105,6 +7146,2067 @@ ggsave(filename = paste("20200930_z_score_for_d_by_chr", ".png", sep = ""),
        height = 19.5,
        units = "cm",
        dpi = 500)
+```
+
+## Get stats on total admixture
+
+```{r}
+# Get mean f statistics for 3 strains
+test[test$chr == "all", colnames(test) %in% c("P2", "mean_f")]
+# Which chromosomes are higher in HNI than HSOK?
+higher_hni <- test %>% dplyr::select(P2, chr, mean_f) %>% 
+  tidyr::pivot_wider(names_from = P2, values_from = mean_f)
+
+higher_hni[higher_hni$HNI > higher_hni$HSOK, ]
+```
+
+# Find out what's different in Chr 2
+
+Meeting with Tom:
+
+* Higher repeat content? Ask Jack. Can summarise all the different types of repeats? Herpesvirus repeat?
+* Or assembly quality. Can't really get at that, unless there's a measure of mapability per chromosome. 
+* Also gene content. Is chr 2 gene-rich or gene-poor? Number of genes or total length of gene content (exons) / total length of chromosome. 
+
+# Try other Simon Martin tutorial on fD
+
+<https://github.com/simonhmartin/tutorials/blob/master/ABBA_BABA_windows/README.md>
+
+```{bash}
+# abbababa_tutorial folder already exists, so adapt the code from the README slightly
+mkdir data/sliding_windows
+
+cd data/sliding_windows
+
+wget https://github.com/simonhmartin/tutorials/raw/master/ABBA_BABA_windows/data/hel92.DP8HET75MP9BIminVar2.chr18.geno.gz
+
+wget https://github.com/simonhmartin/tutorials/raw/master/ABBA_BABA_windows/data/hel92.pop.txt
+
+wget https://github.com/simonhmartin/tutorials/raw/master/ABBA_BABA_windows/data/chr18.LDhelmet_MLrho.w100.tsv
+
+cd ../..
+
+# Run the analysis python script
+python genomics_general-master/ABBABABAwindows.py \
+-g data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.geno.gz -f phased \
+-o data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel_ros_chi_num.w25m250.csv.gz \
+-P1 mel_mel -P2 mel_ros -P3 cyd_chi -O num \
+--popsFile data/sliding_windows/hel92.pop.txt -w 25000 -m 250 --T 2
+
+python genomics_general-master/ABBABABAwindows.py \
+-g data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.geno.gz -f phased \
+-o data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel_ama_txn_num.w25m250.csv.gz \
+-P1 mel_mel -P2 mel_ama -P3 tim_txn -O num \
+--popsFile data/sliding_windows/hel92.pop.txt -w 25000 -m 250 --T 2
+
+# Send to local
+bash
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/abbababba_tutorial/data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel* ~/Documents/Data/20200910_abbababa_test 
+```
+
+## Plot
+```{r}
+AB_files <- c("~/Documents/Data/20200910_abbababa_test/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel_ros_chi_num.w25m250.csv.gz",
+              "~/Documents/Data/20200910_abbababa_test/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel_ama_txn_num.w25m250.csv.gz")
+
+AB_tables = lapply(AB_files, read.csv)
+
+
+head(AB_tables[[1]])
+```
+```{r}
+# Convert all fd values to 0 at sites where D is negative
+for (x in 1:length(AB_tables)){
+AB_tables[[x]]$fd = ifelse(AB_tables[[x]]$D < 0, 0, AB_tables[[x]]$fd)
+}
+
+# Plot fd across the chromosome
+par(mfrow=c(length(AB_tables), 1), mar = c(4,4,1,1))
+
+for (x in 1:length(AB_tables)){
+    plot(AB_tables[[x]]$mid, AB_tables[[x]]$fd,
+    type = "l", xlim=c(0,17e6),ylim=c(0,1),ylab="Admixture Proportion",xlab="Position")
+    rect(1000000,0,1250000,1, col = rgb(0,0,0,0.2), border=NA)
+    }
+```
+
+# Get gene content per-chromosome
+
+## Gather data from Ensembl
+
+HdrR index: <https://asia.ensembl.org/Oryzias_latipes/Info/Index>
+Coding regions fasta page: <ftp://ftp.ensembl.org/pub/release-101/fasta/oryzias_latipes/cds/>
+
+From the README:
+
+*"These files hold the coding sequences corresponding to Ensembl gene predictions. CDS does not contain UTR or intronic sequence."*
+
+### Download FASTA
+
+```{bash}
+mkcd fastas_exons
+
+wget ftp://ftp.ensembl.org/pub/release-101/fasta/oryzias_latipes/cds/Oryzias_latipes.ASM223467v1.cds.all.fa.gz
+
+gunzip -k Oryzias_latipes.ASM223467v1.cds.all.fa.gz 
+
+cd ..
+
+```
+
+### Extract relevant info
+
+```{bash}
+# How many exons? 
+grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | wc -l
+# 37468
+# Confirm which info is the chromosome
+grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | cut -f3 -d" " | cut -f3 -d":" | sort | uniq
+# Yes
+# Columns 3, 4, 5, and 6 are chr, start, end, strand
+grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | cut -f3 -d" " | awk -F ":" -v OFS="\t" '{print $3, $4, $5, $6}'
+# Works.
+# Make file
+## Create header
+printf "chr\tstart\tend\tstrand\n" > stats/202010121_exon_pos.txt
+# Send stats to file
+grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | cut -f3 -d" " | awk -F ":" -v OFS="\t" '{print $3, $4, $5, $6}' >> stats/202010121_exon_pos.txt
+# Send to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/stats/202010121_exon_pos.txt ~/Documents/Data/20201012_mikk_genome 
+```
+
+## Analysis
+
+```{r}
+# Read in total chromosome lengths
+
+# Read in exon data
+exons <- readr::read_tsv("~/Documents/Data/20201012_mikk_genome/202010121_exon_pos.txt")
+```
+
+
+
+
+
+### Try `biomaRt`
+
+```{r}
+# Get lenghth of chromosomes
+chr_counts <- readr::read_tsv("~/Documents/Repositories/mikk_genome/data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt",
+                                col_names = c("chr", "length"))
+```
+
+
+```{r}
+library("biomaRt")
+listMarts()
+```
+```{r}
+# Select database and list datasets within
+ensembl_mart <- useMart("ENSEMBL_MART_ENSEMBL")
+listDatasets(ensembl_mart)
+```
+```{r}
+# Select dataset
+ensembl_olat <- useDataset("olatipes_gene_ensembl", mart = ensembl_mart)
+olat_mart = useEnsembl(biomart = "ensembl", dataset = "olatipes_gene_ensembl")
+# Get attributes of interest (exon ID, chr, start, end)
+exons <- getBM(attributes = c("chromosome_name", "ensembl_gene_id", "ensembl_transcript_id", "transcript_start", "transcript_end", "transcript_length", "ensembl_exon_id", "rank", "strand", "exon_chrom_start", "exon_chrom_end", "cds_start", "cds_end"),
+               mart = olat_mart)
+```
+
+```{r}
+# Factorise chr so it's in the right order
+chrs <- unique(exons$chromosome_name)
+auto_range <- range(as.integer(chrs), na.rm = T)
+non_auto <- chrs[is.na(as.integer(chrs))]
+chr_order <- c(seq(auto_range[1], auto_range[2]), non_auto)
+exons$chromosome_name <- factor(exons$chromosome_name, levels = chr_order)
+
+# Convert into list
+exons_lst <- split(exons, f = exons$chromosome_name)
+
+# Get mean length of exons per chromosome
+exons_lst <- lapply(exons_lst, function(chr){
+  chr <- chr %>%
+    dplyr::mutate(exon_length = (exon_chrom_end - exon_chrom_start) + 1,
+                  transcript_total_length = (transcript_end - transcript_start) + 1)
+  return(chr)
+})
+
+# Do histograms for exon length
+lapply(exons_lst, function(chr){
+  hist(chr$exon_length)
+})
+```
+
+## Get sequences to find all unique numbers
+
+```{r}
+# get total length of chr covered by exons
+exon_lengths <- lapply(exons_lst, function(chr){
+  # create list of start pos to end pos sequences for each exon
+  out_list <- apply(chr, 1, function(exon) {
+    seq(exon[["exon_chrom_start"]], exon[["exon_chrom_end"]])
+  })
+  # combine list of vectors into single vector and get only unique numbers
+  out_vec <- unique(unlist(out_list))
+  # get length of out_vec and put it into data frame
+  out_final <- data.frame("exon_cov" = length(out_vec))
+  return(out_final)
+})
+
+# combine into single DF
+exons_len_df <- dplyr::bind_rows(exon_lengths, .id = "chr") %>% 
+  dplyr::filter(chr != "MT") %>% 
+  dplyr::mutate(chr = as.integer(chr))
+
+# join with chr_counts and get proportion of chr covered by exons
+chr_stats <- dplyr::left_join(chr_counts, exons_len_df, by = "chr") %>% 
+  dplyr::mutate(prop_cov_exon = exon_cov / length)
+# convert chr to factor for plotting
+chr_stats$chr <- factor(chr_stats$chr)
+```
+
+## Plot
+
+```{r}
+chr_stats %>% 
+  ggplot() +
+    geom_col(aes(chr, prop_cov_exon, fill = chr)) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
+    guides(fill = F) +
+    xlab("Chromosome") +
+    ylab("Proportion of chromosome covered by exons")
+```
+```{r}
+ggsave(filename = paste("20201012_exon_props", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24.125,
+       height = 12.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Compare to LD scores
+
+### Read in LD data
+
+```{r}
+data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200727_mean_r2_10kb-lim_mikk/",
+                         full.names = T)
+data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200727_mean_r2_10kb-lim_mikk")
+data_files_trunc <- gsub(".txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  #names(df) <- c("chr", "snp_1", "snp_2", "count", "r2")
+  return(df)
+})
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+
+# bind into DF
+r2_df_1kb_mikk <- dplyr::bind_rows(data_list, .id = "chr")
+r2_df_1kb_mikk$chr <- factor(r2_df_1kb_mikk$chr, levels = seq(1, 24))
+
+# get kb measure
+r2_df_1kb_mikk$bin_bdr_kb <- r2_df_1kb_mikk$bin_bdr / 1000
+```
+
+### Plot
+
+```{r}
+r2_df_1kb_mikk %>% ggplot() +
+  geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance between SNPs (kb)") +
+  ylab(bquote(.("Mean r")^2)) +
+  facet_wrap(~chr, nrow = 4, ncol = 6) +
+  theme(panel.grid = element_blank()) +
+  labs(colour = "Chromosome") +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+```
+```{r}
+ggsave(filename = paste("20201012_ld_decay_facets", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 30,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+### Get start and mean LD
+
+```{r}
+# Get mean LD decay for distance window of 0-100 bp
+ld_100bp <- r2_df_1kb_mikk %>% 
+  dplyr::filter(bin_bdr == 0) %>% 
+  dplyr::select(chr, first_bin_mean = mean)
+
+# Get mean LD across each chromosome
+ld_mean <- r2_df_1kb_mikk %>% 
+  dplyr::group_by(chr) %>% 
+  dplyr::summarise(total_mean = mean(mean))
+```
+
+### Bind with exon props DF
+
+```{r}
+final_df <- chr_stats %>% 
+  dplyr::left_join(ld_100bp, by = "chr") %>% 
+  dplyr::left_join(ld_mean, by = "chr")
+```
+
+### Plot
+
+#### Mean LD by exon coverage
+
+```{r}
+ggplot(final_df, aes(prop_cov_exon, total_mean, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  guides(colour = F) +
+  ylab("Mean LD decay across all distance windows") +
+  xlab("Proportion of chromosome covered by exons")
+```
+```{r}
+ggsave(filename = paste("20201012_exons_v_meanld", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+#### LD of first window by exon coverage
+
+```{r}
+ggplot(final_df, aes(prop_cov_exon, first_bin_mean, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  guides(colour = F) +
+  ylab("Mean r2 for SNPs 0 to 100 bp apart") +
+  xlab("Proportion of chromosome covered by exons")
+```
+```{r}
+ggsave(filename = paste("20201012_exons_v_firstwindowld", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+Could it be due to differences in the length of introns? 
+
+```{r}
+# Split exon_lst by transcript 
+ex_to_trans <- lapply(exons_lst, function(chr){
+  # split by transcript
+  ts_lst <- split(chr, f = chr$ensembl_transcript_id)
+  # check whether all transcript lengths are the same
+  #all(unlist(lapply(ts_lst, function(x){
+  #  length(unique(x$transcript_length)) == 1
+  #})))
+  # Create DF with exon and total transcript length
+  ts_df <- lapply(ts_lst, function(x){
+    out_df <- data.frame("transcript_length" = unique(x$transcript_length),
+                         "total_exon_length" = sum(x$exon_length),
+                         "transcript_total_length" = unique(x$transcript_total_length))
+    # get proportion of transcript length to transcript total length
+    out_df <- out_df %>% 
+      dplyr::mutate(ratio_exon_to_transcript = transcript_length / transcript_total_length )
+    return(out_df)
+  })
+  # bind DFs
+  ts_df <- dplyr::bind_rows(ts_df, .id = "ensembl_transcript_id")
+  # take transcript length
+  return(ts_df)
+})
+
+# Bind into single df
+ex_to_trans_df <- dplyr::bind_rows(ex_to_trans, .id = "chr")
+
+# Factor
+ex_to_trans_df$chr <- factor(ex_to_trans_df$chr, levels = seq(1, 24))
+```
+
+Plot
+```{r}
+ggplot(ex_to_trans_df) +
+  geom_boxplot(aes(chr, ratio_exon_to_transcript, fill = chr)) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  guides(fill = F) +
+  xlab("Chromosome") +
+  ylab("Total length of exon sequences\n / total transcript length (end_pos - start_pos)")
+  
+```
+```{r}
+ggsave(filename = paste("20201012_exon_to_transcript", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24.125,
+       height = 12.5,
+       units = "cm",
+       dpi = 500)
+```
+
+### Get median and plot against LD
+
+```{r}
+ex_to_trans_med <- ex_to_trans_df %>% 
+  dplyr::group_by(chr) %>% 
+  dplyr::summarise(med_ex_to_trans = median(ratio_exon_to_transcript))
+
+# sanity check
+ggplot(ex_to_trans_med) + 
+  geom_col(aes(chr, med_ex_to_trans, fill = chr))
+
+# bind to chr_stats
+final_df <- dplyr::left_join(final_df, med_ex_to_trans, by  = "chr")
+```
+
+Plot
+```{r}
+ggplot(final_df, aes(med_ex_to_trans, first_bin_mean, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  guides(colour = F) +
+  xlab("Median ratio of exon to total transcript") +  
+  ylab("Mean r2 for SNPs 0 to 100 bp apart")
+
+```
+Get correlations
+```{r}
+# Mean r^2 across all windows vs proportion of exon coverage
+cor.test(final_df$total_mean, final_df$prop_cov_exon, method = "spearman")
+# Mean r^2 between SNPs 1 to 100bp apart vs proportion of exon coverage
+cor.test(final_df$total_mean, final_df$prop_cov_exon, method = "spearman")
+# Mean r^2 across all windows vs median exon-to-transcript 
+cor.test(final_df$total_mean, final_df$med_ex_to_trans, method = "spearman")
+```
+
+## Total number of SNPs or comparisons? 
+
+```{bash}
+# How many comparisons?
+wc -l ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld
+```
+
+   35849304 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/10.ld
+   33628705 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/11.ld
+   20296544 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/12.ld
+   31234421 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/13.ld
+   24737777 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/14.ld
+   24107349 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/15.ld
+   33794836 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/16.ld
+   32416583 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/17.ld
+   88536268 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/18.ld
+   31803630 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/19.ld
+   54768157 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/1.ld
+   25460469 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/20.ld
+   29680373 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/21.ld
+   17837411 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/22.ld
+   20639723 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/23.ld
+   26408595 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/24.ld
+   83028231 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/2.ld
+   35789791 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/3.ld
+   26365446 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/4.ld
+   22387640 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/5.ld
+   22042719 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/6.ld
+   34370140 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/7.ld
+   34606016 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/8.ld
+   34432214 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/9.ld
+  824222342 total
+  
+```{bash}
+# How many SNPs? 
+## Total
+wc -l plink/20200727_mikk_no-missing_maf-0.05/20200727.bim 
+# 4357116
+## Per chr
+cut -f1 plink/20200727_mikk_no-missing_maf-0.05/20200727.bim | sort | uniq -c
+```
+  
+ 252083 1
+ 193656 10
+ 172997 11
+ 151599 12
+ 195023 13
+ 163803 14
+ 164476 15
+ 197105 16
+ 195097 17
+ 263572 18
+ 153555 19
+ 245984 2
+ 146468 20
+ 174783 21
+ 138303 22
+ 132032 23
+ 137189 24
+ 207470 3
+ 174023 4
+ 174974 5
+ 164055 6
+ 196475 7
+ 169951 8
+ 192404 9
+ 
+# Get reverse strand segments
+
+```{bash}
+# OLD
+# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments 
+for i in $(find emfs/segmented/*/*_1.data.txt ); do
+  # make new directory
+  chr_file=$(echo $i | cut -f3 -d"/" );
+  new_path=$(echo emfs/cleaned/$chr_file );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi  
+  # create name for new file
+  bname=$(echo $i | sed 's/.data.txt//g' );
+  bname_short=$(basename $bname );
+  bsub \
+    -M 10000 \
+    -o log/20200925_$chr_file\_$bname_short.out \
+    -e log/20200925_$chr_file\_$bname_short.err \
+    "Rscript --vanilla mikk_genome/code/scripts/20200908_add-hdrr-coords-to-emf-data.R $bname $new_path";
+done
+
+```
+
+## Get sequences for reverse complements
+
+```{bash}
+# First flip files
+for i in $( find emfs/segmented/*/*_-1.data.txt ) ; do
+  dir_out=$( dirname $i );
+  bname=$( basename $i | cut -f1,2,3 -d"_" ); 
+  file_out=$dir_out/$bname\_1_rc.data.txt;
+  bsub \
+    -M 10000 \
+    -o log/20201015_reverse_$bname.out \
+    -e log/20201015_reverse_$bname.err \
+    "tac $i > $file_out";
+done    
+  
+# Then clean
+for i in $( find emfs/segmented/*/*rc.data.txt ); do
+  # make new directory
+  chr_file=$( echo $i | cut -f3 -d"/" );
+  new_path=$( echo emfs/cleaned/$chr_file );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi  
+  # create name for new file
+  bname=$( echo $i | sed 's/_1_rc.data.txt//g' );
+  bname_short=$( basename $bname );
+  script=mikk_genome/code/scripts/20201015_add-hdrr-coords-to-emf-data_rc.R ;
+  bsub \
+    -M 10000 \
+    -o log/20201015_$chr_file\_$bname_short.out \
+    -e log/20201015_$chr_file\_$bname_short.err \
+    "Rscript --vanilla $script $bname $new_path";
+done
+
+# Other than 17_1, only failed on this: 24_2/24_16480574_16481928
+
+# Consolidate 
+mkdir emfs/consolidated_with_rc
+
+# run for each sub-chr (e.g. 10_1, 10_2)
+
+for i in $(find emfs/cleaned/* -type d ); do
+  # get chromosome
+  chr=$(echo $i | cut -f3 -d"/" ) ;
+  # set script
+  script=mikk_genome/code/scripts/20201015_consolidate_chr_dat.R ;
+  # set output directory
+  out_dir=emfs/consolidated_with_rc ;
+  # consolidate into one file
+  bsub \
+    -M 30000 \
+    -o log/20201015_consol_$chr.out \
+    -e log/20201015_consol_$chr.err \
+    "Rscript --vanilla $script $i $out_dir/$chr.txt " ; 
+done  
+
+# combine for each chr
+mkdir emfs/final_with_rc
+
+for i in $(find emfs/consolidated_with_rc/* | cut -f3 -d"/" | cut -f1 -d"_" | sort | uniq ); do
+  script=mikk_genome/code/scripts/20201015_consolidate_chr_files.R ;
+  in_dir=emfs/consolidated_with_rc ;
+  out_dir=emfs/final_with_rc ;
+  bsub \
+    -M 50000 \
+    -o log/20201019_full_chr_$i.out \
+    -e log/20201019_full_chr_$i.err \
+    "Rscript --vanilla $script $i $in_dir $out_dir ";
+done
+
+# combine full, A and B MAF datasets
+mkdir maf/20201015_split-by-chr_all
+
+for i in $(seq 1 24 ); do
+  printf "chr_pos\tchr\tpos\tref\talt\tmikk\tmikk_a\tmikk_b\n" \
+    > maf/20201015_split-by-chr_all/$i.txt ;
+  cut -f6 maf/20200915_split-by-chr_1/$i.txt > tmpa.txt ;
+  cut -f6 maf/20200915_split-by-chr_2/$i.txt > tmpb.txt ;
+  paste maf/20200910_split-by-chr/$i.txt \
+        tmpa.txt \
+        tmpb.txt \
+          >> maf/20201015_split-by-chr_all/$i.txt ;
+  rm tmpa.txt tmpb.txt;        
+done
+
+# bind MAF and EMF datasets
+mkdir abba_baba_mikk/20201015_freq_tables
+
+for i in $( seq 1 24 ); do
+  dat_file=$( echo emfs/final_with_rc/$i.txt ) ;
+  af_file=$( echo maf/20201015_split-by-chr_all/$i.txt ) ;
+  dir_out=abba_baba_mikk/20201015_freq_tables ;
+  script=mikk_genome/code/scripts/20201017_combine_final_and_af_data.R ;
+  bsub \
+    -M 30000 \
+    -o log/20201017_frq_tbl_$i.out \
+    -e log/20201017_frq_tbl_$i.err \
+    "Rscript --vanilla $script $i $dat_file $af_file $dir_out " ;
+done
+```
+
+# Investigate ABBA BABA for 131-1
+ 
+## Split original VCF by individual and sub-populations
+ 
+```{bash}
+# split by individuals, take non-missing, biallelic SNPs, and add AF all at once
+mkdir vcfs/20201014_indiv-split_non-missing_biallelic-snps
+
+for i in $(bcftools query -l vcfs/full-run_line-ids.vcf.gz ); do
+  input_vcf=vcfs/full-run_line-ids.vcf.gz  \
+  output_dir=vcfs/20201014_indiv-split_non-missing_biallelic-snps \
+  bsub \
+    -o log/20201014_indiv_split_$i.out \
+    -e log/20201014_indiv_split_$i.err \
+    "bcftools view \
+      --samples $i \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$i.vcf.gz \
+              -- \
+              --tags AF";
+done
+
+# Do again for sub-populations
+mkdir vcfs/20201014_subpops_non-missing_biallelic-snps
+
+output_dir=vcfs/20201014_subpops_non-missing_biallelic-snps
+
+## KW (wild Kiyosu)
+pop_name=kiyosu_wild
+
+bcftools view \
+      --samples KW_1,KW_2,KW_3,KW_4,KW_5,KW_6,KW_7 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name.vcf.gz \
+              -- \
+              --tags AF
+
+## iCab
+pop_name=icab
+
+bcftools view \
+      --samples iCab_F24,iCab_2F2,iCab_HD,iCab_F25 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name.vcf.gz \
+              -- \
+              --tags AF
+              
+## HO5
+pop_name=ho5
+
+bcftools view \
+      --samples Ho5_1,Ho5_2 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name.vcf.gz \
+              -- \
+              --tags AF
+```
+
+## Get allele frequencies
+
+### For individuals
+
+```{bash}
+# For individuals
+mkdir maf/20201014_indiv_split
+
+for i in $( find vcfs/20201014_indiv-split_non-missing_biallelic-snps/* ); do
+  name=$( basename $i | cut -f1 -d"." );
+  output_dir=maf/20201014_indiv_split;
+  bsub \
+    -o log/20201014_get_maf_$i.out \
+    -e log/20201014_get_maf_$i.err \
+  "bcftools query \
+    --format '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AF\n' \
+    --output-file $output_dir/$name.txt \
+    $i";
+done
+
+# Run R script over them to add chr_pos column, and pop_a and pop_b AF columns
+mkdir maf/20201014_indiv_split_with_ab
+
+for i in $( find maf/20201014_indiv_split/* ); do
+  sample=$( basename $i | cut -f1 -d"." );
+  script=mikk_genome/code/scripts/20201014_tidy_indiv_maf_files.R ;  
+  file_in=$i ;
+  file_out=maf/20201014_indiv_split_with_ab/$sample.txt ;
+  bsub \
+    -M 20000 \
+    -o log/20201014_tidy_maf_$sample.out \
+    -e log/20201014_tidy_maf_$sample.err \
+  "Rscript --vanilla $script $file_in $file_out ";
+done
+
+```
+
+### For sub-populations
+
+```{bash}
+input_vcf=vcfs/full-run_line-ids.vcf.gz
+output_dir=vcfs/20201014_subpops_non-missing_biallelic-snps
+
+# KW (wild Kiyosu)
+pop_name=kiyosu_wild
+## KW_a
+bcftools view \
+      --samples KW_1,KW_2,KW_3,KW_4 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name\_a.vcf.gz \
+              -- \
+              --tags AF
+              
+## KW_b
+bcftools view \
+      --samples KW_5,KW_6,KW_7 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name\_b.vcf.gz \
+              -- \
+              --tags AF
+              
+# iCab
+pop_name=icab
+## a
+bcftools view \
+      --samples iCab_F24,iCab_2F2 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name\_a.vcf.gz \
+              -- \
+              --tags AF
+              
+## b
+bcftools view \
+      --samples iCab_HD,iCab_F25 \
+      --output-type u \
+      $input_vcf | \
+        bcftools view \
+          --min-alleles 2 \
+          --max-alleles 2 \
+          --types snps \
+          --genotype ^miss \
+          --output-type u | \
+            bcftools +fill-tags \
+              --output-type z \
+              --output $output_dir/$pop_name\_b.vcf.gz \
+              -- \
+              --tags AF
+              
+# HO5
+pop_name=ho5
+## Just copy over the individual ones
+cp vcfs/20201014_indiv-split_non-missing_biallelic-snps/Ho5_1.vcf.gz $output_dir/$pop_name\_a.vcf.gz
+
+cp vcfs/20201014_indiv-split_non-missing_biallelic-snps/Ho5_2.vcf.gz $output_dir/$pop_name\_b.vcf.gz
+
+# Create MAF tables
+mkdir maf/20201015_subpops
+
+for i in $( find vcfs/20201014_subpops_non-missing_biallelic-snps/* ); do
+  name=$( basename $i | cut -f1 -d"." );
+  output_dir=maf/20201015_subpops;
+  bsub \
+    -o log/20201015_get_maf_$name.out \
+    -e log/20201015_get_maf_$name.err \
+  "bcftools query \
+    --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT\t%INFO/AF\n' \
+    --output-file $output_dir/$name.txt \
+    $i";
+done
+
+# Split by chr
+mkdir maf/20201017_subpops_split-by-chr
+
+for i in $( find maf/20201015_subpops/* ) ; do
+  pop_name=$( basename $i | sed 's/.txt//g' ) ; 
+  new_path=maf/20201017_subpops_split-by-chr/$pop_name ;
+  if [ ! -d "$new_path" ] ; then
+    mkdir $new_path ;
+  fi ;    
+  for j in $(cut -f2 $i | sort | uniq ) ; do
+    awk "\$2 == $j" $i \
+    > $new_path/$j.txt ;
+  done ;
+done 
+
+
+```
+
+## Bind subpops and ONT MIKK samples to final
+
+ONT samples (n = 9): `mikk_genome/data/20201017_ont_stable_samples.txt`
+
+4_1
+4_2
+7_2
+11_1
+69_1
+79_2
+80_1
+117_2
+134_1
+
+### Combine EMF, ONT samples, and sub-popns
+
+```{bash}
+# Split ONT samples by chr
+mkdir maf/20201014_indiv_split_with_ab_split-by-chr
+
+cat mikk_genome/data/20201017_ont_samples.txt
+
+for i in $( echo  7_1 131_1 134_2 ) ; do
+  input_file=maf/20201014_indiv_split_with_ab/$i.txt ;
+  new_path=maf/20201014_indiv_split_with_ab_split-by-chr/$i ;
+  if [ ! -d "$new_path" ] ; then
+    mkdir $new_path ;
+  fi ;    
+  for j in $(cut -f2 $input_file | sort | uniq ) ; do
+    awk "\$2 == $j" $input_file \
+      > $new_path/$j.txt ;
+  done ;
+done 
+
+# Combine ONT samples
+mkdir maf/20201017_ont_samples_split-by-chr
+
+for i in $( seq 1 24 ) ; do
+  chr=$i ;
+  in_dir=maf/20201014_indiv_split_with_ab_split-by-chr ;
+  out_dir=maf/20201017_ont_samples_split-by-chr ;
+  script=mikk_genome/code/scripts/20201017_combine_ont_sample_mafs.R ;
+  bsub \
+    -M 30000 \
+    -o log/20201019_combine-ont_$chr.out \
+    -e log/20201019_combine-ont_$chr.err \
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+done
+
+# Combine subpop files
+mkdir maf/20201017_subpops_split-by-chr_all
+
+for i in $( seq 1 24 ) ; do
+  chr=$i ;
+  in_dir=maf/20201017_subpops_split-by-chr ;
+  out_dir=maf/20201017_subpops_split-by-chr_all ;
+  script=mikk_genome/code/scripts/20201017_combine_subpop_sample_mafs.R ;
+  bsub \
+    -M 30000 \
+    -o log/20201019_combine-subp_$chr.out \
+    -e log/20201019_combine-subp_$chr.err \
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+done
+  
+
+# Combine MIKK total, ONT, and subpop MAF tables
+mkdir maf/20201019_all
+
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201017_combine_final_and_af_data.R ;
+  chr=$i ;
+  in_file_mik=maf/20201015_split-by-chr_all/$chr.txt ;
+  in_file_sub=maf/20201017_subpops_split-by-chr_all/$chr.txt ;
+  in_file_ont=maf/20201017_ont_samples_split-by-chr/$chr.txt ;
+  in_file_emf=emfs/final_with_rc/$chr.txt ;
+  out_dir=maf/20201019_all ;
+  bsub \
+    -M 50000 \
+    -o log/20201020_frq_tbl_$i.out \
+    -e log/20201020_frq_tbl_$i.err \
+    "Rscript --vanilla $script $chr $in_file_mik $in_file_sub $in_file_ont $in_file_emf $out_dir " ;
+done
+
+# Create dir for final output
+mkdir abba_baba_mikk/20201020_freq_tables
+```
+
+Combine chr files into single file - *run directly on cluster*
+
+```{r}
+files <- list.files("maf/20201019_all",
+                    pattern = "[0-9]",
+                    full.names = T)
+# read in data
+dat_list <- lapply(files, function(x){
+  # read in data
+  df <- read.table(x,
+                   header = T,
+                   sep = "\t",
+                   as.is = T,
+                   check.names = F)
+  return(df)
+})
+
+# bind together and sort
+final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+# write table
+write.table(final_df, "abba_baba_mikk/20201020_freq_tables/all.txt", quote = F, sep = "\t", row.names = F)
+```
+
+### Run ABBA BABA
+
+```{bash}
+# Run ABBA BABA
+mkdir abba_baba_mikk/20201020_rlists
+
+# get string of samples
+ont_samples=$( cat mikk_genome/data/20201019_ont_samples.txt | tr "\n" " ")
+
+for i in $( echo melastigma javanicus ); do
+  for j in $( echo hdrr hni hsok ho5 icab kiyosu_wild mikk ); do
+    for k in $( echo mikk ho5 icab kiyosu_wild $ont_samples ) ; do
+      # don't run if they are the same
+      if [ $j != $k ] ; then
+        script=mikk_genome/code/scripts/20201020_run_abbababa.R ;
+        p1=$i ;
+        p2=$j ;
+        p3=$k ;
+        dat_file=$( echo abba_baba_mikk/20201020_freq_tables/all.txt ) ;
+        dir_out=$( echo abba_baba_mikk/20201020_rlists ) ;
+        bsub \
+          -M 30000 \
+          -o log/20201020_abbababa_$p1\_$p2\_$p3.out \
+          -e log/20201020_abbababa_$p1\_$p2\_$p3.err \
+          "Rscript --vanilla $script $p1 $p2 $p3 $dat_file $dir_out "
+      fi ;
+    done ;  
+  done ;
+done
+
+```
+
+### Combine into one list *directly on cluster*
+
+```{r}
+library(tidyverse)
+
+# get list of target files
+files <- list.files("abba_baba_mikk/20201020_rlists",
+                    full.names = T)
+
+# read into one list
+final_lst = lapply(files, readRDS)
+
+# Reduce down to DF
+final_df <- lapply(final_lst, function(file){
+  # Get D stats
+  g_wide_d <- file[["Genome-wide D"]][["D statistic"]]
+  per_chr_d <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["D statistic"]])
+  # Get Z scores
+  g_wide_z <- file[["Genome-wide D"]][["Z score"]]
+  per_chr_z <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["Z score"]])
+  # Get admixture
+  admix_f <- file[["Admixture"]][["f statistic"]]
+  per_chr_f <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["Admixture"]][["f statistic"]])
+  # Get confidence intervals
+  g_wide_ci_lower <- file[["Admixture"]][["Confidence interval"]][["lower"]]
+  g_wide_ci_upper <- file[["Admixture"]][["Confidence interval"]][["upper"]]
+  per_chr_ci_lower <- sapply(file[["Per-chromosome"]],
+                             function(x) x[["Admixture"]][["Confidence interval"]][["lower"]])
+  per_chr_ci_upper <- sapply(file[["Per-chromosome"]],
+                             function(x) x[["Admixture"]][["Confidence interval"]][["upper"]])
+
+  # Create data frame
+  df_out <- data.frame("p1" = file[["Populations"]][["P1"]],
+                       "p2" = file[["Populations"]][["P2"]],
+                       "p3" = file[["Populations"]][["P3"]],
+                       "chr" = c("all", names(per_chr_d)),
+                       "d_stat" = c(g_wide_d, per_chr_d),
+                       "z_score" = c(g_wide_z, per_chr_z),
+                       "admix_f" = c(admix_f, per_chr_f),
+                       "f_ci_lower" = c(g_wide_ci_lower, per_chr_ci_lower),
+                       "f_ci_upper" = c(g_wide_ci_upper, per_chr_ci_upper),
+                       stringsAsFactors = F)
+  return(df_out)
+}) %>% 
+  dplyr::bind_rows()
+
+# capitalise species / line names / colnames
+rename_vec = c("HdrR", "HNI", "HO5", "HSOK", "iCab", "KW", "MIKK")
+names(rename_vec) = c("hdrr", "hni", "ho5", "hsok", "icab", "kiyosu_wild", "mikk")
+
+final_df = final_df %>% 
+  dplyr::mutate(dplyr::across(c("p2", "p3"),
+                              ~dplyr::recode(.x, !!!rename_vec)))
+
+colnames(final_df) = dplyr::recode(colnames(final_df),
+                                   p1 = "P1",
+                                   p2 = "P2",
+                                   p3 = "P3")
+
+# save
+write.table(final_df, "mikk_genome/data/20201020_abbababa_final.txt",
+            quote = F, sep = "\t", row.names = F)
+```
+
+# Plot final
+
+## Read in data
+
+```{r}
+# Read in data
+final_df <- read.table(here("data", "20201020_abbababa_final.txt"),
+                       header = T,
+                       sep = "\t",
+                       as.is = T)
+
+# Set colours
+cols <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#08605F", "#002642", "#B02156")
+names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", "iCab")
+
+# Factorise chr, P1 and P2 to get them in the right order
+chr_order <- c(seq(1,24), "all")
+fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
+
+final_df <- final_df %>% 
+  dplyr::mutate(across(P2,
+                       ~factor(.x, levels = fish_order))) %>% 
+  dplyr::mutate(chr = factor(chr, levels = chr_order))
+
+```
+
+**NOTE**: There are 142 rows with an `admix_f` value over 1? 
+
+* All chromosomes when MIKK(P3) -> KW(P2) except 9,10,12,17,20
+* 131_1(P3) is a main offender, especially when with MIKK(P2) or KW(P2), but also with all other strains. * 131_1(P3) chr 23 has huge scores (2:12)
+
+```{r}
+final_df %>% 
+  dplyr::filter(admix_f > 1) %>% 
+  dplyr::count(P2, P3)
+
+```
+## Create DF with mean `melastigma` and `javanicus`
+
+```{r}
+cor_df <- final_df %>% 
+  # filter for when P1 is another Oryzias, and P2 
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>% 
+  # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+  tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                     names_from = P1,
+                     values_from = c(admix_f, f_ci_lower, f_ci_upper))
+
+cor_df$chr <- as.character(cor_df$chr)
+cor_df$chr <- ifelse(cor_df$chr == "all", "genome-wide", cor_df$chr)
+chr_order_plot <- c(seq(1,24), "genome-wide")
+cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
+
+cor_df_means <- cor_df %>%
+  # apply across rows
+  dplyr::rowwise() %>% 
+  # get means for f and CIs
+  dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
+                mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
+  # set stats at a maximum of 1
+  dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
+                       ~dplyr::if_else(.x > 1,
+                                       1,
+                                       .x)))
+```
+
+## Plot
+
+```{r}
+cor_df_means %>% 
+  ggplot(aes(P2, mean_f, fill = P2)) +
+    geom_col() +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +  
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylim(0,1) +
+    ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+    theme_bw(base_size = 8) +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+```{r}
+ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Redo figure for paper
+
+```{r}
+cor_df_means %>% 
+  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>% 
+  ggplot(aes(P2, mean_f, fill = P2)) +
+    geom_col() +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +  
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylim(0,1) +
+    ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+
+```{r}
+ggsave(filename = paste("20201020_f_stat_by_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Do the same for each of the ONT samples
+
+```{r}
+# get vector of ONT samples
+ont_samples <- read.table(here("data", "20201019_ont_samples.txt"))[, 1]
+# plot separate panel for each of the ONT samples
+lapply(ont_samples, function(x){
+  # create DF
+  cor_df <- final_df %>% 
+    # filter for when P1 is another Oryzias, and P2 
+    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>% 
+    # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+    tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                       names_from = P1,
+                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>% 
+    # apply across rows
+    dplyr::rowwise() %>% 
+    # get means for f and CIs
+    dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
+                  mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                  mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma)))
+    # set stats at a maximum of 1
+    # dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
+    #                      ~dplyr::if_else(.x > 1,
+    #                                      1,
+    #                                      .x)))
+    # Create plot
+    out_plot <- cor_df %>% 
+      ggplot(aes(P2, mean_f, fill = P2)) +
+        geom_col() +
+        geom_errorbar(aes(ymin = mean_ci_lower,
+                          ymax = mean_ci_upper),
+                      position = position_dodge(0.9),
+                      width = 0.25) +  
+        guides(fill = F) +
+        facet_wrap(~chr) +
+        #ylim(0,1) +
+        ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+        theme_bw() +
+        theme(panel.grid = element_blank()) +
+        scale_fill_manual(values = cols) +
+        ggtitle(x)
+    # Save 
+    ggsave(filename = paste("20201020_", x, ".png", sep = ""),
+           device = "png",
+           path = "~/Documents/Docs/medaka pics/20200921_introgression/20201020_ont_samples/",
+           width = 24.75,
+           height = 19.5,
+           units = "cm",
+           dpi = 500)    
+})
+```
+
+# Run sliding windows ABBA BABA on MIKK
+
+## Convert VCF to genotype format
+
+```{bash}
+mkdir geno
+
+# Pull out genotypes
+bcftools view \
+  --min-alleles 2 \
+  --max-alleles 2 \
+  --types snps \
+  --output-type u \
+  vcfs/full-run_line-ids.vcf |\
+    bcftools query \
+      --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT[\t%TGT]\n' \
+      --output geno/20201020_full_vcf.geno
+## replace all . with N
+sed 's/\./N/g' geno/20201020_full_vcf.geno > geno/20201021_full_vcf_bcftools.geno
+      
+# use Simon Martin's parseVCF.py script
+python abbababba_tutorial/genomics_general-master/VCF_processing/parseVCF.py \
+  -i vcfs/full-run_line-ids.vcf \
+  --skipIndels \
+  --minQual 30 \
+    > geno/20201021_full_vcf.geno
+# Doesn't remove indels.  
+      
+# Split by chr
+mkdir geno/20201021_full_vcf_bcftools_split-by-chr
+
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201021_split_geno_by_chr.R ;
+  chr=$i ;
+  in_file=geno/20201021_full_vcf_bcftools.geno ;
+  out_file=geno/20201021_full_vcf_bcftools_split-by-chr/$chr.geno ;
+  bsub \
+    -M 50000 \
+    -o log/20201021_split_geno_by_chr_$i.out \
+    -e log/20201021_split_geno_by_chr_$i.err \
+    "Rscript --vanilla $script $chr $in_file $out_file " ; 
+done 
+
+```
+
+## Convert EMF files to `.geno` format and bind to VCF geno
+
+```{bash}
+mkdir geno/20201021_final
+
+# make samples file
+bcftools query -l vcfs/full-run_line-ids.vcf \
+  > mikk_genome/data/20201021_full-run_line-ids_samples.txt
+
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201021_emf_to_geno.R ;
+  chr=$i ;
+  emf_in_file=emfs/final_with_rc/$chr.txt ;
+  vcf_gen_file=geno/20201021_full_vcf_bcftools_split-by-chr/$chr.geno ;
+  vcf_samples=mikk_genome/data/20201021_full-run_line-ids_samples.txt ;
+  out_file=geno/20201021_final/$chr.txt ;
+  bsub \
+    -M 50000 \
+    -o log/20201021_create_final_geno_$chr.out \
+    -e log/20201021_create_final_geno_$chr.err \
+    "Rscript --vanilla $script $emf_in_file $vcf_gen_file $vcf_samples $out_file " ;
+done 
+
+# make no-sibs version
+mkdir geno/20201022_final_no-sibs/
+
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201022_remove_sibs.R ;
+  chr=$i ;
+  in_file=geno/20201021_final/$chr.txt ;
+  sibs_file=mikk_genome/data/20200227_panel_lines_excluded.txt ;
+  out_file=geno/20201022_final_no-sibs/$chr.txt ;
+  bsub \
+    -M 20000 \
+    -o log/20201022_tidy_geno_$chr.out \
+    -e log/20201022_tidy_geno_$chr.err \
+    "Rscript --vanilla $script $in_file $sibs_file $out_file " ;
+done 
+```
+
+Combine into single file
+
+```{r}
+files <- list.files("geno/20201021_final",
+                    pattern = "[0-9]",
+                    full.names = T)
+# read in data
+dat_list <- lapply(files, function(x){
+  # read in data
+  df <- read.table(x,
+                   header = T,
+                   sep = "\t",
+                   as.is = T,
+                   comment.char = "*",
+                   check.names = F)
+  return(df)
+})
+
+# bind together and sort
+final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
+  dplyr::arrange("#CHROM", "POS") # sort by chromosome, then position
+
+# write table
+write.table(final_df, "geno/20201021_final/all.txt", 
+            quote = F, 
+            sep = "\t", 
+            row.names = F)
+
+# create a no-sibs version
+## create vector of siblines to be excluded
+excl_sibs = scan("mikk_genome/data/20200227_panel_lines_excluded.txt", character())
+## remove columns from final_df
+final_df_nosibs = final_df %>% 
+  dplyr::select(-all_of(excl_sibs))
+## write table
+write.table(final_df_nosibs, "geno/20201021_final/all_nosibs.txt",
+            quote = F, 
+            sep = "\t", 
+            row.names = F)
+```
+
+
+## Make `pop.txt` file *directly on cluster*
+
+```{r}
+emf_samples = c("hdrr", "hni", "hsok", "javanicus", "melastigma", "ancestor")
+vcf_samples = scan("mikk_genome/data/20201021_full-run_line-ids_samples.txt", character())
+
+pop_out = data.frame("samples" = c(emf_samples, vcf_samples),stringsAsFactors = F)
+
+pop_out$population = ifelse(pop_out$samples %in% emf_samples,
+                            pop_out$samples,
+                            ifelse(grepl("iCab", pop_out$samples),
+                                   "icab",
+                                   ifelse(grepl("Ho5", pop_out$samples),
+                                          "ho5",
+                                          ifelse(grepl("KW", pop_out$samples),
+                                                 "kiyosu_wild",
+                                                 "mikk"))))
+
+write.table(pop_out, 
+            "mikk_genome/data/20201021_abba.pop.txt",
+            quote = F, sep = "\t", row.names = F, col.names = F)
+```
+
+## Run ABBA BABA in sliding windows
+
+```{bash}
+mkdir abba_baba_mikk/20201022_sliding_windows
+
+# TEST
+python abbababba_tutorial/genomics_general-master/ABBABABAwindows.py \
+  -g geno/20201022_final_no-sibs/1.txt \
+  -f phased \
+  -o abba_baba_mikk/20201022_sliding_windows/1.txt \
+  -P1 melastigma \
+  -P2 hsok \
+  -P3 mikk \
+  -O ancestor \
+  --popsFile mikk_genome/data/20201022_abba_nosibs.pop.txt \
+  -w 25000 \
+  -m 250 
+# Works!
+
+
+
+# TRUE
+for i in $( echo melastigma javanicus ) ; do
+  for j in $( echo hdrr hni hsok ) ; do
+    for k in $( seq 1 24 ) ; do
+      script=abbababba_tutorial/genomics_general-master/ABBABABAwindows.py
+      p1=$i ;
+      p2=$j ;
+      chr=$k ;
+      popsfile=mikk_genome/data/20201022_abba_nosibs.pop.txt ;
+      bsub \
+        -M 20000 \
+        -o log/20201022_abba_sliding_$p1\_$p2\_$chr.out \
+        -e log/20201022_abba_sliding_$p1\_$p2\_$chr.err \
+        "python $script \
+          -g geno/20201022_final_no-sibs/$chr.txt \
+          -f phased \
+          -o abba_baba_mikk/20201022_sliding_windows/$p1\_$p2\_$chr.txt \
+          -P1 $p1 \
+          -P2 $p2 \
+          -P3 mikk \
+          -O ancestor \
+          --popsFile $popsfile \
+          -w 25000 \
+          -m 250"      
+    done ;
+  done ;
+done
+```
+
+## Combine *directly on cluster*
+
+```{r}
+library(tidyverse)
+# get full paths of target files
+files = list.files("abba_baba_mikk/20201022_sliding_windows",
+                   full.names = T)
+
+basename(files) %>% 
+  stringr::str_split("_", simplify = T)
+  
+
+# read in files
+df = lapply(files, function(x){
+  # read in data
+  out_df = read.csv(x)
+  # get populations
+  split_name = basename(x) %>% 
+    stringr::str_split("_", simplify = T)
+  p1 = split_name[, 1]
+  p2 = split_name[, 2]
+  # add to data
+  out_df$p1 = p1
+  out_df$p2 = p2
+  return(out_df)
+}) %>% 
+  # bind into DF
+  dplyr::bind_rows()
+
+# write file 
+write.table(df,
+            "mikk_genome/data/20201022_abba_sliding_windows.txt",
+            quote = F,
+            sep = "\t",
+            row.names = F)
+```
+
+## Process
+
+```{r}
+# Read in data
+df = read.table(here("data", "20201022_abba_sliding_windows.txt"), header = T, sep = "\t", as.is = T)
+
+# Convert fd to 0 if D < 0
+df$fd = ifelse(df$D < 0,
+               0,
+               df$fd)
+
+# Change names
+df = df %>% 
+  dplyr::mutate(p2 = recode(df$p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK"))
+
+# Set colours
+cols <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#08605F", "#002642", "#B02156")
+names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", "iCab")
+
+## Factorise chr, P1 and P2 to get them in the right order
+#chr_order <- c(seq(1,24), "all")
+#fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
+#
+#final_df <- final_df %>% 
+#  dplyr::mutate(across(P2,
+#                       ~factor(.x, levels = fish_order))) %>% 
+#  dplyr::mutate(chr = factor(chr, levels = chr_order))
+```
+
+## Plot
+
+```{r}
+df %>% 
+  dplyr::filter(p1 == "melastigma") %>% 
+  ggplot() +
+    geom_line(aes(mid, fd, colour = p2)) +
+    facet_wrap(~scaffold, nrow = 24, ncol = 1) +
+    scale_colour_manual(values = cols) +
+    theme_bw(base_size = 10) +
+    scale_x_continuous(breaks = c(0, 5000000, 10000000, 15000000, 20000000, 25000000, 30000000, 35000000),
+                       labels = scales::comma) +
+    xlab("Base position") +
+    ylab(bquote(italic(f[d]))) +
+    labs(colour = "P2")
+    
+```
+```{r}
+ggsave(filename = paste("20201022_fd_by_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 50,
+       units = "cm",
+       dpi = 300)
+```
+
+# Make karyoplot with SNP distribution
+
+## Install `karyoploteR`
+
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("karyoploteR")
+
+library(karyoploteR)
+```
+
+```{r}
+BSgenome::available.genomes()
+```
+
+No medaka. Need to make custom.
+
+```{r}
+# Get chromosome lengths
+med_chr_lens = read.table(here("data", "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+                          col.names = c("chr", "end"))
+# Add start
+med_chr_lens$start = 1
+# Reorder
+med_chr_lens = med_chr_lens %>% 
+  dplyr::select(chr, start, end)
+# Create custom genome
+med_genome = regioneR::toGRanges(med_chr_lens)
+# Create plot
+kp = karyoploteR::plotKaryotype(genome = med_genome)
+```
+## Adapt data
+
+```{r}
+# filter for melastigma
+df_kp = df %>%
+  dplyr::filter(p1 == "melastigma")
+# make chr and fd numeric 
+df_kp$scaffold <- as.numeric(df_kp$scaffold)
+
+```
+
+## Get SNP density for HdrR, HNI and HSOK
+
+```{bash}
+# Pull out HdrR, HNI and HSOK columns
+mkdir geno/20201023_abba_sw_granges
+
+for i in $( seq 1 24 ) ; do
+  chr=$i ;
+  in_file=geno/20201022_final_no-sibs/$chr.txt ;
+  out_file=geno/20201023_abba_sw_granges/$chr.txt ;
+  awk '{print $1,$2,$3,$4,$5}' $in_file \
+    > $out_file ;
+done
+
+# Create final output directory
+mkdir geno/20201023_abba_sw_granges/final
+```
+
+```{r}
+library(tidyverse)
+
+# Read files into R
+files = list.files("geno/20201023_abba_sw_granges", full.names = T)
+
+df = lapply(files, function(x){
+  out = read.table(x,
+                   header = T, 
+                   as.is = T, 
+                   comment.char = "*",
+                   check.names = F)
+  return(out)
+}) %>% 
+  dplyr::bind_rows() %>% 
+  dplyr::select(chr = "#CHROM",
+                pos = "POS",
+                everything()) %>% 
+  dplyr::mutate(dplyr::across(hdrr:hsok,
+                              ~ifelse(.x == "N/N", NA, 1)))
+  
+
+write.table(df, 
+            file = "geno/20201023_abba_sw_granges_final/20201023_hdrr_hni_hsok.txt",
+            quote = F,
+            sep = "\t",
+            row.names = F)
+```
+
+```{bash}
+# Pull to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_hdrr_hni_hsok.txt ~/Documents/Data/20201012_mikk_genome
+```
+
+```{r}
+# Read in file on local
+ol_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_hdrr_hni_hsok.txt",
+                       header = T, 
+                       sep = "\t", 
+                       as.is = T)
+
+ol_ranges_df_long = ol_ranges_df %>% 
+  tidyr::pivot_longer(cols = c(hdrr, hni, hsok), names_to = "line", values_to = "present")
+
+ol_ranges_list = split(ol_ranges_df_long, f = ol_ranges_df_long$line)
+
+ol_ranges_list = lapply(ol_ranges_list, function(x){
+  # remove NAs
+  df = x %>% 
+    tidyr::drop_na(present)
+  # convert to GRanges object
+  ol_ranges = GenomicRanges::makeGRangesFromDataFrame(df,
+                                                      ignore.strand = T,
+                                                      seqnames.field = "chr",
+                                                      start.field = "pos",
+                                                      end.field = "pos")
+  return(ol_ranges)
+})
+# Convert to GRanges object
+library(GenomicRanges)
+ol_ranges = GenomicRanges::makeGRangesFromDataFrame(ol_ranges_df,
+                                                    ignore.strand = T,
+                                                    seqnames.field = "chr",
+                                                    start.field = "pos",
+                                                    end.field = "pos")
+```
+
+## Get SNP density for MIKK
+
+```{bash}
+bcftools view \
+  --min-alleles 2 \
+  --max-alleles 2 \
+  --types snps \
+  --output-type u \
+  vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz |\
+    bcftools query \
+      --format '%CHROM\t%POS\n' \
+      --output geno/20201023_abba_sw_granges_final/20201023_mikk.txt
+      
+# Pull to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_mikk.txt ~/Documents/Data/20201012_mikk_genome
+```
+
+```{r}
+# Read in file on local
+mikk_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_mikk.txt",
+                            col.names = c("chr", "pos"), 
+                            sep = "\t", 
+                            as.is = T)
+
+# Convert to GRanges object
+library(GenomicRanges)
+mikk_ranges = GenomicRanges::makeGRangesFromDataFrame(mikk_ranges_df,
+                                                      ignore.strand = T,
+                                                      seqnames.field = "chr",
+                                                      start.field = "pos",
+                                                      end.field = "pos")
+```
+
+
+## Get exon density
+
+```{r}
+# Get list of exons from biomaRt
+library("biomaRt")
+# Select dataset
+olat_mart = useEnsembl(biomart = "ensembl", dataset = "olatipes_gene_ensembl")
+# Get attributes of interest (exon ID, chr, start, end)
+exons <- getBM(attributes = c("chromosome_name", "ensembl_gene_id", "ensembl_transcript_id", "transcript_start", "transcript_end", "transcript_length", "ensembl_exon_id", "rank", "strand", "exon_chrom_start", "exon_chrom_end", "cds_start", "cds_end"),
+               mart = olat_mart)
+# Convert exons to GRanges
+ex_ranges = GenomicRanges::makeGRangesFromDataFrame(exons,
+                                                    ignore.strand = T,
+                                                    seqnames.field = "chromosome_name",
+                                                    start.field = "exon_chrom_start",
+                                                    end.field = "exon_chrom_end")
+```
+
+## Add features
+
+```{r}
+# Plot 
+kp <- plotKaryotype(med_genome, chromosomes = "2")
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
+# Add data backgrounds
+karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
+# Add axis label
+kpAxis(kp, r0=0.6, r1 = 1, cex = 0.4)
+# Add fd data
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HNI"],
+                     x = df_kp$mid[df_kp$p2 == "HNI"],
+                     y = df_kp$fd[df_kp$p2 == "HNI"],
+                     col = "#F6673A",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HdrR"],
+                     x = df_kp$mid[df_kp$p2 == "HdrR"],
+                     y = df_kp$fd[df_kp$p2 == "HdrR"],
+                     col = "#F3B61F",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HSOK"],
+                     x = df_kp$mid[df_kp$p2 == "HSOK"],
+                     y = df_kp$fd[df_kp$p2 == "HSOK"],
+                     col = "#631E68",
+                     r0=0.6, r1 = 1)
+# Add SNP density data
+kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
+              r0=0, r1=0.15, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
+              r0=0.15, r1=0.3, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
+              r0=0.3, r1=0.45, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
+              r0=0.45, r1=0.6,
+              window.size = 25000)
+# Add exon density to ideogram
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 1)
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 0)
+# Add labels
+kpAddLabels(kp, labels="MIKK",
+            r0=0, r1=0.15, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HNI",
+            r0=0.15, r1=0.3, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HSOK",
+            r0=0.3, r1=0.45, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HdrR",
+            r0=0.45, r1=0.6, 
+            cex = 0.4)
+kpAddLabels(kp, labels=bquote(italic(f[d])),
+            r0=0.6, r1=1, 
+            label.margin = 0.035,
+            cex = 0.6)
+```
+## Save chr 2 only
+
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka pics/20200921_introgression/20201023_fd_with_density_chr2.png",
+    width=1279,
+    height=357,
+    units = "px",
+    res = 400)
+# Plot 
+kp = plotKaryotype(med_genome, chromosomes = "2")
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
+# Add data backgrounds
+karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
+# Add axis label
+kpAxis(kp, r0=0.6, r1 = 1, cex = 0.4)
+# Add fd data
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HNI"],
+                     x = df_kp$mid[df_kp$p2 == "HNI"],
+                     y = df_kp$fd[df_kp$p2 == "HNI"],
+                     col = "#F6673A",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HdrR"],
+                     x = df_kp$mid[df_kp$p2 == "HdrR"],
+                     y = df_kp$fd[df_kp$p2 == "HdrR"],
+                     col = "#F3B61F",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HSOK"],
+                     x = df_kp$mid[df_kp$p2 == "HSOK"],
+                     y = df_kp$fd[df_kp$p2 == "HSOK"],
+                     col = "#631E68",
+                     r0=0.6, r1 = 1)
+# Add SNP density data
+kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
+              r0=0, r1=0.15, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
+              r0=0.15, r1=0.3, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
+              r0=0.3, r1=0.45, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
+              r0=0.45, r1=0.6,
+              window.size = 25000)
+# Add exon density to ideogram
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 1)
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 0)
+# Add labels
+kpAddLabels(kp, labels="MIKK",
+            r0=0, r1=0.15, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HNI",
+            r0=0.15, r1=0.3, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HSOK",
+            r0=0.3, r1=0.45, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HdrR",
+            r0=0.45, r1=0.6, 
+            cex = 0.4)
+kpAddLabels(kp, labels=bquote(italic(f[d])),
+            r0=0.6, r1=1, 
+            label.margin = 0.035,
+            cex = 0.6)
+dev.off()
+```
+
+
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka\ pics/20200921_introgression/20201023_fd_with_density.png",
+    width=8500,
+    height=13500,
+    units = "px",
+    res = 400)
+# Plot 
+kp = plotKaryotype(med_genome)
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
+# Add data backgrounds
+karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
+# Add axis label
+kpAxis(kp, r0=0.6, r1 = 1, cex = 0.4)
+# Add fd data
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HNI"],
+                     x = df_kp$mid[df_kp$p2 == "HNI"],
+                     y = df_kp$fd[df_kp$p2 == "HNI"],
+                     col = "#F6673A",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HdrR"],
+                     x = df_kp$mid[df_kp$p2 == "HdrR"],
+                     y = df_kp$fd[df_kp$p2 == "HdrR"],
+                     col = "#F3B61F",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HSOK"],
+                     x = df_kp$mid[df_kp$p2 == "HSOK"],
+                     y = df_kp$fd[df_kp$p2 == "HSOK"],
+                     col = "#631E68",
+                     r0=0.6, r1 = 1)
+# Add SNP density data
+kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
+              r0=0, r1=0.15, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
+              r0=0.15, r1=0.3, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
+              r0=0.3, r1=0.45, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
+              r0=0.45, r1=0.6,
+              window.size = 25000)
+# Add exon density to ideogram
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 1)
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 0)
+# Add labels
+kpAddLabels(kp, labels="MIKK",
+            r0=0, r1=0.15, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HNI",
+            r0=0.15, r1=0.3, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HSOK",
+            r0=0.3, r1=0.45, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HdrR",
+            r0=0.45, r1=0.6, 
+            cex = 0.4)
+kpAddLabels(kp, labels=bquote(italic(f[d])),
+            r0=0.6, r1=1, 
+            label.margin = 0.035,
+            cex = 0.6)
+dev.off()
+```
+
+```{r}
+# Save
+png(file="~/Documents/Docs/medaka\ pics/20200921_introgression/20201023_fd_with_density_chr2.png",
+    width=8500,
+    height=2372,
+    units = "px",
+    res = 400)
+# Plot 
+kp = plotKaryotype(med_genome, chromosomes = "2")
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
+# Add data backgrounds
+karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
+# Add axis label
+kpAxis(kp, r0=0.6, r1 = 1, cex = 0.4)
+# Add fd data
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HNI"],
+                     x = df_kp$mid[df_kp$p2 == "HNI"],
+                     y = df_kp$fd[df_kp$p2 == "HNI"],
+                     col = "#F6673A",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HdrR"],
+                     x = df_kp$mid[df_kp$p2 == "HdrR"],
+                     y = df_kp$fd[df_kp$p2 == "HdrR"],
+                     col = "#F3B61F",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HSOK"],
+                     x = df_kp$mid[df_kp$p2 == "HSOK"],
+                     y = df_kp$fd[df_kp$p2 == "HSOK"],
+                     col = "#631E68",
+                     r0=0.6, r1 = 1)
+# Add SNP density data
+kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
+              r0=0, r1=0.15, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
+              r0=0.15, r1=0.3, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
+              r0=0.3, r1=0.45, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
+              r0=0.45, r1=0.6,
+              window.size = 25000)
+# Add exon density to ideogram
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 1)
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 0)
+# Add labels
+kpAddLabels(kp, labels="MIKK",
+            r0=0, r1=0.15, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HNI",
+            r0=0.15, r1=0.3, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HSOK",
+            r0=0.3, r1=0.45, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HdrR",
+            r0=0.45, r1=0.6, 
+            cex = 0.4)
+kpAddLabels(kp, labels=bquote(italic(f[d])),
+            r0=0.6, r1=1, 
+            label.margin = 0.035,
+            cex = 0.6)
+dev.off()
 ```
 
 
