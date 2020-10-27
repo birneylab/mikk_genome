@@ -26,6 +26,7 @@ echo "Matching lines:"
 awk "NR==$chunk_start,NR==$chunk_end" $i | grep "^SEQ oryzias_latipes "
 
 if (( $hit_count > 1 )); then # if there is more than one hit
+  echo "Hit count is greater than 1"
   # count the forward strands
   forward_matches=$(awk "NR==$chunk_start,NR==$chunk_end" $i | egrep "^SEQ oryzias_latipes .+ 1 " | wc -l )
   if (( $forward_matches == 0 )); then # if there are no forward strands

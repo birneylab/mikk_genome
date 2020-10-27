@@ -100,7 +100,7 @@ names(repl_vec) <- c("T", "A", "C", "G")
 ## Replace values
 dat <- dat %>%
           dplyr::mutate(dplyr::across(dplyr::starts_with(c("oryzias", "Ancestor")),
-                                      ~dplyr::recode(.x, !!!repl_vec)))                         
+                                      ~dplyr::recode(.x, !!!repl_vec)))
 
 # Save to file
 
