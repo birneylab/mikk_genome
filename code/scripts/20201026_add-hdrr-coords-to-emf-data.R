@@ -12,7 +12,7 @@ library(ape)
 file_in = args[1]
 dir_out = args[2]
 
-# Get sequence start and end coords
+# Collect metadata from file prefix
 
 meta = stringr::str_split(basename(file_in), pattern = "_", simplify = T)
 chr = meta[1]
@@ -20,7 +20,7 @@ seq_start = meta[2]
 seq_end = meta[3]
 strand = meta[4]
 
-# Get file names
+# Get names for three target files
 
 file_data = paste(file_in, ".data.txt", sep = "")
 file_tree = paste(file_in, ".tree.txt", sep = "")
@@ -33,6 +33,11 @@ phylo_tree = ape::read.tree(file = file_tree)
 # Find most recent common ancestor
 
 ids = phylo_tree$tip.label[grep("Olat|Ohni|Ohso|Omel|Ojav", phylo_tree$tip.label)] # get vector of IDs
+## stop and exit if there is only 1 match
+if (length(ids) <= 1){
+  print("No other medaka in tree.")
+  quit(save = "no")
+}
 node_number = ape::getMRCA(phylo_tree, tip = ids) # get node number of most recent common ancestor
 mrca_label = c(phylo_tree$tip.label, phylo_tree$node.label)[node_number] # get label of node
 mrca_label_trim = stringr::str_split(mrca_label, "_", simplify = T)[2:4] %>% str_c(collapse = "_") # trim to match line in SEQ file
