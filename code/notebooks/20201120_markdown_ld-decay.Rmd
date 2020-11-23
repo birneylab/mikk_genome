@@ -1,5 +1,10 @@
 ---
 title: "MIKK panel - LD decay analysis"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Ian Brettell"
 date: "20/11/2020"
 output:
@@ -348,7 +353,7 @@ See zoomed plots here:
 
 ## Obtain 
 
-```{bash}
+```{bash, eval = F}
 # make BED
 mkdir plink/20200727_mikk_no-missing_maf-0.05
 
@@ -431,5 +436,7 @@ wc -l ld/20200803_mikk_maf-0.10_window-10kb_no-missing/*.ld
 # Total: 
 wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld
 ```
+
+
 
 
