@@ -2,21 +2,23 @@
 title: "MIKK panel - LD decay analysis"
 ---
 
-# `yaml` entries
-
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
-author: "Ian Brettell"
-date: "20/11/2020"
 output:
   html_document:
     toc: true
     toc_float: true
     number_sections: true
     keep_md: true
+    theme: cerulean
+navbar:
+  title: "MIKK panel analysis"
+  left:
+    - text: "Home"
+      href: ../../docs/index.html
+    - text: "LD decay"
+      href: ../../code/notebooks/20201120_markdown_ld-decay.html
+author: "Ian Brettell"
+date: "20/11/2020"
+
 
 # Setup
 
