@@ -209,6 +209,7 @@ bcftools index --tbi vcfs/panel_no-sibs_line-ids.vcf.gz
 ```{bash}
 mkdir stats
 bcftools stats vcfs/panel_no-sibs_line-ids.vcf.gz > stats/20200305_panel_no-sibs.txt
+
 ```
 
 • number of samples:      63
@@ -7302,6 +7303,7 @@ chr_counts <- readr::read_tsv("~/Documents/Repositories/mikk_genome/data/Oryzias
 library("biomaRt")
 listMarts()
 ```
+
 ```{r}
 # Select database and list datasets within
 ensembl_mart <- useMart("ENSEMBL_MART_ENSEMBL")
@@ -8066,7 +8068,7 @@ ONT samples (n = 9): `mikk_genome/data/20201017_ont_stable_samples.txt`
 # Split ONT samples by chr
 mkdir maf/20201014_indiv_split_with_ab_split-by-chr
 
-cat mikk_genome/data/20201017_ont_samples.txt
+cat mikk_genome/data/20201019_ont_samples.txt
 
 for i in $( echo  7_1 131_1 134_2 ) ; do
   input_file=maf/20201014_indiv_split_with_ab/$i.txt ;
@@ -9208,5 +9210,958 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
             cex = 0.6)
 dev.off()
 ```
+
+*20201027*
+
+# Get ABBA BABA for 131_2, 134_1, and 139_4
+
+### Add to "ONT" samples, then combine with sub-popns and MIKK
+
+```{bash}
+# Split samples by chr
+for i in $( echo 131_2 139_4 ) ; do
+  input_file=maf/20201014_indiv_split_with_ab/$i.txt ;
+  new_path=maf/20201014_indiv_split_with_ab_split-by-chr/$i ;
+  if [ ! -d "$new_path" ] ; then
+    mkdir $new_path ;
+  fi ;    
+  for j in $(cut -f2 $input_file | sort | uniq ) ; do
+    awk "\$2 == $j" $input_file \
+      > $new_path/$j.txt ;
+  done ;
+done 
+
+# Combine samples
+for i in $( seq 1 24 ) ; do
+  chr=$i ;
+  in_dir=maf/20201014_indiv_split_with_ab_split-by-chr ;
+  out_dir=maf/20201017_ont_samples_split-by-chr ;
+  script=mikk_genome/code/scripts/20201017_combine_ont_sample_mafs.R ;
+  bsub \
+    -M 30000 \
+    -o log/20201027_combine-ont_$chr.out \
+    -e log/20201027_combine-ont_$chr.err \
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+done
+
+# Combine MIKK total, ONT, and subpop MAF tables
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201017_combine_final_and_af_data.R ;
+  chr=$i ;
+  in_file_mik=maf/20201015_split-by-chr_all/$chr.txt ;
+  in_file_sub=maf/20201017_subpops_split-by-chr_all/$chr.txt ;
+  in_file_ont=maf/20201017_ont_samples_split-by-chr/$chr.txt ;
+  in_file_emf=emfs/final_with_rc/$chr.txt ;
+  out_dir=maf/20201019_all ;
+  bsub \
+    -M 50000 \
+    -o log/20201027_frq_tbl_$i.out \
+    -e log/20201027_frq_tbl_$i.err \
+    "Rscript --vanilla $script $chr $in_file_mik $in_file_sub $in_file_ont $in_file_emf $out_dir " ;
+done
+
+```
+
+Combine chr files into single file - *run directly on cluster*
+
+```{r}
+library(tidyverse)
+files <- list.files("maf/20201019_all",
+                    pattern = "[0-9]",
+                    full.names = T)
+# read in data
+dat_list <- lapply(files, function(x){
+  # read in data
+  df <- read.table(x,
+                   header = T,
+                   sep = "\t",
+                   as.is = T,
+                   check.names = F)
+  return(df)
+})
+
+# bind together and sort
+final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+# write table
+write.table(final_df, "abba_baba_mikk/20201020_freq_tables/all.txt", quote = F, sep = "\t", row.names = F)
+```
+
+### Run ABBA BABA
+
+```{bash}
+
+for i in $( echo melastigma javanicus ); do
+  for j in $( echo hdrr hni hsok ); do
+    for k in $( echo 131_2 139_4 ) ; do
+      # don't run if they are the same
+      if [ $j != $k ] ; then
+        script=mikk_genome/code/scripts/20201020_run_abbababa.R ;
+        p1=$i ;
+        p2=$j ;
+        p3=$k ;
+        dat_file=$( echo abba_baba_mikk/20201020_freq_tables/all.txt ) ;
+        dir_out=$( echo abba_baba_mikk/20201020_rlists ) ;
+        bsub \
+          -M 30000 \
+          -o log/20201027_abbababa_$p1\_$p2\_$p3.out \
+          -e log/20201027_abbababa_$p1\_$p2\_$p3.err \
+          "Rscript --vanilla $script $p1 $p2 $p3 $dat_file $dir_out "
+      fi ;
+    done ;  
+  done ;
+done
+
+```
+
+### Combine into one list *directly on cluster*
+
+```{r}
+library(tidyverse)
+
+# get list of target files
+files <- list.files("abba_baba_mikk/20201020_rlists",
+                    full.names = T)
+
+# read into one list
+final_lst = lapply(files, readRDS)
+
+# Reduce down to DF
+final_df <- lapply(final_lst, function(file){
+  # Get D stats
+  g_wide_d <- file[["Genome-wide D"]][["D statistic"]]
+  per_chr_d <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["D statistic"]])
+  # Get Z scores
+  g_wide_z <- file[["Genome-wide D"]][["Z score"]]
+  per_chr_z <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["Z score"]])
+  # Get admixture
+  admix_f <- file[["Admixture"]][["f statistic"]]
+  per_chr_f <- sapply(file[["Per-chromosome"]],
+                      function(x) x[["Admixture"]][["f statistic"]])
+  # Get confidence intervals
+  g_wide_ci_lower <- file[["Admixture"]][["Confidence interval"]][["lower"]]
+  g_wide_ci_upper <- file[["Admixture"]][["Confidence interval"]][["upper"]]
+  per_chr_ci_lower <- sapply(file[["Per-chromosome"]],
+                             function(x) x[["Admixture"]][["Confidence interval"]][["lower"]])
+  per_chr_ci_upper <- sapply(file[["Per-chromosome"]],
+                             function(x) x[["Admixture"]][["Confidence interval"]][["upper"]])
+
+  # Create data frame
+  df_out <- data.frame("p1" = file[["Populations"]][["P1"]],
+                       "p2" = file[["Populations"]][["P2"]],
+                       "p3" = file[["Populations"]][["P3"]],
+                       "chr" = c("all", names(per_chr_d)),
+                       "d_stat" = c(g_wide_d, per_chr_d),
+                       "z_score" = c(g_wide_z, per_chr_z),
+                       "admix_f" = c(admix_f, per_chr_f),
+                       "f_ci_lower" = c(g_wide_ci_lower, per_chr_ci_lower),
+                       "f_ci_upper" = c(g_wide_ci_upper, per_chr_ci_upper),
+                       stringsAsFactors = F)
+  return(df_out)
+}) %>% 
+  dplyr::bind_rows()
+
+# capitalise species / line names / colnames
+rename_vec = c("HdrR", "HNI", "HO5", "HSOK", "iCab", "KW", "MIKK")
+names(rename_vec) = c("hdrr", "hni", "ho5", "hsok", "icab", "kiyosu_wild", "mikk")
+
+final_df = final_df %>% 
+  dplyr::mutate(dplyr::across(c("p2", "p3"),
+                              ~dplyr::recode(.x, !!!rename_vec)))
+
+colnames(final_df) = dplyr::recode(colnames(final_df),
+                                   p1 = "P1",
+                                   p2 = "P2",
+                                   p3 = "P3")
+
+# save
+write.table(final_df, "mikk_genome/data/20201020_abbababa_final.txt",
+            quote = F, sep = "\t", row.names = F)
+```
+
+# Plot final
+
+## Read in data
+
+```{r}
+# Read in data
+final_df <- read.table(here("data", "20201020_abbababa_final.txt"),
+                       header = T,
+                       sep = "\t",
+                       as.is = T)
+
+# Set colours
+cols <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#08605F", "#002642", "#B02156")
+names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", "iCab")
+
+# Factorise chr, P1 and P2 to get them in the right order
+chr_order <- c(seq(1,24), "all")
+fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
+
+final_df <- final_df %>% 
+  dplyr::mutate(across(P2,
+                       ~factor(.x, levels = fish_order))) %>% 
+  dplyr::mutate(chr = factor(chr, levels = chr_order))
+
+```
+
+**NOTE**: There are 142 rows with an `admix_f` value over 1? 
+
+* All chromosomes when MIKK(P3) -> KW(P2) except 9,10,12,17,20
+* 131_1(P3) is a main offender, especially when with MIKK(P2) or KW(P2), but also with all other strains. * 131_1(P3) chr 23 has huge scores (2:12)
+
+```{r}
+final_df %>% 
+  dplyr::filter(admix_f > 1) %>% 
+  dplyr::count(P2, P3)
+
+```
+## Create DF with mean `melastigma` and `javanicus`
+
+```{r}
+cor_df <- final_df %>% 
+  # filter for when P1 is another Oryzias, and P2 
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>% 
+  # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+  tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                     names_from = P1,
+                     values_from = c(admix_f, f_ci_lower, f_ci_upper))
+
+cor_df$chr <- as.character(cor_df$chr)
+cor_df$chr <- ifelse(cor_df$chr == "all", "genome-wide", cor_df$chr)
+chr_order_plot <- c(seq(1,24), "genome-wide")
+cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
+
+cor_df_means <- cor_df %>%
+  # apply across rows
+  dplyr::rowwise() %>% 
+  # get means for f and CIs
+  dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
+                mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
+  # set stats at a maximum of 1
+  dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
+                       ~dplyr::if_else(.x > 1,
+                                       1,
+                                       .x)))
+```
+
+## Plot
+
+```{r}
+cor_df_means %>% 
+  ggplot(aes(P2, mean_f, fill = P2)) +
+    geom_col() +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +  
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylim(0,1) +
+    ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+    theme_bw(base_size = 8) +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+```{r}
+ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Redo figure for paper
+
+```{r}
+cor_df_means %>% 
+  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>% 
+  ggplot(aes(P2, mean_f, fill = P2)) +
+    geom_col() +
+    geom_errorbar(aes(ymin = mean_ci_lower,
+                      ymax = mean_ci_upper),
+                  position = position_dodge(0.9),
+                  width = 0.25) +  
+    guides(fill = F) +
+    facet_wrap(~chr) +
+    ylim(0,1) +
+    ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
+    scale_fill_manual(values = cols)
+```
+
+```{r}
+ggsave(filename = paste("20201020_f_stat_by_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200921_introgression/",
+       width = 24.75,
+       height = 19.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Do the same for each of the ONT samples
+
+```{r}
+lapply(c("131_2", "139_4"), function(x){
+  # create DF
+  cor_df <- final_df %>% 
+    # filter for when P1 is another Oryzias, and P2 
+    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>% 
+    # pivot to put the admixture_f stat for melastigma and javanicus in the same row
+    tidyr::pivot_wider(id_cols = c("P2", "chr"),
+                       names_from = P1,
+                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>% 
+    # apply across rows
+    dplyr::rowwise() %>% 
+    # get means for f and CIs
+    dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
+                  mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
+                  mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma)))
+    # set stats at a maximum of 1
+    # dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
+    #                      ~dplyr::if_else(.x > 1,
+    #                                      1,
+    #                                      .x)))
+    # Create plot
+    out_plot <- cor_df %>% 
+      ggplot(aes(P2, mean_f, fill = P2)) +
+        geom_col() +
+        geom_errorbar(aes(ymin = mean_ci_lower,
+                          ymax = mean_ci_upper),
+                      position = position_dodge(0.9),
+                      width = 0.25) +  
+        guides(fill = F) +
+        facet_wrap(~chr) +
+        #ylim(0,1) +
+        ylab(expression(paste("Mean ", italic("f"), " statistic"))) +
+        theme_bw() +
+        theme(panel.grid = element_blank()) +
+        scale_fill_manual(values = cols) +
+        ggtitle(x)
+    # Save 
+    ggsave(filename = paste("20201027_", x, ".png", sep = ""),
+           device = "png",
+           path = "~/Documents/Docs/medaka pics/20200921_introgression/20201020_ont_samples/",
+           width = 24.75,
+           height = 19.5,
+           units = "cm",
+           dpi = 500)    
+})
+```
+
+*end 20201027*
+
+# Run analysis on new EMF files from Ensembl 101
+
+<ftp://ftp.ensembl.org/pub/release-101/emf/ensembl-compara/multiple_alignments/50_fish.epo/> 
+
+```{bash}
+# Set up directory
+mkdir emfs/ensembl_101
+mkdir emfs/ensembl_101/raw
+
+# Download raw files
+wget -P emfs/ensembl_101/raw ftp://ftp.ensembl.org/pub/release-101/emf/ensembl-compara/multiple_alignments/50_fish.epo/*
+
+# unzip into new directory
+mkdir emfs/ensembl_101/unzipped
+
+for i in $( find emfs/ensembl_101/raw/50_fish.epo.[0-9]* ) ; do
+  name=$( basename $i | cut -f3,4 -d'.') ;
+  out_dir=emfs/ensembl_101/unzipped ;
+  bsub \
+    -o log/20201026_unzip_$name.out \
+    -e log/20201026_unzip_$name.err \
+    "zcat $i > $out_dir/$name" ;
+done
+
+# Extract segments
+mkdir emfs/ensembl_101/segmented
+
+for i in $( find emfs/ensembl_101/unzipped/* ); do
+  script=./mikk_genome/code/scripts/20201026_extract-emf-segments.sh ;
+  out_dir=emfs/ensembl_101/segmented ;
+  # get basename
+  bname=$(basename $i) ;
+  bname_short=$(echo ${bname::-4} ) ;
+  # get chromosome
+  chr=$(echo $bname | cut -f1 -d"_" ) ;
+  # make directory for each EMF file
+  new_path=$out_dir/$bname_short ;
+  if [ ! -d "$new_path" ] ; then
+    mkdir $new_path ;
+  fi
+  # get segment count
+  segment_count=$( grep "^DATA" $i | wc -l ) ;
+  # get segment start and end for each file
+  for j in $( seq 1 $segment_count ) ; do
+    bsub \
+      -e log/20201026_segment_$bname_short\_$j.err \
+      -o log/20201026_segment_$bname_short\_$j.out \
+      "$script $i $j $new_path "
+  done;  
+done
+
+# How many segments?
+find emfs/ensembl_101/segmented/*/*data.txt
+# 8,961
+
+## Here the 6_2 file is corrupted! Contains 195 segments.
+## Copy from 47_fish.epo from Ensembl 100:
+# First segment: 6_18083133_18110990_1
+# Last segment: 6_32112995_32194088_1
+rm emfs/ensembl_101/segmented/6_2/* # remove from the new folder
+# copy from the old one
+for i in $( find emfs/segmented/6*/* ) ; do 
+  bname=$( basename $i ) ;
+  start=$( echo $bname | cut -d"_" -f2 ) ;
+  end=$( echo $bname | cut -d"_" -f3 ) ;
+  if (( $start >= 18083133 && $end <= 32194088 )) ; then
+    cp $i emfs/ensembl_101/segmented/6_2/ ;
+  fi ;  
+done
+
+# How many segments?
+find emfs/ensembl_101/segmented/*/*.data.txt | wc -l
+# 8974
+
+# Clean
+mkdir emfs/ensembl_101/cleaned
+
+for i in $( find emfs/ensembl_101/segmented/*/*.data.txt ); do
+  # make new directory
+  chr_file=$( echo $i | cut -f4 -d"/" );
+  new_path=$( echo emfs/ensembl_101/cleaned/$chr_file );
+  if [ ! -d "$new_path" ]; then
+    mkdir $new_path;
+  fi  
+  # create name for new file
+  bname=$( echo $i | sed 's/.data.txt//g' );
+  bname_short=$( basename $bname );
+  script=mikk_genome/code/scripts/20201026_add-hdrr-coords-to-emf-data.R ;
+  bsub \
+    -M 10000 \
+    -o log/20201029_clean_$chr_file\_$bname_short.out \
+    -e log/20201029_clean_$chr_file\_$bname_short.err \
+    "Rscript --vanilla $script $bname $new_path";
+done
+# 115 segments had no other target Oryzias
+# Now only 8859
+
+# Consolidate each sub-chr
+mkdir emfs/ensembl_101/consolidated
+
+for i in $(find emfs/ensembl_101/cleaned/* -type d ); do
+  dir_in=$i ;
+  script=mikk_genome/code/scripts/20200910_consolidate_chr_dat.R ;
+  # get chromosome
+  chr=$(echo $i | cut -f4 -d"/" );
+  out_file=emfs/ensembl_101/consolidated/$chr.txt ;
+  # consolidate into one file
+  bsub \
+    -M 20000 \
+    -o log/20201030_consol_$chr.out \
+    -e log/20201030_consol_$chr.err \
+    "Rscript --vanilla $script $dir_in $out_file ";
+done  
+
+# combine for each chr
+mkdir emfs/ensembl_101/final
+
+for i in $(find emfs/ensembl_101/consolidated/* | cut -f4 -d"/" | cut -f1 -d"_" | sort | uniq ); do
+  chr=$i ;
+  script=mikk_genome/code/scripts/20200911_consolidate_chr_files.R ;
+  in_dir=emfs/ensembl_101/consolidated ;
+  out_dir=emfs/ensembl_101/final ;
+  bsub \
+    -M 50000 \
+    -o log/20201030_full_chr_$i.out \
+    -e log/20201030_full_chr_$i.err \
+    "Rscript --vanilla $script $chr $in_dir $out_dir ";
+done
+
+# Combine MIKK total, ONT, and subpop MAF tables
+mkdir maf/20201030_all
+
+for i in $( seq 1 24 ) ; do
+  script=mikk_genome/code/scripts/20201017_combine_final_and_af_data.R ;
+  chr=$i ;
+  in_file_mik=maf/20201015_split-by-chr_all/$chr.txt ;
+  in_file_sub=maf/20201017_subpops_split-by-chr_all/$chr.txt ;
+  in_file_ont=maf/20201017_ont_samples_split-by-chr/$chr.txt ;
+  in_file_emf=emfs/ensembl_101/final/$chr.txt ;
+  out_dir=maf/20201030_all ;
+  bsub \
+    -M 50000 \
+    -o log/20201030_frq_tbl_$i.out \
+    -e log/20201030_frq_tbl_$i.err \
+    "Rscript --vanilla $script $chr $in_file_mik $in_file_sub $in_file_ont $in_file_emf $out_dir " ;
+done
+```
+
+Combine chr files into single file - *run directly on cluster*
+
+```{r}
+library(tidyverse)
+files <- list.files("maf/20201019_all",
+                    pattern = "[0-9]",
+                    full.names = T)
+# read in data
+dat_list <- lapply(files, function(x){
+  # read in data
+  df <- read.table(x,
+                   header = T,
+                   sep = "\t",
+                   as.is = T,
+                   check.names = F)
+  return(df)
+})
+
+# bind together and sort
+final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
+  dplyr::arrange(chr, pos) # sort by chromosome, then position
+
+# write table
+write.table(final_df, "abba_baba_mikk/20201020_freq_tables/all.txt", quote = F, sep = "\t", row.names = F)
+```
+
+*20201106*
+
+# Get singleton counts per sample
+
+```{bash}
+mkdir stats/20201106_indiv_stats
+
+for sample in $( bcftools query -l vcfs/full-run_line-ids.vcf.gz ); do
+  in_file=vcfs/full-run_line-ids.vcf.gz ;
+  out_file=stats/20201106_indiv_stats/$sample.stats ;
+  bsub \
+    -M 20000 \
+    -o log/20201106_singleton_stats_$sample.out \
+    -e log/20201106_singleton_stats_$sample.err \
+    "bcftools view \
+      --output-type v \
+      --samples $sample \
+      $in_file | \
+        bcftools stats > $out_file " ;
+done
+# Doesn't work because every SNP will be a singleton if there's only 1 sample in the VCF.
+
+# Full run
+vcftools \
+  --gzvcf vcfs/full-run_line-ids.vcf.gz \
+  --out stats/20201106_full-run_line-ids \
+  --singletons
+
+# Non-missing, biallelic SNPs
+vcftools \
+  --gzvcf vcfs/panel_no-sibs_line-ids_no-missing_with-maf_bi-snps.vcf.gz \
+  --out stats/20201106_panel_no-sibs_line-ids_no-missing_with-maf_bi-snps \
+  --singletons
+# Creates giant files  
+  
+# Try again with bcftools stats
+## Create file with all samples in it
+bcftools query -l vcfs/full-run_line-ids.vcf.gz \
+  > mikk_genome/data/20201106_full-run_line-ids_samples.txt
+## Run states using this as the samples file
+bcftools stats \
+  --samples-file mikk_genome/data/20201106_full-run_line-ids_samples.txt \
+  vcfs/full-run_line-ids.vcf.gz \
+    > stats/full-run_line-ids_per-sample.stats
+## Extract relevant lines
+grep "PSC" stats/full-run_line-ids_per-sample.stats \
+  > mikk_genome/data/20201106_full-run_line-ids_singleton_counts.txt
+  
+# Do the same thing per-chromosome
+mkdir stats/full-run_line-ids_per-sample_per-chr
+
+for chr in $( seq 1 24 ); do
+  in_file=vcfs/full-run_line-ids.vcf.gz ;
+  out_file=stats/full-run_line-ids_per-sample_per-chr/$chr.stats ;
+  bsub \
+    -M 20000 \
+    -o log/20201106_singleton_perchr_$chr.out \
+    -e log/20201106_singleton_perchr_$chr.err \
+    "bcftools view \
+      --output-type v \
+      --regions $chr \
+      $in_file | \
+        bcftools stats \
+          --samples-file mikk_genome/data/20201106_full-run_line-ids_samples.txt \
+            > $out_file " ;
+done
+
+# Extract relevant lines
+mkdir stats/full-run_line-ids_per-sample_per-chr_psc
+
+for chr in $( seq 1 24 ) ; do
+  grep "PSC" stats/full-run_line-ids_per-sample_per-chr/$chr.stats \
+    > stats/full-run_line-ids_per-sample_per-chr_psc/$chr.stats ;
+done     
+```
+
+Consolidate per-chr data on cluster
+```{r}
+# List files
+files = list.files("stats/full-run_line-ids_per-sample_per-chr_psc",
+                   full.names = T)
+# Read into list
+df_list = lapply(files, function(x){
+  # Read df
+  df = read.table(x,
+                  skip = 1,
+                  sep = "\t",
+                  comment.char = ",",
+                  header = T,
+                  check.names = F)
+  # fix column names
+  colnames(df) = gsub("\\[.+\\]|#|\ ", "", colnames(df))  
+  # return df
+  return(df)
+})
+# Set names (chromsome)
+names(df_list) = gsub(".stats", "", basename(files))
+# Bind into single DF
+df = df_list %>% 
+  dplyr::bind_rows(.id = "chr")
+# Write table
+write.table(df, "mikk_genome/data/20201107_singletons_per_chr.txt",
+            quote = F,
+            sep = "\t",
+            row.names = F)
+```
+
+## Plot per-chr data
+```{r}
+sing_df = read.table(here::here("data", "20201107_singletons_per_chr.txt"),
+                     sep = "\t",
+                     header = T,
+                     check.names = F)
+
+# Plot
+sing_df %>% 
+  ggplot() +
+  geom_col(aes(sample, nSingletons, fill = sample)) +
+  xlab("Sample") +
+  ylab("Number of singleton SNPs") +
+  coord_flip() +
+  guides(fill = F) +
+  theme_bw(base_size = 4) +
+  facet_wrap(~chr, nrow = 4, ncol = 6)
+```
+```{r}
+ggsave(filename = paste("20201107_singleton_counts_per_chr", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 48,
+       height = 40,
+       units = "cm",
+       dpi = 500)
+```
+
+## Genome-wide
+```{r}
+# Read in data 
+sing_df = read.table(here::here("data", "20201106_full-run_line-ids_singleton_counts.txt"),
+                     skip = 1,
+                     sep = "\t",
+                     comment.char = ",",
+                     header = T,
+                     check.names = F)
+
+# remove weird things in column names
+colnames(sing_df) = gsub("\\[.+\\]|#|\ ", "", colnames(sing_df))
+
+# Plot
+sing_df %>% 
+  ggplot() +
+  geom_col(aes(sample, nSingletons, fill = sample)) +
+  xlab("Sample") +
+  ylab("Number of singleton SNPs") +
+  coord_flip() +
+  guides(fill = F) +
+  theme_bw(base_size = 6) 
+```
+```{r}
+ggsave(filename = paste("20201106_singleton_counts", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24,
+       height = 20,
+       units = "cm",
+       dpi = 500)
+```
+
+
+# Get SNP counts per megabase
+
+## Get counts
+```{bash}
+bcftools index \
+  --stats \
+  vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af.vcf.gz \
+    > mikk_genome/data/20201106_non-missing_bi-snp_count.txt
+```
+
+## Read in data and plot
+```{r}
+snp_counts = read.table(here::here("data", "20201106_non-missing_bi-snp_count.txt"),
+                        sep = "\t",
+                        col.names = c("chr", "length", "snp_count")) %>% 
+  # create megabase column
+  dplyr::mutate(megabases = length / 1e6,
+                snps_per_megabase = snp_count / megabases) %>% 
+  # remove MT
+  dplyr::filter(chr != "MT") %>% 
+  # turn chr column into integer
+  dplyr::mutate(chr = as.factor(as.integer(chr)))
+
+# Plot
+snp_counts %>% 
+  ggplot() +
+    geom_col(aes(chr, snps_per_megabase, fill = chr)) +
+    guides(fill = F) + 
+    xlab("Chromosome") +
+    ylab("Non-missing, biallelic SNPs per megabase") +
+    theme_bw()
+```
+```{r}
+ggsave(filename = paste("20201106_snps_per_mb", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24.125,
+       height = 12.5,
+       units = "cm",
+       dpi = 500)
+```
+
+## Combine with exon proportion counts and plot again
+
+```{r}
+chr_df = snp_counts %>% 
+  dplyr::full_join(chr_stats, by = c("chr", "length"))
+
+# Create recode vector
+recode_vec = c("Non-missing, biallelic SNPs per megabase",
+               "Proportion of chromosome covered by exons")
+names(recode_vec) = c("snps_per_megabase",
+                      "prop_cov_exon")
+# Plot
+chr_df %>% 
+  tidyr::pivot_longer(cols = c(snps_per_megabase, prop_cov_exon), 
+                      names_to = "variable",
+                      values_to = "values") %>% 
+  dplyr::mutate(variable = dplyr::recode(variable, !!!recode_vec)) %>% 
+  ggplot() +
+    geom_col(aes(chr, values, fill = chr)) +
+    guides(fill = F) + 
+    xlab("Chromosome") +
+    ylab(NULL) +
+    theme_bw() +
+    facet_wrap(~variable,
+               nrow = 2, ncol = 1,
+               scales = "free_y")
+```
+```{r}
+ggsave(filename = paste("20201106_snps-per-mb_v_exon-props", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 24,
+       height = 20,
+       units = "cm",
+       dpi = 500)
+```
+
+## Plot SNPs per Mb against prop exons
+
+```{r}
+# Calculate correlation
+cor.test(chr_df$snps_per_megabase, chr_df$prop_cov_exon, method = "spearman")
+```
+
+
+```{r}
+chr_df %>% 
+  ggplot(aes(snps_per_megabase, prop_cov_exon, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  guides(colour = F) +
+  xlab("Non-missing, biallelic SNPs per megabase") +
+  ylab("Proportion of chromosome covered by exons")
+```
+```{r}
+ggsave(filename = paste("20201106_snps-per-mb_v_exon-props_scatter", ".png", sep = ""),
+       device = "png",
+       path = "~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+       width = 21,
+       height = 20,
+       units = "cm",
+       dpi = 500)
+```
+
+# Get heatmaps for sibling lines
+
+## Make list of sibling lines on cluster
+
+```{r}
+# On cluster (in mikk_genome repo directory)
+library(here)
+library(tidyverse)
+# Read in lines
+lines = scan(here::here("data", "20201021_full-run_line-ids_samples.txt"),
+             what = character())
+# Remove non-MIKK lines and duplicates
+lines = lines[!grepl(c("iCab|KW|Ho5|-"), lines)]
+# Find siblings
+sibs = lines %>% 
+  stringr::str_split("_", simplify = T) %>% 
+  subset(select = 1)
+# Create vector of sibling lines to keep
+to_keep = duplicated(sibs) | duplicated(sibs, fromLast = T)
+# Filter and sort
+lines_out = sort(lines[to_keep])
+# Write to file
+write.table(lines_out, here("data", "20201107_sibling_lines.txt"),
+            quote = F,
+            row.names = F,
+            col.names = F)
+```
+
+## Make new VCF with sib-lines only
+
+```{bash}
+bcftools view \
+  --samples-file mikk_genome/data/20201107_sibling_lines.txt \
+  --output-type z \
+  --output-file vcfs/mikk_sib-lines-only.vcf.gz \
+  vcfs/full-run_line-ids.vcf.gz
+```
+
+#### Make new BED 
+```{bash}
+mkdir plink/20201107_mikk_sib-lines-only
+
+# make BED  
+plink \
+  --vcf vcfs/mikk_sib-lines-only.vcf.gz \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr-set 24 no-xy \
+  --chr 1-24 \
+  --out plink/20201107_mikk_sib-lines-only/20201107
+  
+# recode for 012 transposed
+plink \
+  --bfile plink/20201107_mikk_sib-lines-only/20201107 \
+  --recode A-transpose \
+  --out plink/20201107_mikk_sib-lines-only/20201107_recode012
+  
+# compress
+gzip -k plink/20201107_mikk_sib-lines-only/20201107_recode012.traw
+gzip -k plink/20201107_mikk_sib-lines-only/20201107.bim
+
+# send to local
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20201107_mikk_sib-lines-only/20201107_recode012.traw.gz ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20201107_mikk_sib-lines-only/20201107.bim.gz ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20201107_mikk_sib-lines-only/20201107.bed ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set
+
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20201107_mikk_sib-lines-only/20201107.fam ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set
+
+# decompress
+gunzip ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set/20201107_recode012.traw.gz
+gunzip ~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set/20201107.bim.gz
+```
+
+## Read in BED matrix
+```{r}
+library(gaston)
+# try with read.bed.matrix
+mikk_full <- gaston::read.bed.matrix("~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set/20201107",
+                                     rds = NULL)
+```
+
+## Read in geno file
+
+```{r}
+mikk_geno <- readr::read_tsv(file = "~/Documents/Data/20200707_mikk_ld/20201107_plink_full_set/20201107_recode012.traw",
+                             progress = T,
+                             col_names = T)
+
+# rename IDs
+colnames(mikk_geno)[7:length(colnames(mikk_geno))] <- mikk_full@ped$id
+```
+
+## Do for all regions
+
+```{r}
+# get coordinates
+high_ld_chrs <- c(5, 6, 12, 14, 17, 21)
+high_ld_start <- c(28385805, 29608514, 25340000, 12584614, 15559963, 6800261)
+high_ld_end <- c(28798048, 32212235, 25372985, 12861147, 19553529, 7760258)
+
+# build into list
+counter <- 0
+high_ld_lst <- lapply(high_ld_chrs, function(x){
+  counter <<- counter + 1
+  x <- list("chr" = x,
+            "start" = high_ld_start[counter],
+            "end" = high_ld_end[counter])
+  # find indexes for SNPs with MAF > 0.05
+  x[["target_inds"]] <- which(mikk_full@snps$chr == x[["chr"]] &
+                         dplyr::between(mikk_full@snps$pos, x[["start"]], x[["end"]]) &
+                         mikk_full@snps$maf > 0.05)
+  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]  
+  # make matrix
+  x[["geno_mat"]] <- as.matrix(x[["target_snps"]][, -(1:6)])
+  return(x)
+})
+names(high_ld_lst) <- high_ld_chrs
+
+```
+
+### Plot
+
+```{r}
+counter <- 0
+lapply(high_ld_lst, function(x){
+  counter <<- counter + 1
+  png(filename = paste("~/Documents/Docs/medaka pics/20200602_mikk_genome/",
+                       "20201109_heatmap_chr",
+                       names(high_ld_lst)[counter],
+                       "low_res",
+                       ".png",
+                       sep = ""),
+      width = 40,
+      height = 40,
+      units = "cm",
+      res = 300)
+  heatmap(x[["geno_mat"]], Rowv = NA, Colv = NA)
+  dev.off()  
+})
+
+```
+
+# Create karyoplot with SV density
+
+## Copy file from Adrien's directory
+
+```{bash}
+cp /hps/research1/birney/users/adrien/analyses/medaka_DNA_promethion/brain_run2/DNA_analysis/results/SV/sniffles_all/merged.vcf vcfs/sv_adrien.vcf
+```
+
 
 
