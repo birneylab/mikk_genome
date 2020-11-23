@@ -1,14 +1,24 @@
 ---
 title: "MIKK panel - LD decay analysis"
-author: "Ian Brettell"
-date: "20/11/2020"
 output:
   html_document:
     toc: true
     toc_float: true
     number_sections: true
     keep_md: true
+    theme: cerulean
 ---
+
+navbar:
+  title: "MIKK panel analysis"
+  left:
+    - text: "Home"
+      href: ../../docs/index.html
+    - text: "LD decay"
+      href: ../../code/notebooks/20201120_markdown_ld-decay.html
+author: "Ian Brettell"
+date: "20/11/2020"
+
 
 # Setup
 
@@ -349,8 +359,104 @@ See zoomed plots here:
 ![**5:28181970-28970558**](hv_5_28181970-28970558.png)
 
 ![**6:29398579-32246747**](hv_6_29398579-32246747.png)
-![**12:25336174-25384053**](hv_12_25336174-25384053.png) 
 
+![**12:25336174-25384053**](hv_12_25336174-25384053.png) 
 ![**14:12490842-129470833**](hv_14_12490842-12947083.png)
+
+
+![**17:15557892-19561518**](hv_17_15557892-19561518.png)
+
+![**hv_21_6710074-7880374**](hv_21_6710074-7880374.png)
+
+# LD decay
+
+## Obtain 
+
+
+```bash
+# make BED
+mkdir plink/20200727_mikk_no-missing_maf-0.05
+
+plink \
+  --vcf vcfs/panel_no-sibs_line-ids.vcf.gz \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --maf 0.05 \
+  --geno 0 \
+  --chr-set 24 no-xy \
+  --out plink/20200727_mikk_no-missing_maf-0.05/20200727
+
+# get LD   
+mkdir ld/20200727_mikk_maf-0.10_window-50kb_no-missing/
+
+for i in $(seq 1 24); do
+  plink \
+      --bfile plink/20200727_mikk_no-missing_maf-0.05/20200727 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 50 \
+      --ld-window-r2 0 \
+      --chr-set 24 no-xy \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200727_mikk_maf-0.10_window-50kb_no-missing/$i;
+done
+
+# for 1KG too
+mkdir ld/20200727_1kg_maf-0.10_window-50kb_no-missing/
+
+for i in $(seq 1 22); do
+  plink \
+      --bfile plink/20200723_1gk_no-missing_maf-0.05/20200723 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 50 \
+      --ld-window-r2 0 \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200727_1kg_maf-0.10_window-50kb_no-missing/$i;
+done
+
+# do again with ld-window-kb 10 to get counts of comparisons for paper
+# get LD   
+mkdir ld/20200803_mikk_maf-0.10_window-10kb_no-missing/
+
+for i in $(seq 1 24); do
+  plink \
+      --bfile plink/20200727_mikk_no-missing_maf-0.05/20200727 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 10 \
+      --ld-window-r2 0 \
+      --chr-set 24 no-xy \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200803_mikk_maf-0.10_window-10kb_no-missing/$i;
+done
+
+# for 1KG too
+mkdir ld/20200803_1kg_maf-0.10_window-10kb_no-missing/
+
+for i in $(seq 1 22); do
+  plink \
+      --bfile plink/20200723_1gk_no-missing_maf-0.05/20200723 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 10 \
+      --ld-window-r2 0 \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200803_1kg_maf-0.10_window-10kb_no-missing/$i;
+done
+
+# Get counts
+wc -l ld/20200803_mikk_maf-0.10_window-10kb_no-missing/*.ld
+# Total: 
+wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld
+```
+
+
 
 
