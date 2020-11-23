@@ -1,12 +1,12 @@
-name: "cars"
+name: "MIKK panel analysis"
 output_dir: "docs"
 navbar:
-  title: "Cars"
+  title: "MIKK panel analysis"
   left:
   - text: "Home"
    href: index.html
-  - text: "Speed and Distance"
-   href: speed-and-distance.html
+  - text: "LD"
+   href: ld_notebook.html
 output:
   html_document:
  theme: cosmo
