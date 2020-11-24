@@ -1,0 +1,16 @@
+name: "MIKK panel analysis"
+output_dir: "docs"
+navbar:
+  title: "MIKK panel analysis"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "LD"
+      href: 20201120_markdown_ld-decay.html
+output:
+  html_document:
+    theme: cerulean
+    highlight: textmate
+    include:
+      after_body: footer.html
+    css: styles.css
