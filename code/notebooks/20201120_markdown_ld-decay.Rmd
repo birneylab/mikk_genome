@@ -1,14 +1,14 @@
 ---
 title: "MIKK panel - LD decay analysis"
----
-
 output:
   html_document:
     toc: true
     toc_float: true
     number_sections: true
     keep_md: true
-    theme: cerulean
+---
+
+
 navbar:
   title: "MIKK panel analysis"
   left:
