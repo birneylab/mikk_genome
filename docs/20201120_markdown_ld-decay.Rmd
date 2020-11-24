@@ -7,7 +7,6 @@ output:
     number_sections: true
 ---
 
-
 # Setup
 
 ## Create conda evironment
@@ -117,7 +116,7 @@ Manually removed duplicate lines (`mikk_genome/data/20200227_duplicates_excluded
 
 Final no-sibling-lines CRAM-to-lineID key file: `mikk_genome/data/20200227_cram2line_no-sibs.txt`
 
-# Create no-sibling-lines MIKK panel VCF
+# Create MIKK panel VCF with no sibling lines
 
 ```{bash, eval = F}
 # create no-sibs file with CRAM ID only
@@ -333,18 +332,45 @@ See zoomed plots here:
 ![**5:28181970-28970558**](hv_5_28181970-28970558.png)
 
 ![**6:29398579-32246747**](hv_6_29398579-32246747.png)
-
-![**12:25336174-25384053**](hv_12_25336174-25384053.png) 
-![**14:12490842-129470833**](hv_14_12490842-12947083.png)
-
-
+![**12:25336174-25384053**](hv_12_25336174-25384053.png)
+![**14_12490842-12947083**](hv_14_12490842-12947083.png)
 ![**17:15557892-19561518**](hv_17_15557892-19561518.png)
 
-![**hv_21_6710074-7880374**](hv_21_6710074-7880374.png)
+![**21:6710074-7880374**](hv_21_6710074-7880374.png)
 
 # LD decay
 
-## Obtain 
+## Obtain 1000 Genomes dataset
+
+### Download from FTP
+
+```{bash, eval = F}
+cd vcfs
+
+wget -r -p -k --no-parent -cut-dirs=5 ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/
+```
+
+### Put list of files into list
+
+```{bash, eval = F}
+find vcfs/ftp.1000genomes.ebi.ac.uk/ALL.chr*.vcf.gz > mikk_genome/data/20200205_vcfs.list
+```
+
+### Merge VCFs
+
+```{bash, eval = F}
+# Remove MT and Y from list 
+sed -i '/MT/d' mikk_genome/data/20200205_vcfs.list
+
+sed -i '/chrY/d' mikk_genome/data/20200205_vcfs.list
+
+# run MergeVCFs 
+java -jar /nfs/software/birney/picard-2.9.0/picard.jar MergeVcfs \
+  I=mikk_genome/data/20200205_vcfs.list \
+  O=vcfs/1gk_all.vcf.gz
+```
+
+## Get LD stats using `Plink`
 
 ```{bash, eval = F}
 # make BED
@@ -361,7 +387,7 @@ plink \
   --chr-set 24 no-xy \
   --out plink/20200727_mikk_no-missing_maf-0.05/20200727
 
-# get LD   
+# get LD stats for MIKK
 mkdir ld/20200727_mikk_maf-0.10_window-50kb_no-missing/
 
 for i in $(seq 1 24); do
@@ -377,7 +403,7 @@ for i in $(seq 1 24); do
       --out ld/20200727_mikk_maf-0.10_window-50kb_no-missing/$i;
 done
 
-# for 1KG too
+# get LD stats for 1KG
 mkdir ld/20200727_1kg_maf-0.10_window-50kb_no-missing/
 
 for i in $(seq 1 22); do
@@ -393,7 +419,7 @@ for i in $(seq 1 22); do
 done
 
 # do again with ld-window-kb 10 to get counts of comparisons for paper
-# get LD   
+# MIKK  
 mkdir ld/20200803_mikk_maf-0.10_window-10kb_no-missing/
 
 for i in $(seq 1 24); do
@@ -409,7 +435,7 @@ for i in $(seq 1 24); do
       --out ld/20200803_mikk_maf-0.10_window-10kb_no-missing/$i;
 done
 
-# for 1KG too
+# 1KG
 mkdir ld/20200803_1kg_maf-0.10_window-10kb_no-missing/
 
 for i in $(seq 1 22); do
@@ -424,12 +450,145 @@ for i in $(seq 1 22); do
       --out ld/20200803_1kg_maf-0.10_window-10kb_no-missing/$i;
 done
 
-# Get counts
+# Get total counts of pairwise comparisons:
 wc -l ld/20200803_mikk_maf-0.10_window-10kb_no-missing/*.ld
-# Total: 
+# 204,152,898
 wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld
 ```
 
+## Get mean LD within SNP-distance windows
 
+Rscript here: `mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R`
 
+### MIKK
+
+```{bash, eval = F}
+script=mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R
+
+mkdir ld/20200727_mean_r2_10kb-lim_mikk
+
+for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
+  name=$(basename $i | cut -f1 -d".") ;
+  out_dir=ld/20200727_mean_r2_10kb-lim_mikk ;
+  bsub \
+    -M 10000 \
+    -o log/20200727_$name\_mean-r2_1kb-max.out \
+    -e log/20200727_$name\_mean-r2_1kb-max.err \
+    "Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir";
+done
+```
+
+### 1KG
+
+```{bash}
+mkdir ld/20200727_mean_r2_10kb-lim_1kg
+
+for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
+  name=$(basename $i | cut -f1 -d".") ;
+  out_dir=ld/20200727_mean_r2_10kb-lim_1kg ;
+  bsub \
+    -M 30000 \
+    -o log/20200727_$name\_mean-r2_10kb-max.out \
+    -e log/20200727_$name\_mean-r2_10kb-max.err \
+    "Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir";
+done
+```
+
+## Create LD plots in `R`
+
+### Read in and process data
+
+```{r, eval = F}
+# Setup
+require(here)
+source(here("code", "scripts", "setup.R"))
+
+# Create function to read in data and bind into single DF
+
+read_n_bind = function(dataset){
+  # Set path
+  path = paste("ld/20200727_mean_r2_10kb-lim_", dataset, sep = "")
+  
+  # Read in data
+  data_files <- list.files(path,
+                           full.names = T)
+  data_files_trunc <- list.files(path)
+  data_files_trunc <- gsub(".txt", "", data_files_trunc)
+  
+  data_list <- lapply(data_files, function(data_file){
+    df <- read.delim(data_file,
+                     sep = "\t",
+                     header = T)
+    return(df)
+  })
+  names(data_list) <- as.integer(data_files_trunc)
+  
+  # reorder
+  data_list <- data_list[order(as.integer(names(data_list)))]
+  
+  # bind into DF
+  out_df = dplyr::bind_rows(data_list, .id = "chr")
+  out_df$chr <- factor(out_df$chr, levels = seq(1, 24))
+  
+  # get kb measure
+  out_df$bin_bdr_kb <- out_df$bin_bdr / 1000  
+  
+  return(out_df)
+}
+
+# Run over both datasets
+datasets = c("mikk", "1kg")
+final_lst = lapply(datasets, read_n_bind)
+names(final_lst) = datasets
+
+# Combine into single DF
+r2_final_df <- dplyr::bind_rows(final_lst, .id = "dataset")
+```
+
+```{r, eval = F}
+# Write table
+write.table(r2_final_df,
+            file = here("mikk_genome", "data", "20200803_r2_10kb-lim.csv"),
+            quote = F, sep = ",", row.names = F, col.names = T)
+```
+
+### Plot
+
+```{r, include = F}
+r2_final_df = read.table(here("data", "20200803_r2_10kb-lim.csv"),
+                         header = T,
+                         sep = ",",
+                         as.is = T)
+```
+
+```{r}
+r2_plot_main = r2_final_df %>% ggplot() +
+  geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance between SNPs (kb)") +
+  ylab(bquote(.("Mean r")^2)) +
+  facet_wrap(~dataset, nrow = 1, ncol = 2) +
+  theme(panel.grid = element_blank()) +
+  labs(colour = "Chromosome") +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+
+r2_plot_main
+
+# Save 
+ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep = ""),
+       plot = r2_plot_main,
+       device = "png",
+       path = here("mikk_genome", "plots"),
+       width = 25,
+       height = 13,
+       units = "cm",
+       dpi = 500)
+```
 
