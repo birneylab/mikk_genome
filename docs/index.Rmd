@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "MIKK panel analysis"
 ---
 
-THIS IS THE HOMEPAGE
+Pages associated with the forthcoming paper describing the MIKK panel genome by Fitzgerald et al.
