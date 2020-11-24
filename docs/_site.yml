@@ -5,8 +5,8 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "LD decay"
-      href: ../../code/notebooks/20201120_markdown_ld-decay.html
+    - text: "LD"
+      href: code/notebooks/20201120_markdown_ld-decay.html
 output:
   html_document:
-    theme: cerulean
+    theme: cosmo
