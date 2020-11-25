@@ -8720,6 +8720,7 @@ df %>%
     labs(colour = "P2")
     
 ```
+
 ```{r}
 ggsave(filename = paste("20201022_fd_by_chr", ".png", sep = ""),
        device = "png",
@@ -8825,6 +8826,13 @@ write.table(df,
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_hdrr_hni_hsok.txt ~/Documents/Data/20201012_mikk_genome
 ```
 
+```{bash, eval = F}
+# Make version with just HNI and HSOK
+awk -v OFS="\t" '{print $1, $2, $4, $5}' \
+  geno/20201023_abba_sw_granges_final/20201023_hdrr_hni_hsok.txt \
+  > geno/20201023_abba_sw_granges_final/20201023_hni_hsok.txt
+```
+
 ```{r}
 # Read in file on local
 ol_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_hdrr_hni_hsok.txt",
@@ -8871,13 +8879,15 @@ bcftools view \
       --format '%CHROM\t%POS\n' \
       --output geno/20201023_abba_sw_granges_final/20201023_mikk.txt
       
+gzip -k geno/20201023_abba_sw_granges_final/20201023_mikk.txt      
+      
 # Pull to local
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_mikk.txt ~/Documents/Data/20201012_mikk_genome
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_mikk.txt.gz ~/Documents/Data/20201012_mikk_genome
 ```
 
 ```{r}
 # Read in file on local
-mikk_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_mikk.txt",
+mikk_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_mikk.txt.gz",
                             col.names = c("chr", "pos"), 
                             sep = "\t", 
                             as.is = T)
@@ -8889,6 +8899,8 @@ mikk_ranges = GenomicRanges::makeGRangesFromDataFrame(mikk_ranges_df,
                                                       seqnames.field = "chr",
                                                       start.field = "pos",
                                                       end.field = "pos")
+
+saveRDS(mikk_ranges, here("data", "mikk_ranges.rds"))
 ```
 
 
