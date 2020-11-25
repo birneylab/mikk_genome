@@ -1,7 +1,7 @@
-name: "MIKK panel analysis"
+name: "MIKK panel genome"
 output_dir: "."
 navbar:
-  title: "MIKK panel analysis"
+  title: "MIKK panel genome"
   left:
     - text: "Home"
       href: index.html
@@ -9,6 +9,8 @@ navbar:
       href: 20201120_markdown_ld-decay.html
     - text: "Introgression"
       href: 20201125_markdown_introgression.html
+    - text: "Repeat Elements"
+      href: 20201126_repeats.html
 output:
   html_document:
     theme: flatly
