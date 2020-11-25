@@ -3,4 +3,4 @@ For the forthcoming paper describing the MIKK panel genome by the Birney Group (
 
 Code and figures from my contributions to the analysis are available on the github site for this repo: 
 
-https://ian-brettell.github.io/mikk_genome/.
+https://ian-brettell.github.io/mikk_genome/
