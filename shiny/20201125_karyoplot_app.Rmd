@@ -270,6 +270,11 @@ ol_ranges = GenomicRanges::makeGRangesFromDataFrame(ol_ranges_df,
 saveRDS(ol_ranges, here("data", "20201125_ol_ranges.rds"))
 ```
 
+```{r, include = F}
+# Load exon density for app
+ol_ranges = readRDS(here("data", "20201125_ol_ranges.rds"))
+```
+
 # Plot
 
 ```{r}
