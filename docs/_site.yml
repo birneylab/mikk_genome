@@ -7,6 +7,8 @@ navbar:
       href: index.html
     - text: "Linkage Disequilibrium"
       href: 20201120_markdown_ld-decay.html
+    - text: "Introgression"
+      href: 20201125_markdown_introgression.html
 output:
   html_document:
     theme: flatly
