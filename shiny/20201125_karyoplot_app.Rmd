@@ -1,0 +1,205 @@
+---
+title: "MIKK panel karyoplot app"
+author: "Ian Brettell"
+date: "25/11/2020"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This R Markdown document is made interactive using Shiny. Unlike the more traditional workflow of creating static reports, you can now create documents that allow your readers to change the assumptions underlying your analysis and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Inputs and Outputs
+
+You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
+
+
+
+```{r eruptions, echo=FALSE}
+inputPanel(
+  selectInput("n_breaks", label = "Number of bins:",
+              choices = c(10, 20, 35, 50), selected = 20),
+  
+  sliderInput("bw_adjust", label = "Bandwidth adjustment:",
+              min = 0.2, max = 2, value = 1, step = 0.2)
+)
+
+renderPlot({
+  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),
+       xlab = "Duration (minutes)", main = "Geyser eruption duration")
+  
+  dens <- density(faithful$eruptions, adjust = input$bw_adjust)
+  lines(dens, col = "blue")
+})
+```
+
+## Embedded Application
+
+It's also possible to embed an entire Shiny application within an R Markdown document using the `shinyAppDir` function. This example embeds a Shiny application located in another directory:
+
+```{r tabsets, echo=FALSE}
+shinyAppDir(
+  system.file("examples/06_tabsets", package = "shiny"),
+  options = list(
+    width = "100%", height = 550
+  )
+)
+```
+
+Note the use of the `height` parameter to determine how much vertical space the embedded application should occupy.
+
+You can also use the `shinyApp` function to define an application inline rather then in an external directory.
+
+In all of R code chunks above the `echo = FALSE` attribute is used. This is to prevent the R code within the chunk from rendering in the document alongside the Shiny components.
+
+# Setup
+
+```{r, message=F, warning=F}
+library(karyoploteR)
+library(tidyverse)
+library(here)
+```
+
+# Read in ABBA-BABA sliding windows data and process
+
+```{r}
+# Read in data
+df = read.table(here("data", "20201022_abba_sliding_windows.txt"), header = T, sep = "\t", as.is = T)
+
+# Convert fd to 0 if D < 0
+df$fd = ifelse(df$D < 0,
+               0,
+               df$fd)
+
+# Change names
+df = df %>% 
+  dplyr::mutate(p2 = recode(df$p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK"))
+
+# Set colours
+cols <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#08605F", "#002642", "#B02156")
+names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", "iCab")
+
+# Filter for melastigma
+df_kp = df %>%
+  dplyr::filter(p1 == "melastigma")
+# make chr numeric
+df_kp$scaffold <- as.numeric(df_kp$scaffold)
+```
+
+# Make custom Karyoplot scaffold
+
+```{r}
+# Get chromosome lengths
+med_chr_lens = read.table(here("data", "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+                          col.names = c("chr", "end"))
+# Add start
+med_chr_lens$start = 1
+# Reorder
+med_chr_lens = med_chr_lens %>% 
+  dplyr::select(chr, start, end)
+# Create custom genome
+med_genome = regioneR::toGRanges(med_chr_lens)
+# Create plot
+#kp = karyoploteR::plotKaryotype(genome = med_genome)
+```
+
+# Get exon density
+
+```{r}
+# Get list of exons from biomaRt
+library("biomaRt")
+# Select dataset
+olat_mart = useEnsembl(biomart = "ensembl", dataset = "olatipes_gene_ensembl")
+# Get attributes of interest (exon ID, chr, start, end)
+exons <- getBM(attributes = c("chromosome_name", "ensembl_gene_id", "ensembl_transcript_id", "transcript_start", "transcript_end", "transcript_length", "ensembl_exon_id", "rank", "strand", "exon_chrom_start", "exon_chrom_end", "cds_start", "cds_end"),
+               mart = olat_mart)
+# Convert exons to GRanges
+ex_ranges = GenomicRanges::makeGRangesFromDataFrame(exons,
+                                                    ignore.strand = T,
+                                                    seqnames.field = "chromosome_name",
+                                                    start.field = "exon_chrom_start",
+                                                    end.field = "exon_chrom_end")
+```
+
+# Plot
+
+```{r}
+inputPanel(
+  selectInput("chromosome", label = "Chromosome",
+              choices = seq(1, 24), selected = 2)
+)
+
+# Plot 
+kp = plotKaryotype(med_genome)
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
+# Add data backgrounds
+karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
+# Add axis label
+kpAxis(kp, r0=0.6, r1 = 1, cex = 0.4)
+# Add fd data
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HNI"],
+                     x = df_kp$mid[df_kp$p2 == "HNI"],
+                     y = df_kp$fd[df_kp$p2 == "HNI"],
+                     col = "#F6673A",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HdrR"],
+                     x = df_kp$mid[df_kp$p2 == "HdrR"],
+                     y = df_kp$fd[df_kp$p2 == "HdrR"],
+                     col = "#F3B61F",
+                     r0=0.6, r1 = 1)
+karyoploteR::kpLines(kp,
+                     chr = df_kp$scaffold[df_kp$p2 == "HSOK"],
+                     x = df_kp$mid[df_kp$p2 == "HSOK"],
+                     y = df_kp$fd[df_kp$p2 == "HSOK"],
+                     col = "#631E68",
+                     r0=0.6, r1 = 1)
+# Add SNP density data
+kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
+              r0=0, r1=0.15, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
+              r0=0.15, r1=0.3, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
+              r0=0.3, r1=0.45, 
+              window.size = 25000)
+kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
+              r0=0.45, r1=0.6,
+              window.size = 25000)
+# Add exon density to ideogram
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 1)
+kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
+              data.panel = "ideogram",
+              window.size = 25000,
+              r0 = 0.5, r1 = 0)
+# Add labels
+kpAddLabels(kp, labels="MIKK",
+            r0=0, r1=0.15, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HNI",
+            r0=0.15, r1=0.3, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HSOK",
+            r0=0.3, r1=0.45, 
+            cex = 0.4)
+kpAddLabels(kp, labels="HdrR",
+            r0=0.45, r1=0.6, 
+            cex = 0.4)
+kpAddLabels(kp, labels=bquote(italic(f[d])),
+            r0=0.6, r1=1, 
+            label.margin = 0.035,
+            cex = 0.6)
+```
+```
+

@@ -350,7 +350,7 @@ knitr::include_graphics("hv_17_15557892-19561518.png")
 knitr::include_graphics("hv_21_6710074-7880374.png")
 ```
 
-# Genotype heatmaps
+# Genotype heatmaps for high-LD regions
 
 See which lines are causing the high-LD regions at the `MAF > 0.05` threshold (i.e. from a sample of 63 diploid individuals, variants with an allele count (`AC`) of at least `7`).
 
