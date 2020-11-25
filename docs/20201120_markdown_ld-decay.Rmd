@@ -1,5 +1,5 @@
 ---
-title: "MIKK panel - LD decay analysis"
+title: "Linkage Disequilibrium analysis"
 output:
   html_document:
     toc: true
@@ -8,6 +8,17 @@ output:
 ---
 
 # Setup
+
+## Create directory structure and clone repo
+
+(Working directory on EBI cluster: `/hps/research1/birney/users/ian/mikk_paper`)
+
+```{bash, eval = F}
+# move to working directory
+cd /your/working/directory
+# clone git repository
+git clone https://github.com/Ian-Brettell/mikk_genome.git
+```
 
 ## Create conda evironment
 
@@ -19,31 +30,15 @@ conda env create \
 conda activate mikk_env
 ```
 
-## Load R packages
-
-```{r, message = F}
-require(here)
-require(tidyverse)
-```
-
-## Create directory structure and clone repo
-
-(Working directory on EBI cluster: `/hps/research1/birney/users/ian/mikk_paper`)
-
-```{bash, eval = F}
-# move to working directory
-cd /your/working/directory
-# clone git repository
-git clone https://github.com/Ian-Brettell/mikk_genome.git
-# create directory for VCFs
-mkdir vcfs
-```
-
 ## Copy MIKK panel VCF into working directory
 
 (See supplementary material for how VCF was generated.)
 
 ```{bash, eval = F}
+# create directory for VCFs
+mkdir vcfs
+
+# Copy into working directory
 cp /nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf* vcfs
 ```
 
@@ -208,6 +203,7 @@ plink \
   --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
   --recode A-transpose \
   --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012
+# creates plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw  
 ```
 
 ## Create BED sets filtered for MAF > 0.03, 0.05 and 0.10
@@ -313,6 +309,7 @@ done
 ```
 
 These `svg` files can be converted to `pdf` using:
+
 * <https://www.zamzar.com/> for files > 30 MB (chr 1) - note limit on number of files you can convert
 * <https://onlineconvertfree.com/convert-format/svg-to-pdf/> for the rest
 
@@ -329,16 +326,165 @@ By inspecting these LD plots at the `MAF > 0.05` level, we discovered the follow
 
 See zoomed plots here:
 
-![**5:28181970-28970558**](hv_5_28181970-28970558.png)
+```{r, echo = F, fig.cap = "5:28181970-28970558"}
+knitr::include_graphics("hv_5_28181970-28970558.png")
+```
 
-![**6:29398579-32246747**](hv_6_29398579-32246747.png)
-![**12:25336174-25384053**](hv_12_25336174-25384053.png)
-![**14_12490842-12947083**](hv_14_12490842-12947083.png)
-![**17:15557892-19561518**](hv_17_15557892-19561518.png)
+```{r, echo = F, fig.cap = "6:29398579-32246747"}
+knitr::include_graphics("hv_6_29398579-32246747.png")
+```
 
-![**21:6710074-7880374**](hv_21_6710074-7880374.png)
+```{r, echo = F, fig.cap = "12:25336174-25384053"}
+knitr::include_graphics("hv_12_25336174-25384053.png")
+```
+
+```{r, echo = F, fig.cap = "14:12490842-12947083"}
+knitr::include_graphics("hv_14_12490842-12947083.png")
+```
+
+```{r, echo = F, fig.cap = "17:15557892-19561518"}
+knitr::include_graphics("hv_17_15557892-19561518.png")
+```
+
+```{r, echo = F, fig.cap = "21:6710074-7880374"}
+knitr::include_graphics("hv_21_6710074-7880374.png")
+```
+
+# Genotype heatmaps
+
+See which lines are causing the high-LD regions at the `MAF > 0.05` threshold (i.e. from a sample of 63 diploid individuals, variants with an allele count (`AC`) of at least `7`).
+
+## Read data into BED matrix into `R`
+
+```{r, eval = F}
+# Load required libraries
+require(here)
+source(here("mikk_genome", "code", "scripts", "setup.R"))
+
+# Read in BED matrix
+mikk_full <- gaston::read.bed.matrix(here("plink", "20200716_panel_no-sibs_line-ids_no-missing/20200716"),
+                                     rds = NULL)
+
+# Read in genotypes file
+mikk_geno <- readr::read_tsv(file = here("plink", "20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw"),
+                             progress = T,
+                             col_names = T)
+
+# rename IDs
+colnames(mikk_geno)[7:length(colnames(mikk_geno))] <- mikk_full@ped$id
+```
+
+## Extract target regions and build into list
+
+```{r, eval = F}
+# get coordinates
+high_ld_chrs <- c(5, 6, 12, 14, 17, 21)
+high_ld_start <- c(28385805, 29608514, 25340000, 12584614, 15559963, 6800261)
+high_ld_end <- c(28798048, 32212235, 25372985, 12861147, 19553529, 7760258)
+
+# build into list
+counter <- 0
+high_ld_lst <- lapply(high_ld_chrs, function(x){
+  counter <<- counter + 1
+  x <- list("chr" = x,
+            "start" = high_ld_start[counter],
+            "end" = high_ld_end[counter])
+  # find indexes for SNPs with MAF > 0.05
+  x[["target_inds"]] <- which(mikk_full@snps$chr == x[["chr"]] &
+                         dplyr::between(mikk_full@snps$pos, x[["start"]], x[["end"]]) &
+                         mikk_full@snps$maf > 0.05)
+  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]  
+  # make matrix
+  x[["geno_mat"]] <- as.matrix(x[["target_snps"]][, -(1:6)])
+  return(x)
+})
+names(high_ld_lst) <- high_ld_chrs
+
+# save to repo
+saveRDS(high_ld_lst, here("mikk_genome", "data", "20200727_high_ld_list.rds"))
+```
+
+## Plot
+
+Genotypes were recoded to 0, 1, 2 for REF, HET, and HOM_ALT respectively.
+
+Dark red = 2
+Orange = 1
+Yellow = 0
+
+```{r load_high_ld_list, include = F}
+high_ld_lst = readRDS(here("data", "20200727_high_ld_list.rds"))
+```
+
+```{r}
+# Write function to create heatmap
+get_heatmap = function(in_list){
+  # Get order of samples
+  sample_order = colnames(in_list[["target_snps"]])[-(1:6)]  
+  # Sort by count
+  sorted_order = names(sort(colSums(in_list[["geno_mat"]]), decreasing = T))
+  # Get re-ordered indein_listes
+  new_ind = match(sorted_order, sample_order)
+  # Plot
+  heatmap(in_list[["geno_mat"]][, new_ind], 
+          Rowv = NA,
+          Colv = NA,
+          scale = "row",
+          keep.dendro = F)  
+}
+```
+
+### Chr 5
+
+```{r, cache = T, fig.show="hold", out.width='50%',  fig.cap = "5:28181970-28970558"}
+knitr::include_graphics("hv_5_28181970-28970558.png")
+x = high_ld_lst[["5"]]
+get_heatmap(x)
+```
+
+### Chr 6
+
+```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "6:29398579-32246747"}
+knitr::include_graphics("hv_6_29398579-32246747.png")
+x = high_ld_lst[["6"]]
+get_heatmap(x)
+```
+
+### Chr 12
+
+```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "12:25336174-25384053"}
+knitr::include_graphics("hv_12_25336174-25384053.png")
+x = high_ld_lst[["12"]]
+get_heatmap(x)
+```
+
+### Chr 14
+
+```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "14:12490842-12947083"}
+knitr::include_graphics("hv_14_12490842-12947083.png")
+x = high_ld_lst[["14"]]
+get_heatmap(x)
+```
+
+### Chr 17
+
+```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "17:15557892-19561518"}
+knitr::include_graphics("hv_17_15557892-19561518.png")
+x = high_ld_lst[["17"]]
+get_heatmap(x)
+```
+
+### Chr 21
+
+```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "21:6710074-7880374"}
+knitr::include_graphics("hv_21_6710074-7880374.png")
+x = high_ld_lst[["21"]]
+get_heatmap(x)
+```
 
 # LD decay
+
+We want to compare the rate at which LD decays with inter-SNP distance between the MIKK panel and humans. This will give an indication of the resolution at which one can map genetic traits using the MIKK panel, *provided that at least two lines have the same variant of interest*.
 
 ## Obtain 1000 Genomes dataset
 
@@ -458,9 +604,11 @@ wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld
 
 ## Get mean LD within SNP-distance windows
 
+### 0-10kb distance (main, MIKK v 1KG)
+
 Rscript here: `mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R`
 
-### MIKK
+#### MIKK
 
 ```{bash, eval = F}
 script=mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R
@@ -481,9 +629,9 @@ for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
 done
 ```
 
-### 1KG
+#### 1KG
 
-```{bash}
+```{bash, eval = F}
 mkdir ld/20200727_mean_r2_10kb-lim_1kg
 
 for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
@@ -500,20 +648,45 @@ for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
 done
 ```
 
+### 0-1kb distance (inset, MIKK only)
+
+Rscript: `mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_1kb-lim.R`
+
+```{bash, eval = F}
+mkdir ld/20200803_mean_r2_1kb-lim_mikk
+
+out_dir=ld/20200803_mean_r2_1kb-lim_mikk
+script=mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_1kb-lim.R
+
+for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*ld); do
+  name=$(basename $i | cut -f1 -d".");
+  bsub \
+    -M 30000 \
+    -o log/20200803_$name\_mean-r2_1kb-max.out \
+    -e log/20200803_$name\_mean-r2_1kb-max.err \
+    "Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir";
+done
+```
+
 ## Create LD plots in `R`
 
-### Read in and process data
+### Main
+
+#### Read in and process data
 
 ```{r, eval = F}
 # Setup
 require(here)
-source(here("code", "scripts", "setup.R"))
+source(here("mikk_genome", "code", "scripts", "setup.R"))
 
 # Create function to read in data and bind into single DF
 
-read_n_bind = function(dataset){
+read_n_bind = function(data_path_pref, dataset){
   # Set path
-  path = paste("ld/20200727_mean_r2_10kb-lim_", dataset, sep = "")
+  path = paste(data_path_pref, dataset, sep = "")
   
   # Read in data
   data_files <- list.files(path,
@@ -544,7 +717,7 @@ read_n_bind = function(dataset){
 
 # Run over both datasets
 datasets = c("mikk", "1kg")
-final_lst = lapply(datasets, read_n_bind)
+final_lst = lapply(datasets, function(x) read_n_bind("ld/20200727_mean_r2_10kb-lim_", x))
 names(final_lst) = datasets
 
 # Combine into single DF
@@ -552,22 +725,26 @@ r2_final_df <- dplyr::bind_rows(final_lst, .id = "dataset")
 ```
 
 ```{r, eval = F}
-# Write table
+# Write table to repo
 write.table(r2_final_df,
             file = here("mikk_genome", "data", "20200803_r2_10kb-lim.csv"),
             quote = F, sep = ",", row.names = F, col.names = T)
 ```
 
-### Plot
+#### Plot
 
 ```{r, include = F}
 r2_final_df = read.table(here("data", "20200803_r2_10kb-lim.csv"),
                          header = T,
-                         sep = ",",
-                         as.is = T)
+                         sep = ",")
 ```
 
-```{r}
+```{r, fig.width=18.75, fig.height=9.75}
+# Tidy data for final plot
+r2_final_df$chr = factor(r2_final_df$chr, levels = seq(1, 24))
+r2_final_df$dataset = toupper(r2_final_df$dataset)
+
+# Plot
 r2_plot_main = r2_final_df %>% ggplot() +
   geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
   theme_bw() +
@@ -581,7 +758,10 @@ r2_plot_main = r2_final_df %>% ggplot() +
 
 r2_plot_main
 
-# Save 
+```
+
+```{r, eval = F}
+# Save plot to repo
 ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep = ""),
        plot = r2_plot_main,
        device = "png",
@@ -592,3 +772,226 @@ ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep
        dpi = 500)
 ```
 
+### Inset
+
+```{r, eval = F}
+# Read in data
+r2_df_1kb_mikk = read_n_bind("ld/20200803_mean_r2_1kb-lim_", "mikk")
+
+```
+
+```{r, eval = F}
+# Write table to repo
+write.table(r2_df_1kb_mikk,
+            file = here("mikk_genome", "data", "20200803_r2_1kb-lim_mikk.csv"),
+            quote = F, sep = ",", row.names = F, col.names = T)
+```
+
+```{r, include = F}
+r2_df_1kb_mikk = read.table(here("data", "20200803_r2_1kb-lim_mikk.csv"),
+                            header = T,
+                            sep = ",")
+```
+
+```{r}
+# Process for plotting
+r2_df_1kb_mikk$chr <- factor(r2_df_1kb_mikk$chr, levels = seq(1, 24))
+
+# Plot
+r2_1kb_mikk = r2_df_1kb_mikk %>% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (bp)") +
+  ylab(bquote(.("Mean r")^2)) +
+  labs(colour = "Chromosome") +
+  theme(panel.grid = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14)) +
+  guides(colour = F) +
+  scale_x_continuous(limits = c(0, 1000)) +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+
+r2_1kb_mikk
+```
+
+```{r, eval = F}
+# Save to repo
+ggsave(filename = paste("20200803_mean-r2_1kb-lim_MIKK_inset_100bp-bins", ".png", sep = ""),
+       plot = r2_1kb_mikk,
+       device = "png",
+       path = here("mikk_genome", "plots"),
+       width = 10.88,
+       height = 8,
+       units = "cm",
+       dpi = 500)
+```
+
+# Investigation of LD decay in chr 2
+
+Chromsome 2 has an obviously faster LD decay than the other chromosomes. We explore some possible reasons for this.
+
+## Get lengths of each chr on `bash`
+```{bash, eval = F}
+seq 1 24 > tmp1.txt
+
+grep ">" refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa | scut -f6 -d":" | head -24 > tmp2.txt
+
+paste tmp1.txt tmp2.txt > mikk_genome/data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt
+```
+
+## Get proportion of each chromosome covered by exons using `biomaRt`
+
+Move into repo directory before running `R`
+
+```{bash, eval = F}
+cd mikk_genome
+R
+```
+
+```{r, message = F, warning = F}
+# Load libraries
+library(here)
+source(here("code", "scripts", "setup.R"))
+
+# Get length of chromosomes
+chr_counts <- readr::read_tsv(here("data", "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+                              col_names = c("chr", "length"))
+
+# List marts 
+listMarts()
+
+# Select database and list datasets within
+ensembl_mart <- useMart("ENSEMBL_MART_ENSEMBL")
+
+# Select dataset
+ensembl_olat <- useDataset("olatipes_gene_ensembl", mart = ensembl_mart)
+olat_mart = useEnsembl(biomart = "ensembl", dataset = "olatipes_gene_ensembl")
+# Get attributes of interest (exon ID, chr, start, end)
+exons <- getBM(attributes = c("chromosome_name", "ensembl_gene_id", "ensembl_transcript_id", "transcript_start", "transcript_end", "transcript_length", "ensembl_exon_id", "rank", "strand", "exon_chrom_start", "exon_chrom_end", "cds_start", "cds_end"),
+               mart = olat_mart)
+
+# Factorise chr so it's in the right order
+chrs <- unique(exons$chromosome_name)
+auto_range <- range(as.integer(chrs), na.rm = T)
+non_auto <- chrs[is.na(as.integer(chrs))]
+chr_order <- c(seq(auto_range[1], auto_range[2]), non_auto)
+exons$chromosome_name <- factor(exons$chromosome_name, levels = chr_order)
+
+# Convert into list
+exons_lst <- split(exons, f = exons$chromosome_name)
+
+# Get mean length of exons per chromosome
+exons_lst <- lapply(exons_lst, function(chr){
+  chr <- chr %>%
+    dplyr::mutate(exon_length = (exon_chrom_end - exon_chrom_start) + 1,
+                  transcript_total_length = (transcript_end - transcript_start) + 1)
+  return(chr)
+})
+
+# Get total length of chr covered by exons
+exon_lengths <- lapply(exons_lst, function(chr){
+  # create list of start pos to end pos sequences for each exon
+  out_list <- apply(chr, 1, function(exon) {
+    seq(exon[["exon_chrom_start"]], exon[["exon_chrom_end"]])
+  })
+  # combine list of vectors into single vector and get only unique numbers
+  out_vec <- unique(unlist(out_list))
+  # get length of out_vec and put it into data frame
+  out_final <- data.frame("exon_cov" = length(out_vec))
+  return(out_final)
+})
+
+# combine into single DF
+exons_len_df <- dplyr::bind_rows(exon_lengths, .id = "chr") %>% 
+  dplyr::filter(chr != "MT") %>% 
+  dplyr::mutate(chr = as.integer(chr))
+
+# join with chr_counts and get proportion of chr covered by exons
+chr_stats <- dplyr::left_join(chr_counts, exons_len_df, by = "chr") %>% 
+  dplyr::mutate(prop_cov_exon = exon_cov / length)
+# convert chr to factor for plotting
+chr_stats$chr <- factor(chr_stats$chr)
+```
+
+## Get SNP counts per megabase
+
+### Get counts
+
+```{bash, eval = F}
+bcftools index \
+  --stats \
+  ../vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af.vcf.gz \
+    > data/20201106_non-missing_bi-snp_count.txt
+```
+
+### Read SNP counts data into `R`
+
+```{r}
+snp_counts = read.table(here::here("data", "20201106_non-missing_bi-snp_count.txt"),
+                        sep = "\t",
+                        col.names = c("chr", "length", "snp_count")) %>% 
+  # create megabase column
+  dplyr::mutate(megabases = length / 1e6,
+                snps_per_megabase = snp_count / megabases) %>% 
+  # remove MT
+  dplyr::filter(chr != "MT") %>% 
+  # turn chr column into integer
+  dplyr::mutate(chr = as.factor(as.integer(chr)))
+```
+
+
+## Combine SNP counts with exon proportion counts
+
+```{r}
+chr_df = snp_counts %>% 
+  dplyr::full_join(chr_stats, by = c("chr", "length"))
+
+# Create recode vector
+recode_vec = c("Non-missing, biallelic SNPs per megabase",
+               "Proportion of chromosome covered by exons")
+names(recode_vec) = c("snps_per_megabase",
+                      "prop_cov_exon")
+```
+
+## Plot
+```{r, fig.show="hold", out.width='50%', fig.cap = "SNPs per Mb vs proportion of chr covered by exons"}
+chr_df %>% 
+  tidyr::pivot_longer(cols = c(snps_per_megabase, prop_cov_exon), 
+                      names_to = "variable",
+                      values_to = "values") %>% 
+  dplyr::mutate(variable = dplyr::recode(variable, !!!recode_vec)) %>% 
+  ggplot() +
+    geom_col(aes(chr, values, fill = chr)) +
+    guides(fill = F) + 
+    xlab("Chromosome") +
+    ylab(NULL) +
+    theme_bw() +
+    facet_wrap(~variable,
+               nrow = 2, ncol = 1,
+               scales = "free_y")
+chr_df %>% 
+  ggplot(aes(snps_per_megabase, prop_cov_exon, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  guides(colour = F) +
+  xlab("Non-missing, biallelic SNPs per megabase") +
+  ylab("Proportion of chromosome covered by exons")
+```
+
+```{r, eval = F}
+# Save to repo
+ggsave(filename = paste("20201106_snps-per-mb_v_exon-props", ".png", sep = ""),
+       device = "png",
+       path = here("plots"),
+       width = 24,
+       height = 20,
+       units = "cm",
+       dpi = 500)
+```
+
+## Calculate correlation
+```{r}
+cor.test(chr_df$snps_per_megabase, chr_df$prop_cov_exon, method = "spearman")
+```

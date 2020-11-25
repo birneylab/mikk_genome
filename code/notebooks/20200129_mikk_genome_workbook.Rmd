@@ -9901,7 +9901,6 @@ ggsave(filename = paste("20201106_singleton_counts", ".png", sep = ""),
        dpi = 500)
 ```
 
-
 # Get SNP counts per megabase
 
 ## Get counts
