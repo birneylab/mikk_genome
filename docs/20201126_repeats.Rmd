@@ -112,7 +112,8 @@ hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
   # Rename columns
   dplyr::rename(chr = V1, tool = V2, class_full = V3, start = V4, end = V5, percent = V6, strand = V7, info = V9)
 
-head(hdrr_reps)
+# Show head of table
+knitr::kable(head(hdrr_reps, 10), format = "markdown")
 
 # Find types of class other than "(GATCCA)n" types
 class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
@@ -128,7 +129,8 @@ hdrr_reps = hdrr_reps %>%
   # "misc" for others in "(GATCCA)n" type classes
   dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "misc", class))
 
-head(hdrr_reps)
+# Show head of new table
+knitr::kable(head(hdrr_reps, 10), format = "markdown")
 
 # Split into list based on class
 rep_list = split(hdrr_reps, f = hdrr_reps$class)
@@ -234,7 +236,7 @@ for (i in seq_len(length(target_classes))){
 
 **NOTE**: As the plot for every chromosome is generated separately, the y-scale for the same class of repeat element changes with each plot. The chromosomes now also look as if they're the same length. It is therefore preferable to scan for genome-wide anomolies using the full-genome plot above.
 
-```{r, fig.height=8, fig.width=30}
+```{r, fig.height=4, fig.width=15}
 for (chr in as.character(seq(1, 24))){
   # Create Karyoplot
   kp = plotKaryotype(med_genome, chromosomes = chr)
