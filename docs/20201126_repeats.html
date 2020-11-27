@@ -620,10 +620,9 @@ knitr::kable(head(hdrr_reps, 10), format = &quot;markdown&quot;)</code></pre>
 <pre class="r"><code># Find types of class other than &quot;(GATCCA)n&quot; types
 class_types = unique(hdrr_reps$class[grep(&quot;)n&quot;, hdrr_reps$class, invert = T)])
 class_types</code></pre>
-<pre><code>##  [1] &quot;DNA&quot;           &quot;Unknown&quot;       &quot;SINE&quot;          &quot;LINE&quot;         
-##  [5] &quot;LTR&quot;           &quot;Simple_repeat&quot; &quot;Satellite&quot;     &quot;RC&quot;           
-##  [9] &quot;tRNA&quot;          &quot;rRNA&quot;          &quot;Retroposon&quot;    &quot;snRNA&quot;        
-## [13] &quot;&quot;              &quot;buffer&quot;        &quot;ARTEFACT&quot;      &quot;scRNA&quot;</code></pre>
+<pre><code>##  [1] &quot;DNA&quot;           &quot;Unknown&quot;       &quot;SINE&quot;          &quot;LINE&quot;          &quot;LTR&quot;           &quot;Simple_repeat&quot; &quot;Satellite&quot;    
+##  [8] &quot;RC&quot;            &quot;tRNA&quot;          &quot;rRNA&quot;          &quot;Retroposon&quot;    &quot;snRNA&quot;         &quot;&quot;              &quot;buffer&quot;       
+## [15] &quot;ARTEFACT&quot;      &quot;scRNA&quot;</code></pre>
 <pre class="r"><code># How many in the blank class?
 length(which(hdrr_reps$class == &quot;&quot;))</code></pre>
 <pre><code>## [1] 8</code></pre>
