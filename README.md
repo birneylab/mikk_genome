@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:126134fee573973d676a57cd11ef5d00b73a8c94ca85c0460413039cef01f15e
-size 468
+# MIKK panel genome analysis
+
+Repo for the forthcoming paper describing the MIKK panel genome by the Birney Group (EMBL-EBI), Wittbrodt Group (COS Heidelberg), and Loosli Group (KIT).
+
+
+Code and figures from my contributions to the analysis are available on the github site for this repo: 
+Code and figures from my contributions to the analysis are available on the GitHub Pages site for this repo: 
+
+
+https://ian-brettell.github.io/mikk_genome/
