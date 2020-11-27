@@ -1,5 +1,5 @@
 ---
-title: "MIKK panel analysis"
+title: "MIKK panel genome"
 ---
 
-Pages associated with the forthcoming paper describing the MIKK panel genome by Fitzgerald et al.
+Analyses for the forthcoming paper describing the MIKK panel genome by Fitzgerald, Leger et al.
