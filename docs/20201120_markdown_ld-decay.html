@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Linkage disequilibrium</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MIKK panel genome</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="20201120_markdown_ld-decay.html">Linkage Disequilibrium</a>
+</li>
+<li>
+  <a href="20201125_markdown_introgression.html">Introgression</a>
+</li>
+<li>
+  <a href="20201126_repeats.html">Repeat Elements</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Linkage disequilibrium</h1>
+
+</div>
+
+
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">1</span> Setup</h1>
+<div id="create-directory-structure-and-clone-repo" class="section level2">
+<h2><span class="header-section-number">1.1</span> Create directory structure and clone repo</h2>
+<p>(Working directory on EBI cluster: <code>/hps/research1/birney/users/ian/mikk_paper</code>)</p>
+<pre class="bash"><code># move to working directory
+cd /your/working/directory
+# clone git repository
+git clone https://github.com/Ian-Brettell/mikk_genome.git</code></pre>
+</div>
+<div id="create-conda-evironment" class="section level2">
+<h2><span class="header-section-number">1.2</span> Create conda evironment</h2>
+<pre class="bash"><code>conda env create \
+  -n mikk_env \
+  -f mikk_genome/code/config/conda_env.yml
+  
+conda activate mikk_env</code></pre>
+</div>
+<div id="copy-mikk-panel-vcf-into-working-directory" class="section level2">
+<h2><span class="header-section-number">1.3</span> Copy MIKK panel VCF into working directory</h2>
+<p>(See supplementary material for how VCF was generated.)</p>
+<pre class="bash"><code># create directory for VCFs
+mkdir vcfs
+
+# Copy into working directory
+cp /nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf* vcfs</code></pre>
+</div>
+<div id="key-value-file-for-cram-id-to-line-id" class="section level2">
+<h2><span class="header-section-number">1.4</span> Key-value file for cram ID to line ID</h2>
+<p><code>mikk_genome/data/20200206_cram_id_to_line_id.txt</code></p>
+</div>
+<div id="remove-sibling-lines-and-replicates" class="section level2">
+<h2><span class="header-section-number">1.5</span> Remove sibling lines and replicates</h2>
+<p><strong>Full list of 80 extant MIKK panel lines</strong>: <code>mikk_genome/data/20200210_panel_lines_full.txt</code></p>
+<p><strong>Note</strong>: Line <code>130-2</code> is missing from the MIKK panel VCF.</p>
+<p>Identify sibling lines</p>
+<pre class="bash"><code>cat mikk_genome/data/20200210_panel_lines_full.txt | cut -f1 -d&quot;-&quot; | sort | uniq -d</code></pre>
+<ul>
+<li>106</li>
+<li>11</li>
+<li>117</li>
+<li>131</li>
+<li>132</li>
+<li>135</li>
+<li>14</li>
+<li>140</li>
+<li>23</li>
+<li>39</li>
+<li>4</li>
+<li>40</li>
+<li>59</li>
+<li>69</li>
+<li>72</li>
+<li>80</li>
+</ul>
+<p>Only keep first sibling line ( suffix _1); manually remove all others and write list of non-sibling lines to here: <code>mikk_genome/data/20200227_panel_lines_no-sibs.txt</code>. 64 lines total.</p>
+<p>Excluded sibling lines here: <code>mikk_genome/data/20200227_panel_lines_excluded.txt</code>. 16 lines total.</p>
+<p>Replace all dashes with underscores to match <code>mikk_genome/data/20200206_cram_id_to_line_id.txt</code> key file</p>
+<pre class="bash"><code>sed &#39;s/-/_/g&#39; mikk_genome/data/20200227_panel_lines_no-sibs.txt \
+  &gt; mikk_genome/data/20200227_panel_lines_no-sibs_us.txt</code></pre>
+<p>Extract the lines to keep from the key file.</p>
+<pre class="bash"><code>awk  &#39;FNR==NR {f1[$0]; next} $2 in f1&#39; \
+  mikk_genome/data/20200227_panel_lines_no-sibs_us.txt \
+  mikk_genome/data/20200206_cram_id_to_line_id.txt \
+    &gt; mikk_genome/data/20200227_cram2line_no-sibs.txt</code></pre>
+<p>Has 66 lines instead of 63 (64 lines minus <code>130-2</code>, which isn’t in the VCF), so there must be replicates Find out which ones:</p>
+<pre class="bash"><code>cat mikk_genome/data/20200227_cram2line_no-sibs.txt | cut -f2 | cut -f1 -d&quot;_&quot; | sort | uniq -d</code></pre>
+<p>32 71 84</p>
+<p>Manually removed duplicate lines (<code>mikk_genome/data/20200227_duplicates_excluded.txt</code>):</p>
+<ul>
+<li>24271_7#5 32_2</li>
+<li>24271_8#4 71_1</li>
+<li>24259_1#1 84_2</li>
+</ul>
+<p>Final no-sibling-lines CRAM-to-lineID key file: <code>mikk_genome/data/20200227_cram2line_no-sibs.txt</code></p>
+</div>
+</div>
+<div id="create-mikk-panel-vcf-with-no-sibling-lines" class="section level1">
+<h1><span class="header-section-number">2</span> Create MIKK panel VCF with no sibling lines</h1>
+<pre class="bash"><code># create no-sibs file with CRAM ID only
+cut -f1 mikk_genome/data/20200227_cram2line_no-sibs.txt \
+  &gt; mikk_genome/data/20200227_cram2line_no-sibs_cram-only.txt
+  
+# make new VCF having filtered out non-MIKK and sibling lines
+bcftools view \
+  --output-file vcfs/panel_no-sibs.vcf \
+  --samples-file mikk_genome/data/20200227_cram2line_no-sibs_cram-only.txt \
+  vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf
+  
+# recode with line IDs
+bcftools reheader \
+  --output vcfs/panel_no-sibs_line-ids.vcf \
+  --samples mikk_genome/data/20200227_cram2line_no-sibs.txt \
+  vcfs/panel_no-sibs.vcf
+  
+# compress
+bcftools view \
+  --output-type z \
+  --output-file vcfs/panel_no-sibs_line-ids.vcf.gz \
+  vcfs/panel_no-sibs_line-ids.vcf
+  
+# index
+bcftools index \
+  --tbi \
+  vcfs/panel_no-sibs_line-ids.vcf.gz
+
+# get stats
+mkdir stats
+
+bcftools stats \
+  vcfs/panel_no-sibs_line-ids.vcf.gz \
+  &gt; stats/20200305_panel_no-sibs.txt
+
+## get basic counts
+grep &quot;^SN&quot; stats/20200305_panel_no-sibs.txt</code></pre>
+<div id="make-a-version-with-no-missing-variants" class="section level2">
+<h2><span class="header-section-number">2.1</span> Make a version with no missing variants</h2>
+<pre class="bash"><code>vcftools \
+  --gzvcf vcfs/panel_no-sibs_line-ids.vcf.gz \
+  --max-missing 1 \
+  --recode \
+  --stdout &gt; vcfs/panel_no-sibs_line-ids_no-missing.vcf
+  
+# compress
+bcftools view \
+  --output-type z \
+  --output-file vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  vcfs/panel_no-sibs_line-ids_no-missing.vcf
+
+# create index
+bcftools index \
+  --tbi vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz
+  
+# get stats 
+bcftools stats \
+  vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  &gt; stats/20200305_panel_no-sibs_no-missing.txt
+
+# get basic counts
+grep &quot;^SN&quot; stats/20200305_panel_no-sibs_no-missing.txt</code></pre>
+</div>
+</div>
+<div id="generate-haploview-plots" class="section level1">
+<h1><span class="header-section-number">3</span> Generate Haploview plots</h1>
+<div id="create-plink-dataset-from-no-sib-lines-no-missing-vcf" class="section level2">
+<h2><span class="header-section-number">3.1</span> Create <code>plink</code> dataset from no-sib-lines, no-missing VCF</h2>
+<pre class="bash"><code>mkdir plink/20200716_panel_no-sibs_line-ids_no-missing
+
+# make BED  
+plink \
+  --vcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --chr-set 24 no-xy \
+  --chr 1-24 \
+  --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200716
+  
+# recode for 012 transposed
+plink \
+  --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
+  --recode A-transpose \
+  --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012
+# creates plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw  </code></pre>
+</div>
+<div id="create-bed-sets-filtered-for-maf-0.03-0.05-and-0.10" class="section level2">
+<h2><span class="header-section-number">3.2</span> Create BED sets filtered for MAF &gt; 0.03, 0.05 and 0.10</h2>
+<pre class="bash"><code>maf_thresholds=$( echo 0.03 0.05 0.10 )
+
+# Make new BEDs 
+for i in $maf_thresholds ; do
+  # make directory
+  new_path=plink/20200716_panel_no-sibs_line-ids_no-missing/20200803_maf-$i ;
+  # make directory
+  if [ ! -d &quot;$new_path&quot; ]; then
+    mkdir $new_path;
+  fi
+  # make BED set
+  plink \
+    --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
+    --make-bed \
+    --double-id \
+    --chr-set 24 no-xy \
+    --maf $i \
+    --out $new_path/20200803
+done</code></pre>
+</div>
+<div id="recode-for-haploview" class="section level2">
+<h2><span class="header-section-number">3.3</span> Recode for Haploview</h2>
+<pre class="bash"><code># Create output directory
+mkdir plink/20200716_panel_no-sibs_line-ids_no-missing/20200803_hv_thinned
+
+hv_thinned_path=plink/20200716_panel_no-sibs_line-ids_no-missing/20200803_hv_thinned
+
+# Recode
+for i in $maf_thresholds ; do
+  new_path=$hv_thinned_path/$i ;
+  # make directory
+  if [ ! -d &quot;$new_path&quot; ]; then
+    mkdir $new_path;
+  fi 
+  # recode 
+  for j in $(seq 1 24); do
+    plink \
+      --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200803_maf-$i/20200803 \
+      --recode HV-1chr \
+      --double-id \
+      --chr-set 24 no-xy \
+      --chr $j \
+      --allele1234 \
+      --thin-count 3000 \
+      --out $hv_thinned_path/$i/20200803_chr-$j;
+  done;
+done
+
+# Edit .ped files to remove asterisks
+for i in $maf_thresholds ; do
+  for j in $(find $hv_thinned_path/$i/20200803_chr-*.ped); do
+    sed -i &#39;s/\*/0/g&#39; $j;
+  done;
+done  
+
+# Edit .info files to make the SNP&#39;s bp position its ID
+for i in $maf_thresholds; do
+  for j in $(find $hv_thinned_path/$i/20200803_chr*.info); do
+    outname=$(echo $j\_with-id);
+    awk -v OFS=&quot;\t&quot; {&#39;print $2,$2&#39;} $j &gt; $outname;
+  done;
+done</code></pre>
+</div>
+<div id="plot" class="section level2">
+<h2><span class="header-section-number">3.4</span> Plot</h2>
+<p><strong>NOTE</strong>: This code requires <code>Haploview</code>, which you will need to install on your system: <a href="https://www.broadinstitute.org/haploview/haploview" class="uri">https://www.broadinstitute.org/haploview/haploview</a></p>
+<pre class="bash"><code>hv_path=/nfs/software/birney/Haploview.jar # edit to your Haploview path
+
+mkdir plots/20200803_ld_thinned/
+
+for i in $maf_thresholds; do
+  # set output directory
+  new_path=plots/20200803_ld_thinned/$i ;
+  # make directory
+  if [ ! -d &quot;$new_path&quot; ]; then
+    mkdir $new_path;
+  fi   
+  for j in $(seq 1 24); do
+    bsub -M 20000 -o log/20200803_hv_$i\_$j.out -e log/20200803_hv_$i\_$j.err \
+    &quot;java -Xms18G -Xmx18G -jar $hv_path \
+      -memory 18000 \
+      -pedfile $hv_thinned_path/$i/20200803_chr-$j.ped  \
+      -info $hv_thinned_path/$i/20200803_chr-$j.info_with-id \
+      -maxDistance 1000 \
+      -ldcolorscheme DEFAULT \
+      -ldvalues RSQ \
+      -minMAF $i \
+      -nogui \
+      -svg \
+      -out $new_path/$j&quot;;
+  done;
+done</code></pre>
+<p>These <code>svg</code> files can be converted to <code>pdf</code> using:</p>
+<ul>
+<li><a href="https://www.zamzar.com/" class="uri">https://www.zamzar.com/</a> for files &gt; 30 MB (chr 1) - note limit on number of files you can convert</li>
+<li><a href="https://onlineconvertfree.com/convert-format/svg-to-pdf/" class="uri">https://onlineconvertfree.com/convert-format/svg-to-pdf/</a> for the rest</li>
+</ul>
+<p>The full Haploview LD plots are available in the Supplementary Material.</p>
+<p>By inspecting these LD plots at the <code>MAF &gt; 0.05</code> level, we discovered the following LD blocks worthy of further investigation:</p>
+<ul>
+<li>5:28181970-28970558 (788 Kb)</li>
+<li>6:29398579-32246747 (2.85 Mb)</li>
+<li>12:25336174-25384053 (48 Kb)</li>
+<li>14:12490842-12947083 (456 Kb)</li>
+<li>17:15557892-19561518 (4 Mb)</li>
+<li>21:6710074-7880374 (1.17 Mb)</li>
+</ul>
+<p>See zoomed plots here:</p>
+<div class="figure">
+<img src="hv_5_28181970-28970558.png" alt="5:28181970-28970558" width="1668" />
+<p class="caption">
+5:28181970-28970558
+</p>
+</div>
+<div class="figure">
+<img src="hv_6_29398579-32246747.png" alt="6:29398579-32246747" width="4436" />
+<p class="caption">
+6:29398579-32246747
+</p>
+</div>
+<div class="figure">
+<img src="hv_12_25336174-25384053.png" alt="12:25336174-25384053" width="961" />
+<p class="caption">
+12:25336174-25384053
+</p>
+</div>
+<div class="figure">
+<img src="hv_14_12490842-12947083.png" alt="14:12490842-12947083" width="894" />
+<p class="caption">
+14:12490842-12947083
+</p>
+</div>
+<div class="figure">
+<img src="hv_17_15557892-19561518.png" alt="17:15557892-19561518" width="7687" />
+<p class="caption">
+17:15557892-19561518
+</p>
+</div>
+<div class="figure">
+<img src="hv_21_6710074-7880374.png" alt="21:6710074-7880374" width="1452" />
+<p class="caption">
+21:6710074-7880374
+</p>
+</div>
+</div>
+</div>
+<div id="genotype-heatmaps-for-high-ld-regions" class="section level1">
+<h1><span class="header-section-number">4</span> Genotype heatmaps for high-LD regions</h1>
+<p>See which lines are causing the high-LD regions at the <code>MAF &gt; 0.05</code> threshold (i.e. from a sample of 63 diploid individuals, variants with an allele count (<code>AC</code>) of at least <code>7</code>).</p>
+<div id="read-data-into-bed-matrix-into-r" class="section level2">
+<h2><span class="header-section-number">4.1</span> Read data into BED matrix into <code>R</code></h2>
+<pre class="r"><code># Load required libraries
+require(here)
+source(here(&quot;mikk_genome&quot;, &quot;code&quot;, &quot;scripts&quot;, &quot;setup.R&quot;))
+
+# Read in BED matrix
+mikk_full &lt;- gaston::read.bed.matrix(here(&quot;plink&quot;, &quot;20200716_panel_no-sibs_line-ids_no-missing/20200716&quot;),
+                                     rds = NULL)
+
+# Read in genotypes file
+mikk_geno &lt;- readr::read_tsv(file = here(&quot;plink&quot;, &quot;20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw&quot;),
+                             progress = T,
+                             col_names = T)
+
+# rename IDs
+colnames(mikk_geno)[7:length(colnames(mikk_geno))] &lt;- mikk_full@ped$id</code></pre>
+</div>
+<div id="extract-target-regions-and-build-into-list" class="section level2">
+<h2><span class="header-section-number">4.2</span> Extract target regions and build into list</h2>
+<pre class="r"><code># get coordinates
+high_ld_chrs &lt;- c(5, 6, 12, 14, 17, 21)
+high_ld_start &lt;- c(28385805, 29608514, 25340000, 12584614, 15559963, 6800261)
+high_ld_end &lt;- c(28798048, 32212235, 25372985, 12861147, 19553529, 7760258)
+
+# build into list
+counter &lt;- 0
+high_ld_lst &lt;- lapply(high_ld_chrs, function(x){
+  counter &lt;&lt;- counter + 1
+  x &lt;- list(&quot;chr&quot; = x,
+            &quot;start&quot; = high_ld_start[counter],
+            &quot;end&quot; = high_ld_end[counter])
+  # find indexes for SNPs with MAF &gt; 0.05
+  x[[&quot;target_inds&quot;]] &lt;- which(mikk_full@snps$chr == x[[&quot;chr&quot;]] &amp;
+                         dplyr::between(mikk_full@snps$pos, x[[&quot;start&quot;]], x[[&quot;end&quot;]]) &amp;
+                         mikk_full@snps$maf &gt; 0.05)
+  x[[&quot;target_snps&quot;]] &lt;- mikk_geno[x[[&quot;target_inds&quot;]], ]  
+  # make matrix
+  x[[&quot;geno_mat&quot;]] &lt;- as.matrix(x[[&quot;target_snps&quot;]][, -(1:6)])
+  return(x)
+})
+names(high_ld_lst) &lt;- high_ld_chrs
+
+# save to repo
+saveRDS(high_ld_lst, here(&quot;mikk_genome&quot;, &quot;data&quot;, &quot;20200727_high_ld_list.rds&quot;))</code></pre>
+</div>
+<div id="plot-1" class="section level2">
+<h2><span class="header-section-number">4.3</span> Plot</h2>
+<p>Genotypes were recoded to 0, 1, 2 for REF, HET, and HOM_ALT respectively.</p>
+<p>Dark red = 2 Orange = 1 Yellow = 0</p>
+<pre class="r"><code># Write function to create heatmap
+get_heatmap = function(in_list){
+  # Get order of samples
+  sample_order = colnames(in_list[[&quot;target_snps&quot;]])[-(1:6)]  
+  # Sort by count
+  sorted_order = names(sort(colSums(in_list[[&quot;geno_mat&quot;]]), decreasing = T))
+  # Get re-ordered indein_listes
+  new_ind = match(sorted_order, sample_order)
+  # Plot
+  heatmap(in_list[[&quot;geno_mat&quot;]][, new_ind], 
+          Rowv = NA,
+          Colv = NA,
+          scale = &quot;row&quot;,
+          keep.dendro = F)  
+}</code></pre>
+<div id="chr-5" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> Chr 5</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_5_28181970-28970558.png&quot;)
+x = high_ld_lst[[&quot;5&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_5_28181970-28970558.png" alt="5:28181970-28970558" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-23-2.png" alt="5:28181970-28970558" width="50%" />
+<p class="caption">
+5:28181970-28970558
+</p>
+</div>
+</div>
+<div id="chr-6" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> Chr 6</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_6_29398579-32246747.png&quot;)
+x = high_ld_lst[[&quot;6&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_6_29398579-32246747.png" alt="6:29398579-32246747" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-24-2.png" alt="6:29398579-32246747" width="50%" />
+<p class="caption">
+6:29398579-32246747
+</p>
+</div>
+</div>
+<div id="chr-12" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> Chr 12</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_12_25336174-25384053.png&quot;)
+x = high_ld_lst[[&quot;12&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_12_25336174-25384053.png" alt="12:25336174-25384053" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-25-2.png" alt="12:25336174-25384053" width="50%" />
+<p class="caption">
+12:25336174-25384053
+</p>
+</div>
+</div>
+<div id="chr-14" class="section level3">
+<h3><span class="header-section-number">4.3.4</span> Chr 14</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_14_12490842-12947083.png&quot;)
+x = high_ld_lst[[&quot;14&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_14_12490842-12947083.png" alt="14:12490842-12947083" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-26-2.png" alt="14:12490842-12947083" width="50%" />
+<p class="caption">
+14:12490842-12947083
+</p>
+</div>
+</div>
+<div id="chr-17" class="section level3">
+<h3><span class="header-section-number">4.3.5</span> Chr 17</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_17_15557892-19561518.png&quot;)
+x = high_ld_lst[[&quot;17&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_17_15557892-19561518.png" alt="17:15557892-19561518" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-27-2.png" alt="17:15557892-19561518" width="50%" />
+<p class="caption">
+17:15557892-19561518
+</p>
+</div>
+</div>
+<div id="chr-21" class="section level3">
+<h3><span class="header-section-number">4.3.6</span> Chr 21</h3>
+<pre class="r"><code>knitr::include_graphics(&quot;hv_21_6710074-7880374.png&quot;)
+x = high_ld_lst[[&quot;21&quot;]]
+get_heatmap(x)</code></pre>
+<div class="figure">
+<img src="hv_21_6710074-7880374.png" alt="21:6710074-7880374" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-28-2.png" alt="21:6710074-7880374" width="50%" />
+<p class="caption">
+21:6710074-7880374
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="ld-decay" class="section level1">
+<h1><span class="header-section-number">5</span> LD decay</h1>
+<p>We want to compare the rate at which LD decays with inter-SNP distance between the MIKK panel and humans. This will give an indication of the resolution at which one can map genetic traits using the MIKK panel, <em>provided that at least two lines have the same variant of interest</em>.</p>
+<div id="obtain-1000-genomes-dataset" class="section level2">
+<h2><span class="header-section-number">5.1</span> Obtain 1000 Genomes dataset</h2>
+<div id="download-from-ftp" class="section level3">
+<h3><span class="header-section-number">5.1.1</span> Download from FTP</h3>
+<pre class="bash"><code>cd vcfs
+
+wget -r -p -k --no-parent -cut-dirs=5 ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/</code></pre>
+</div>
+<div id="put-list-of-files-into-list" class="section level3">
+<h3><span class="header-section-number">5.1.2</span> Put list of files into list</h3>
+<pre class="bash"><code>find vcfs/ftp.1000genomes.ebi.ac.uk/ALL.chr*.vcf.gz &gt; mikk_genome/data/20200205_vcfs.list</code></pre>
+</div>
+<div id="merge-vcfs" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Merge VCFs</h3>
+<pre class="bash"><code># Remove MT and Y from list 
+sed -i &#39;/MT/d&#39; mikk_genome/data/20200205_vcfs.list
+
+sed -i &#39;/chrY/d&#39; mikk_genome/data/20200205_vcfs.list
+
+# run MergeVCFs 
+java -jar /nfs/software/birney/picard-2.9.0/picard.jar MergeVcfs \
+  I=mikk_genome/data/20200205_vcfs.list \
+  O=vcfs/1gk_all.vcf.gz</code></pre>
+</div>
+</div>
+<div id="get-ld-stats-using-plink" class="section level2">
+<h2><span class="header-section-number">5.2</span> Get LD stats using <code>Plink</code></h2>
+<pre class="bash"><code># make BED
+mkdir plink/20200727_mikk_no-missing_maf-0.05
+
+plink \
+  --vcf vcfs/panel_no-sibs_line-ids.vcf.gz \
+  --make-bed \
+  --double-id \
+  --snps-only \
+  --biallelic-only \
+  --maf 0.05 \
+  --geno 0 \
+  --chr-set 24 no-xy \
+  --out plink/20200727_mikk_no-missing_maf-0.05/20200727
+
+# get LD stats for MIKK
+mkdir ld/20200727_mikk_maf-0.10_window-50kb_no-missing/
+
+for i in $(seq 1 24); do
+  plink \
+      --bfile plink/20200727_mikk_no-missing_maf-0.05/20200727 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 50 \
+      --ld-window-r2 0 \
+      --chr-set 24 no-xy \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200727_mikk_maf-0.10_window-50kb_no-missing/$i;
+done
+
+# get LD stats for 1KG
+mkdir ld/20200727_1kg_maf-0.10_window-50kb_no-missing/
+
+for i in $(seq 1 22); do
+  plink \
+      --bfile plink/20200723_1gk_no-missing_maf-0.05/20200723 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 50 \
+      --ld-window-r2 0 \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200727_1kg_maf-0.10_window-50kb_no-missing/$i;
+done
+
+# do again with ld-window-kb 10 to get counts of comparisons for paper
+# MIKK  
+mkdir ld/20200803_mikk_maf-0.10_window-10kb_no-missing/
+
+for i in $(seq 1 24); do
+  plink \
+      --bfile plink/20200727_mikk_no-missing_maf-0.05/20200727 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 10 \
+      --ld-window-r2 0 \
+      --chr-set 24 no-xy \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200803_mikk_maf-0.10_window-10kb_no-missing/$i;
+done
+
+# 1KG
+mkdir ld/20200803_1kg_maf-0.10_window-10kb_no-missing/
+
+for i in $(seq 1 22); do
+  plink \
+      --bfile plink/20200723_1gk_no-missing_maf-0.05/20200723 \
+      --r2 \
+      --ld-window 999999 \
+      --ld-window-kb 10 \
+      --ld-window-r2 0 \
+      --chr $i \
+      --maf 0.10 \
+      --out ld/20200803_1kg_maf-0.10_window-10kb_no-missing/$i;
+done
+
+# Get total counts of pairwise comparisons:
+wc -l ld/20200803_mikk_maf-0.10_window-10kb_no-missing/*.ld
+# 204,152,898
+wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld</code></pre>
+</div>
+<div id="get-mean-ld-within-snp-distance-windows" class="section level2">
+<h2><span class="header-section-number">5.3</span> Get mean LD within SNP-distance windows</h2>
+<div id="kb-distance-main-mikk-v-1kg" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> 0-10kb distance (main, MIKK v 1KG)</h3>
+<p>Rscript here: <code>mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R</code></p>
+<div id="mikk" class="section level4">
+<h4><span class="header-section-number">5.3.1.1</span> MIKK</h4>
+<pre class="bash"><code>script=mikk_genome/code/scripts/20200727_r2_decay_mean_10kb-lim.R
+
+mkdir ld/20200727_mean_r2_10kb-lim_mikk
+
+for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
+  name=$(basename $i | cut -f1 -d&quot;.&quot;) ;
+  out_dir=ld/20200727_mean_r2_10kb-lim_mikk ;
+  bsub \
+    -M 10000 \
+    -o log/20200727_$name\_mean-r2_1kb-max.out \
+    -e log/20200727_$name\_mean-r2_1kb-max.err \
+    &quot;Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir&quot;;
+done</code></pre>
+</div>
+<div id="kg" class="section level4">
+<h4><span class="header-section-number">5.3.1.2</span> 1KG</h4>
+<pre class="bash"><code>mkdir ld/20200727_mean_r2_10kb-lim_1kg
+
+for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
+  name=$(basename $i | cut -f1 -d&quot;.&quot;) ;
+  out_dir=ld/20200727_mean_r2_10kb-lim_1kg ;
+  bsub \
+    -M 30000 \
+    -o log/20200727_$name\_mean-r2_10kb-max.out \
+    -e log/20200727_$name\_mean-r2_10kb-max.err \
+    &quot;Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir&quot;;
+done</code></pre>
+</div>
+</div>
+<div id="kb-distance-inset-mikk-only" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> 0-1kb distance (inset, MIKK only)</h3>
+<p>Rscript: <code>mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_1kb-lim.R</code></p>
+<pre class="bash"><code>mkdir ld/20200803_mean_r2_1kb-lim_mikk
+
+out_dir=ld/20200803_mean_r2_1kb-lim_mikk
+script=mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_1kb-lim.R
+
+for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*ld); do
+  name=$(basename $i | cut -f1 -d&quot;.&quot;);
+  bsub \
+    -M 30000 \
+    -o log/20200803_$name\_mean-r2_1kb-max.out \
+    -e log/20200803_$name\_mean-r2_1kb-max.err \
+    &quot;Rscript --vanilla \
+      $script \
+      $i \
+      $out_dir&quot;;
+done</code></pre>
+</div>
+</div>
+<div id="create-ld-plots-in-r" class="section level2">
+<h2><span class="header-section-number">5.4</span> Create LD plots in <code>R</code></h2>
+<div id="main" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Main</h3>
+<div id="read-in-and-process-data" class="section level4">
+<h4><span class="header-section-number">5.4.1.1</span> Read in and process data</h4>
+<pre class="r"><code># Setup
+require(here)
+source(here(&quot;mikk_genome&quot;, &quot;code&quot;, &quot;scripts&quot;, &quot;setup.R&quot;))
+
+# Create function to read in data and bind into single DF
+
+read_n_bind = function(data_path_pref, dataset){
+  # Set path
+  path = paste(data_path_pref, dataset, sep = &quot;&quot;)
+  
+  # Read in data
+  data_files &lt;- list.files(path,
+                           full.names = T)
+  data_files_trunc &lt;- list.files(path)
+  data_files_trunc &lt;- gsub(&quot;.txt&quot;, &quot;&quot;, data_files_trunc)
+  
+  data_list &lt;- lapply(data_files, function(data_file){
+    df &lt;- read.delim(data_file,
+                     sep = &quot;\t&quot;,
+                     header = T)
+    return(df)
+  })
+  names(data_list) &lt;- as.integer(data_files_trunc)
+  
+  # reorder
+  data_list &lt;- data_list[order(as.integer(names(data_list)))]
+  
+  # bind into DF
+  out_df = dplyr::bind_rows(data_list, .id = &quot;chr&quot;)
+  out_df$chr &lt;- factor(out_df$chr, levels = seq(1, 24))
+  
+  # get kb measure
+  out_df$bin_bdr_kb &lt;- out_df$bin_bdr / 1000  
+  
+  return(out_df)
+}
+
+# Run over both datasets
+datasets = c(&quot;mikk&quot;, &quot;1kg&quot;)
+final_lst = lapply(datasets, function(x) read_n_bind(&quot;ld/20200727_mean_r2_10kb-lim_&quot;, x))
+names(final_lst) = datasets
+
+# Combine into single DF
+r2_final_df &lt;- dplyr::bind_rows(final_lst, .id = &quot;dataset&quot;)</code></pre>
+<pre class="r"><code># Write table to repo
+write.table(r2_final_df,
+            file = here(&quot;mikk_genome&quot;, &quot;data&quot;, &quot;20200803_r2_10kb-lim.csv&quot;),
+            quote = F, sep = &quot;,&quot;, row.names = F, col.names = T)</code></pre>
+</div>
+<div id="plot-2" class="section level4">
+<h4><span class="header-section-number">5.4.1.2</span> Plot</h4>
+<pre class="r"><code># Tidy data for final plot
+r2_final_df$chr = factor(r2_final_df$chr, levels = seq(1, 24))
+r2_final_df$dataset = toupper(r2_final_df$dataset)
+
+# Plot
+r2_plot_main = r2_final_df %&gt;% ggplot() +
+  geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
+  theme_bw() +
+  xlab(&quot;Distance between SNPs (kb)&quot;) +
+  ylab(bquote(.(&quot;Mean r&quot;)^2)) +
+  facet_wrap(~dataset, nrow = 1, ncol = 2) +
+  theme(panel.grid = element_blank()) +
+  labs(colour = &quot;Chromosome&quot;) +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+
+r2_plot_main</code></pre>
+<p><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-39-1.png" width="1800" /></p>
+<pre class="r"><code># Save plot to repo
+ggsave(filename = paste(&quot;20200803_mean-r2_10kb-lim_1KGvMIKK_single&quot;, &quot;.png&quot;, sep = &quot;&quot;),
+       plot = r2_plot_main,
+       device = &quot;png&quot;,
+       path = here(&quot;mikk_genome&quot;, &quot;plots&quot;),
+       width = 25,
+       height = 13,
+       units = &quot;cm&quot;,
+       dpi = 500)</code></pre>
+</div>
+</div>
+<div id="inset" class="section level3">
+<h3><span class="header-section-number">5.4.2</span> Inset</h3>
+<pre class="r"><code># Read in data
+r2_df_1kb_mikk = read_n_bind(&quot;ld/20200803_mean_r2_1kb-lim_&quot;, &quot;mikk&quot;)</code></pre>
+<pre class="r"><code># Write table to repo
+write.table(r2_df_1kb_mikk,
+            file = here(&quot;mikk_genome&quot;, &quot;data&quot;, &quot;20200803_r2_1kb-lim_mikk.csv&quot;),
+            quote = F, sep = &quot;,&quot;, row.names = F, col.names = T)</code></pre>
+<pre class="r"><code># Process for plotting
+r2_df_1kb_mikk$chr &lt;- factor(r2_df_1kb_mikk$chr, levels = seq(1, 24))
+
+# Plot
+r2_1kb_mikk = r2_df_1kb_mikk %&gt;% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab(&quot;Distance beetween SNPs (bp)&quot;) +
+  ylab(bquote(.(&quot;Mean r&quot;)^2)) +
+  labs(colour = &quot;Chromosome&quot;) +
+  theme(panel.grid = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14)) +
+  guides(colour = F) +
+  scale_x_continuous(limits = c(0, 1000)) +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+
+r2_1kb_mikk</code></pre>
+<p><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<pre class="r"><code># Save to repo
+ggsave(filename = paste(&quot;20200803_mean-r2_1kb-lim_MIKK_inset_100bp-bins&quot;, &quot;.png&quot;, sep = &quot;&quot;),
+       plot = r2_1kb_mikk,
+       device = &quot;png&quot;,
+       path = here(&quot;mikk_genome&quot;, &quot;plots&quot;),
+       width = 10.88,
+       height = 8,
+       units = &quot;cm&quot;,
+       dpi = 500)</code></pre>
+</div>
+</div>
+</div>
+<div id="investigation-of-ld-decay-in-chr-2" class="section level1">
+<h1><span class="header-section-number">6</span> Investigation of LD decay in chr 2</h1>
+<p>Chromsome 2 has an obviously faster LD decay than the other chromosomes. We explore some possible reasons for this.</p>
+<div id="get-lengths-of-each-chr-on-bash" class="section level2">
+<h2><span class="header-section-number">6.1</span> Get lengths of each chr on <code>bash</code></h2>
+<pre class="bash"><code>seq 1 24 &gt; tmp1.txt
+
+grep &quot;&gt;&quot; refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa | scut -f6 -d&quot;:&quot; | head -24 &gt; tmp2.txt
+
+paste tmp1.txt tmp2.txt &gt; mikk_genome/data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt</code></pre>
+</div>
+<div id="get-proportion-of-each-chromosome-covered-by-exons-using-biomart" class="section level2">
+<h2><span class="header-section-number">6.2</span> Get proportion of each chromosome covered by exons using <code>biomaRt</code></h2>
+<p>Move into repo directory before running <code>R</code></p>
+<pre class="bash"><code>cd mikk_genome
+R</code></pre>
+<pre class="r"><code># Load libraries
+library(here)
+source(here(&quot;code&quot;, &quot;scripts&quot;, &quot;setup.R&quot;))
+
+# Get length of chromosomes
+chr_counts &lt;- readr::read_tsv(here(&quot;data&quot;, &quot;Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt&quot;),
+                              col_names = c(&quot;chr&quot;, &quot;length&quot;))
+
+# List marts 
+listMarts()</code></pre>
+<pre><code>##                biomart                version
+## 1 ENSEMBL_MART_ENSEMBL      Ensembl Genes 101
+## 2   ENSEMBL_MART_MOUSE      Mouse strains 101
+## 3     ENSEMBL_MART_SNP  Ensembl Variation 101
+## 4 ENSEMBL_MART_FUNCGEN Ensembl Regulation 101</code></pre>
+<pre class="r"><code># Select database and list datasets within
+ensembl_mart &lt;- useMart(&quot;ENSEMBL_MART_ENSEMBL&quot;)
+
+# Select dataset
+ensembl_olat &lt;- useDataset(&quot;olatipes_gene_ensembl&quot;, mart = ensembl_mart)
+olat_mart = useEnsembl(biomart = &quot;ensembl&quot;, dataset = &quot;olatipes_gene_ensembl&quot;)
+# Get attributes of interest (exon ID, chr, start, end)
+exons &lt;- getBM(attributes = c(&quot;chromosome_name&quot;, &quot;ensembl_gene_id&quot;, &quot;ensembl_transcript_id&quot;, &quot;transcript_start&quot;, &quot;transcript_end&quot;, &quot;transcript_length&quot;, &quot;ensembl_exon_id&quot;, &quot;rank&quot;, &quot;strand&quot;, &quot;exon_chrom_start&quot;, &quot;exon_chrom_end&quot;, &quot;cds_start&quot;, &quot;cds_end&quot;),
+               mart = olat_mart)
+
+# Factorise chr so it&#39;s in the right order
+chrs &lt;- unique(exons$chromosome_name)
+auto_range &lt;- range(as.integer(chrs), na.rm = T)
+non_auto &lt;- chrs[is.na(as.integer(chrs))]
+chr_order &lt;- c(seq(auto_range[1], auto_range[2]), non_auto)
+exons$chromosome_name &lt;- factor(exons$chromosome_name, levels = chr_order)
+
+# Convert into list
+exons_lst &lt;- split(exons, f = exons$chromosome_name)
+
+# Get mean length of exons per chromosome
+exons_lst &lt;- lapply(exons_lst, function(chr){
+  chr &lt;- chr %&gt;%
+    dplyr::mutate(exon_length = (exon_chrom_end - exon_chrom_start) + 1,
+                  transcript_total_length = (transcript_end - transcript_start) + 1)
+  return(chr)
+})
+
+# Get total length of chr covered by exons
+exon_lengths &lt;- lapply(exons_lst, function(chr){
+  # create list of start pos to end pos sequences for each exon
+  out_list &lt;- apply(chr, 1, function(exon) {
+    seq(exon[[&quot;exon_chrom_start&quot;]], exon[[&quot;exon_chrom_end&quot;]])
+  })
+  # combine list of vectors into single vector and get only unique numbers
+  out_vec &lt;- unique(unlist(out_list))
+  # get length of out_vec and put it into data frame
+  out_final &lt;- data.frame(&quot;exon_cov&quot; = length(out_vec))
+  return(out_final)
+})
+
+# combine into single DF
+exons_len_df &lt;- dplyr::bind_rows(exon_lengths, .id = &quot;chr&quot;) %&gt;% 
+  dplyr::filter(chr != &quot;MT&quot;) %&gt;% 
+  dplyr::mutate(chr = as.integer(chr))
+
+# join with chr_counts and get proportion of chr covered by exons
+chr_stats &lt;- dplyr::left_join(chr_counts, exons_len_df, by = &quot;chr&quot;) %&gt;% 
+  dplyr::mutate(prop_cov_exon = exon_cov / length)
+# convert chr to factor for plotting
+chr_stats$chr &lt;- factor(chr_stats$chr)</code></pre>
+</div>
+<div id="get-snp-counts-per-megabase" class="section level2">
+<h2><span class="header-section-number">6.3</span> Get SNP counts per megabase</h2>
+<div id="get-counts" class="section level3">
+<h3><span class="header-section-number">6.3.1</span> Get counts</h3>
+<pre class="bash"><code>bcftools index \
+  --stats \
+  ../vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af.vcf.gz \
+    &gt; data/20201106_non-missing_bi-snp_count.txt</code></pre>
+</div>
+<div id="read-snp-counts-data-into-r" class="section level3">
+<h3><span class="header-section-number">6.3.2</span> Read SNP counts data into <code>R</code></h3>
+<pre class="r"><code>snp_counts = read.table(here::here(&quot;data&quot;, &quot;20201106_non-missing_bi-snp_count.txt&quot;),
+                        sep = &quot;\t&quot;,
+                        col.names = c(&quot;chr&quot;, &quot;length&quot;, &quot;snp_count&quot;)) %&gt;% 
+  # create megabase column
+  dplyr::mutate(megabases = length / 1e6,
+                snps_per_megabase = snp_count / megabases) %&gt;% 
+  # remove MT
+  dplyr::filter(chr != &quot;MT&quot;) %&gt;% 
+  # turn chr column into integer
+  dplyr::mutate(chr = as.factor(as.integer(chr)))</code></pre>
+</div>
+</div>
+<div id="combine-snp-counts-with-exon-proportion-counts" class="section level2">
+<h2><span class="header-section-number">6.4</span> Combine SNP counts with exon proportion counts</h2>
+<pre class="r"><code>chr_df = snp_counts %&gt;% 
+  dplyr::full_join(chr_stats, by = c(&quot;chr&quot;, &quot;length&quot;))
+
+# Create recode vector
+recode_vec = c(&quot;Non-missing, biallelic SNPs per megabase&quot;,
+               &quot;Proportion of chromosome covered by exons&quot;)
+names(recode_vec) = c(&quot;snps_per_megabase&quot;,
+                      &quot;prop_cov_exon&quot;)</code></pre>
+</div>
+<div id="plot-3" class="section level2">
+<h2><span class="header-section-number">6.5</span> Plot</h2>
+<pre class="r"><code>chr_df %&gt;% 
+  tidyr::pivot_longer(cols = c(snps_per_megabase, prop_cov_exon), 
+                      names_to = &quot;variable&quot;,
+                      values_to = &quot;values&quot;) %&gt;% 
+  dplyr::mutate(variable = dplyr::recode(variable, !!!recode_vec)) %&gt;% 
+  ggplot() +
+    geom_col(aes(chr, values, fill = chr)) +
+    guides(fill = F) + 
+    xlab(&quot;Chromosome&quot;) +
+    ylab(NULL) +
+    theme_bw() +
+    facet_wrap(~variable,
+               nrow = 2, ncol = 1,
+               scales = &quot;free_y&quot;)
+chr_df %&gt;% 
+  ggplot(aes(snps_per_megabase, prop_cov_exon, colour = chr, label = chr)) +
+  geom_point() +
+  geom_text(hjust = -0.5) +
+  theme_bw() +
+  guides(colour = F) +
+  xlab(&quot;Non-missing, biallelic SNPs per megabase&quot;) +
+  ylab(&quot;Proportion of chromosome covered by exons&quot;)</code></pre>
+<div class="figure">
+<img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-52-1.png" alt="SNPs per Mb vs proportion of chr covered by exons" width="50%" /><img src="20201120_markdown_ld-decay_files/figure-html/unnamed-chunk-52-2.png" alt="SNPs per Mb vs proportion of chr covered by exons" width="50%" />
+<p class="caption">
+SNPs per Mb vs proportion of chr covered by exons
+</p>
+</div>
+<pre class="r"><code># Save to repo
+ggsave(filename = paste(&quot;20201106_snps-per-mb_v_exon-props&quot;, &quot;.png&quot;, sep = &quot;&quot;),
+       device = &quot;png&quot;,
+       path = here(&quot;plots&quot;),
+       width = 24,
+       height = 20,
+       units = &quot;cm&quot;,
+       dpi = 500)</code></pre>
+</div>
+<div id="calculate-correlation" class="section level2">
+<h2><span class="header-section-number">6.6</span> Calculate correlation</h2>
+<pre class="r"><code>cor.test(chr_df$snps_per_megabase, chr_df$prop_cov_exon, method = &quot;spearman&quot;)</code></pre>
+<pre><code>## 
+##  Spearman&#39;s rank correlation rho
+## 
+## data:  chr_df$snps_per_megabase and chr_df$prop_cov_exon
+## S = 3274, p-value = 0.04033
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##        rho 
+## -0.4234783</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
