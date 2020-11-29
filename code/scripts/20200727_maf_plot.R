@@ -47,9 +47,9 @@ maf_final %>%
   facet_wrap(~dataset, nrow = 1, ncol = 2) +
   xlab("Minor allele frequencies") +
   ylab("Density") +
-  theme(panel.grid = element_blank()) +
-  scale_fill_manual(values = c(`1KG` = "#FC4E07",
-                               MIKK = "#360568"))
+  theme(panel.grid = element_blank()) #+
+#  scale_fill_manual(values = c(`1KG` = "#FC4E07",
+#                               MIKK = "#360568"))
 
 # Save
 ggsave(filename = paste(file_out, ".png", sep = ""),
