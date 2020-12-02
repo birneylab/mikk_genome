@@ -16,6 +16,8 @@ We want to determine the extent to which the MIKK panel shows evidence of introg
 (Working directory on EBI cluster: `/hps/research1/birney/users/ian/mikk_paper` - the same as for the LD analysis) 
 
 ```{bash, eval = F}
+# make working directory
+mkdir /your/working/directory
 # move to working directory
 cd /your/working/directory
 # clone git repository if it's not already there
@@ -33,6 +35,20 @@ conda activate mikk_env
 ```
 
 # Obtain multiple alignment data 
+
+## Show how `mikk_genome/code/snakemake/config/samples.csv` was created
+
+```{bash, eval = F}
+# add header
+echo "sample" \
+  > mikk_genome/code/snakemake/config/samples.csv
+# add target files
+curl -l ftp://ftp.ensembl.org/pub/release-102/emf/ensembl-compara/multiple_alignments/50_fish.epo/ |
+  grep -E "50_fish.epo.[0-9]{1,2}_[0-9].emf.gz" |
+  cut -f3 -d"." \
+  >> mikk_genome/code/snakemake/config/samples.csv 
+```
+
 
 ```{bash, eval = F}
 mkdir emfs
@@ -99,4 +115,4 @@ ape::plot.phylo(phylo_tree,
 dev.off()
 ```
 
-[Karyoplot Markdown App](20201125_karyoplot_app.Rmd)
+
