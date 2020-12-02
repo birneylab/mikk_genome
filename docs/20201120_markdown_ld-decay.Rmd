@@ -30,6 +30,15 @@ conda env create \
 conda activate mikk_env
 ```
 
+## Setup `R`
+
+```{r, message = F, warning = F}
+# Load required libraries
+require(here)
+source(here::here("code", "scripts", "setup.R"))
+```
+
+
 ## Copy MIKK panel VCF into working directory
 
 (See supplementary material for how VCF was generated.)
@@ -357,10 +366,6 @@ See which lines are causing the high-LD regions at the `MAF > 0.05` threshold (i
 ## Read data into BED matrix into `R`
 
 ```{r, eval = F}
-# Load required libraries
-require(here)
-source(here("mikk_genome", "code", "scripts", "setup.R"))
-
 # Read in BED matrix
 mikk_full <- gaston::read.bed.matrix(here("plink", "20200716_panel_no-sibs_line-ids_no-missing/20200716"),
                                      rds = NULL)
@@ -401,7 +406,7 @@ high_ld_lst <- lapply(high_ld_chrs, function(x){
 names(high_ld_lst) <- high_ld_chrs
 
 # save to repo
-saveRDS(high_ld_lst, here("mikk_genome", "data", "20200727_high_ld_list.rds"))
+saveRDS(high_ld_lst, here::here("mikk_genome", "data", "20200727_high_ld_list.rds"))
 ```
 
 ## Plot
@@ -413,7 +418,7 @@ Orange = 1
 Yellow = 0
 
 ```{r load_high_ld_list, include = F}
-high_ld_lst = readRDS(here("data", "20200727_high_ld_list.rds"))
+high_ld_lst = readRDS(here::here("data", "20200727_high_ld_list.rds"))
 ```
 
 ```{r}
@@ -727,7 +732,7 @@ r2_final_df <- dplyr::bind_rows(final_lst, .id = "dataset")
 ```{r, eval = F}
 # Write table to repo
 write.table(r2_final_df,
-            file = here("mikk_genome", "data", "20200803_r2_10kb-lim.csv"),
+            file = here::here("mikk_genome", "data", "20200803_r2_10kb-lim.csv"),
             quote = F, sep = ",", row.names = F, col.names = T)
 ```
 
@@ -765,7 +770,7 @@ r2_plot_main
 ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep = ""),
        plot = r2_plot_main,
        device = "png",
-       path = here("mikk_genome", "plots"),
+       path = here::here("mikk_genome", "plots"),
        width = 25,
        height = 13,
        units = "cm",
@@ -773,6 +778,8 @@ ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep
 ```
 
 ### Inset
+
+#### 100-bp windows
 
 ```{r, eval = F}
 # Read in data
@@ -783,12 +790,12 @@ r2_df_1kb_mikk = read_n_bind("ld/20200803_mean_r2_1kb-lim_", "mikk")
 ```{r, eval = F}
 # Write table to repo
 write.table(r2_df_1kb_mikk,
-            file = here("mikk_genome", "data", "20200803_r2_1kb-lim_mikk.csv"),
+            file = here::here("mikk_genome", "data", "20200803_r2_1kb-lim_mikk.csv"),
             quote = F, sep = ",", row.names = F, col.names = T)
 ```
 
 ```{r, include = F}
-r2_df_1kb_mikk = read.table(here("data", "20200803_r2_1kb-lim_mikk.csv"),
+r2_df_1kb_mikk = read.table(here::here("data", "20200803_r2_1kb-lim_mikk.csv"),
                             header = T,
                             sep = ",")
 ```
@@ -820,11 +827,141 @@ r2_1kb_mikk
 ggsave(filename = paste("20200803_mean-r2_1kb-lim_MIKK_inset_100bp-bins", ".png", sep = ""),
        plot = r2_1kb_mikk,
        device = "png",
-       path = here("mikk_genome", "plots"),
+       path = here::here("mikk_genome", "plots"),
        width = 10.88,
        height = 8,
        units = "cm",
        dpi = 500)
+```
+
+#### 10-bp windows
+
+For a finer resolution.
+
+##### Get means for each bin
+
+```{bash, eval = F}
+script=mikk_genome/code/scripts/20200724_r2_decay_mean_1gk_1kb-lim.R
+out_dir=ld/20200727_mean_r2_1kb-lim_mikk
+
+for in_file in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*ld); do
+  name=$(basename $in_file | cut -f1 -d".");
+  bsub \
+    -M 30000 \
+    -o log/20200803_$name\_mean-r2_1kb-max.out \
+    -e log/20200803_$name\_mean-r2_1kb-max.err \
+    "Rscript \
+      --vanilla \
+      $script \
+      $in_file \
+      $out_dir";
+done
+```
+
+```{r, eval = F}
+# Combine in R
+data_files <- list.files("ld/20200727_mean_r2_1kb-lim_mikk",
+                         full.names = T)
+
+data_files_trunc <- list.files("ld/20200727_mean_r2_1kb-lim_mikk")
+
+data_files_trunc <- gsub(".txt", "", data_files_trunc)
+
+data_list <- lapply(data_files, function(data_file){
+  df <- read.delim(data_file,
+                   sep = "\t",
+                   header = T)
+  return(df)
+})
+
+names(data_list) <- as.integer(data_files_trunc)
+
+# reorder
+data_list <- data_list[order(as.integer(names(data_list)))]
+
+# bind into DF
+r2_df_1kb_mikk <- dplyr::bind_rows(data_list, .id = "chr")
+r2_df_1kb_mikk$chr <- factor(r2_df_1kb_mikk$chr, levels = seq(1, 24))
+
+# write to table
+write.table(r2_df_1kb_mikk, here::here("mikk_genome", "data", "20200803_mikk_ld-decay_1kb-lim_10bp-windows.txt"),
+            quote = F, row.names = F, col.names = T, sep = "\t")
+```
+
+##### Plot
+
+```{r}
+# Read in data
+r2_df_1kb_mikk = read.table(here::here("data", "20200803_mikk_ld-decay_1kb-lim_10bp-windows.txt"),
+                            header = T, sep = "\t", as.is = T)
+
+
+# Factorise chromosomes
+r2_df_1kb_mikk$chr <- factor(r2_df_1kb_mikk$chr, levels = seq(1, 24))
+
+# Plot
+r2_df_1kb_mikk %>% ggplot() +
+  geom_line(aes(bin_bdr, mean, colour = chr)) +
+  theme_bw() +
+  xlab("Distance beetween SNPs (bp)") +
+  ylab(bquote(.("Mean r")^2)) +
+  labs(colour = "Chromosome") +
+  theme(panel.grid = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 16)) +
+  guides(colour = F) +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+                     limits = c(0.05, 0.7))
+
+```
+
+```{r, eval = F}
+# Save
+ggsave(filename = paste("20200803_mean-r2_1kb-lim_MIKK_inset_10bp-windows", ".png", sep = ""),
+       device = "png",
+       path = here::here("mikk_genome", "plots"),
+       width = 10.88,
+       height = 8,
+       units = "cm",
+       dpi = 500)
+```
+
+# MAF distribution MIKK v 1KG
+
+## Get frequencies with `plink`
+
+```{bash, eval = F}
+# 1KG
+plink \
+  --bfile plink/20200723_1gk_no-missing/20200723 \
+  --freq \
+  --out maf/20200727_1kg_no-missing
+# Creates a 3.9GB file.  
+  
+# MIKK
+plink \
+  --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
+  --freq \
+  --chr-set 24 no-xy \
+  --out maf/20200727_mikk_no-missing
+# Creates a 657MB file. 
+```
+
+## Plot
+
+```{bash, eval = F}
+# Run on cluster because the files are so big
+script=mikk_genome/code/scripts/20200727_maf_plot.R
+in_mikk=maf/20200727_mikk_no-missing.frq
+in_1kg=maf/20200727_1kg_no-missing.frq
+out_dir=mikk_genome/plots
+out_file=20200727_maf_MIKKv1KG
+
+Rscript --vanilla $script $in_mikk $in_1kg $out_dir $out_file
+```
+
+```{r, echo = F}
+knitr::include_graphics("20200727_maf_MIKKv1KG.png")
 ```
 
 # Investigation of LD decay in chr 2
@@ -842,20 +979,14 @@ paste tmp1.txt tmp2.txt > mikk_genome/data/Oryzias_latipes.ASM223467v1.dna.tople
 
 ## Get proportion of each chromosome covered by exons using `biomaRt`
 
-Move into repo directory before running `R`
-
-```{bash, eval = F}
-cd mikk_genome
-R
-```
-
 ```{r, message = F, warning = F}
 # Load libraries
 library(here)
-source(here("code", "scripts", "setup.R"))
+source(here::here("code", "scripts", "setup.R"))
 
 # Get length of chromosomes
-chr_counts <- readr::read_tsv(here("data", "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+chr_counts <- readr::read_tsv(here::here("data",
+                                         "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
                               col_names = c("chr", "length"))
 
 # List marts 
@@ -984,7 +1115,7 @@ chr_df %>%
 # Save to repo
 ggsave(filename = paste("20201106_snps-per-mb_v_exon-props", ".png", sep = ""),
        device = "png",
-       path = here("plots"),
+       path = here("mikk_genome", "plots"),
        width = 24,
        height = 20,
        units = "cm",
