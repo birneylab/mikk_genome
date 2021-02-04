@@ -1,0 +1,8 @@
+input_dir:
+    "/nfs/ftp/private/birney-res-ftp/upload/medaka/videos/ian_pilot/all"
+samples_file:
+    "pilot_paper/snmk/config/samples_test.csv"
+split_script:
+    "scripts/20201111_split_videos.py"
+python_env:
+    "envs/pilot_py.yml"
