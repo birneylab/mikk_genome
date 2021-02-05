@@ -2,16 +2,17 @@ Bootstrap: docker
 From: gcc:5.4.0
 
 %environment
-    export LC_ALL="en_US.UTF-8"
-    export LC_CTYPE="en_US.UTF-8"
+    PATH=$PATH:/SViper/build/
 
 %post
-    # Install cmake
-    wget https://github.com/Kitware/CMake/releases/download/v3.19.4/cmake-3.19.4-Linux-x86_64.sh
-    chmod +x ./cmake-3.19.4-Linux-x86_64.sh
-    ./cmake-3.19.4-Linux-x86_64.sh
+    # Install `cmake`
+    apt-get -y update
 
-    # Download SViper
+    wget https://github.com/Kitware/CMake/releases/download/v3.19.4/cmake-3.19.4.tar.gz
+    tar -xzf cmake-3.19.4.tar.gz
+    ./cmake-3.19.4/bootstrap && make && make install
+
+    # Install `SViper`
 
     git clone --recursive https://github.com/smehringer/SViper.git
     cd SViper
