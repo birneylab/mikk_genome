@@ -67,6 +67,23 @@ conda activate baseR
 conda env export > envs/baseR/baseR.yaml
 ```
 
+### `renv`
+
+```{r, eval = F}
+# Initiate
+renv::init()
+# Snapshot
+renv::snapshot()
+# Restore
+renv::restore()
+```
+
+#### Source
+
+```{r}
+library(here)
+source(here::here("code", "scripts", "sv_analysis", "source.R"))
+```
 
 ### Nanopore VCF
 
@@ -78,7 +95,6 @@ out_path=../sv_analysis/vcfs/ont_raw.vcf
 
 # Copy
 cp $nano_raw $out_path
-
 ```
 
 #### Rename samples
@@ -157,15 +173,21 @@ bcftools view \
 ##### Pull out IDs for relevant samples
 
 ```{r, eval = F}
-ont_samples ="data/sv_analysis/20210205_ont_raw_samples_file.txt"
-ill_samples ="data/20200206_cram_id_to_line_id.txt"
+ont_samples =here::here("data", "sv_analysis", "20210205_ont_raw_samples_file.txt")
+ill_samples = here::here("data","20200206_cram_id_to_line_id.txt")
+out_file = here::here("data", "sv_analysis", "20210205_ill_key_ont_samples.txt")
 
-library(tidyverse)
-in_vcf=../sv_analysis/vcfs/ill_raw.vcf.gz
-out_vcf=../sv_analysis/vcfs/ill_raw_rehead.vcf.gz
+# Read in tables
 
 ont_key = read.table(ont_samples)
-ill_key = read.table(ill_samples, comment.char = "\"", header = T)
+ill_key = read.table(ill_samples, comment.char = "\"", header = T) %>% 
+  dplyr::mutate(line = gsub("_", "-", line))
+
+# Find matches
+out = ill_key[ill_key$line %in% ont_key$V2, ]
+
+# Write to file
+readr::write_delim(out, out_file, delim = " ", col_names = F)
 ```
 
 ##### Rename and filter
