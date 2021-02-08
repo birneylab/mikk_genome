@@ -1,3 +1,7 @@
 [deps]
+DataVoyager = "5721bf48-af8e-5845-8445-c9e18126e773"
+ExcelReaders = "c04bee98-12a5-510c-87df-2a230cb6e075"
 Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Queryverse = "612083be-0b0f-5412-89c1-4e7c75506a58"
+XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
