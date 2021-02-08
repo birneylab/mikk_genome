@@ -162,10 +162,18 @@ in_vcf=/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-rele
 out_vcf=../sv_analysis/vcfs/ill_raw.vcf.gz
 
 # Compress and copy
-bcftools view \
-  --output-type z \
-  --output $out_vcf \
-  $in_vcf
+bsub \
+  -M 30000 \
+  -o ../log/20210208_comp_ill.out \
+  -e ../log/20210208_comp_ill.err \
+bsub -Is bash \
+  """
+  conda activate sv_env ;
+  bcftools view \
+    --output-type z \
+    --output $out_vcf \
+    $in_vcf
+  """  
 ```
 
 #### Rename and filter for ONT samples
@@ -193,7 +201,24 @@ readr::write_delim(out, out_file, delim = " ", col_names = F)
 ##### Rename and filter
 
 ```{bash, eval = F}
+samples_file=data/sv_analysis/20210205_ill_key_ont_samples.txt
+out_dir=../sv_analysis/vcfs/ill_raw_rehead_per_sample
 
+mkdir -p $out_dir
+
+# Split by sample
+bcftools +split \
+  $in_vcf \
+  --output $out_dir
+
+bcftools view \
+  --samples-file $samples_file
+  --output-type u |\
+    bcftools reheader \
+      --samples $samples_file \
+      --output-type u \
+        bcftools +split \
+          --output $out_dir
 ```
 
 

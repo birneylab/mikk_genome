@@ -1,8 +1,0 @@
-input_dir:
-    "ftp://ftp.ensembl.org/pub/release-102/emf/ensembl-compara/multiple_alignments/50_fish.epo"
-samples_file:
-    "mikk_genome/code/snakemake/config/samples.csv"
-split_script:
-    "scripts/20201111_split_videos.py"
-python_env:
-    "envs/pilot_py.yml"

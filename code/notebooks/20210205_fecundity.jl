@@ -20,7 +20,7 @@ md"
 "
 
 # ╔═╡ 7feec574-67b0-11eb-3d29-6d6dff03ea05
-cd("/hps/research1/birney/users/ian/mikk_paper/mikk_genome")
+cd("/Users/brettell/Documents/Repositories/mikk_genome")
 
 # ╔═╡ e12b13e8-67b1-11eb-04b2-5f5de4eab8a8
 md"
