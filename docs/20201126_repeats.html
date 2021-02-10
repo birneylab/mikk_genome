@@ -13,6 +13,7 @@
 
 <title>Repeat elements</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -370,6 +371,9 @@ div.tocify {
 <li>
   <a href="20201126_repeats.html">Repeat Elements</a>
 </li>
+<li>
+  <a href="20210208_fecundity.html">Fecundity</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -387,13 +391,13 @@ div.tocify {
 </div>
 
 
-<div id="setup" class="section level1">
-<h1><span class="header-section-number">1</span> Setup</h1>
+<div id="setup" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Setup</h1>
 <p>Working directory on EBI cluster: <code>/hps/research1/birney/users/ian/mikk_paper</code></p>
-<div id="create-conda-environments" class="section level2">
-<h2><span class="header-section-number">1.1</span> Create <code>conda</code> environments</h2>
-<div id="for-linux" class="section level3">
-<h3><span class="header-section-number">1.1.1</span> For Linux</h3>
+<div id="create-conda-environments" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Create <code>conda</code> environments</h2>
+<div id="for-linux" class="section level3" number="1.1.1">
+<h3 number="1.1.1"><span class="header-section-number">1.1.1</span> For Linux</h3>
 <pre class="bash"><code># Create and activate environment 
 conda create -n repeat_env
 conda activate repeat_env
@@ -403,8 +407,8 @@ conda install -c bioconda bcftools
 # Export to repo
 conda env export &gt; mikk_genome/code/config/repeat_env.yml</code></pre>
 </div>
-<div id="for-r" class="section level3">
-<h3><span class="header-section-number">1.1.2</span> For R</h3>
+<div id="for-r" class="section level3" number="1.1.2">
+<h3 number="1.1.2"><span class="header-section-number">1.1.2</span> For R</h3>
 <pre class="bash"><code>conda create -n r
 conda activate r
 conda install -c conda-forge r-base
@@ -416,8 +420,8 @@ conda install -c conda-forge r-scales
 conda env export &gt; mikk_genome/code/config/r.yml</code></pre>
 </div>
 </div>
-<div id="get-jacks-data" class="section level2">
-<h2><span class="header-section-number">1.2</span> Get Jack’s data</h2>
+<div id="get-jacks-data" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Get Jack’s data</h2>
 <p>Jack’s directory here: <code>/nfs/leia/research/enright/jack/10_medaka_fish/02_genome_repeats/repeatmasker_filtered/medaka_hdrr</code></p>
 <pre class="bash"><code># Create directory for repeats work
 mkdir repeats
@@ -427,8 +431,8 @@ scp brettell@yoda:/nfs/leia/research/enright/jack/10_medaka_fish/02_genome_repea
 scp ~/Desktop/medaka_hdrr_repeats.fixed.gff brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/repeats</code></pre>
 </div>
 </div>
-<div id="create-consensus-sequence-fasta-for-each-sample" class="section level1">
-<h1><span class="header-section-number">2</span> Create consensus sequence FASTA for each sample</h1>
+<div id="create-consensus-sequence-fasta-for-each-sample" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Create consensus sequence FASTA for each sample</h1>
 <pre class="bash"><code># NOTE: this is for when we want to analyse the repeats in each of the MIKK panel lines.
 mkdir fastas_for_reps
 
@@ -450,23 +454,23 @@ for i in $( cat $full_panel_list ) ; do
       $in_file&quot; ;
 done      </code></pre>
 </div>
-<div id="process-data" class="section level1">
-<h1><span class="header-section-number">3</span> Process data</h1>
-<div id="activate-r-environment" class="section level2">
-<h2><span class="header-section-number">3.1</span> Activate <code>r</code> environment</h2>
+<div id="process-data" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Process data</h1>
+<div id="activate-r-environment" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Activate <code>r</code> environment</h2>
 <pre class="bash"><code>conda activate r
 R</code></pre>
 </div>
-<div id="load-packages" class="section level2">
-<h2><span class="header-section-number">3.2</span> Load packages</h2>
+<div id="load-packages" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Load packages</h2>
 <pre class="r"><code>require(here)
 require(tidyverse)
 require(GenomicRanges)
 library(scales)
 require(karyoploteR)</code></pre>
 </div>
-<div id="read-in-data-and-clean" class="section level2">
-<h2><span class="header-section-number">3.3</span> Read in data and clean</h2>
+<div id="read-in-data-and-clean" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Read in data and clean</h2>
 <pre class="r"><code># Read in data
 hdrr_reps = read.table(here(&quot;data&quot;, &quot;20201126_medaka_hdrr_repeats.fixed.gff&quot;),
                        header = F, sep = &quot;\t&quot;, skip = 3, comment.char = &quot;&quot;, quote = &quot;&quot;, as.is = T) %&gt;% 
@@ -776,8 +780,8 @@ knitr::kable(head(hdrr_reps, 10), format = &quot;markdown&quot;)</code></pre>
 <pre class="r"><code># Split into list based on class
 rep_list = split(hdrr_reps, f = hdrr_reps$class)</code></pre>
 </div>
-<div id="convert-into-genomicranges" class="section level2">
-<h2><span class="header-section-number">3.4</span> Convert into GenomicRanges</h2>
+<div id="convert-into-genomicranges" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Convert into GenomicRanges</h2>
 <pre class="r"><code>rep_list_ranges = lapply(rep_list, function(x){
   ranges = GenomicRanges::makeGRangesFromDataFrame(x,
                                                    ignore.strand = T,
@@ -788,10 +792,10 @@ rep_list = split(hdrr_reps, f = hdrr_reps$class)</code></pre>
 })</code></pre>
 </div>
 </div>
-<div id="prepare-data-for-karyoplot" class="section level1">
-<h1><span class="header-section-number">4</span> Prepare data for karyoplot</h1>
-<div id="get-hdrr-reference-genome-for-karyoplot-scaffold" class="section level2">
-<h2><span class="header-section-number">4.1</span> Get HdrR reference genome for karyoplot scaffold</h2>
+<div id="prepare-data-for-karyoplot" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Prepare data for karyoplot</h1>
+<div id="get-hdrr-reference-genome-for-karyoplot-scaffold" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Get HdrR reference genome for karyoplot scaffold</h2>
 <pre class="r"><code># Get chromosome lengths
 med_chr_lens = read.table(here(&quot;data&quot;, &quot;Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt&quot;),
                           col.names = c(&quot;chr&quot;, &quot;end&quot;))
@@ -803,21 +807,21 @@ med_chr_lens = med_chr_lens %&gt;%
 # Create custom genome
 med_genome = regioneR::toGRanges(med_chr_lens)</code></pre>
 </div>
-<div id="load-exon-ranges" class="section level2">
-<h2><span class="header-section-number">4.2</span> Load exon ranges</h2>
+<div id="load-exon-ranges" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Load exon ranges</h2>
 <pre class="r"><code># Load exon density for app
 ex_ranges = readRDS(here(&quot;data&quot;, &quot;20201125_exon_ranges.rds&quot;))</code></pre>
 </div>
-<div id="make-palette" class="section level2">
-<h2><span class="header-section-number">4.3</span> Make palette</h2>
+<div id="make-palette" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Make palette</h2>
 <pre class="r"><code>electro_angler = c(&quot;#7400b8&quot;,&quot;#6930c3&quot;,&quot;#5e60ce&quot;,&quot;#5390d9&quot;,&quot;#4ea8de&quot;,&quot;#48bfe3&quot;,&quot;#56cfe1&quot;,&quot;#64dfdf&quot;,&quot;#72efdd&quot;,&quot;#80ffdb&quot;)
 new_pal = grDevices::colorRampPalette(electro_angler)</code></pre>
 </div>
 </div>
-<div id="generate-karyoplot" class="section level1">
-<h1><span class="header-section-number">5</span> Generate karyoplot</h1>
-<div id="full-genome" class="section level2">
-<h2><span class="header-section-number">5.1</span> Full genome</h2>
+<div id="generate-karyoplot" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Generate karyoplot</h1>
+<div id="full-genome" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Full genome</h2>
 <p><strong>NOTE</strong>: The y-scale for each class of repeat element is different.</p>
 <pre class="r"><code># Create Karyoplot
 kp = plotKaryotype(med_genome, chromosomes = NULL)
@@ -864,8 +868,8 @@ for (i in seq_len(length(target_classes))){
 }</code></pre>
 <p><img src="20201126_repeats_files/figure-html/unnamed-chunk-12-1.png" width="1632" /></p>
 </div>
-<div id="per-chromosome" class="section level2">
-<h2><span class="header-section-number">5.2</span> Per chromosome</h2>
+<div id="per-chromosome" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Per chromosome</h2>
 <p><strong>NOTE</strong>: As the plot for every chromosome is generated separately, the y-scale for the same class of repeat element changes with each plot. The chromosomes now also look as if they’re the same length. It is therefore preferable to scan for genome-wide anomolies using the full-genome plot above.</p>
 <pre class="r"><code>for (chr in as.character(seq(1, 24))){
   # Create Karyoplot
