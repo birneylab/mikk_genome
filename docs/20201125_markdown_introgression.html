@@ -13,6 +13,7 @@
 
 <title>Introgression in the MIKK panel</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -370,6 +371,9 @@ div.tocify {
 <li>
   <a href="20201126_repeats.html">Repeat Elements</a>
 </li>
+<li>
+  <a href="20210208_fecundity.html">Fecundity</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -388,18 +392,20 @@ div.tocify {
 
 
 <p>We want to determine the extent to which the MIKK panel shows evidence of introgression with other medaka populations, specifically the Northern and Korean medaka strains.</p>
-<div id="setup" class="section level1">
-<h1><span class="header-section-number">1</span> Setup</h1>
-<div id="create-directory-structure-and-clone-repo" class="section level2">
-<h2><span class="header-section-number">1.1</span> Create directory structure and clone repo</h2>
+<div id="setup" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Setup</h1>
+<div id="create-directory-structure-and-clone-repo" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Create directory structure and clone repo</h2>
 <p>(Working directory on EBI cluster: <code>/hps/research1/birney/users/ian/mikk_paper</code> - the same as for the LD analysis)</p>
-<pre class="bash"><code># move to working directory
+<pre class="bash"><code># make working directory
+mkdir /your/working/directory
+# move to working directory
 cd /your/working/directory
 # clone git repository if it&#39;s not already there
 git clone https://github.com/Ian-Brettell/mikk_genome.git</code></pre>
 </div>
-<div id="create-conda-evironment" class="section level2">
-<h2><span class="header-section-number">1.2</span> Create conda evironment</h2>
+<div id="create-conda-evironment" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Create conda evironment</h2>
 <pre class="bash"><code>conda env create \
   -n mikk_env \
   -f mikk_genome/code/config/conda_env.yml
@@ -407,8 +413,18 @@ git clone https://github.com/Ian-Brettell/mikk_genome.git</code></pre>
 conda activate mikk_env</code></pre>
 </div>
 </div>
-<div id="obtain-multiple-alignment-data" class="section level1">
-<h1><span class="header-section-number">2</span> Obtain multiple alignment data</h1>
+<div id="obtain-multiple-alignment-data" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Obtain multiple alignment data</h1>
+<div id="show-how-mikk_genomecodesnakemakeconfigsamples.csv-was-created" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Show how <code>mikk_genome/code/snakemake/config/samples.csv</code> was created</h2>
+<pre class="bash"><code># add header
+echo &quot;sample&quot; \
+  &gt; mikk_genome/code/snakemake/config/samples.csv
+# add target files
+curl -l ftp://ftp.ensembl.org/pub/release-102/emf/ensembl-compara/multiple_alignments/50_fish.epo/ |
+  grep -E &quot;50_fish.epo.[0-9]{1,2}_[0-9].emf.gz&quot; |
+  cut -f3 -d&quot;.&quot; \
+  &gt;&gt; mikk_genome/code/snakemake/config/samples.csv </code></pre>
 <pre class="bash"><code>mkdir emfs
 # download
 wget -P emfs/ ftp://ftp.ensembl.org/pub/release-100/emf/ensembl-compara/multiple_alignments/47_fish.epo/*
@@ -429,8 +445,9 @@ done
 sed &#39;/\$VAR1/d; /\ \ /d&#39; emfs/unzipped/17_1.emf | uniq -u &gt; emfs/unzipped/tmp.txt
 # replace old file
 mv emfs/unzipped/tmp.txt emfs/unzipped/17_1.emf</code></pre>
-<div id="tree-plot" class="section level2">
-<h2><span class="header-section-number">2.1</span> Tree plot</h2>
+</div>
+<div id="tree-plot" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Tree plot</h2>
 <p>The tree file was copied and pasted from within <code>emfs/README.47</code>.</p>
 <p>If generating the tree directly, the tips remove the spaces between Genus and species, so manually edit using regex to find spaces and replace them with "_": <code>{bash} (?&lt;=[a-z])( )(?=[a-z])</code></p>
 <pre class="r"><code>phylo_tree &lt;- ape::read.tree(file = &quot;~/Documents/Repositories/mikk_genome/data/20200921_47-fish-epo_tree.txt&quot;)</code></pre>
@@ -447,7 +464,7 @@ ape::plot.phylo(phylo_tree,
                 edge.color = all_med_col,
                 tip.color = all_med_tip,
                 font = 4)</code></pre>
-<p><img src="20201125_markdown_introgression_files/figure-html/unnamed-chunk-5-1.png" width="1056" /></p>
+<p><img src="20201125_markdown_introgression_files/figure-html/unnamed-chunk-6-1.png" width="1056" /></p>
 <pre class="r"><code># Save to repo
 png(file= here(&quot;plots&quot;, &quot;tree_all_oryzias.png&quot;),
     width=22,

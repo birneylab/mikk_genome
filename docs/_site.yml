@@ -11,6 +11,8 @@ navbar:
       href: 20201125_markdown_introgression.html
     - text: "Repeat Elements"
       href: 20201126_repeats.html
+    - text: "Fecundity"
+      href: 20210208_fecundity.html
 output:
   html_document:
     theme: flatly
