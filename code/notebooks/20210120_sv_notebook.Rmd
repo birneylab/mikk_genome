@@ -87,6 +87,23 @@ source(here::here("code", "scripts", "sv_analysis", "source.R"))
 
 ### Nanopore VCF
 
+`/hps/research1/birney/users/adrien/analyses/medaka_DNA_promethion/brain_run2/DNA_analysis/results/SV/sniffles_all/merged.vcf`
+
+Created with:
+```{bash}
+sniffles \
+  --min_support 3 \
+  --max_num_splits 7 \
+  --max_distance 1000 \
+  --min_length 50 \
+  --minmapping_qual 20 \
+  --min_seq_size 1000 \
+  --allelefreq 0.1 \
+  -t {threads} \
+  -m {input_bam} \
+  -v {output_vcf}
+```
+
 #### Copy to working directory
 
 ```{bash, eval = F}
@@ -181,7 +198,8 @@ bsub -Is bash \
 ##### Pull out IDs for relevant samples
 
 ```{r, eval = F}
-ont_samples =here::here("data", "sv_analysis", "20210205_ont_raw_samples_file.txt")
+library(here)
+ont_samples = here::here("data", "sv_analysis", "20210205_ont_raw_samples_file.txt")
 ill_samples = here::here("data","20200206_cram_id_to_line_id.txt")
 out_file = here::here("data", "sv_analysis", "20210205_ill_key_ont_samples.txt")
 
@@ -201,7 +219,9 @@ readr::write_delim(out, out_file, delim = " ", col_names = F)
 ##### Rename and filter
 
 ```{bash, eval = F}
+in_vcf=../sv_analysis/vcfs/ill_raw.vcf.gz
 samples_file=data/sv_analysis/20210205_ill_key_ont_samples.txt
+out_vcf=../sv_analysis/vcfs/ill_raw_rehead.vcf.gz
 out_dir=../sv_analysis/vcfs/ill_raw_rehead_per_sample
 
 mkdir -p $out_dir
@@ -212,13 +232,15 @@ bcftools +split \
   --output $out_dir
 
 bcftools view \
-  --samples-file $samples_file
-  --output-type u |\
+  --samples-file $samples_file \
+  --output-type u \
+  $in_vcf |\
     bcftools reheader \
       --samples $samples_file \
-      --output-type u \
-        bcftools +split \
-          --output $out_dir
+      --output $out_vcf
+
+bcftools +split \
+  --output $out_dir
 ```
 
 
