@@ -483,7 +483,7 @@ for sample in $(cut -f2 -d' ' $sample_key | tail -n+2 ) ; do
   # Run SViper
   bsub \
     -M 30000 \
-    -n 4 \
+    -n 16 \
     -o ../log/20210212_sviper_$sample.out \
     -e ../log/20210212_sviper_$sample.err \
     """
@@ -497,20 +497,77 @@ for sample in $(cut -f2 -d' ' $sample_key | tail -n+2 ) ; do
     """
 done
 
-  bsub \
-    -M 30000 \
-    -n 16 \
-    -o ../log/20210212_sviper_$sample.out \
-    -e ../log/20210212_sviper_$sample.err \
-    """
-    singularity exec $container \
-      sviper \
-        --candidate-vcf $ont_vcf \
-        --short-read-bam $ill_bam \
-        --long-read-bam $ont_bam \
-        --reference $ref \
-        --output-prefix $out_dir/$sample
-    """
+# 4-2 and 7-2 failed
+```
+
+### Merge
+
+```{bash, eval = F}
+# Get list of vcf paths
+in_dir=../sv_analysis/vcfs/sviper
+out_dir=$in_dir/merged
+mkdir -p $out_dir
+in_vcfs=$(find $in_dir/*.vcf | tr '\n' ' ')
+
+bcftools merge \
+  --output $out_dir/all.vcf\
+  $in_vcfs
+  
+# Requires them to be bgzipped
+
+# Try with Picard
+in_dir=../sv_analysis/vcfs/sviper
+out_dir=$in_dir/merged
+mkdir -p $out_dir
+find $in_dir/*.vcf > tmp.list
+
+picard MergeVcfs \
+  I=tmp.list \
+  O=$out_dir/merged.vcf.gz
+
+rm tmp.list
+#Exception in thread "main" java.lang.IllegalArgumentException: Input file /hps/research1/birney/users/ian/mikk_paper/mikk_genome/../sv_analysis/vcfs/sviper/117-2.vcf has sample entries that don't match the other files.
+```
+
+### Try `SURVIVOR`
+
+<https://github.com/fritzsedlazeck/SURVIVOR>
+
+```{bash, eval = F}
+module load singularity
+
+# Build
+singularity build \
+  --remote ../sing_conts/survivor.sif \
+  envs/survivor/20210217_survivor.def
+  
+# Open interactive shell
+bsub -Is "singularity shell ../sing_conts/survivor.sif"
+# Works! 
+```
+
+### Get raw data from `SViper`
+
+```{bash, eval = F}
+in_dir=../sv_analysis/vcfs/sviper
+out_dir=data/sv_analysis/20210217_sviper_filter_pass
+mkdir -p $out_dir
+
+for in_vcf in $(find $in_dir/*vcf) ; do
+  sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
+  bcftools query \
+    --include 'FILTER="PASS"' \
+    --exclude 'GT~"\."' \
+    --format '%CHROM,%POS,%ALT,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
+  --output $out_dir/$sample.csv \
+  $in_vcf ;
+done
+```
+
+# Analysis
+
+## Get stats 
+```{r}
 
 ```
 

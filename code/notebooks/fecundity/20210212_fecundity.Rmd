@@ -477,7 +477,9 @@ final_hor_df = semi_out %>%
   dplyr::mutate(KEY = gsub("; ", ";\n", KEY),
                 KEY = factor(KEY, levels = recode_vec_3)) %>% 
   dplyr::filter(DATE == "Jul 2020") %>% 
-  dplyr::mutate(STRAIN = factor(STRAIN, levels=unique(STRAIN[order(KEY,decreasing = T)])))
+  dplyr::mutate(STRAIN = factor(STRAIN, levels=unique(STRAIN[order(KEY,decreasing = T)]))) %>% 
+  # remove "Not producing"
+  dplyr::filter(KEY != "Not producing")
   # order by category
 
 # Get levels for correlation plot
@@ -502,20 +504,22 @@ final_hor_plot
 ### Correlation plot
 
 ```{r}
-recode_vec_4 = c("Not producing",
-                 "Do not produce\nevery day;\n<3 eggs\nwhen they do",
+recode_vec_4 = c("Do not produce\nevery day;\n<3 eggs\nwhen they do",
                  "Do not produce\nevery day;\n<5 eggs\nwhen they do",
                  "0-3 eggs\nper day",
                  "0-5 eggs\nper day",
                  "5-10 eggs\nper day")
-names(recode_vec_4) = recode_vec_2
+names(recode_vec_4) = recode_vec_2[!recode_vec_2 == "Not producing"]
   
   
 semi_corr = semi_out %>% 
+  # remove "Not producing"
+  dplyr::filter(KEY != "Not producing") %>% 
   dplyr::mutate(KEY = dplyr::recode_factor(KEY, !!!recode_vec_4)) %>% 
   tidyr::pivot_wider(id_cols = STRAIN,
                      names_from = DATE,
                      values_from = KEY) %>% 
+  tidyr::drop_na() %>% 
   ggplot() +
     geom_jitter(aes(`Feb 2019`, `Jul 2020`, colour = STRAIN), alpha = 0.8) +
     coord_fixed() +
@@ -524,32 +528,34 @@ semi_corr = semi_out %>%
           axis.title = element_text(size = 9)) +
     guides(colour = F) +
     scale_color_manual(values = pal_corr) +
-    xlab("F15: Feb 2019") +
-    ylab("F16: Jul 2020")
+    xlab("F15 (Feb 2019)") +
+    ylab("F16 (Jul 2020)")
 
 semi_corr
 ```
 
 
 ```{r}
-ggdraw() +
+final = ggdraw() +
   draw_plot(out2, x = 0.05, y = .5, width = .45, height = .5) +
-  draw_plot(semi_corr, x = .4, y = .35, width = .65, height = .65) +
+  draw_plot(semi_corr, x = .42, y = .35, width = .65, height = .65) +
   draw_plot(final_hor_plot, x = 0, y = 0, width = 1, height = 0.5) +
   draw_plot_label(label = c("A", "B", "C"), size = 15,
                   x = c(0, 0.5, 0), y = c(1, 1, 0.5))
+
+final
 ```
 
 ```{r, eval = F}
 # SVG
-ggsave(here("plots", "fecundity", "20210217_final_figure.svg"),
+ggsave(here("plots", "fecundity", "20210217_final_figure_producing.svg"),
        device = "svg",
        units = "cm",
        height = 15,
        width = 30)
 
 # PNG
-ggsave(here("plots", "fecundity", "20210217_final_figure.png"),
+ggsave(here("plots", "fecundity", "20210217_final_figure_producing.png"),
        device = "png",
        dpi = 400,
        units = "cm",
@@ -557,7 +563,6 @@ ggsave(here("plots", "fecundity", "20210217_final_figure.png"),
        width = 30)
 ```
 
-```{julia}
-2 + 2
-```
+
+
 
