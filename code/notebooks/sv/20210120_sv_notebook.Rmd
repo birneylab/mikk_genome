@@ -496,5 +496,21 @@ for sample in $(cut -f2 -d' ' $sample_key | tail -n+2 ) ; do
         --output-prefix $out_dir/$sample
     """
 done
+
+  bsub \
+    -M 30000 \
+    -n 16 \
+    -o ../log/20210212_sviper_$sample.out \
+    -e ../log/20210212_sviper_$sample.err \
+    """
+    singularity exec $container \
+      sviper \
+        --candidate-vcf $ont_vcf \
+        --short-read-bam $ill_bam \
+        --long-read-bam $ont_bam \
+        --reference $ref \
+        --output-prefix $out_dir/$sample
+    """
+
 ```
 

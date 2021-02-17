@@ -21,6 +21,7 @@ library(tidyverse)
 library(plotly)
 library(scales)
 library(lubridate)
+library(cowplot)
 ```
 
 # Quantitative data
@@ -298,6 +299,11 @@ final_hor = semi_out %>%
     ylab(NULL) +
     ggtitle("Fecundity of the MIKK panel lines as of July 2020")
 
+final_hor
+```
+
+
+```{r}
 ggplotly(final_hor, width = 900, height = 300) %>% 
   layout(showlegend = F)
 ```
@@ -313,7 +319,7 @@ inbreed_df = readr::read_csv(raw_dat)
 
 total_crosses = 253
 
-test = inbreed_df %>%
+inbreed_df_tidy = inbreed_df %>%
   # Remove final row, which makes `N of strains lost` character
   dplyr::slice(-c(11,12)) %>% 
   # Change column names
@@ -345,26 +351,213 @@ test = inbreed_df %>%
   dplyr::mutate(GENERATION = stringr::str_extract(GENERATION, "(?:F\\d{1,2})")) %>% 
   # Add first row
   rbind(., c("F1", rep(0,7), total_crosses)) %>% 
+  # Add rows for F12-14
+  rbind(., dplyr::filter(., GENERATION == "F11") %>%
+            dplyr::slice(rep(1:n(), each = 3)) %>%
+            dplyr::mutate(GENERATION = c("F12", "F13", "F14"))) %>% 
   # Factorise GENERATION
-  dplyr::mutate(GENERATION = factor(GENERATION, levels = paste("F", seq(1:11), sep = ""))) %>% 
+  dplyr::mutate(GENERATION = factor(GENERATION, levels = paste("F", seq(1:14), sep = ""))) %>% 
+  # Order
+  .[order(.$GENERATION), ] %>% 
   # Gather 
   tidyr::pivot_longer(cols = c(`not productive`,
                                `infertile male`,
                                `no males`, 
                                `no females`,
-                               `all cause death`),
-                      names_to = "CAUSE_OF_DEATH",
-                      values_to = "N_LOST")
+                               `all cause death`,
+                               N_SURVIVING),
+                      names_to = "STATUS",
+                      values_to = "N") %>% 
+  # Convert `N` to integer
+  dplyr::mutate(N = as.integer(N))
 ```
 
 Plot
 ```{r}
-ggplot(data=test, aes(x=GENERATION, group=N_LOST, fill=N_LOST)) +
-    geom_density(adjust=1.5, position="fill")
+recode_vec = c("Infertile male",
+               "No males",
+               "No females", 
+               "Not productive",
+               "All-cause death", 
+               "Reproducing")
+names(recode_vec) = c("infertile male", 
+                      "no males", 
+                      "no females", 
+                      "not productive", 
+                      "all cause death", 
+                      "N_SURVIVING")
+
+test = inbreed_df_tidy %>% 
+  # geom_area() seems to need `x` to be numeric
+  dplyr::mutate(GENERATION = as.integer(gsub("F", "", GENERATION))) %>%
+  # recode STATUS values and order
+  dplyr::mutate(STATUS = dplyr::recode(STATUS, !!!recode_vec),
+                STATUS = factor(STATUS, levels = recode_vec))# %>% 
+out = ggplot(test) +
+    geom_area(aes(x=GENERATION,
+                  y=N,
+                  fill = STATUS)) +
+#    geom_text(aes(x=GENERATION, y=N, label = STATUS)) +
+    scale_x_continuous(breaks = unique(test$GENERATION),
+                       labels = paste("F", unique(test$GENERATION), sep = "")) +
+    theme_bw() +
+    xlab("Generation") +
+    ylab("Number of MIKK panel lines") +
+    labs(fill = "Status") +
+    theme(panel.grid = element_blank())
+#    theme(legend.position=c(0.2, 0.3),
+#          legend.box.background = element_blank())
+
+out
 ```
-## Try with `streamgraph`
+```{r, eval =F}
+ggsave(here("plots", "20210215_inbreeding_status.svg"),
+       device = "svg",
+       units = "cm",
+       dpi = 400,
+       height = 12,
+       width = 19.5)
+```
+
 
 ```{r}
-devtools::install_github("hrbrmstr/streamgraph")
+ggplotly(out)
+```
+
+# Compile final figure
+
+## Create new plots with new palettes
+
+### Inbreeding
+
+```{r}
+recode_vec = c("Infertile male",
+               "No males",
+               "No females", 
+               "Not productive",
+               "All-cause death", 
+               "Reproducing")
+names(recode_vec) = c("infertile male", 
+                      "no males", 
+                      "no females", 
+                      "not productive", 
+                      "all cause death", 
+                      "N_SURVIVING")
+
+test = inbreed_df_tidy %>% 
+  # geom_area() seems to need `x` to be numeric
+  dplyr::mutate(GENERATION = as.integer(gsub("F", "", GENERATION))) %>%
+  # recode STATUS values and order
+  dplyr::mutate(STATUS = dplyr::recode(STATUS, !!!recode_vec),
+                STATUS = factor(STATUS, levels = recode_vec))# %>% 
+out2 = ggplot(test) +
+    geom_area(aes(x=GENERATION,
+                  y=N,
+                  fill = STATUS)) +
+#    geom_text(aes(x=GENERATION, y=N, label = STATUS)) +
+    scale_fill_viridis_d(option = "magma") +
+    scale_x_continuous(breaks = unique(test$GENERATION),
+                       labels = paste("F", unique(test$GENERATION), sep = "")) +
+    theme_cowplot(font_size = 10) +
+    xlab("Generation") +
+    ylab("Number of MIKK panel lines") +
+    labs(fill = "Status") +
+    theme(panel.grid = element_blank())
+#    theme(legend.position=c(0.2, 0.3),
+#          legend.box.background = element_blank())
+
+out2
+```
+
+### Fecundity horizontal
+
+```{r}
+# Process data
+final_hor_df = semi_out %>% 
+  dplyr::mutate(KEY = gsub("; ", ";\n", KEY),
+                KEY = factor(KEY, levels = recode_vec_3)) %>% 
+  dplyr::filter(DATE == "Jul 2020") %>% 
+  dplyr::mutate(STRAIN = factor(STRAIN, levels=unique(STRAIN[order(KEY,decreasing = T)])))
+  # order by category
+
+# Get levels for correlation plot
+pal_corr = viridis_pal(direction = -1)(length(levels(final_hor_df$STRAIN)))
+names(pal_corr) = levels(final_hor_df$STRAIN)
+
+final_hor_plot = final_hor_df %>%   
+  ggplot() +
+    geom_col(aes(STRAIN, KEY, fill = STRAIN)) +
+    theme_cowplot() +
+    scale_fill_viridis_d(direction = -1) +
+    guides(fill = F) +
+    theme(axis.text.x = element_text(size = 3.5,
+                                     angle = 45),
+          axis.text.y = element_text(size = 5),
+          axis.title.x = element_text(size = 9)) +
+    xlab("F16 MIKK panel lines (July 2020)") +
+    ylab(NULL)
+
+final_hor_plot
+```
+### Correlation plot
+
+```{r}
+recode_vec_4 = c("Not producing",
+                 "Do not produce\nevery day;\n<3 eggs\nwhen they do",
+                 "Do not produce\nevery day;\n<5 eggs\nwhen they do",
+                 "0-3 eggs\nper day",
+                 "0-5 eggs\nper day",
+                 "5-10 eggs\nper day")
+names(recode_vec_4) = recode_vec_2
+  
+  
+semi_corr = semi_out %>% 
+  dplyr::mutate(KEY = dplyr::recode_factor(KEY, !!!recode_vec_4)) %>% 
+  tidyr::pivot_wider(id_cols = STRAIN,
+                     names_from = DATE,
+                     values_from = KEY) %>% 
+  ggplot() +
+    geom_jitter(aes(`Feb 2019`, `Jul 2020`, colour = STRAIN), alpha = 0.8) +
+    coord_fixed() +
+    theme_cowplot() +
+    theme(axis.text = element_text(size = 5),
+          axis.title = element_text(size = 9)) +
+    guides(colour = F) +
+    scale_color_manual(values = pal_corr) +
+    xlab("F15: Feb 2019") +
+    ylab("F16: Jul 2020")
+
+semi_corr
+```
+
+
+```{r}
+ggdraw() +
+  draw_plot(out2, x = 0.05, y = .5, width = .45, height = .5) +
+  draw_plot(semi_corr, x = .4, y = .35, width = .65, height = .65) +
+  draw_plot(final_hor_plot, x = 0, y = 0, width = 1, height = 0.5) +
+  draw_plot_label(label = c("A", "B", "C"), size = 15,
+                  x = c(0, 0.5, 0), y = c(1, 1, 0.5))
+```
+
+```{r, eval = F}
+# SVG
+ggsave(here("plots", "fecundity", "20210217_final_figure.svg"),
+       device = "svg",
+       units = "cm",
+       height = 15,
+       width = 30)
+
+# PNG
+ggsave(here("plots", "fecundity", "20210217_final_figure.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       height = 15,
+       width = 30)
+```
+
+```{julia}
+2 + 2
 ```
 
