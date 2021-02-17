@@ -1,0 +1,11 @@
+# Build command on EBI cluster:
+# cd /hps/research1/birney/users/ian/mikk_paper/mikk_genome
+# singularity build --remote ../sing_conts/rstudio-server.sif envs/20210209_rstudio_server.def
+
+Bootstrap: docker
+From: rocker/r-base
+
+%post
+    apt-get install gdebi-core
+    wget https://download2.rstudio.org/server/xenial/amd64/rstudio-server-1.4.1103-amd64.deb
+    gdebi rstudio-server-1.4.1103-amd64.deb
