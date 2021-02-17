@@ -1,8 +1,0 @@
-Bootstrap: docker
-From: rocker/tidyverse
-
-%runscript
-    /usr/lib/rstudio-server/bin/rserver "$@"
-
-%startscript
-    /usr/lib/rstudio-server/bin/rserv
