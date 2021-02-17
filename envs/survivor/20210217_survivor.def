@@ -1,0 +1,22 @@
+Bootstrap: docker
+From: gcc:5.4.0
+
+%environment
+    PATH=$PATH:/SURVIVOR-master/Debug
+
+%post
+    # Install `cmake`
+
+    apt-get -y update
+
+#    wget https://github.com/Kitware/CMake/releases/download/v3.19.4/cmake-3.19.4.tar.gz
+#    tar -xzf cmake-3.19.4.tar.gz
+#    ./cmake-3.19.4/bootstrap && make && make install
+
+    # Install `SURVIVOR`
+
+    wget https://github.com/fritzsedlazeck/SURVIVOR/archive/master.tar.gz -O SURVIVOR.tar.gz
+    tar xzvf SURVIVOR.tar.gz
+    cd SURVIVOR-master/Debug/
+    make
+    ./SURVIVOR
