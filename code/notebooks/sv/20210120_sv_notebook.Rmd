@@ -2,15 +2,18 @@
 title: "Structural variants"
 author: "Ian Brettell"
 date: '`r format(Sys.Date())`'
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    dev: 'svg'
-    number_sections: true
-    keep_md: true
-    pandoc_args: --lua-filter=color-text.lua
-    highlight: pygments  
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+#output:
+#  html_document:
+#    toc: true
+#    toc_float: true
+#    dev: 'svg'
+#    number_sections: true
+#    keep_md: true
+#    pandoc_args: --lua-filter=color-text.lua
+#    highlight: pygments  
 ---
 
 Email from Tom, 18 January:
@@ -566,8 +569,60 @@ done
 
 # Analysis
 
-## Get stats 
+## Setup
+
 ```{r}
+library(reticulate)
+# Get miniconda
+#use_condaenv(conda_list()[[2]][3])
+# Install packages
+py_install("dask")
+```
+
+
+```{python}
+import os
+import glob
+import pandas as pd
+import numpy as np
+```
+
+## Read in data
+
+```{python}
+data_dir = path.join(os.getcwd(), "data/sv_analysis/20210217_sviper_filter_pass")
+target_files = glob.glob(data_dir + "/*.csv")      
+
+# Read files
+dfs = list()
+for f in target_files:
+  sample = os.path.basename(f).strip('.csv')
+  df = pd.read_csv(f,
+                   header = None,
+                   names = ['CHROM', 'POS', 'ALT', 'SVLEN', 'SVTYPE', 'CHR2', 'END','GT','LN','ST'],
+                   dtype = {'CHROM' : str,
+                            'POS' : np.int,
+                            'ALT' : str, 
+                            'SVLEN' : np.int, 
+                            'SVTYPE' : str,
+                            'CHR2' : str, 
+                            'END' : np.int, 
+                            'GT' : str, 
+                            'LN' : np.int, 
+                            'ST' : str})
+  df['SAMPLE'] = sample
+  dfs.append(df)
+
+# bind together
+full_df = pd.concat(dfs)
+
+print(full_df.head())
+```
+
+## Plot
+
+```{python}
 
 ```
+
 
