@@ -576,7 +576,7 @@ library(reticulate)
 # Get miniconda
 #use_condaenv(conda_list()[[2]][3])
 # Install packages
-py_install("dask")
+py_install("IPython")
 ```
 
 
@@ -622,7 +622,161 @@ print(full_df.head())
 ## Plot
 
 ```{python}
+import bokeh
+from bokeh.plotting import figure, output_notebook, show
 
+# output to notebook
+output_notebook()
+
+x = [1, 2, 3, 4, 5]
+y = [6, 7, 2, 4, 5]
+
+# create a new plot with a title and axis labels
+p = figure(title="simple line example", x_axis_label='x', y_axis_label='y')
+
+# add a line renderer with legend and line thickness
+p.line(x, y, legend_label="Temp.", line_width=2)
+
+# show the results
+show(p)
 ```
 
+
+# Try with `circlize`
+
+## Read in SV data
+
+```{r}
+in_dir = here::here("data", "sv_analysis/20210217_sviper_filter_pass")
+
+in_files = list.files(in_dir, full.names = T)
+names(in_files) = basename(in_files) %>% 
+  str_remove(".csv")
+
+sv_df = lapply(in_files, function(in_file){
+  df = readr::read_csv(in_file,
+                       col_names = c("CHROM", "POS", "ALT", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("ciciccicic"))
+  
+  return(df)
+}) %>% 
+  dplyr::bind_rows(.id = "SAMPLE") %>% 
+  # add "chr" to beginning of CHROM column
+  dplyr::mutate(CHROM = paste("chr", CHROM, sep = ""))
+```
+
+## Preliminary plotting of SV type
+
+```{r}
+# Get order
+type_order = dplyr::count(sv_df, SVTYPE) %>% 
+  dplyr::arrange(desc(n)) %>% 
+  dplyr::pull(SVTYPE)
+
+# Plot
+sv_df %>% 
+  ggplot() +
+    geom_bar(aes(factor(SVTYPE, levels = type_order), fill = SVTYPE)) +
+    facet_wrap(~factor(SAMPLE, levels = ont_samples)) +
+    scale_fill_manual(values = rev(pal_paddle)) +
+    theme_cowplot() +
+    xlab("Structual variant type") +
+    ylab("Count") +
+    guides(fill = F)
+```
+
+```{r, eval = F}
+ggsave(here::here("plots", "sv_analysis", "20210223_sv_type_counts.svg"),
+       device = "svg",
+       units = "cm",
+       width = 20,
+       height = 14.5)
+
+ggsave(here::here("plots", "sv_analysis", "20210223_sv_type_counts.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       width = 20,
+       height = 14.5)
+```
+
+
+## Load image
+
+```{r}
+set.seed(999)
+n = 1000
+df = data.frame(sectors = sample(letters[1:8], n, replace = TRUE),
+    x = rnorm(n), y = runif(n))
+
+circos.par("track.height" = 0.1)
+circos.initialize(df$sectors, x = df$x)
+
+circos.track(df$sectors, y = df$y,
+    panel.fun = function(x, y) {
+        circos.text(CELL_META$xcenter, 
+            CELL_META$cell.ylim[2] + mm_y(5), 
+            CELL_META$sector.index)
+        circos.axis(labels.cex = 0.6)
+})
+col = rep(c("#FF0000", "#00FF00"), 4)
+circos.trackPoints(df$sectors, df$x, df$y, col = col, pch = 16, cex = 0.5)
+circos.text(-1, 0.5, "text", sector.index = "a", track.index = 1)
+```
+
+```{r}
+circos.initializeWithIdeogram()
+text(0, 0, "default", cex = 1)
+```
+
+```{r}
+# Read in chromosome data
+chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+```
+
+```{r}
+# Get deletions data
+sv_dels = sv_df %>% 
+  dplyr::filter(SVTYPE == "DEL") %>% 
+  dplyr::select(CHROM, POS, END, SAMPLE) %>% 
+  dplyr::slice_sample(n = 30000)# %>% 
+  dplyr::filter(SAMPLE == "11-1")
+```
+
+
+```{r}
+# Initialize plot
+circos.genomicInitialize(chroms)
+
+# Add deletion data
+#circos.genomicTrack(sv_dels, ylim = c(0,1),
+#    panel.fun = function(region, value, ...) {
+#        # numeric.column is automatically passed to `circos.genomicPoints()`
+#        circos.genomicRect(region, value, ytop = 1, ybottom = 0)
+#})
+
+pal = c("#54478c","#2c699a","#048ba8","#0db39e","#16db93","#83e377","#b9e769","#efea5a","#f1c453","#f29e4c")
+counter = 0
+lapply(unique(sv_dels$SAMPLE), function(sample) {
+  # Set counter
+  counter <<- counter + 1
+  circos.genomicDensity(dplyr::filter(sv_dels, SAMPLE == sample),
+                        col = pal[counter],
+                        track.height = 0.05)
+})
+
+#circos.genomicDensity(sv_dels, col = c("#0000FF80"), track.height = 0.1)
+```
+Seems to hit the wall at 40k regions. Try putting into a script.
+
+```{r}
+tp_family = readRDS(system.file(package = "circlize", "extdata", "tp_family_df.rds"))
+head(tp_family)
+n = max(tapply(tp_family$transcript, tp_family$gene, function(x) length(unique(x))))
+```
 
