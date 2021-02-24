@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="3000px" height="3000px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="bg">
+<rect x="0" y="0" width="3000px" height="3000px" style="fill:rgb(255,255,255);"/>
+</g>
+<g id="ideograms">
+<path d="M1500.000,170.000 A1330.000,1330.000 40.000 0,1 1878.056,224.863 L1883.741,205.688 A1350.000,1350.000 0.000 0,0 1500.000,150.000 Z" style="stroke-linecap:round;fill:rgb(153,102,0);" />
+<path d="M1913.670,235.968 A1330.000,1330.000 40.000 0,1 2149.554,339.405 L2159.321,321.953 A1350.000,1350.000 0.000 0,0 1919.891,216.960 Z" style="stroke-linecap:round;fill:rgb(102,102,0);" />
+<path d="M2181.848,358.079 A1330.000,1330.000 40.000 0,1 2481.995,603.013 L2496.762,589.525 A1350.000,1350.000 0.000 0,0 2192.102,340.908 Z" style="stroke-linecap:round;fill:rgb(153,153,30);" />
+<path d="M2506.766,630.907 A1330.000,1330.000 40.000 0,1 2691.198,908.437 L2709.111,899.541 A1350.000,1350.000 0.000 0,0 2521.905,617.838 Z" style="stroke-linecap:round;fill:rgb(204,0,0);" />
+<path d="M2707.321,942.078 A1330.000,1330.000 40.000 0,1 2808.724,1263.056 L2828.404,1259.493 A1350.000,1350.000 0.000 0,0 2725.476,933.689 Z" style="stroke-linecap:round;fill:rgb(255,0,0);" />
+<path d="M2814.854,1299.854 A1330.000,1330.000 40.000 0,1 2823.954,1626.676 L2843.863,1628.581 A1350.000,1350.000 0.000 0,0 2834.626,1296.844 Z" style="stroke-linecap:round;fill:rgb(255,0,204);" />
+<path d="M2819.880,1663.758 A1330.000,1330.000 40.000 0,1 2731.304,2002.784 L2749.819,2010.345 A1350.000,1350.000 0.000 0,0 2839.728,1666.221 Z" style="stroke-linecap:round;fill:rgb(255,204,204);" />
+<path d="M2716.718,2037.120 A1330.000,1330.000 40.000 0,1 2585.343,2268.721 L2601.664,2280.280 A1350.000,1350.000 0.000 0,0 2735.014,2045.197 Z" style="stroke-linecap:round;fill:rgb(255,153,0);" />
+<path d="M2563.356,2298.858 A1330.000,1330.000 40.000 0,1 2327.193,2541.466 L2339.632,2557.127 A1350.000,1350.000 0.000 0,0 2579.346,2310.871 Z" style="stroke-linecap:round;fill:rgb(255,204,0);" />
+<path d="M2297.658,2564.256 A1330.000,1330.000 40.000 0,1 2023.542,2722.622 L2031.415,2741.007 A1350.000,1350.000 0.000 0,0 2309.653,2580.260 Z" style="stroke-linecap:round;fill:rgb(255,255,0);" />
+<path d="M1989.046,2736.824 A1330.000,1330.000 40.000 0,1 1713.123,2812.813 L1716.328,2832.555 A1350.000,1350.000 0.000 0,0 1996.400,2755.423 Z" style="stroke-linecap:round;fill:rgb(204,255,0);" />
+<path d="M1676.220,2818.274 A1330.000,1330.000 40.000 0,1 1366.500,2823.283 L1364.492,2843.182 A1350.000,1350.000 0.000 0,0 1678.869,2838.098 Z" style="stroke-linecap:round;fill:rgb(0,255,0);" />
+<path d="M1329.439,2819.018 A1330.000,1330.000 40.000 0,1 997.903,2731.584 L990.353,2750.104 A1350.000,1350.000 0.000 0,0 1326.874,2838.853 Z" style="stroke-linecap:round;fill:rgb(53,128,0);" />
+<path d="M963.560,2717.018 A1330.000,1330.000 40.000 0,1 696.141,2559.581 L684.053,2575.514 A1350.000,1350.000 0.000 0,0 955.493,2735.319 Z" style="stroke-linecap:round;fill:rgb(0,0,204);" />
+<path d="M666.740,2536.619 A1330.000,1330.000 40.000 0,1 449.972,2316.297 L434.182,2328.573 A1350.000,1350.000 0.000 0,0 654.210,2552.207 Z" style="stroke-linecap:round;fill:rgb(102,153,255);" />
+<path d="M427.491,2286.527 A1330.000,1330.000 40.000 0,1 265.306,1994.399 L246.739,2001.834 A1350.000,1350.000 0.000 0,0 411.363,2298.354 Z" style="stroke-linecap:round;fill:rgb(153,204,255);" />
+<path d="M251.926,1959.576 A1330.000,1330.000 40.000 0,1 178.016,1645.800 L158.136,1647.993 A1350.000,1350.000 0.000 0,0 233.158,1966.487 Z" style="stroke-linecap:round;fill:rgb(0,255,255);" />
+<path d="M174.447,1608.666 A1330.000,1330.000 40.000 0,1 185.843,1295.325 L166.081,1292.247 A1350.000,1350.000 0.000 0,0 154.514,1610.300 Z" style="stroke-linecap:round;fill:rgb(204,255,255);" />
+<path d="M192.101,1258.548 A1330.000,1330.000 40.000 0,1 263.517,1010.093 L244.923,1002.726 A1350.000,1350.000 0.000 0,0 172.433,1254.917 Z" style="stroke-linecap:round;fill:rgb(153,0,204);" />
+<path d="M277.743,975.607 A1330.000,1330.000 40.000 0,1 404.977,745.133 L388.510,733.782 A1350.000,1350.000 0.000 0,0 259.363,967.722 Z" style="stroke-linecap:round;fill:rgb(204,51,255);" />
+<path d="M426.579,714.719 A1330.000,1330.000 40.000 0,1 642.034,483.735 L629.132,468.453 A1350.000,1350.000 0.000 0,0 410.437,702.910 Z" style="stroke-linecap:round;fill:rgb(204,153,255);" />
+<path d="M670.874,460.072 A1330.000,1330.000 40.000 0,1 919.544,303.350 L910.815,285.356 A1350.000,1350.000 0.000 0,0 658.406,444.434 Z" style="stroke-linecap:round;fill:rgb(102,102,102);" />
+<path d="M953.334,287.541 A1330.000,1330.000 40.000 0,1 1187.610,207.207 L1182.912,187.767 A1350.000,1350.000 0.000 0,0 945.113,269.309 Z" style="stroke-linecap:round;fill:rgb(153,153,153);" />
+<path d="M1223.991,198.955 A1330.000,1330.000 40.000 0,1 1462.698,170.523 L1462.138,150.531 A1350.000,1350.000 0.000 0,0 1219.840,179.390 Z" style="stroke-linecap:round;fill:rgb(204,204,204);" />
+</g>
+<defs>
+<pattern id="hline-sparse" width="10" height="10" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="10" y2="0" style="stroke:black;stroke-width:2" /></pattern>
+<pattern id="hline" width="10" height="10" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="10" y2="0" style="stroke:black;stroke-width:5" /></pattern>
+<pattern id="checker" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="10" y2="0" style="stroke:black;stroke-width:5" /><line x1="0" y1="0" x2="0" y2="10" style="stroke:black;stroke-width:4" /></pattern>
+<pattern id="checker" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="10" y2="0" style="stroke:black;stroke-width:2" /><line x1="0" y1="0" x2="0" y2="10" style="stroke:black;stroke-width:2" /></pattern>
+<pattern id="vline-sparse" width="10" height="10" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="10" style="stroke:black;stroke-width:2" /></pattern>
+<pattern id="vline" width="10" height="10" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="10" style="stroke:black;stroke-width:5" /></pattern>
+</defs>
+</svg>
