@@ -500,7 +500,7 @@ for sample in $(cut -f2 -d' ' $sample_key | tail -n+2 ) ; do
     """
 done
 
-# 4-2 and 7-2 failed
+# 4-2 and 7-2 failed with no error message
 ```
 
 ### Merge
@@ -532,6 +532,7 @@ rm tmp.list
 #Exception in thread "main" java.lang.IllegalArgumentException: Input file /hps/research1/birney/users/ian/mikk_paper/mikk_genome/../sv_analysis/vcfs/sviper/117-2.vcf has sample entries that don't match the other files.
 ```
 
+<!--
 ### Try `SURVIVOR`
 
 <https://github.com/fritzsedlazeck/SURVIVOR>
@@ -549,11 +550,14 @@ bsub -Is "singularity shell ../sing_conts/survivor.sif"
 # Works! 
 ```
 
-### Get raw data from `SViper`
+-->
+
+### Get data from `SViper`
 
 ```{bash, eval = F}
 in_dir=../sv_analysis/vcfs/sviper
 out_dir=data/sv_analysis/20210217_sviper_filter_pass
+
 mkdir -p $out_dir
 
 for in_vcf in $(find $in_dir/*vcf) ; do
@@ -567,84 +571,51 @@ for in_vcf in $(find $in_dir/*vcf) ; do
 done
 ```
 
+### Get data from original VCF
+
+```{bash}
+in_dir=../sv_analysis/vcfs/ont_raw_rehead_per_sample
+out_dir=data/sv_analysis/20210217_raw_ont_filter_pass
+
+mkdir -p $out_dir
+
+for in_vcf in $(find $in_dir/*vcf) ; do
+  sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
+  bcftools query \
+    --include 'FILTER="PASS"' \
+    --exclude 'GT~"\."' \
+    --format '%CHROM,%POS,%ALT,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
+  --output $out_dir/$sample.csv \
+  $in_vcf ;
+done
+```
+
+### Get polish stats 
+
+```{bash, eval = F}
+in_dir=../sv_analysis/vcfs/sviper
+out_dir=data/sv_analysis/20210226_polish_stats
+
+mkdir -p $out_dir
+
+for in_vcf in $(find $in_dir/*vcf) ; do
+  sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
+  bcftools query \
+    --include 'FILTER="PASS"' \
+    --exclude 'GT~"\."' \
+    --format '%CHROM,%POS,%FILTER,%INFO/SVTYPE,[%LN]\n' \
+  --output $out_dir/$sample.csv \
+  $in_vcf ;
+done
+```
+
+
+
 # Analysis
 
-## Setup
-
-```{r}
-library(reticulate)
-# Get miniconda
-#use_condaenv(conda_list()[[2]][3])
-# Install packages
-py_install("IPython")
-```
-
-
-```{python}
-import os
-import glob
-import pandas as pd
-import numpy as np
-```
-
-## Read in data
-
-```{python}
-data_dir = path.join(os.getcwd(), "data/sv_analysis/20210217_sviper_filter_pass")
-target_files = glob.glob(data_dir + "/*.csv")      
-
-# Read files
-dfs = list()
-for f in target_files:
-  sample = os.path.basename(f).strip('.csv')
-  df = pd.read_csv(f,
-                   header = None,
-                   names = ['CHROM', 'POS', 'ALT', 'SVLEN', 'SVTYPE', 'CHR2', 'END','GT','LN','ST'],
-                   dtype = {'CHROM' : str,
-                            'POS' : np.int,
-                            'ALT' : str, 
-                            'SVLEN' : np.int, 
-                            'SVTYPE' : str,
-                            'CHR2' : str, 
-                            'END' : np.int, 
-                            'GT' : str, 
-                            'LN' : np.int, 
-                            'ST' : str})
-  df['SAMPLE'] = sample
-  dfs.append(df)
-
-# bind together
-full_df = pd.concat(dfs)
-
-print(full_df.head())
-```
-
-## Plot
-
-```{python}
-import bokeh
-from bokeh.plotting import figure, output_notebook, show
-
-# output to notebook
-output_notebook()
-
-x = [1, 2, 3, 4, 5]
-y = [6, 7, 2, 4, 5]
-
-# create a new plot with a title and axis labels
-p = figure(title="simple line example", x_axis_label='x', y_axis_label='y')
-
-# add a line renderer with legend and line thickness
-p.line(x, y, legend_label="Temp.", line_width=2)
-
-# show the results
-show(p)
-```
-
-
-# Try with `circlize`
-
 ## Read in SV data
+
+### SViper polished
 
 ```{r}
 in_dir = here::here("data", "sv_analysis/20210217_sviper_filter_pass")
@@ -653,7 +624,7 @@ in_files = list.files(in_dir, full.names = T)
 names(in_files) = basename(in_files) %>% 
   str_remove(".csv")
 
-sv_df = lapply(in_files, function(in_file){
+sv_df_pol = lapply(in_files, function(in_file){
   df = readr::read_csv(in_file,
                        col_names = c("CHROM", "POS", "ALT", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
                        col_types = c("ciciccicic"))
@@ -665,7 +636,83 @@ sv_df = lapply(in_files, function(in_file){
   dplyr::mutate(CHROM = paste("chr", CHROM, sep = ""))
 ```
 
+### ONT raw
+
+```{r}
+in_dir = here::here("data", "sv_analysis/20210217_raw_ont_filter_pass")
+
+in_files = list.files(in_dir, full.names = T)
+names(in_files) = basename(in_files) %>% 
+  str_remove(".csv")
+
+sv_df_raw = lapply(in_files, function(in_file){
+  df = readr::read_csv(in_file,
+                       col_names = c("CHROM", "POS", "ALT", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("ciciccicic"))
+  
+  return(df)
+}) %>% 
+  dplyr::bind_rows(.id = "SAMPLE") %>% 
+  # add "chr" to beginning of CHROM column
+  dplyr::mutate(CHROM = paste("chr", CHROM, sep = ""))
+```
+
+### Combine into single df
+
+```{r}
+sv_df = list("polished" = sv_df_pol,
+             "raw" = sv_df_raw) %>% 
+  dplyr::bind_rows(.id = "DATASET") %>% 
+  # factor samples and dataset
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples),
+                DATASET = factor(DATASET, levels = c("raw", "polished")))
+```
+
 ## Preliminary plotting of SV type
+
+```{r}
+svtype_hist_pal = darker(colorRampPalette(pal_brainbow)(4),amount = 75)
+
+# Histogram of LN
+svtype_distinct_list = sv_df %>% 
+  dplyr::filter(DATASET == "polished",
+                SVTYPE != "TRA") %>% 
+  dplyr::mutate(SVTYPE = factor(SVTYPE, levels = c("DEL", "INS", "DUP", "INV"))) %>% 
+  dplyr::select(SVTYPE, CHROM, POS, END, LN) %>% 
+  dplyr::distinct() %>% 
+  split(., f = .$SVTYPE)
+
+counter = 0
+svtype_hists = lapply(svtype_distinct_list, function(svtype){
+  counter <<- counter + 1
+  svtype %>% 
+    ggplot() +
+      geom_histogram(aes(LN, fill = SVTYPE),
+                     binwidth = 1e3) +
+      scale_fill_manual(values = svtype_hist_pal[counter]) +
+      guides(fill = F) +
+      xlim(-1000,1e5) +
+      xlab("Length") +
+      ylab("Count") +
+      theme_cowplot() +
+      ggtitle(names(svtype_distinct_list)[counter]) +
+      theme(axis.text.x = element_text(size = 6),
+            plot.title = element_text(colour = svtype_hist_pal[counter]))
+
+})
+
+svtype_hists
+```
+
+```{r}
+# Arrange
+plot_grid(svtype_hists[[1]],
+          svtype_hists[[2]],
+          svtype_hists[[3]],
+          svtype_hists[[4]],
+          labels = c('A', 'B', 'C', 'D'), label_size = 12)
+```
+
 
 ```{r}
 # Get order
@@ -673,61 +720,77 @@ type_order = dplyr::count(sv_df, SVTYPE) %>%
   dplyr::arrange(desc(n)) %>% 
   dplyr::pull(SVTYPE)
 
+# Set palette
+pal_svtype = grDevices::colorRampPalette(pal_brainbow)(length(ont_samples))
+names(pal_svtype) = ont_samples
+
 # Plot
-sv_df %>% 
+svtype_plt = sv_df %>% 
+  dplyr::mutate(DATASET = dplyr::recode(DATASET,
+                                        raw = "Unpolished",
+                                        polished = "Polished")) %>% 
+  group_by(DATASET, SVTYPE, SAMPLE) %>% 
+  summarise(MEAN = mean(LN),
+            MEDIAN = median(LN),
+            COUNT = n()) %>% 
   ggplot() +
-    geom_bar(aes(factor(SVTYPE, levels = type_order), fill = SVTYPE)) +
-    facet_wrap(~factor(SAMPLE, levels = ont_samples)) +
-    scale_fill_manual(values = rev(pal_paddle)) +
+    geom_jitter(aes(factor(SVTYPE, levels = type_order),
+                    COUNT,
+                    colour = SAMPLE,
+#                    size = MEDIAN,
+                    ),
+ #               alpha = 0.7,
+                height = 0) +
+#    geom_point(aes(factor(SVTYPE, levels = type_order),
+#                    COUNT,
+#                    colour = SAMPLE,
+#                    size = MEDIAN),
+#                alpha = 0.7) +  
+    facet_wrap(~DATASET) +
+    scale_colour_manual(values = pal_svtype) +
     theme_cowplot() +
-    xlab("Structual variant type") +
+    theme(strip.background = element_blank()) +
+    xlab("Structural variant type") +
     ylab("Count") +
+    labs(color = "Sample") +
     guides(fill = F)
+    
+svtype_plt
 ```
 
+```{r}
+ggplotly(svtype_plt)
+```
+```{r}
+final_svtype = ggdraw() +
+  draw_plot(svtype_plt, x = 0, y = 0, width = .6, height = 1) +
+  draw_plot(svtype_hists[[1]], x = .6, y = .5, width =0.2, height = 0.5) +
+  draw_plot(svtype_hists[[2]], x = .8, y = .5, width =0.2, height = 0.5) +
+  draw_plot(svtype_hists[[3]], x = .6, y = 0, width =0.2, height = 0.5) +
+  draw_plot(svtype_hists[[4]], x = .8, y = 0, width =0.2, height = 0.5) +
+  draw_plot_label(label = c("A", "B"), size = 15,
+                  x = c(0, .6), y = c(1, 1))
+
+final_svtype
+```
+
+
 ```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210223_sv_type_counts.svg"),
+ggsave(here::here("plots", "sv_analysis", "20210225_sv_type_counts.svg"),
        device = "svg",
        units = "cm",
-       width = 20,
-       height = 14.5)
+       width = 30,
+       height = 10)
 
-ggsave(here::here("plots", "sv_analysis", "20210223_sv_type_counts.png"),
+ggsave(here::here("plots", "sv_analysis", "20210225_sv_type_counts.png"),
        device = "png",
        dpi = 400,
        units = "cm",
-       width = 20,
-       height = 14.5)
+       width = 30,
+       height = 10)
 ```
 
-
-## Load image
-
-```{r}
-set.seed(999)
-n = 1000
-df = data.frame(sectors = sample(letters[1:8], n, replace = TRUE),
-    x = rnorm(n), y = runif(n))
-
-circos.par("track.height" = 0.1)
-circos.initialize(df$sectors, x = df$x)
-
-circos.track(df$sectors, y = df$y,
-    panel.fun = function(x, y) {
-        circos.text(CELL_META$xcenter, 
-            CELL_META$cell.ylim[2] + mm_y(5), 
-            CELL_META$sector.index)
-        circos.axis(labels.cex = 0.6)
-})
-col = rep(c("#FF0000", "#00FF00"), 4)
-circos.trackPoints(df$sectors, df$x, df$y, col = col, pch = 16, cex = 0.5)
-circos.text(-1, 0.5, "text", sector.index = "a", track.index = 1)
-```
-
-```{r}
-circos.initializeWithIdeogram()
-text(0, 0, "default", cex = 1)
-```
+## Circos plots
 
 ```{r}
 # Read in chromosome data
@@ -744,39 +807,579 @@ chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa
 sv_dels = sv_df %>% 
   dplyr::filter(SVTYPE == "DEL") %>% 
   dplyr::select(CHROM, POS, END, SAMPLE) %>% 
-  dplyr::slice_sample(n = 30000)# %>% 
-  dplyr::filter(SAMPLE == "11-1")
+#  dplyr::slice_sample(n = 30000) %>% 
+  split(., f = .$SAMPLE)
+#  dplyr::filter(SAMPLE == "11-1")
+
+# Transform the data to densities
+#sv_dels_dens = lapply(sv_dels, function(sample){
+#  genomicDensity(sample, window.size = 1e6, count_by = "number")
+#})  
 ```
 
 
-```{r}
+```{r, eval = F}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_density_500kb.svg")
+svg(out_plot,
+    width = 20,
+    height = 20)
+
+# Choose palette
+pal = grDevices::colorRampPalette(pal_smrarvo)(length(sv_dels))
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 5))
+
 # Initialize plot
-circos.genomicInitialize(chroms)
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
 
-# Add deletion data
-#circos.genomicTrack(sv_dels, ylim = c(0,1),
-#    panel.fun = function(region, value, ...) {
-#        # numeric.column is automatically passed to `circos.genomicPoints()`
-#        circos.genomicRect(region, value, ytop = 1, ybottom = 0)
-#})
-
-pal = c("#54478c","#2c699a","#048ba8","#0db39e","#16db93","#83e377","#b9e769","#efea5a","#f1c453","#f29e4c")
+# Create densities
 counter = 0
-lapply(unique(sv_dels$SAMPLE), function(sample) {
+lapply(sv_dels, function(sample) {
   # Set counter
   counter <<- counter + 1
-  circos.genomicDensity(dplyr::filter(sv_dels, SAMPLE == sample),
+  circos.genomicDensity(sample,
+                        ylim.force = T,
+                        window.size = 5e5,
                         col = pal[counter],
-                        track.height = 0.05)
+                        track.height = 0.07,
+                        border = karyoploteR::darker(pal[counter]),
+                        bg.border = NA)
+  circos.yaxis(side = "right",
+               at = c(0, 0.5),
+               labels.cex = 0.25*par("cex"),
+               tick.length = 0.5)
 })
 
-#circos.genomicDensity(sv_dels, col = c("#0000FF80"), track.height = 0.1)
+circos.clear()
+
+dev.off() 
 ```
-Seems to hit the wall at 40k regions. Try putting into a script.
+
+### Try with lines, with `y` indicating deletion length
 
 ```{r}
-tp_family = readRDS(system.file(package = "circlize", "extdata", "tp_family_df.rds"))
-head(tp_family)
-n = max(tapply(tp_family$transcript, tp_family$gene, function(x) length(unique(x))))
+sv_dels = sv_df %>% 
+  dplyr::filter(DATASET == "polished",
+                SVTYPE == "DEL") %>% 
+  dplyr::select(CHROM, POS, END, SAMPLE, LN) %>%
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
+#  dplyr::slice_sample(n = 10000) %>% 
+  split(., f = .$SAMPLE)# %>% 
+#  lapply(., function(sample){
+#    sample %>% 
+#      dplyr::select(-SAMPLE)
+#  })
+```
+
+
+### Try with lines
+
+```{r, eval = F}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 400)
+
+# Get max value for `ylim`
+max_len = max(sapply(sv_dels, function(sample) max(sample$LN)))
+max_len = round.choose(max_len, 1e5, dir = 1)
+
+# Choose palette
+pal = grDevices::colorRampPalette(pal_smrarvo)(length(sv_dels))
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 14))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter = 0
+lapply(sv_dels, function(sample) {
+  # Set counter
+  counter <<- counter + 1
+  # Create track
+  circos.genomicTrack(sample,
+    panel.fun = function(region, value, ...) {
+      circos.genomicLines(region,
+                          value,
+                          type = "h",
+                          col = pal[counter],
+                          cex = 0.05)
+  },
+  track.height = 0.07,
+  bg.border = NA,
+  ylim = c(0, max_len))
+  
+  # Add SV length y-axis label
+  circos.yaxis(side = "right",
+             at = c(2.5e5, max_len),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+
+  # Add SAMPLE y-axis label
+  circos.text(2e6, 2.5e5,
+              labels = names(sv_dels)[counter],
+              sector.index = "chr1",
+              cex = 0.4*par("cex"))
+})
+
+
+circos.clear()
+
+dev.off()
+```
+SVG was a 84 MB file. Hence PNG.
+
+Build into final plot
+
+```{r}
+# Pull del circos
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
+
+final_svtype = ggdraw() +
+  draw_plot(svtype_plt,
+            x = 0, y = .7, width = .6, height = .3) +
+  draw_plot(svtype_hists[[1]],
+            x = .6, y = .85, width =0.2, height = 0.15) +
+  draw_plot(svtype_hists[[2]],
+            x = .8, y = .85, width =0.2, height = 0.15) +
+  draw_plot(svtype_hists[[3]],
+            x = .6, y = .7, width =0.2, height = 0.15) +
+  draw_plot(svtype_hists[[4]],
+            x = .8, y = .7, width =0.2, height = 0.15) +
+  draw_image(here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png"),
+             x = 0, y = 0, width = 1, height = .7) +
+  draw_plot_label(label = c("A", "B", "C"), size = 15,
+                  x = c(0, .6, 0), y = c(1, 1, .7))
+
+final_svtype
+```
+```{r}
+ggsave(here::here("plots", "sv_analysis", "20210225_sv_main.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       width = 30,
+       height = 36)
+```
+
+
+
+Palettes
+
+```{r}
+library(fishualize)
+fishualize(n = 10, option = "Cirrhilabrus_solorensis")
+fishualize(n = 10, option = "Gramma_loreto")
+fishualize(n = 10, option = "Hypsypops_rubicundus", end = 0.9)
+fishualize(n = 10, option = "Lepomis_megalotis")
+fishualize(n = 10, option = "Variola_louti")
+```
+
+
+### Insertions
+
+[NOTE]{color="red"}: 25982/351996 insertions have an END that is less than POS. Make the END the same as POS.
+
+```{r}
+sv_ins = sv_df %>% 
+  dplyr::filter(DATASET == "polished",
+                SVTYPE == "INS") %>% 
+  dplyr::select(CHROM, POS, END, SAMPLE, LN) %>%
+  # Factorise SAMPLE to order
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
+  # if END is less than POS, make it the same as POS
+  dplyr::mutate(END = dplyr::if_else(END < POS, POS, END)) %>% 
+#  dplyr::slice_sample(n = 10000) %>% 
+  split(., f = .$SAMPLE)
+```
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_ins_lines.png")
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 400)
+
+# Get max value for `ylim`
+max_len = max(sapply(sv_ins, function(sample) max(sample$LN)))
+max_len = round.choose(max_len, 1e5, dir = 1)
+
+# Choose palette
+pal = fishualize::fish(n = length(sv_ins), option = "Cirrhilabrus_solorensis")
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 14))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter = 0
+lapply(sv_ins, function(sample) {
+  # Set counter
+  counter <<- counter + 1
+  # Create track
+  circos.genomicTrack(sample,
+    panel.fun = function(region, value, ...) {
+      circos.genomicLines(region,
+                          value,
+                          type = "h",
+                          col = pal[counter],
+                          cex = 0.05)
+  },
+  track.height = 0.07,
+  bg.border = NA,
+  ylim = c(0, max_len))
+  
+  # Add SV length y-axis label
+  circos.yaxis(side = "right",
+             at = c(2.5e5, max_len),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+
+  # Add SAMPLE y-axis label
+  circos.text(2e6, 2.5e5,
+              labels = names(sv_ins)[counter],
+              sector.index = "chr1",
+              cex = 0.4*par("cex"))
+})
+
+
+circos.clear()
+
+dev.off()
+```
+
+### Duplications
+
+[NOTE]{color="red"}: 307/26823 duplications have an END that is less than POS. Make the END the same as POS.
+
+```{r}
+sv_dups = sv_df %>% 
+  dplyr::filter(DATASET == "polished",
+                SVTYPE == "DUP") %>% 
+  dplyr::select(CHROM, POS, END, SAMPLE, LN) %>%
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
+  # if END is less than POS, make it the same as POS
+  dplyr::mutate(END = dplyr::if_else(END < POS, POS, END)) %>% 
+#  dplyr::slice_sample(n = 10000) %>% 
+  split(., f = .$SAMPLE)
+```
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_dups_lines.png")
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 400)
+
+# Get max value for `ylim`
+max_len = max(sapply(sv_dups, function(sample) max(sample$LN)))
+max_len = round.choose(max_len, 1e5, dir = 1)
+
+# Choose palette
+pal = fishualize::fish(n = length(sv_dups), option = "Gramma_loreto")
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 14))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter = 0
+lapply(sv_dups, function(sample) {
+  # Set counter
+  counter <<- counter + 1
+  # Create track
+  circos.genomicTrack(sample,
+    panel.fun = function(region, value, ...) {
+      circos.genomicLines(region,
+                          value,
+                          type = "h",
+                          col = pal[counter],
+                          cex = 0.05)
+  },
+  track.height = 0.07,
+  bg.border = NA,
+  ylim = c(0, max_len))
+  
+  # Add SV length y-axis label
+  circos.yaxis(side = "right",
+             at = c(2.5e5, max_len),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+
+  # Add SAMPLE y-axis label
+  circos.text(2e6, 2.5e5,
+              labels = names(sv_dups)[counter],
+              sector.index = "chr1",
+              cex = 0.4*par("cex"))
+})
+
+
+circos.clear()
+
+dev.off()
+```
+
+### Inversions
+
+```{r}
+sv_invs = sv_df %>% 
+  dplyr::filter(DATASET == "polished",
+                SVTYPE == "INV") %>% 
+  dplyr::select(CHROM, POS, END, SAMPLE, LN) %>%
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
+  # if END is less than POS, make it the same as POS
+#  dplyr::mutate(END = dplyr::if_else(END < POS, POS, END)) %>% 
+#  dplyr::slice_sample(n = 10000) %>% 
+  split(., f = .$SAMPLE)
+```
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_invs_lines.png")
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 400)
+
+# Get max value for `ylim`
+max_len = max(sapply(sv_invs, function(sample) max(sample$LN)))
+max_len = round.choose(max_len, 1e5, dir = 1)
+
+# Choose palette
+pal = fishualize::fish(n = length(sv_invs), option = "Lepomis_megalotis")
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 14))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter = 0
+lapply(sv_invs, function(sample) {
+  # Set counter
+  counter <<- counter + 1
+  # Create track
+  circos.genomicTrack(sample,
+    panel.fun = function(region, value, ...) {
+      circos.genomicLines(region,
+                          value,
+                          type = "h",
+                          col = pal[counter],
+                          cex = 0.05)
+  },
+  track.height = 0.07,
+  bg.border = NA,
+  ylim = c(0, max_len))
+  
+  # Add SV length y-axis label
+  circos.yaxis(side = "right",
+             at = c(2.5e5, max_len),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+
+  # Add SAMPLE y-axis label
+  circos.text(2e6, 2.5e5,
+              labels = names(sv_invs)[counter],
+              sector.index = "chr1",
+              cex = 0.4*par("cex"))
+})
+
+
+circos.clear()
+
+dev.off()
+```
+
+
+### Stats for paper
+
+```{r}
+# How many short deletions?
+lapply(sv_dels, function(sample){
+  quantile(sample$LN, 0.9)
+})
+```
+
+```{r}
+# How many insertions and duplications?
+## Combine
+list("INS" = sv_ins,
+                   "DUP" = sv_dups) %>% 
+  lapply(., dplyr::bind_rows) %>% 
+  dplyr::bind_rows(.id = "SVTYPE") %>% 
+  dplyr::group_by(SAMPLE) %>% 
+  dplyr::summarise(n(),
+                   quantile(LN, .96)) %>% 
+  dplyr::summarise(mean(`n()`))
+```
+
+```{r}
+# How many translocations?
+sv_df %>% 
+  dplyr::filter(DATASET == "polished") %>% 
+  dplyr::filter(SVTYPE == "TRA") %>% 
+  dplyr::group_by(SAMPLE) %>% 
+  dplyr::summarise(n()) %>% 
+  dplyr::summarise(mean(`n()`))
+```
+```{r}
+# How many inversions?
+sv_df %>% 
+  dplyr::filter(DATASET == "polished") %>% 
+  dplyr::filter(SVTYPE == "INV") %>% 
+  dplyr::group_by(SAMPLE) %>% 
+  dplyr::summarise(n(),
+                   quantile(LN, 0.5))
+```
+
+
+## Get stats for table
+
+### Total counts for polished / unpolished
+
+```{r}
+sv_df %>% 
+  group_by(SAMPLE, DATASET) %>% 
+  count()
+```
+Unpolished and polished have the same counts! Look only at polished...
+
+```{r}
+sv_df %>%
+  dplyr::filter(DATASET == "polished") %>% 
+  group_by(SVTYPE) %>% 
+  summarise(TOTAL_COUNT = n(),
+            UNDER_1KB = sum(LN < 1000),
+            UNDER_5KB = sum(LN < 5000),
+            PROP_UNDER_1KB = UNDER_1KB/TOTAL_COUNT,
+            PROP_UNDER_5KB = UNDER_5KB/TOTAL_COUNT)
+```
+```{r}
+sv_df %>% 
+  filter(DATASET == "polished") %>% 
+  group_by(SAMPLE) %>% 
+  summarise(`Total SV count` = n()) %>% 
+  rename(`Sample` = SAMPLE)
+```
+
+```{r}
+sv_df %>% 
+  filter(DATASET == "polished") %>% 
+  group_by(SAMPLE, SVTYPE) %>% 
+  count() %>% 
+  pivot_wider(names_from = SVTYPE, values_from = n)
+```
+
+## Get singleton counts
+
+```{r}
+sv_df_pol = sv_df %>% 
+  dplyr::filter(DATASET == "polished")
+
+sv_df_pol %>% 
+  distinct(CHROM, POS, SVTYPE, LN)
+
+# Test
+sample = "4-1"
+
+sample_in = sv_df_pol %>% 
+  dplyr::filter(SAMPLE == sample) %>% 
+  dplyr::select(CHROM, POS, SVTYPE, LN)
+
+sample_out = sv_df_pol %>% 
+  dplyr::filter(SAMPLE != sample) %>% 
+  dplyr::select(CHROM, POS, SVTYPE, LN)
+
+sample
+
+lapply(ont_samples_pol, function(sample){
+  target_df
+})
+```
+```{r}
+sv_df_pol %>% 
+  dplyr::select(CHROM, POS, SVTYPE, LN)
+```
+
+
+```{r}
+test = sv_df_pol %>% 
+  distinct(CHROM,POS, SVTYPE, LN, .keep_all = T)
+
+
+```
+
+```{r}
+# check
+test %>% 
+  filter(CHROM == "chr1" & POS == 6774 & SVTYPE == "TRA" & LN == 1)
+
+sv_df_pol %>% 
+  filter(CHROM == "chr1" & POS == 9516 & SVTYPE == "TRA" & LN == 1)
+```
+
+```{r}
+# Try with duplicated
+## Select only target cols
+sv_df_pol_new = sv_df_pol %>% 
+  dplyr::select(CHROM, POS, SVTYPE, LN)
+
+## Get unique rows
+uq_svs = sv_df_pol_new[!(duplicated(sv_df_pol_new) | duplicated(sv_df_pol_new, fromLast = T)), ]
+
+# Join back with other variables
+sv_sings = dplyr::right_join(sv_df_pol, uq_svs)
+
+
+sv_sings
+
+```
+```{r}
+# Check counts
+sv_sings %>%
+  group_by(SAMPLE, SVTYPE) %>% 
+  count()
 ```
 
