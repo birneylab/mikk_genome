@@ -20,3 +20,14 @@ heatmaply
 ape
 scales
 lubridate
+cowplot
+circlize
+BiocGenerics
+S4Vectors
+IRanges
+GenomeInfoDb
+GenomicRanges
+regioneR
+karyoploteR
+magick
+gdtools

@@ -212,7 +212,7 @@ fec_count
 
 # Final figure
 
-```{r}
+```{r, fig.width=30, fig.height=11.2}
 final = ggdraw() +
   draw_plot(out2, x = 0, y = 0, width = .55, height = 1) +
   draw_plot(fec_count, x = .55, y = 0, width = .45, height = 1) +
