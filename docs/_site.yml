@@ -12,7 +12,7 @@ navbar:
     - text: "Repeat Elements"
       href: 20201126_repeats.html
     - text: "Fecundity"
-      href: 20210208_fecundity.html
+      href: 20210301_fecundity.html
 output:
   html_document:
     theme: flatly
