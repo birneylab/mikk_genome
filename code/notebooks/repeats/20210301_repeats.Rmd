@@ -16,6 +16,14 @@ editor_options:
 
 # Setup
 
+## Load libraries
+
+```{r}
+library(here)
+source(here::here("code", "scripts", "repeats", "source.R"))
+```
+
+
 Working directory on EBI cluster: `/hps/research1/birney/users/ian/mikk_paper`
 
 ## Get Jack's data
@@ -29,3 +37,194 @@ scp brettell@yoda:/nfs/leia/research/enright/jack/10_medaka_fish/02_genome_repea
 
 scp ~/Desktop/medaka_hdrr_repeats.fixed.gff brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/repeats
 ```
+
+## Read in data and clean
+
+```{r, results = 'asis'}
+# Read in data
+hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
+                       header = F, sep = "\t", skip = 3, comment.char = "", quote = "", as.is = T) %>% 
+  # Remove empty V8 column
+  dplyr::select(-V8) %>% 
+  # Get class of repeat from third column
+  dplyr::mutate(class = stringr::str_split(V3, pattern = "#", simplify = T)[, 1]) %>% 
+  # Rename columns
+  dplyr::rename(chr = V1, tool = V2, class_full = V3, start = V4, end = V5, percent = V6, strand = V7, info = V9)
+
+head(hdrr_reps)
+
+# Find types of class other than "(GATCCA)n" types
+class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
+class_types
+
+# How many in the blank class?
+length(which(hdrr_reps$class == ""))
+
+# Recode class 
+hdrr_reps = hdrr_reps %>% 
+  # NA for blanks
+  dplyr::mutate(class = dplyr::na_if(class, "")) %>% 
+  # "misc" for others in "(GATCCA)n" type classes
+  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "misc", class))
+
+knitr::kable(head(hdrr_reps))
+
+```
+
+# Plot
+
+## Get chromosome data
+
+```{r}
+# Read in chromosome data
+chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+```
+
+```{r}
+# How many repeats in each category?
+hdrr_reps %>% 
+  count(class)
+```
+
+## Circos
+
+### Set up data
+
+```{r}
+# Get indexes of target repeat classes
+#target_classes = c("misc", "SINE", "LTR", "LINE", "DNA", "Satellite", "Simple_repeat", "RC", "Unknown")
+target_classes = c("misc", "SINE")
+
+plot_list = hdrr_reps %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                chr = factor(chr, levels = paste("chr", 1:24, sep = "")),
+                strand = factor(strand, levels = c("+", "-"))) %>% 
+#  dplyr::filter(class %in% target_classes) %>% 
+#  dplyr::filter(strand == "+") %>% 
+#  dplyr::slice_sample(n = 20000) %>% 
+  dplyr::arrange(class, chr, start) %>% 
+  dplyr::select(chr, start, end, strand, class) %>% 
+  split(., .$class)
+
+
+# Test 
+dens = lapply(plot_list, function(class){
+  out = split(class, class$strand)
+  
+  return(out)
+})
+  
+
+## Get density
+class_counter = 0
+dens = lapply(dens, function(class){
+  class_counter <<- class_counter + 1
+  strand_counter = 0
+  lapply(class, function(strand){
+    strand_counter <<- strand_counter + 1
+    out = circlize::genomicDensity(strand, window.size = 25e3)
+    print(paste(names(dens)[class_counter], names(class)[strand_counter], "success"))
+    return(out)
+  })
+})  
+
+counter = 0
+test = lapply(test_dens, function(strand){
+  counter <<- counter + 1
+  if (names(test_dens)[counter] == "-"){
+    strand$value = strand$value * -1
+  }
+  
+  strand = strand %>% 
+    dplyr::slice_sample(n = 5000)
+  
+  return(strand)
+})
+```
+
+### Generate plot
+
+```{r}
+# Choose palette
+# Choose palette
+pal = grDevices::colorRampPalette(pal_electroangler)(length(plot_list))
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 5))
+
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter = 0
+lapply(test, function(strand){
+  # Set counter
+  counter <<- counter + 1
+  # Set y-limits for both strands
+  if (names(test)[counter] == "+"){
+    ylim = c(0,1)
+  }
+  else if (names(test)[counter] == "-"){
+    ylim = c(-1, 0)
+  }
+  
+  # Add track
+  circos.genomicTrack(strand,
+    panel.fun = function(region, value, ...) {
+      circos.genomicLines(region,
+                          value,
+                          type = "h",
+                          col = pal[counter],
+                          cex = 0.05,
+                          baseline = 0)
+  },
+  ylim = ylim,
+  bg.border = NA)
+  
+  # Add labels
+  if (names(test)[counter] == "+"){
+    # y-axis
+    circos.yaxis(side = "right",
+                 at = ylim,
+                 labels.cex = 0.25*par("cex"),
+                 tick.length = 2
+                 )
+
+    # strand
+    circos.text(0, 0.5,
+                labels = "+",
+                sector.index = "chr1",
+                cex = 0.4*par("cex"))     
+  } else if (names(test)[counter] == "-"){
+    # strand
+    circos.text(0, -0.5,
+                labels = "-",
+                sector.index = "chr1",
+                cex = 0.4*par("cex"))
+    # repeat class
+    circos.text(0, 0,
+                labels = "DNA",
+                facing = "clockwise",
+                adj = c(0, -0.125),
+                sector.index = "chr1",
+                cex = 0.4*par("cex")) 
+  }
+
+})
+
+# Add 
+
+
+circos.clear()
+```
+
