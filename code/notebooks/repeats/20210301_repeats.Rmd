@@ -93,72 +93,132 @@ hdrr_reps %>%
 
 ## Circos
 
-### Set up data
+### Clean data
 
 ```{r}
-# Get indexes of target repeat classes
-#target_classes = c("misc", "SINE", "LTR", "LINE", "DNA", "Satellite", "Simple_repeat", "RC", "Unknown")
-target_classes = c("misc", "SINE")
+# Exclude classes with very few counts
+excluded_classes = c("ARTEFACT", "buffer", "scRNA", "snRNA")
 
 plot_list = hdrr_reps %>% 
   dplyr::mutate(chr = paste("chr", chr, sep = ""),
-                chr = factor(chr, levels = paste("chr", 1:24, sep = "")),
-                strand = factor(strand, levels = c("+", "-"))) %>% 
-#  dplyr::filter(class %in% target_classes) %>% 
+                chr = factor(chr, levels = chr_order),
+                strand = factor(strand, levels = strand_order)) %>% 
+  dplyr::filter(!class %in% excluded_classes) %>% 
 #  dplyr::filter(strand == "+") %>% 
 #  dplyr::slice_sample(n = 20000) %>% 
-  dplyr::arrange(class, chr, start) %>% 
-  dplyr::select(chr, start, end, strand, class) %>% 
-  split(., .$class)
+  # sort
+  dplyr::arrange(class, strand, chr, start) %>%
+  # get length and log length of repeats
+  dplyr::mutate(length = end - start + 1,
+                log_length = log(length)) %>% 
+  dplyr::select(chr, start, end, strand, class, length, log_length) %>%
+  # remove the couple of rows with NA in `chr` column
+  na.omit(.)
 
+# Get max lengths for each class (rounded up to the nearest 1000)
+max_lengths_df = plot_list %>% 
+  dplyr::group_by(class) %>% 
+  dplyr::summarise(max = round.choose(max(length), 1e3, dir = 1)) %>%
+  dplyr::arrange(desc(max))
 
-# Test 
-dens = lapply(plot_list, function(class){
-  out = split(class, class$strand)
+max_lengths = max_lengths_df %>% 
+  dplyr::pull(max)
+
+class_order = max_lengths_df %>% 
+  dplyr::pull(class)
+
+# Swap `SINE` and `Simple_repeat` because `Simple_repeat` and `Retrotransposon` labels overlap
+class_order = class_order[c(1:9, 11, 10, 12)]
+
+# Order by longest repeats
+plot_list = plot_list %>% 
+  dplyr::mutate(class = factor(class, levels = class_order))
+
+# Split by class and strand 
+plot_list = plot_list %>% 
+  split(., .$class) %>% 
+  lapply(., function(class){
+    out = split(class, class$strand)
+    
+    return(out)
+  })
   
-  return(out)
-})
-  
+```
 
+<!--
+```{r, eval = F}
 ## Get density
 class_counter = 0
 dens = lapply(dens, function(class){
   class_counter <<- class_counter + 1
-  strand_counter = 0
+#  strand_counter = 0
   lapply(class, function(strand){
-    strand_counter <<- strand_counter + 1
+#    strand_counter <<- strand_counter + 1
     out = circlize::genomicDensity(strand, window.size = 25e3)
-    print(paste(names(dens)[class_counter], names(class)[strand_counter], "success"))
+#    print(paste(names(dens)[class_counter], names(class)[strand_counter], "success"))
     return(out)
   })
 })  
 
-counter = 0
-test = lapply(test_dens, function(strand){
-  counter <<- counter + 1
-  if (names(test_dens)[counter] == "-"){
-    strand$value = strand$value * -1
-  }
-  
-  strand = strand %>% 
-    dplyr::slice_sample(n = 5000)
-  
-  return(strand)
-})
+# Bind rows and save
+lapply(dens, function(class){
+  dplyr::bind_rows(class, .id = "strand")
+}) %>% 
+  dplyr::bind_rows(.id = "class") %>% 
+  readr::write_csv(out_file)
 ```
 
-### Generate plot
+### Read back in 
+
+```{r}
+in_file = here::here("data", "repeats", "20210302_hdrr_repeat_dens_window_25e3.csv")
+dens_df = readr::read_csv(in_file, col_types = "ccciid") %>% 
+  dplyr::mutate(strand = factor(strand, levels = strand_order),
+                chr = factor(chr, levels = chr_order))
+```
+
+-->
+
+### Convert reverse strand densities to negative values for plotting
+
+```{r}
+plot_list = lapply(plot_list, function(class){
+  lapply(class, function(strand){
+    strand %>% 
+      dplyr::mutate(length = ifelse(strand == "-",
+                                        length * -1,
+                                        length)) %>% 
+      # choose target values
+      dplyr::select(chr, start, end, length)
+  })
+})
+
+# Testing
+test = plot_list %>% 
+  lapply(., function(class){
+    lapply(class, function(strand){
+      strand %>% 
+        dplyr::slice_sample(n = 1000)
+    })
+  })
+
+# True
+test = plot_list
+
+```
+
+
+### Generate plot (sample)
 
 ```{r}
 # Choose palette
-# Choose palette
-pal = grDevices::colorRampPalette(pal_electroangler)(length(plot_list))
+pal = grDevices::colorRampPalette(pal_electroangler)(length(test))
 
 # Set parameters
 ## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
 circos.par(cell.padding = c(0, 0, 0, 0),
            track.margin = c(0, 0),
-           gap.degree = c(rep(1, nrow(chroms) - 1), 5))
+           gap.degree = c(rep(1, nrow(chroms) - 1), 11))
 
 # Initialize plot
 circos.initializeWithIdeogram(chroms,
@@ -166,65 +226,164 @@ circos.initializeWithIdeogram(chroms,
                               major.by = 1e7,
                               axis.labels.cex = 0.25*par("cex"))
 
-counter = 0
-lapply(test, function(strand){
-  # Set counter
-  counter <<- counter + 1
-  # Set y-limits for both strands
-  if (names(test)[counter] == "+"){
-    ylim = c(0,1)
-  }
-  else if (names(test)[counter] == "-"){
-    ylim = c(-1, 0)
-  }
+counter_class = 0
+lapply(test, function(class){
+  # set counter_class
+  counter_class <<- counter_class + 1
+  # set max ylim
+  max_length = max_lengths[counter_class]
+  counter = 0
+  lapply(class, function(strand){
+    # Set counter
+    counter <<- counter + 1
+    # Set y-limits for both strands
+    if (names(class)[counter] == "+"){
+      ylim = c(0, max_length)
+    }
+    else if (names(class)[counter] == "-"){
+      ylim = c(-max_length, 0)
+    }
+    
+    # Add track
+    circos.genomicTrack(strand,
+      panel.fun = function(region, value, ...) {
+        circos.genomicLines(region,
+                            value,
+                            type = "h",
+                            col = pal[counter_class],
+                            cex = 0.05,
+                            baseline = 0)
+      },
+      track.height = 0.03,
+      ylim = ylim,
+      bg.border = NA)
+    
+    # Add labels
+    if (names(class)[counter] == "+"){
+      # y-axis
+      circos.yaxis(side = "right",
+                   at = ylim,
+                   labels.cex = 0.2*par("cex"),
+                   tick.length = 2
+                   )
   
-  # Add track
-  circos.genomicTrack(strand,
-    panel.fun = function(region, value, ...) {
-      circos.genomicLines(region,
-                          value,
-                          type = "h",
-                          col = pal[counter],
-                          cex = 0.05,
-                          baseline = 0)
-  },
-  ylim = ylim,
-  bg.border = NA)
+      # strand
+      circos.text(0, max_length / 2,
+                  labels = "+",
+                  sector.index = "chr1",
+                  cex = 0.4*par("cex"))     
+    } else if (names(class)[counter] == "-"){
+      # strand
+      circos.text(0, -(max_length / 2),
+                  labels = "-",
+                  sector.index = "chr1",
+                  cex = 0.4*par("cex"))
+      # repeat class
+      circos.text(0, 0,
+                  labels = names(test)[counter_class],
+                  facing = "clockwise",
+                  adj = c(0.5, -0.5),
+                  sector.index = "chr1",
+                  cex = 0.25*par("cex")) 
+    }
   
-  # Add labels
-  if (names(test)[counter] == "+"){
-    # y-axis
-    circos.yaxis(side = "right",
-                 at = ylim,
-                 labels.cex = 0.25*par("cex"),
-                 tick.length = 2
-                 )
-
-    # strand
-    circos.text(0, 0.5,
-                labels = "+",
-                sector.index = "chr1",
-                cex = 0.4*par("cex"))     
-  } else if (names(test)[counter] == "-"){
-    # strand
-    circos.text(0, -0.5,
-                labels = "-",
-                sector.index = "chr1",
-                cex = 0.4*par("cex"))
-    # repeat class
-    circos.text(0, 0,
-                labels = "DNA",
-                facing = "clockwise",
-                adj = c(0, -0.125),
-                sector.index = "chr1",
-                cex = 0.4*par("cex")) 
-  }
+  })
 
 })
 
-# Add 
-
-
 circos.clear()
 ```
+### Save plot
 
+```{r}
+out_plot = here::here("plots", "repeats", "20210302_hdrr_repeats_true.png")
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 400)
+
+# Choose palette
+pal = grDevices::colorRampPalette(pal_electroangler)(length(test))
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 11))
+
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+counter_class = 0
+lapply(test, function(class){
+  # set counter_class
+  counter_class <<- counter_class + 1
+  # set max ylim
+  max_length = max_lengths[counter_class]
+  counter = 0
+  lapply(class, function(strand){
+    # Set counter
+    counter <<- counter + 1
+    # Set y-limits for both strands
+    if (names(class)[counter] == "+"){
+      ylim = c(0, max_length)
+    }
+    else if (names(class)[counter] == "-"){
+      ylim = c(-max_length, 0)
+    }
+    
+    # Add track
+    circos.genomicTrack(strand,
+      panel.fun = function(region, value, ...) {
+        circos.genomicLines(region,
+                            value,
+                            type = "h",
+                            col = pal[counter_class],
+                            cex = 0.05,
+                            baseline = 0)
+      },
+      track.height = 0.03,
+      ylim = ylim,
+      bg.border = NA)
+    
+    # Add labels
+    if (names(class)[counter] == "+"){
+      # y-axis
+      circos.yaxis(side = "right",
+                   at = ylim,
+                   labels.cex = 0.2*par("cex"),
+                   tick.length = 2
+                   )
+  
+      # strand
+      circos.text(0, max_length / 2,
+                  labels = "+",
+                  sector.index = "chr1",
+                  cex = 0.4*par("cex"))     
+    } else if (names(class)[counter] == "-"){
+      # strand
+      circos.text(0, -(max_length / 2),
+                  labels = "-",
+                  sector.index = "chr1",
+                  cex = 0.4*par("cex"))
+      # repeat class
+      circos.text(0, 0,
+                  labels = names(test)[counter_class],
+                  facing = "clockwise",
+                  adj = c(0.5, -0.5),
+                  sector.index = "chr1",
+                  cex = 0.25*par("cex")) 
+    }
+  
+  })
+
+})
+
+circos.clear()
+
+dev.off()
+```
