@@ -128,7 +128,7 @@ class_order = max_lengths_df %>%
   dplyr::pull(class)
 
 # Swap `SINE` and `Simple_repeat` because `Simple_repeat` and `Retrotransposon` labels overlap
-class_order = class_order[c(1:9, 11, 10, 12)]
+class_order = class_order[c(1:6, 8, 7, 11, 10, 12, 9)]
 
 # Order by longest repeats
 plot_list = plot_list %>% 
@@ -295,7 +295,7 @@ circos.clear()
 ```
 ### Save plot
 
-```{r}
+```{r, eval = F}
 out_plot = here::here("plots", "repeats", "20210302_hdrr_repeats_true.png")
 png(out_plot,
     width = 20,
@@ -423,18 +423,75 @@ repeat_cov = repeat_cov %>%
 Plot
 
 ```{r}
-repeat_cov %>% 
+repeat_cov_plot = repeat_cov %>% 
   ggplot() +
     geom_col(aes(CHR, REP_PROP, fill = CHR)) +
-    theme_cowplot() +
+    theme_cowplot(font_size = 10) +
     guides(fill = F) +
     xlab("Chromosome") +
     ylab("Proportion of chromosome\ncovered by repeats")
+
+repeat_cov_plot 
 ```
 
 ## Histograms of log repeat length
 
 ```{r}
+hist_df = lapply(plot_list, function(class){
+  dplyr::bind_rows(class, .id = "strand")
+}) %>% 
+  dplyr::bind_rows(.id = "class") %>% 
+  dplyr::mutate(class = factor(class, levels = class_order),
+                class = recode(class,
+                               "misc" = "Misc",
+                               "Simple_repeat" = "Simple repeat"),
+                length = ifelse(length < 0, length * -1, length))
 
+hist_plot = hist_df %>% 
+  ggplot(aes(x = log10(length),
+                  # remove values under 0 created by the log10
+                  y = ifelse(log10(..count..) < 0,
+                             0,
+                             log10(..count..)),
+                  fill = class,
+                  colour = class)) +
+    geom_area(stat = "bin",
+              bins = 20) +
+#    geom_freqpoly(aes(colour = class)) +
+    facet_wrap(~class, nrow = 3, ncol = 4) +
+    scale_fill_manual(values = pal) +
+    scale_colour_manual(values = karyoploteR::darker(pal)) +
+    guides(fill = F) +
+    guides(colour = F) +
+    xlab(expression(log[10](length))) +
+    ylab(expression(log[10](count))) +
+    theme_cowplot(font_size = 10) +
+    theme(strip.background = element_blank())
+
+hist_plot
 ```
+## Compile into final figure
 
+```{r}
+circos_repeats_path = here::here("plots", "repeats", "20210302_hdrr_repeats_true.png")
+
+final_svtype = ggdraw() +
+  draw_plot(repeat_cov_plot,
+            x = 0, y = .7, width = .4, height = .3) +
+  draw_plot(hist_plot,
+            x = .4, y = .7, width = .6, height = .3) +
+  draw_image(circos_repeats_path,
+             x = 0, y = 0, width = 1, height = .7) +
+  draw_plot_label(label = c("A", "B", "C"), size = 15,
+                  x = c(0, .4, 0), y = c(1, 1, .7))
+
+final_svtype
+```
+```{r}
+ggsave(here::here("plots", "repeats", "20210304_hdrr_final.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       width = 30,
+       height = 36)
+```
