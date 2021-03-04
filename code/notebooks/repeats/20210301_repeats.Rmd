@@ -387,3 +387,54 @@ circos.clear()
 
 dev.off()
 ```
+
+## Coverage of region by repeats
+
+```{r}
+# Get sequence of start to end for each chr
+cov_list = hdrr_reps %>% 
+  dplyr::filter(chr != "MT") %>% 
+  dplyr::mutate(chr = factor(chr, levels = 1:24)) %>% 
+  split(., f = .$chr)
+
+# 
+tmp = lapply(cov_list, function(chr){
+  apply(chr, 1, function(x){
+    seq(x[["start"]], x[["end"]])
+  }) %>% 
+    unlist(.) %>%
+    sort(.) %>% 
+    unique(.) %>% 
+    length(.)
+})
+
+repeat_cov = data.frame(CHR = names(tmp),
+                        REP_COV = unlist(tmp))
+
+repeat_cov = repeat_cov %>% 
+  dplyr::mutate(CHR = paste("chr", CHR, sep = "")) %>% 
+  dplyr::full_join(y = chroms, by = c("CHR" = "chr")) %>% 
+  dplyr::mutate(CHR = str_replace(CHR, "chr", ""),
+                CHR = factor(CHR, levels = 1:24)) %>% 
+  dplyr::select(CHR, START = start, END = end, REP_COV) %>% 
+  dplyr::mutate(REP_PROP = REP_COV/END)
+```
+
+Plot
+
+```{r}
+repeat_cov %>% 
+  ggplot() +
+    geom_col(aes(CHR, REP_PROP, fill = CHR)) +
+    theme_cowplot() +
+    guides(fill = F) +
+    xlab("Chromosome") +
+    ylab("Proportion of chromosome\ncovered by repeats")
+```
+
+## Histograms of log repeat length
+
+```{r}
+
+```
+
