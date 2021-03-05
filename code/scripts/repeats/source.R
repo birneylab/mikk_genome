@@ -6,6 +6,7 @@
 
 library(here)
 library(tidyverse)
+library(cowplot)
 library(scales)
 library(karyoploteR)
 library(circlize)
@@ -31,6 +32,7 @@ round.choose <- function(x, roundTo, dir = 1) {
 ## Factor order
 
 chr_order = paste("chr", 1:24, sep = "")
+#class_order = c("Simple_repeat", "SINE", "LTR", "Satellite", "DNA", "LINE", "Unknown", "RC", "tRNA", "rRNA", "misc", "Retroposon", "snRNA")
 strand_order = c("+", "-")
 
 ## Palettes

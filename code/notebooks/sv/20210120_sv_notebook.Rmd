@@ -970,6 +970,7 @@ final_svtype = ggdraw() +
 
 final_svtype
 ```
+
 ```{r}
 ggsave(here::here("plots", "sv_analysis", "20210225_sv_main.png"),
        device = "png",
