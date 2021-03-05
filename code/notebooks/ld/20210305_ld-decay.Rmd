@@ -1,10 +1,17 @@
 ---
 title: "Linkage disequilibrium"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    number_sections: true
+date: '`r format(Sys.Date())`'
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+#output:
+#  html_document:
+#    toc: true
+#    toc_float: true
+#    dev: 'svg'
+#    number_sections: true
+#    pandoc_args: --lua-filter=color-text.lua
+#    highlight: pygments
 ---
 
 # Setup
@@ -35,7 +42,7 @@ conda activate mikk_env
 ```{r, message = F, warning = F}
 # Load required libraries
 require(here)
-source(here::here("code", "scripts", "setup.R"))
+source(here::here("code", "scripts", "ld_decay", "source.R"))
 ```
 
 
@@ -960,7 +967,7 @@ Rscript --vanilla $script $in_mikk $in_1kg $out_file
 ```
 
 ```{r, echo = F}
-knitr::include_graphics("20200727_maf_MIKKv1KG.png")
+knitr::include_graphics(here::here("plots", "ld_decay", "20210305_maf_MIKKv1KG.svg"))
 ```
 
 # Investigation of LD decay in chr 2
