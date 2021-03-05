@@ -1,6 +1,6 @@
 ---
 title: "Fecundity"
-date: '2021-03-01'
+date: '2021-03-05'
 #output: html_notebook
 #editor_options: 
 #  chunk_output_type: inline
@@ -164,7 +164,7 @@ out2
 
 ![](20210301_fecundity_files/figure-html/unnamed-chunk-3-1.svg)<!-- -->
 
-# Fecundity data
+# Fecundity
 
 ## Read in data
 
@@ -185,8 +185,8 @@ names(recode_vec_1) = c(0, "o", "x", "x/", "xx", "xxx")
 recode_vec_2 = c("Not producing",
                  "Do not produce every day; <3 eggs when they do",
                  "Do not produce every day; <5 eggs when they do",
-                 "0-3 eggs per day",
-                 "0-5 eggs per day",
+                 "1-3 eggs per day",
+                 "1-5 eggs per day",
                  "5-10 eggs per day")
 names(recode_vec_2) = c(0, 1, 2, 3, 4, 5)
 recode_vec_3 = gsub("; ", ";\n", recode_vec_2)
@@ -223,9 +223,9 @@ knitr::kable(head(semi_out))
 |4-1    |Jul 2020 |2         |Do not produce every day; <5 eggs when they do |
 |4-1    |Feb 2019 |2         |Do not produce every day; <5 eggs when they do |
 |4-2    |Jul 2020 |2         |Do not produce every day; <5 eggs when they do |
-|4-2    |Feb 2019 |4         |0-5 eggs per day                               |
+|4-2    |Feb 2019 |4         |1-5 eggs per day                               |
 |5-1    |Jul 2020 |2         |Do not produce every day; <5 eggs when they do |
-|5-1    |Feb 2019 |4         |0-5 eggs per day                               |
+|5-1    |Feb 2019 |4         |1-5 eggs per day                               |
 
 ## Plot
 
@@ -257,6 +257,7 @@ fec_count
 ```
 
 ![](20210301_fecundity_files/figure-html/unnamed-chunk-5-1.svg)<!-- -->
+
 # Final figure
 
 

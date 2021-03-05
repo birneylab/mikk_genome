@@ -751,7 +751,7 @@ r2_final_df = read.table(here("data", "20200803_r2_10kb-lim.csv"),
                          sep = ",")
 ```
 
-```{r, fig.width=18.75, fig.height=9.75}
+```{r}
 # Tidy data for final plot
 r2_final_df$chr = factor(r2_final_df$chr, levels = seq(1, 24))
 r2_final_df$dataset = toupper(r2_final_df$dataset)
@@ -759,29 +759,34 @@ r2_final_df$dataset = toupper(r2_final_df$dataset)
 # Plot
 r2_plot_main = r2_final_df %>% ggplot() +
   geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
-  theme_bw() +
+  theme_cowplot() +
   xlab("Distance between SNPs (kb)") +
   ylab(bquote(.("Mean r")^2)) +
   facet_wrap(~dataset, nrow = 1, ncol = 2) +
-  theme(panel.grid = element_blank()) +
+  theme(panel.grid = element_blank(),
+        strip.background = element_blank(),
+        legend.position = c(0.9, .8)) +
   labs(colour = "Chromosome") +
   scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
                      limits = c(0.05, 0.6))
 
-r2_plot_main
-
+#r2_plot_main
 ```
+
+```{r}
+ggplotly(r2_plot_main)
+```
+
 
 ```{r, eval = F}
 # Save plot to repo
-ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep = ""),
+ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".svg", sep = ""),
        plot = r2_plot_main,
-       device = "png",
-       path = here::here("mikk_genome", "plots"),
+       device = "svg",
+       path = here::here("plots", "ld_decay"),
        width = 25,
        height = 13,
-       units = "cm",
-       dpi = 500)
+       units = "cm")
 ```
 
 ### Inset
@@ -956,18 +961,93 @@ plink \
 
 ## Plot
 
-```{bash, eval = F}
-# Run on cluster because the files are so big
-script=code/scripts/ld_decay/20210305_maf_plot.R
-in_mikk=../maf/20200727_mikk_no-missing.frq
-in_1kg=../maf/20200727_1kg_no-missing.frq
-out_file=plots/ld_decay/20210305_maf_MIKKv1KG
+```{r, eval = F}
+in_mikk <- "../maf/20200727_mikk_no-missing.frq"
+in_1kg <- "../maf/20200727_1kg_no-missing.frq"
+#out_file <- args[3]
 
-Rscript --vanilla $script $in_mikk $in_1kg $out_file
+## MIKK
+maf_mikk <- readr::read_delim(in_mikk,
+                             delim = " ",
+                             trim_ws = T,
+                             col_types = cols_only(MAF = col_double()))
+maf_mikk$dataset <- "MIKK"
+
+## 1KG
+maf_1kg <- readr::read_delim(in_1kg,
+                             delim = " ",
+                             trim_ws = T,
+                             col_types = cols_only(MAF = col_double()))
+maf_1kg$dataset <- "1KG"
+
+## Bind
+maf_final <- rbind(maf_mikk, maf_1kg)
+
+# Plot
+maf_plot = maf_final %>%
+  ggplot() +
+    geom_histogram(aes(x = MAF,
+                       y=0.01*..density..,
+                       fill = dataset),
+                   binwidth = 0.01) +
+    theme_cowplot() +
+    guides(fill = F) +
+    facet_wrap(~dataset, nrow = 1, ncol = 2) +
+    xlab("Minor allele frequencies") +
+    ylab("Density") +
+    theme(strip.background = element_blank(),
+          strip.text = element_text(size = 14,
+                                    face = "bold"))
 ```
 
-```{r, echo = F}
-knitr::include_graphics(here::here("plots", "ld_decay", "20210305_maf_MIKKv1KG.svg"))
+### LD decay without labels
+
+```{r, eval = F}
+r2_plot_main_nolabs = r2_final_df %>% ggplot() +
+  geom_line(aes(bin_bdr_kb, mean, colour = chr)) +
+  theme_cowplot() +
+  xlab("Distance between SNPs (kb)") +
+  ylab(bquote(.("Mean r")^2)) +
+  facet_wrap(~dataset, nrow = 1, ncol = 2) +
+  theme(panel.grid = element_blank(),
+        strip.background = element_blank(),
+        strip.text.x = element_blank(),
+        legend.position = c(.9, .8),
+        legend.key.size = unit(9, "points"),
+        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 9)) +
+  labs(colour = "Chromosome") +
+  scale_y_continuous(breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+                     limits = c(0.05, 0.6))
+```
+
+## Combine with LD decay for final figure
+
+```{r, eval = F}
+final_fig = cowplot::ggdraw() +
+  draw_plot(maf_plot,
+            x = 0, y = .7, width = 1, height = .3) +
+  draw_plot(r2_plot_main_nolabs,
+            x = 0, y = 0, width = 1, height = .7) +
+  draw_plot_label(label = c("A", "B"), size = 15,
+                  x = c(0, 0), y = c(1, .7))
+```
+
+
+```{r, eval = F}
+out_path = here::here("plots", "ld_decay", "20210305_final_figure.png")
+
+ggsave(out_path,
+       plot = final_fig,
+       device = "png",
+       width = 23,
+       height = 22,
+       units = "cm",
+       dpi = 500)
+```
+
+```{r}
+knitr::include_graphics(here::here("plots", "ld_decay", "20210305_final_figure.png"))
 ```
 
 # Investigation of LD decay in chr 2
