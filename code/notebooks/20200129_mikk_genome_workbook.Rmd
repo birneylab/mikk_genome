@@ -2685,58 +2685,6 @@ test <- trio::getLDlarge(mikk_6,
 test2 <- trio::findLDblocks(test)
 ```
 
-
-### Try using `LDExplorer`
-
-```{r}
-install.packages("LDExplorer", repos="http://R-Forge.R-project.org")
-library(LDExplorer)
-```
-
-
-#### Create LD plot for select regions
-
-```{r}
-# get vector of seeds 
-set.seed(10)
-seeds <- sample(seq(1, 100), 24)
-# run over list
-counter <- 0
-test <- lapply(mikk_maf_filts$`0.05`[6], function(chr){
-  counter <<- counter + 1
-  # get seed
-  set.seed(seeds[counter])
-  # set boundaries
-  bounds <- c(25000000, max(chr@snps$pos))
-  # get sample of 1000
-  targ_ind <- sort(sample(which(dplyr::between(chr@snps$pos, bounds[1], bounds[2])), 1000))
-  # convert into logical vector
-  log_vec <- seq(1, nrow(chr@snps)) %in% targ_ind  
-  # thin BED for sample SNPs
-  thin_bed <- gaston::LD.thin(chr,
-                              threshold = 1,
-                              max.dist = 50000,
-                              which.snps = log_vec,
-                              dist.unit = "bases")
-  # compute LD
-  ld.x <- gaston::LD(thin_bed, c(1,ncol(thin_bed)))
-  # replace NaNs with 0
-  ld.x[which(is.na(ld.x))] <- 0
-
-   # plot
-  LD.plot(ld.x,
-          snp.positions = thin_bed@snps$pos, 
-          max.dist = 1000000,
-          write.ld = NULL,
-          write.snp.id = F,
-          pdf.file = paste("~/Documents/Docs/medaka pics/20200602_mikk_genome/20200717_ld_maf-0.05/zoomed/",
-                           "20200717_chr6_25Mb-end",
-                           ".pdf",
-                           sep = "")
-          )
-})
-```
-
 Not easy to identify. Import Plink blocks
 
 ```{bash}

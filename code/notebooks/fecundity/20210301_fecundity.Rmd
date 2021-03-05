@@ -151,8 +151,8 @@ names(recode_vec_1) = c(0, "o", "x", "x/", "xx", "xxx")
 recode_vec_2 = c("Not producing",
                  "Do not produce every day; <3 eggs when they do",
                  "Do not produce every day; <5 eggs when they do",
-                 "0-3 eggs per day",
-                 "0-5 eggs per day",
+                 "1-3 eggs per day",
+                 "1-5 eggs per day",
                  "5-10 eggs per day")
 names(recode_vec_2) = c(0, 1, 2, 3, 4, 5)
 recode_vec_3 = gsub("; ", ";\n", recode_vec_2)

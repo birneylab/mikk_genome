@@ -1,24 +1,24 @@
 ---
 title: "Repeats"
 date: '`r format(Sys.Date())`'
-output: html_notebook
-editor_options: 
-  chunk_output_type: inline
-#output:
-#  html_document:
-#    toc: true
-#    toc_float: true
-#    dev: 'svg'
-#    number_sections: true
-#    pandoc_args: --lua-filter=color-text.lua
-#    highlight: pygments  
+#output: html_notebook
+#editor_options: 
+#  chunk_output_type: inline
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'svg'
+    number_sections: true
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments  
 ---
 
 # Setup
 
 ## Load libraries
 
-```{r}
+```{r, message = F, warning = F}
 library(here)
 source(here::here("code", "scripts", "repeats", "source.R"))
 ```
@@ -51,7 +51,7 @@ hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
   # Rename columns
   dplyr::rename(chr = V1, tool = V2, class_full = V3, start = V4, end = V5, percent = V6, strand = V7, info = V9)
 
-head(hdrr_reps)
+knitr::kable(head(hdrr_reps))
 
 # Find types of class other than "(GATCCA)n" types
 class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
@@ -65,7 +65,9 @@ hdrr_reps = hdrr_reps %>%
   # NA for blanks
   dplyr::mutate(class = dplyr::na_if(class, "")) %>% 
   # "misc" for others in "(GATCCA)n" type classes
-  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "misc", class))
+  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "Misc.", class)) %>% 
+  # rename "Simple_repeat"
+  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat"))
 
 knitr::kable(head(hdrr_reps))
 
@@ -88,7 +90,8 @@ chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa
 ```{r}
 # How many repeats in each category?
 hdrr_reps %>% 
-  count(class)
+  count(class) %>% 
+  knitr::kable(.)
 ```
 
 ## Circos
@@ -127,8 +130,19 @@ max_lengths = max_lengths_df %>%
 class_order = max_lengths_df %>% 
   dplyr::pull(class)
 
-# Swap `SINE` and `Simple_repeat` because `Simple_repeat` and `Retrotransposon` labels overlap
-class_order = class_order[c(1:6, 8, 7, 11, 10, 12, 9)]
+# Change order for best 
+class_order = c("Misc.",
+                "LINE", 
+                "DNA", 
+                "LTR", 
+                "Unknown", 
+                "RC", 
+                "Satellite", 
+                "rRNA", 
+                "Simple repeat", 
+                "SINE", 
+                "tRNA", 
+                "Retroposon")
 
 # Order by longest repeats
 plot_list = plot_list %>% 
@@ -145,40 +159,6 @@ plot_list = plot_list %>%
   
 ```
 
-<!--
-```{r, eval = F}
-## Get density
-class_counter = 0
-dens = lapply(dens, function(class){
-  class_counter <<- class_counter + 1
-#  strand_counter = 0
-  lapply(class, function(strand){
-#    strand_counter <<- strand_counter + 1
-    out = circlize::genomicDensity(strand, window.size = 25e3)
-#    print(paste(names(dens)[class_counter], names(class)[strand_counter], "success"))
-    return(out)
-  })
-})  
-
-# Bind rows and save
-lapply(dens, function(class){
-  dplyr::bind_rows(class, .id = "strand")
-}) %>% 
-  dplyr::bind_rows(.id = "class") %>% 
-  readr::write_csv(out_file)
-```
-
-### Read back in 
-
-```{r}
-in_file = here::here("data", "repeats", "20210302_hdrr_repeat_dens_window_25e3.csv")
-dens_df = readr::read_csv(in_file, col_types = "ccciid") %>% 
-  dplyr::mutate(strand = factor(strand, levels = strand_order),
-                chr = factor(chr, levels = chr_order))
-```
-
--->
-
 ### Convert reverse strand densities to negative values for plotting
 
 ```{r}
@@ -193,24 +173,22 @@ plot_list = lapply(plot_list, function(class){
   })
 })
 
-# Testing
-test = plot_list %>% 
-  lapply(., function(class){
-    lapply(class, function(strand){
-      strand %>% 
-        dplyr::slice_sample(n = 1000)
-    })
-  })
+## Testing
+#test = plot_list %>% 
+#  lapply(., function(class){
+#    lapply(class, function(strand){
+#      strand %>% 
+#        dplyr::slice_sample(n = 1000)
+#    })
+#  })
 
 # True
 test = plot_list
 
 ```
 
-
+```{r, eval = F, include = F}
 ### Generate plot (sample)
-
-```{r}
 # Choose palette
 pal = grDevices::colorRampPalette(pal_electroangler)(length(test))
 
@@ -388,6 +366,11 @@ circos.clear()
 dev.off()
 ```
 
+```{r, fig.width=20, fig.height=20}
+knitr::include_graphics(here::here("plots", "repeats", "20210302_hdrr_repeats_true.png"))
+```
+
+
 ## Coverage of region by repeats
 
 ```{r}
@@ -437,14 +420,13 @@ repeat_cov_plot
 ## Histograms of log repeat length
 
 ```{r}
+pal = grDevices::colorRampPalette(pal_electroangler)(length(plot_list))
+
 hist_df = lapply(plot_list, function(class){
   dplyr::bind_rows(class, .id = "strand")
 }) %>% 
   dplyr::bind_rows(.id = "class") %>% 
   dplyr::mutate(class = factor(class, levels = class_order),
-                class = recode(class,
-                               "misc" = "Misc",
-                               "Simple_repeat" = "Simple repeat"),
                 length = ifelse(length < 0, length * -1, length))
 
 hist_plot = hist_df %>% 
@@ -470,9 +452,11 @@ hist_plot = hist_df %>%
 
 hist_plot
 ```
+
+
 ## Compile into final figure
 
-```{r}
+```{r, fig.width=30, fig.height=36}
 circos_repeats_path = here::here("plots", "repeats", "20210302_hdrr_repeats_true.png")
 
 final_svtype = ggdraw() +
@@ -487,7 +471,7 @@ final_svtype = ggdraw() +
 
 final_svtype
 ```
-```{r}
+```{r, eval = F}
 ggsave(here::here("plots", "repeats", "20210304_hdrr_final.png"),
        device = "png",
        dpi = 400,
