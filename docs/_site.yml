@@ -8,7 +8,7 @@ navbar:
     - text: "Fecundity"
       href: 20210301_fecundity.html
     - text: "Linkage Disequilibrium"
-      href: 20210305_ld-decay.Rmd
+      href: 20210305_ld-decay.html
     - text: "Introgression"
       href: 20201125_markdown_introgression.html
     - text: "Repeat Elements"
