@@ -3,7 +3,7 @@ From: rocker/tidyverse:4.0.0-ubuntu18.04
 
 %environment
     LD_LIBRARY_PATH=/usr/local/lib
-#    RENV_PATHS_CACHE=/homes/brettell/.local/share/renv/cache/v5/R-4.0/x86_64-pc-linux-gnu
+    RENV_PATHS_CACHE=/homes/brettell/.local/share/renv/cache/v5/R-4.0/x86_64-pc-linux-gnu
 
 %post
     # Update

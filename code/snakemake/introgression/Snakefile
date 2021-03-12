@@ -15,52 +15,66 @@
 #   -p
 
 # import functions and packages
-import os
-from os.path import join
-import pandas as pd
+import os.path
+#import pandas as pd
+import glob
 
 # Load config file and provide content as config object
 
 configfile: "code/snakemake/introgression/config/config.yaml"
 
-# Load samples to process
-
-## Get combinations of chr and sub_chr
-chr_subs = [os.path.splitext(file)[0] for file in os.listdir(join(config["target_dir"], "unzipped"))]
-chrs = [chr_sub.split("_")[0] for chr_sub in chr_subs]
-subs = [chr_sub.split("_")[1] for chr_sub in chr_subs]
-## Get number of segments in each file
-segments =
-
 ## Get samples
-#SAMPLES = pd.read_csv(config["samples_file"], comment="#", skip_blank_lines=True, sep=",", index_col=0)
-#TRAINING_SAMPLES = pd.read_csv(config["training_samples_file"], comment="#", skip_blank_lines=True, sep=",", index_col=0)
+
+### Get list of files
+files = glob.glob(os.path.join(config["target_dir"], "segmented/*/*.data.txt"))
+### get chr and sub_chr
+CHRS = []
+SUBCHRS = []
+SEGMENTS = []
+STRANDS = []
+for file in files:
+    CHRS.append(file.split('/')[4].split('_')[0])
+    SUBCHRS.append(file.split('/')[4].split('_')[1])
+    target_segment = file.split('/')[5].split('_')[0:3]
+    SEGMENTS.append("_".join(target_segment))
+    STRANDS.append(file.split('/')[5].split('_')[3].split('.')[0])
+
 
 # Rules
 
 rule all:
     input:
-#        checkpoints.split_segments.get(**wildcards).output[0]
-        dynamic(expand(join(config["target_dir"], "segmented/{chr}_{sub}"), zip, chr=chrs, sub=subs))
-
-
-checkpoint split_segments:
-    input:
-        join(config["target_dir"], "unzipped/{chr}_{sub}.emf")
-    output:
-        dynamic(join(config["target_dir"], "segmented/{chr}_{sub}"))
-    shell:
-        "mkdir {output} ; \
-        segment_count=$(grep \"^DATA\" {input} | wc -l ); \
-        for i in $(seq 1 $segment_count ); do \
-            {config[segments_script]} {input} $i {output} ; \
-        done"
+        expand(os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt"),
+                zip,
+                chr = CHRS,
+                subchr = SUBCHRS,
+                segment = SEGMENTS,
+                strand = STRANDS),
+        expand(os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt"),
+                zip,
+                chr = CHRS,
+                subchr = SUBCHRS)
 
 rule add_hdrr_coords:
     input:
-        join(config["target_dir"], "segmented/{chr}_{sub_chr}/{chr}_{start}_{end}_{strand}.data.txt")
+        os.path.join(config["target_dir"], "segmented/{chr}_{subchr}/{segment}_{strand}.data.txt")
     output:
-        join(config["target_dir"], "cleaned/{chr}_{sub_chr}/{chr}_{start}_{end}_{strand}.txt")
-    run:
-        if wildcards.strand == "1":
-            shell("tac {input} > tmp/{chr}_{start}_{end}_{strand}.data.txt; Rscript {config[add_coord_script_forward]} $bname $output")
+        os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt")
+    params:
+        command = lambda wildcards: "Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        "input={input}; output={output}; {params.command}"
+
+rule consolidate_subchrs:
+    input:
+        os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}")
+    output:
+        os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt")
+ #   params:
+ #       in_dir = lambda wildcards: os.path.join(config["target_dir"], "cleaned", wildcards.chr + "_" wildcards.subchr)
+    singularity:
+        config["sing_cont_r"]        
+    shell:
+        "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_subchr_script]} {input} {output}"

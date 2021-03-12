@@ -1,0 +1,3 @@
+RuleException in line 62 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Conda environments are only allowed with shell, script, notebook, or wrapper directives (not with run).
+  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 62, in <module>

@@ -7,8 +7,12 @@
         "output" : "../log/{rule}_{wildcards}.out",
         "error" : "../log/{rule}_{wildcards}.err"
     },
-    "split_segments" :
+    "add_hdrr_coords" :
     {
         "memory" : "10000"
+    },
+    "consolidate_subchrs" :
+    {
+        "memory" : "30000"
     }
 }

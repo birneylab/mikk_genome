@@ -10,19 +10,20 @@ library(ape)
 # Collect variables from bash script
 
 file_in <- args[1]
-dir_out <- args[2]
+file_out <- args[2]
 
 # Paste into new names
 
-file_data <- paste(file_in, ".data.txt", sep = "")
-file_tree <- paste(file_in, ".tree.txt", sep = "")
-file_seq <- paste(file_in, ".seq.txt", sep = "")
+file_pref = stringr::str_remove(file_in, ".data.txt")
+file_data <- paste(file_pref, ".data.txt", sep = "")
+file_tree <- paste(file_pref, ".tree.txt", sep = "")
+file_seq <- paste(file_pref, ".seq.txt", sep = "")
 
 # Get sequence start and end coords
 
-chr <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[1]
-seq_start <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[2]
-seq_end <- stringr::str_split(basename(file_in), pattern = "_", simplify = T)[3]
+chr <- stringr::str_split(basename(file_pref), pattern = "_", simplify = T)[1]
+seq_start <- stringr::str_split(basename(file_pref), pattern = "_", simplify = T)[2]
+seq_end <- stringr::str_split(basename(file_pref), pattern = "_", simplify = T)[3]
 
 # Get tree
 
@@ -94,6 +95,4 @@ dat <- dat %>% dplyr::select(chr,
 
 # Save to file
 
-bname_out <- paste(basename(file_in), ".txt", sep = "")
-file_out <- file.path(dir_out, bname_out)
 write.table(dat, file_out, quote = F, sep = "\t", row.names = F)

@@ -1,0 +1,38 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	2	add_hdrr_coords
+	1	all
+	3
+
+[Fri Mar 12 13:18:14 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/8_1/8_9347018_9571211_-1.data.txt
+    output: ../introgression/release-102/cleaned/8_1/8_9347018_9571211_-1.txt
+    jobid: 2
+    wildcards: chr=8, subchr=1, segment=8_9347018_9571211, strand=-1
+
+tmp_file=../tmp/{wildcards.segment}_{wildcards.strand}.data.txt ; tac {wildcards.input} > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file {config[add_coord_script_reverse]} $tmp_file {wildcards.output}
+
+[Fri Mar 12 13:18:14 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/8_1/8_8845296_8857760_1.data.txt
+    output: ../introgression/release-102/cleaned/8_1/8_8845296_8857760_1.txt
+    jobid: 1
+    wildcards: chr=8, subchr=1, segment=8_8845296_8857760, strand=1
+
+InputFunctionException in line 55 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Error:
+  AttributeError: 'Wildcards' object has no attribute 'input'
+Wildcards:
+  chr=8
+  subchr=1
+  segment=8_8845296_8857760
+  strand=1
+Traceback:
+  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 61, in <lambda>
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 136, in run_jobs
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 145, in run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 156, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 176, in printjob
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 162, in printjob

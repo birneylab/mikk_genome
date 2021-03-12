@@ -1,0 +1,142 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	7	add_hdrr_coords
+	1	all
+	8
+Select jobs to execute...
+
+[Fri Mar 12 17:48:24 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/24_2/24_16480574_16483416_-1.data.txt
+    output: ../introgression/release-102/cleaned/24_2/24_16480574_16483416_-1.txt
+    jobid: 3503
+    wildcards: chr=24, subchr=2, segment=24_16480574_16483416, strand=-1
+
+input=../introgression/release-102/segmented/24_2/24_16480574_16483416_-1.data.txt; output=../introgression/release-102/cleaned/24_2/24_16480574_16483416_-1.txt; tmp_file=../tmp/24_16480574_16483416_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+Submitted job 3503 with external jobid 'Job <2389046> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt
+    output: ../introgression/release-102/cleaned/20_1/20_6365114_6370294_-1.txt
+    jobid: 2103
+    wildcards: chr=20, subchr=1, segment=20_6365114_6370294, strand=-1
+
+input=../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt; output=../introgression/release-102/cleaned/20_1/20_6365114_6370294_-1.txt; tmp_file=../tmp/20_6365114_6370294_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+Submitted job 2103 with external jobid 'Job <2389047> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/1_1/1_10360589_10386949_1.data.txt
+    output: ../introgression/release-102/cleaned/1_1/1_10360589_10386949_1.txt
+    jobid: 3942
+    wildcards: chr=1, subchr=1, segment=1_10360589_10386949, strand=1
+
+input=../introgression/release-102/segmented/1_1/1_10360589_10386949_1.data.txt; output=../introgression/release-102/cleaned/1_1/1_10360589_10386949_1.txt; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R $input $output
+Submitted job 3942 with external jobid 'Job <2389048> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt
+    output: ../introgression/release-102/cleaned/17_1/17_2139440_2153945_-1.txt
+    jobid: 3996
+    wildcards: chr=17, subchr=1, segment=17_2139440_2153945, strand=-1
+
+input=../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt; output=../introgression/release-102/cleaned/17_1/17_2139440_2153945_-1.txt; tmp_file=../tmp/17_2139440_2153945_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+Submitted job 3996 with external jobid 'Job <2389049> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/11_2/11_21065274_21099126_-1.data.txt
+    output: ../introgression/release-102/cleaned/11_2/11_21065274_21099126_-1.txt
+    jobid: 4583
+    wildcards: chr=11, subchr=2, segment=11_21065274_21099126, strand=-1
+
+input=../introgression/release-102/segmented/11_2/11_21065274_21099126_-1.data.txt; output=../introgression/release-102/cleaned/11_2/11_21065274_21099126_-1.txt; tmp_file=../tmp/11_21065274_21099126_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+Submitted job 4583 with external jobid 'Job <2389050> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/11_2/11_21520618_21550461_1.data.txt
+    output: ../introgression/release-102/cleaned/11_2/11_21520618_21550461_1.txt
+    jobid: 4662
+    wildcards: chr=11, subchr=2, segment=11_21520618_21550461, strand=1
+
+input=../introgression/release-102/segmented/11_2/11_21520618_21550461_1.data.txt; output=../introgression/release-102/cleaned/11_2/11_21520618_21550461_1.txt; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R $input $output
+Submitted job 4662 with external jobid 'Job <2389051> is submitted to default queue <research-rh74>.'.
+
+[Fri Mar 12 17:48:25 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt
+    output: ../introgression/release-102/cleaned/1_2/1_16795958_16835713_1.txt
+    jobid: 7353
+    wildcards: chr=1, subchr=2, segment=1_16795958_16835713, strand=1
+
+input=../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt; output=../introgression/release-102/cleaned/1_2/1_16795958_16835713_1.txt; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R $input $output
+Submitted job 7353 with external jobid 'Job <2389052> is submitted to default queue <research-rh74>.'.
+[Fri Mar 12 17:48:44 2021]
+Error in rule add_hdrr_coords:
+    jobid: 3503
+    output: ../introgression/release-102/cleaned/24_2/24_16480574_16483416_-1.txt
+    shell:
+        input=../introgression/release-102/segmented/24_2/24_16480574_16483416_-1.data.txt; output=../introgression/release-102/cleaned/24_2/24_16480574_16483416_-1.txt; tmp_file=../tmp/24_16480574_16483416_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2389046> is submitted to default queue <research-rh74>.
+
+Error executing rule add_hdrr_coords on cluster (jobid: 3503, external: Job <2389046> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.xsfg71ix/snakejob.add_hdrr_coords.3503.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Fri Mar 12 17:48:44 2021]
+Error in rule add_hdrr_coords:
+    jobid: 2103
+    output: ../introgression/release-102/cleaned/20_1/20_6365114_6370294_-1.txt
+    shell:
+        input=../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt; output=../introgression/release-102/cleaned/20_1/20_6365114_6370294_-1.txt; tmp_file=../tmp/20_6365114_6370294_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2389047> is submitted to default queue <research-rh74>.
+
+Error executing rule add_hdrr_coords on cluster (jobid: 2103, external: Job <2389047> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.xsfg71ix/snakejob.add_hdrr_coords.2103.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Fri Mar 12 17:48:44 2021]
+Finished job 3942.
+1 of 8 steps (12%) done
+[Fri Mar 12 17:48:44 2021]
+Finished job 4662.
+2 of 8 steps (25%) done
+[Fri Mar 12 17:48:44 2021]
+Error in rule add_hdrr_coords:
+    jobid: 7353
+    output: ../introgression/release-102/cleaned/1_2/1_16795958_16835713_1.txt
+    shell:
+        input=../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt; output=../introgression/release-102/cleaned/1_2/1_16795958_16835713_1.txt; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R $input $output
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2389052> is submitted to default queue <research-rh74>.
+
+Error executing rule add_hdrr_coords on cluster (jobid: 7353, external: Job <2389052> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.xsfg71ix/snakejob.add_hdrr_coords.7353.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Fri Mar 12 17:48:54 2021]
+Error in rule add_hdrr_coords:
+    jobid: 3996
+    output: ../introgression/release-102/cleaned/17_1/17_2139440_2153945_-1.txt
+    shell:
+        input=../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt; output=../introgression/release-102/cleaned/17_1/17_2139440_2153945_-1.txt; tmp_file=../tmp/17_2139440_2153945_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2389049> is submitted to default queue <research-rh74>.
+
+Error executing rule add_hdrr_coords on cluster (jobid: 3996, external: Job <2389049> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.xsfg71ix/snakejob.add_hdrr_coords.3996.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Fri Mar 12 17:48:54 2021]
+Error in rule add_hdrr_coords:
+    jobid: 4583
+    output: ../introgression/release-102/cleaned/11_2/11_21065274_21099126_-1.txt
+    shell:
+        input=../introgression/release-102/segmented/11_2/11_21065274_21099126_-1.data.txt; output=../introgression/release-102/cleaned/11_2/11_21065274_21099126_-1.txt; tmp_file=../tmp/11_21065274_21099126_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2389050> is submitted to default queue <research-rh74>.
+
+Error executing rule add_hdrr_coords on cluster (jobid: 4583, external: Job <2389050> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.xsfg71ix/snakejob.add_hdrr_coords.4583.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-12T174704.666259.snakemake.log

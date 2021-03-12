@@ -1,0 +1,33 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	add_hdrr_coords
+	1	all
+	2
+Select jobs to execute...
+
+[Fri Mar 12 14:36:01 2021]
+rule add_hdrr_coords:
+    input: ../introgression/release-102/segmented/8_1/8_9347018_9571211_-1.data.txt
+    output: ../introgression/release-102/cleaned/8_1/8_9347018_9571211_-1.txt
+    jobid: 2
+    wildcards: chr=8, subchr=1, segment=8_9347018_9571211, strand=-1
+
+input=../introgression/release-102/segmented/8_1/8_9347018_9571211_-1.data.txt; output=../introgression/release-102/cleaned/8_1/8_9347018_9571211_-1.txt; tmp_file=../tmp/8_9347018_9571211_-1.data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R $tmp_file $input $output
+Submitted job 2 with external jobid 'Job <2349146> is submitted to default queue <research-rh74>.'.
+[Fri Mar 12 14:36:41 2021]
+Finished job 2.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar 12 14:36:42 2021]
+localrule all:
+    input: ../introgression/release-102/cleaned/8_1/8_8845296_8857760_1.txt, ../introgression/release-102/cleaned/8_1/8_9347018_9571211_-1.txt
+    jobid: 0
+
+[Fri Mar 12 14:36:42 2021]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-12T143558.372757.snakemake.log

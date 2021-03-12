@@ -53,7 +53,7 @@ echo "File name for data: $file_name_data"
 
 # pull out data and copy to data file
 awk "NR==$chunk_start,NR==$chunk_end" $i | egrep -v "^SEQ|TREE|ID|DATA|\/\/|^$" | \
-  awk '$1=$1' FS="" OFS="\t" \
+  awk '$1=$1' FS="" OFS="," \
   > $new_path/$file_name_data
 
 # pull out metadata and copy to metadata files
