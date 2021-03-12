@@ -1,0 +1,10 @@
+samples_file:
+    "code/snakemake/20210203/config/samples.csv"
+target_dir:
+    "../introgression/release-102"
+segments_script:
+    "code/scripts/introgression/20200907_extract-emf-segments.sh"
+add_coord_script_forward:
+    "code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R"
+add_coord_script_reverse:
+    "code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R"

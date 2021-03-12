@@ -1,0 +1,1322 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	57	split_segments
+	58
+Select jobs to execute...
+
+[Thu Mar 11 11:22:11 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/23_1.emf
+    output: ../introgression/release-102/segmented/23_1 (dynamic)
+    jobid: 20
+    wildcards: chr=23, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_1.emf $i ../introgression/release-102/segmented/23_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 20 with external jobid 'Job <2190896> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_3.emf
+    output: ../introgression/release-102/segmented/7_3 (dynamic)
+    jobid: 27
+    wildcards: chr=7, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_3.emf $i ../introgression/release-102/segmented/7_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 27 with external jobid 'Job <2190897> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/2_1.emf
+    output: ../introgression/release-102/segmented/2_1 (dynamic)
+    jobid: 5
+    wildcards: chr=2, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_1.emf $i ../introgression/release-102/segmented/2_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 5 with external jobid 'Job <2190898> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/21_2.emf
+    output: ../introgression/release-102/segmented/21_2 (dynamic)
+    jobid: 12
+    wildcards: chr=21, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_2.emf $i ../introgression/release-102/segmented/21_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 12 with external jobid 'Job <2190899> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/11_2.emf
+    output: ../introgression/release-102/segmented/11_2 (dynamic)
+    jobid: 35
+    wildcards: chr=11, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_2.emf $i ../introgression/release-102/segmented/11_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 35 with external jobid 'Job <2190900> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/15_1.emf
+    output: ../introgression/release-102/segmented/15_1 (dynamic)
+    jobid: 42
+    wildcards: chr=15, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_1.emf $i ../introgression/release-102/segmented/15_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 42 with external jobid 'Job <2190901> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_1.emf
+    output: ../introgression/release-102/segmented/10_1 (dynamic)
+    jobid: 50
+    wildcards: chr=10, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_1.emf $i ../introgression/release-102/segmented/10_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 50 with external jobid 'Job <2190902> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/21_1.emf
+    output: ../introgression/release-102/segmented/21_1 (dynamic)
+    jobid: 57
+    wildcards: chr=21, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_1.emf $i ../introgression/release-102/segmented/21_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 57 with external jobid 'Job <2190903> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:12 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/8_2.emf
+    output: ../introgression/release-102/segmented/8_2 (dynamic)
+    jobid: 6
+    wildcards: chr=8, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_2.emf $i ../introgression/release-102/segmented/8_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 6 with external jobid 'Job <2190904> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/8_1.emf
+    output: ../introgression/release-102/segmented/8_1 (dynamic)
+    jobid: 13
+    wildcards: chr=8, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_1.emf $i ../introgression/release-102/segmented/8_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 13 with external jobid 'Job <2190905> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/24_1.emf
+    output: ../introgression/release-102/segmented/24_1 (dynamic)
+    jobid: 21
+    wildcards: chr=24, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_1.emf $i ../introgression/release-102/segmented/24_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 21 with external jobid 'Job <2190906> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/24_2.emf
+    output: ../introgression/release-102/segmented/24_2 (dynamic)
+    jobid: 28
+    wildcards: chr=24, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_2.emf $i ../introgression/release-102/segmented/24_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 28 with external jobid 'Job <2190907> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_1.emf
+    output: ../introgression/release-102/segmented/1_1 (dynamic)
+    jobid: 36
+    wildcards: chr=1, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_1.emf $i ../introgression/release-102/segmented/1_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 36 with external jobid 'Job <2190908> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_1.emf
+    output: ../introgression/release-102/segmented/16_1 (dynamic)
+    jobid: 43
+    wildcards: chr=16, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_1.emf $i ../introgression/release-102/segmented/16_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 43 with external jobid 'Job <2190909> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/19_1.emf
+    output: ../introgression/release-102/segmented/19_1 (dynamic)
+    jobid: 51
+    wildcards: chr=19, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_1.emf $i ../introgression/release-102/segmented/19_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 51 with external jobid 'Job <2190910> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/6_2.emf
+    output: ../introgression/release-102/segmented/6_2 (dynamic)
+    jobid: 1
+    wildcards: chr=6, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_2.emf $i ../introgression/release-102/segmented/6_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 1 with external jobid 'Job <2190911> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_2.emf
+    output: ../introgression/release-102/segmented/3_2 (dynamic)
+    jobid: 7
+    wildcards: chr=3, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_2.emf $i ../introgression/release-102/segmented/3_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 7 with external jobid 'Job <2190912> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:13 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_1.emf
+    output: ../introgression/release-102/segmented/7_1 (dynamic)
+    jobid: 14
+    wildcards: chr=7, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_1.emf $i ../introgression/release-102/segmented/7_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 14 with external jobid 'Job <2190913> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_3.emf
+    output: ../introgression/release-102/segmented/4_3 (dynamic)
+    jobid: 22
+    wildcards: chr=4, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_3.emf $i ../introgression/release-102/segmented/4_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 22 with external jobid 'Job <2190915> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/15_2.emf
+    output: ../introgression/release-102/segmented/15_2 (dynamic)
+    jobid: 29
+    wildcards: chr=15, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_2.emf $i ../introgression/release-102/segmented/15_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 29 with external jobid 'Job <2190916> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/14_2.emf
+    output: ../introgression/release-102/segmented/14_2 (dynamic)
+    jobid: 37
+    wildcards: chr=14, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_2.emf $i ../introgression/release-102/segmented/14_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 37 with external jobid 'Job <2190917> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_3.emf
+    output: ../introgression/release-102/segmented/10_3 (dynamic)
+    jobid: 44
+    wildcards: chr=10, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_3.emf $i ../introgression/release-102/segmented/10_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 44 with external jobid 'Job <2190918> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/14_1.emf
+    output: ../introgression/release-102/segmented/14_1 (dynamic)
+    jobid: 52
+    wildcards: chr=14, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_1.emf $i ../introgression/release-102/segmented/14_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 52 with external jobid 'Job <2190919> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/2_2.emf
+    output: ../introgression/release-102/segmented/2_2 (dynamic)
+    jobid: 8
+    wildcards: chr=2, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_2.emf $i ../introgression/release-102/segmented/2_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 8 with external jobid 'Job <2190920> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_2.emf
+    output: ../introgression/release-102/segmented/4_2 (dynamic)
+    jobid: 15
+    wildcards: chr=4, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_2.emf $i ../introgression/release-102/segmented/4_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 15 with external jobid 'Job <2190921> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_3.emf
+    output: ../introgression/release-102/segmented/9_3 (dynamic)
+    jobid: 23
+    wildcards: chr=9, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_3.emf $i ../introgression/release-102/segmented/9_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 23 with external jobid 'Job <2190922> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:14 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/12_1.emf
+    output: ../introgression/release-102/segmented/12_1 (dynamic)
+    jobid: 30
+    wildcards: chr=12, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_1.emf $i ../introgression/release-102/segmented/12_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 30 with external jobid 'Job <2190923> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_3.emf
+    output: ../introgression/release-102/segmented/16_3 (dynamic)
+    jobid: 38
+    wildcards: chr=16, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_3.emf $i ../introgression/release-102/segmented/16_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 38 with external jobid 'Job <2190924> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/11_1.emf
+    output: ../introgression/release-102/segmented/11_1 (dynamic)
+    jobid: 45
+    wildcards: chr=11, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_1.emf $i ../introgression/release-102/segmented/11_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 45 with external jobid 'Job <2190925> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/19_2.emf
+    output: ../introgression/release-102/segmented/19_2 (dynamic)
+    jobid: 53
+    wildcards: chr=19, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_2.emf $i ../introgression/release-102/segmented/19_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 53 with external jobid 'Job <2190926> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_1.emf
+    output: ../introgression/release-102/segmented/9_1 (dynamic)
+    jobid: 9
+    wildcards: chr=9, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_1.emf $i ../introgression/release-102/segmented/9_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 9 with external jobid 'Job <2190927> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_1.emf
+    output: ../introgression/release-102/segmented/4_1 (dynamic)
+    jobid: 16
+    wildcards: chr=4, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_1.emf $i ../introgression/release-102/segmented/4_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 16 with external jobid 'Job <2190928> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_3.emf
+    output: ../introgression/release-102/segmented/3_3 (dynamic)
+    jobid: 24
+    wildcards: chr=3, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_3.emf $i ../introgression/release-102/segmented/3_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 24 with external jobid 'Job <2190929> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:15 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/17_2.emf
+    output: ../introgression/release-102/segmented/17_2 (dynamic)
+    jobid: 31
+    wildcards: chr=17, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_2.emf $i ../introgression/release-102/segmented/17_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 31 with external jobid 'Job <2190930> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/12_2.emf
+    output: ../introgression/release-102/segmented/12_2 (dynamic)
+    jobid: 39
+    wildcards: chr=12, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_2.emf $i ../introgression/release-102/segmented/12_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 39 with external jobid 'Job <2190931> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_2.emf
+    output: ../introgression/release-102/segmented/13_2 (dynamic)
+    jobid: 46
+    wildcards: chr=13, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_2.emf $i ../introgression/release-102/segmented/13_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 46 with external jobid 'Job <2190933> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/18_2.emf
+    output: ../introgression/release-102/segmented/18_2 (dynamic)
+    jobid: 54
+    wildcards: chr=18, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_2.emf $i ../introgression/release-102/segmented/18_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 54 with external jobid 'Job <2190934> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/6_1.emf
+    output: ../introgression/release-102/segmented/6_1 (dynamic)
+    jobid: 2
+    wildcards: chr=6, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_1.emf $i ../introgression/release-102/segmented/6_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 2 with external jobid 'Job <2190936> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_1.emf
+    output: ../introgression/release-102/segmented/3_1 (dynamic)
+    jobid: 10
+    wildcards: chr=3, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_1.emf $i ../introgression/release-102/segmented/3_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 10 with external jobid 'Job <2190938> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_1.emf
+    output: ../introgression/release-102/segmented/5_1 (dynamic)
+    jobid: 17
+    wildcards: chr=5, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_1.emf $i ../introgression/release-102/segmented/5_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 17 with external jobid 'Job <2190941> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_2.emf
+    output: ../introgression/release-102/segmented/5_2 (dynamic)
+    jobid: 25
+    wildcards: chr=5, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_2.emf $i ../introgression/release-102/segmented/5_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 25 with external jobid 'Job <2190944> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/17_1.emf
+    output: ../introgression/release-102/segmented/17_1 (dynamic)
+    jobid: 32
+    wildcards: chr=17, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_1.emf $i ../introgression/release-102/segmented/17_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 32 with external jobid 'Job <2190947> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_2.emf
+    output: ../introgression/release-102/segmented/10_2 (dynamic)
+    jobid: 40
+    wildcards: chr=10, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_2.emf $i ../introgression/release-102/segmented/10_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 40 with external jobid 'Job <2190949> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:16 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_3.emf
+    output: ../introgression/release-102/segmented/13_3 (dynamic)
+    jobid: 47
+    wildcards: chr=13, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_3.emf $i ../introgression/release-102/segmented/13_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 47 with external jobid 'Job <2190952> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/20_1.emf
+    output: ../introgression/release-102/segmented/20_1 (dynamic)
+    jobid: 55
+    wildcards: chr=20, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_1.emf $i ../introgression/release-102/segmented/20_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 55 with external jobid 'Job <2190955> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/23_2.emf
+    output: ../introgression/release-102/segmented/23_2 (dynamic)
+    jobid: 3
+    wildcards: chr=23, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_2.emf $i ../introgression/release-102/segmented/23_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 3 with external jobid 'Job <2190957> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_3.emf
+    output: ../introgression/release-102/segmented/5_3 (dynamic)
+    jobid: 11
+    wildcards: chr=5, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_3.emf $i ../introgression/release-102/segmented/5_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 11 with external jobid 'Job <2190960> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/22_1.emf
+    output: ../introgression/release-102/segmented/22_1 (dynamic)
+    jobid: 18
+    wildcards: chr=22, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_1.emf $i ../introgression/release-102/segmented/22_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 18 with external jobid 'Job <2190963> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/22_2.emf
+    output: ../introgression/release-102/segmented/22_2 (dynamic)
+    jobid: 26
+    wildcards: chr=22, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_2.emf $i ../introgression/release-102/segmented/22_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 26 with external jobid 'Job <2190966> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_2.emf
+    output: ../introgression/release-102/segmented/16_2 (dynamic)
+    jobid: 33
+    wildcards: chr=16, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_2.emf $i ../introgression/release-102/segmented/16_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 33 with external jobid 'Job <2190969> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/18_1.emf
+    output: ../introgression/release-102/segmented/18_1 (dynamic)
+    jobid: 41
+    wildcards: chr=18, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_1.emf $i ../introgression/release-102/segmented/18_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 41 with external jobid 'Job <2190973> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:17 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_3.emf
+    output: ../introgression/release-102/segmented/1_3 (dynamic)
+    jobid: 48
+    wildcards: chr=1, sub=3
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_3.emf $i ../introgression/release-102/segmented/1_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 48 with external jobid 'Job <2190978> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:18 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/20_2.emf
+    output: ../introgression/release-102/segmented/20_2 (dynamic)
+    jobid: 56
+    wildcards: chr=20, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_2.emf $i ../introgression/release-102/segmented/20_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 56 with external jobid 'Job <2190982> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:18 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_2.emf
+    output: ../introgression/release-102/segmented/7_2 (dynamic)
+    jobid: 4
+    wildcards: chr=7, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_2.emf $i ../introgression/release-102/segmented/7_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 4 with external jobid 'Job <2190985> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:18 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_2.emf
+    output: ../introgression/release-102/segmented/9_2 (dynamic)
+    jobid: 19
+    wildcards: chr=9, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_2.emf $i ../introgression/release-102/segmented/9_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 19 with external jobid 'Job <2190988> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:18 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_1.emf
+    output: ../introgression/release-102/segmented/13_1 (dynamic)
+    jobid: 34
+    wildcards: chr=13, sub=1
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_1.emf $i ../introgression/release-102/segmented/13_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 34 with external jobid 'Job <2190990> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:22:18 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_2.emf
+    output: ../introgression/release-102/segmented/1_2 (dynamic)
+    jobid: 49
+    wildcards: chr=1, sub=2
+Downstream jobs will be updated after completion.
+
+segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_2.emf $i ../introgression/release-102/segmented/1_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 49 with external jobid 'Job <2190993> is submitted to default queue <research-rh74>.'.
+[Thu Mar 11 11:22:38 2021]
+Error in rule split_segments:
+    jobid: 44
+    output: ../introgression/release-102/segmented/10_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_3.emf $i ../introgression/release-102/segmented/10_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190918> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 44, external: Job <2190918> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.44.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:38 2021]
+Error in rule split_segments:
+    jobid: 8
+    output: ../introgression/release-102/segmented/2_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_2.emf $i ../introgression/release-102/segmented/2_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190920> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 8, external: Job <2190920> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.8.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:38 2021]
+Error in rule split_segments:
+    jobid: 23
+    output: ../introgression/release-102/segmented/9_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_3.emf $i ../introgression/release-102/segmented/9_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190922> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 23, external: Job <2190922> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.23.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:38 2021]
+Error in rule split_segments:
+    jobid: 38
+    output: ../introgression/release-102/segmented/16_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_3.emf $i ../introgression/release-102/segmented/16_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190924> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 38, external: Job <2190924> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.38.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:38 2021]
+Error in rule split_segments:
+    jobid: 53
+    output: ../introgression/release-102/segmented/19_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_2.emf $i ../introgression/release-102/segmented/19_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190926> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 53, external: Job <2190926> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.53.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:40 2021]
+Error in rule split_segments:
+    jobid: 47
+    output: ../introgression/release-102/segmented/13_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_3.emf $i ../introgression/release-102/segmented/13_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190952> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 47, external: Job <2190952> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.47.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:40 2021]
+Error in rule split_segments:
+    jobid: 11
+    output: ../introgression/release-102/segmented/5_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_3.emf $i ../introgression/release-102/segmented/5_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190960> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 11, external: Job <2190960> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.11.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:41 2021]
+Error in rule split_segments:
+    jobid: 48
+    output: ../introgression/release-102/segmented/1_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_3.emf $i ../introgression/release-102/segmented/1_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190978> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 48, external: Job <2190978> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.48.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:51 2021]
+Error in rule split_segments:
+    jobid: 27
+    output: ../introgression/release-102/segmented/7_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_3.emf $i ../introgression/release-102/segmented/7_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190897> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 27, external: Job <2190897> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.27.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:51 2021]
+Error in rule split_segments:
+    jobid: 35
+    output: ../introgression/release-102/segmented/11_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_2.emf $i ../introgression/release-102/segmented/11_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190900> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 35, external: Job <2190900> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.35.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:52 2021]
+Error in rule split_segments:
+    jobid: 22
+    output: ../introgression/release-102/segmented/4_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_3.emf $i ../introgression/release-102/segmented/4_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190915> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 22, external: Job <2190915> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.22.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:53 2021]
+Error in rule split_segments:
+    jobid: 16
+    output: ../introgression/release-102/segmented/4_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_1.emf $i ../introgression/release-102/segmented/4_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190928> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 16, external: Job <2190928> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.16.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:53 2021]
+Error in rule split_segments:
+    jobid: 24
+    output: ../introgression/release-102/segmented/3_3 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_3.emf $i ../introgression/release-102/segmented/3_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190929> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 24, external: Job <2190929> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.24.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:54 2021]
+Error in rule split_segments:
+    jobid: 54
+    output: ../introgression/release-102/segmented/18_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_2.emf $i ../introgression/release-102/segmented/18_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190934> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 54, external: Job <2190934> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.54.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:54 2021]
+Error in rule split_segments:
+    jobid: 3
+    output: ../introgression/release-102/segmented/23_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_2.emf $i ../introgression/release-102/segmented/23_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190957> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 3, external: Job <2190957> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.3.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:55 2021]
+Error in rule split_segments:
+    jobid: 26
+    output: ../introgression/release-102/segmented/22_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_2.emf $i ../introgression/release-102/segmented/22_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190966> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 26, external: Job <2190966> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.26.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:22:55 2021]
+Error in rule split_segments:
+    jobid: 56
+    output: ../introgression/release-102/segmented/20_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_2.emf $i ../introgression/release-102/segmented/20_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190982> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 56, external: Job <2190982> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.56.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:05 2021]
+Error in rule split_segments:
+    jobid: 12
+    output: ../introgression/release-102/segmented/21_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_2.emf $i ../introgression/release-102/segmented/21_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190899> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 12, external: Job <2190899> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.12.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:05 2021]
+Error in rule split_segments:
+    jobid: 42
+    output: ../introgression/release-102/segmented/15_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_1.emf $i ../introgression/release-102/segmented/15_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190901> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 42, external: Job <2190901> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.42.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:05 2021]
+Error in rule split_segments:
+    jobid: 50
+    output: ../introgression/release-102/segmented/10_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_1.emf $i ../introgression/release-102/segmented/10_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190902> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 50, external: Job <2190902> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.50.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:05 2021]
+Error in rule split_segments:
+    jobid: 6
+    output: ../introgression/release-102/segmented/8_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_2.emf $i ../introgression/release-102/segmented/8_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190904> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 6, external: Job <2190904> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.6.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:05 2021]
+Error in rule split_segments:
+    jobid: 28
+    output: ../introgression/release-102/segmented/24_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_2.emf $i ../introgression/release-102/segmented/24_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190907> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 28, external: Job <2190907> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.28.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:06 2021]
+Error in rule split_segments:
+    jobid: 37
+    output: ../introgression/release-102/segmented/14_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_2.emf $i ../introgression/release-102/segmented/14_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190917> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 37, external: Job <2190917> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.37.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:06 2021]
+Error in rule split_segments:
+    jobid: 52
+    output: ../introgression/release-102/segmented/14_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_1.emf $i ../introgression/release-102/segmented/14_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190919> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 52, external: Job <2190919> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.52.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:07 2021]
+Error in rule split_segments:
+    jobid: 45
+    output: ../introgression/release-102/segmented/11_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_1.emf $i ../introgression/release-102/segmented/11_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190925> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 45, external: Job <2190925> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.45.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:07 2021]
+Error in rule split_segments:
+    jobid: 31
+    output: ../introgression/release-102/segmented/17_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_2.emf $i ../introgression/release-102/segmented/17_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190930> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 31, external: Job <2190930> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.31.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:07 2021]
+Error in rule split_segments:
+    jobid: 39
+    output: ../introgression/release-102/segmented/12_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_2.emf $i ../introgression/release-102/segmented/12_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190931> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 39, external: Job <2190931> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.39.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:07 2021]
+Error in rule split_segments:
+    jobid: 46
+    output: ../introgression/release-102/segmented/13_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_2.emf $i ../introgression/release-102/segmented/13_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190933> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 46, external: Job <2190933> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.46.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:07 2021]
+Error in rule split_segments:
+    jobid: 25
+    output: ../introgression/release-102/segmented/5_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_2.emf $i ../introgression/release-102/segmented/5_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190944> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 25, external: Job <2190944> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.25.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:08 2021]
+Error in rule split_segments:
+    jobid: 18
+    output: ../introgression/release-102/segmented/22_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_1.emf $i ../introgression/release-102/segmented/22_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190963> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 18, external: Job <2190963> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.18.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:08 2021]
+Error in rule split_segments:
+    jobid: 41
+    output: ../introgression/release-102/segmented/18_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_1.emf $i ../introgression/release-102/segmented/18_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190973> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 41, external: Job <2190973> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.41.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:08 2021]
+Error in rule split_segments:
+    jobid: 4
+    output: ../introgression/release-102/segmented/7_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_2.emf $i ../introgression/release-102/segmented/7_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190985> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 4, external: Job <2190985> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.4.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:19 2021]
+Error in rule split_segments:
+    jobid: 5
+    output: ../introgression/release-102/segmented/2_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_1.emf $i ../introgression/release-102/segmented/2_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190898> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 5, external: Job <2190898> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.5.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:19 2021]
+Error in rule split_segments:
+    jobid: 13
+    output: ../introgression/release-102/segmented/8_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_1.emf $i ../introgression/release-102/segmented/8_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190905> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 13, external: Job <2190905> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.13.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:19 2021]
+Error in rule split_segments:
+    jobid: 21
+    output: ../introgression/release-102/segmented/24_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_1.emf $i ../introgression/release-102/segmented/24_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190906> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 21, external: Job <2190906> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.21.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:19 2021]
+Error in rule split_segments:
+    jobid: 43
+    output: ../introgression/release-102/segmented/16_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_1.emf $i ../introgression/release-102/segmented/16_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190909> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 43, external: Job <2190909> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.43.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:20 2021]
+Error in rule split_segments:
+    jobid: 29
+    output: ../introgression/release-102/segmented/15_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_2.emf $i ../introgression/release-102/segmented/15_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190916> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 29, external: Job <2190916> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.29.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:20 2021]
+Error in rule split_segments:
+    jobid: 30
+    output: ../introgression/release-102/segmented/12_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_1.emf $i ../introgression/release-102/segmented/12_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190923> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 30, external: Job <2190923> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.30.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:20 2021]
+Error in rule split_segments:
+    jobid: 9
+    output: ../introgression/release-102/segmented/9_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_1.emf $i ../introgression/release-102/segmented/9_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190927> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 9, external: Job <2190927> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.9.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:20 2021]
+Error in rule split_segments:
+    jobid: 2
+    output: ../introgression/release-102/segmented/6_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_1.emf $i ../introgression/release-102/segmented/6_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190936> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 2, external: Job <2190936> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.2.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:20 2021]
+Error in rule split_segments:
+    jobid: 40
+    output: ../introgression/release-102/segmented/10_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_2.emf $i ../introgression/release-102/segmented/10_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190949> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 40, external: Job <2190949> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.40.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:21 2021]
+Error in rule split_segments:
+    jobid: 55
+    output: ../introgression/release-102/segmented/20_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_1.emf $i ../introgression/release-102/segmented/20_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190955> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 55, external: Job <2190955> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.55.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:21 2021]
+Error in rule split_segments:
+    jobid: 34
+    output: ../introgression/release-102/segmented/13_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_1.emf $i ../introgression/release-102/segmented/13_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190990> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 34, external: Job <2190990> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.34.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:21 2021]
+Error in rule split_segments:
+    jobid: 49
+    output: ../introgression/release-102/segmented/1_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_2.emf $i ../introgression/release-102/segmented/1_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190993> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 49, external: Job <2190993> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.49.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:32 2021]
+Error in rule split_segments:
+    jobid: 20
+    output: ../introgression/release-102/segmented/23_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_1.emf $i ../introgression/release-102/segmented/23_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190896> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 20, external: Job <2190896> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.20.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:32 2021]
+Error in rule split_segments:
+    jobid: 57
+    output: ../introgression/release-102/segmented/21_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_1.emf $i ../introgression/release-102/segmented/21_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190903> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 57, external: Job <2190903> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.57.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:32 2021]
+Error in rule split_segments:
+    jobid: 36
+    output: ../introgression/release-102/segmented/1_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_1.emf $i ../introgression/release-102/segmented/1_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190908> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 36, external: Job <2190908> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.36.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:32 2021]
+Error in rule split_segments:
+    jobid: 1
+    output: ../introgression/release-102/segmented/6_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_2.emf $i ../introgression/release-102/segmented/6_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190911> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 1, external: Job <2190911> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.1.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:32 2021]
+Error in rule split_segments:
+    jobid: 14
+    output: ../introgression/release-102/segmented/7_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_1.emf $i ../introgression/release-102/segmented/7_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190913> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 14, external: Job <2190913> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.14.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 51
+    output: ../introgression/release-102/segmented/19_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_1.emf $i ../introgression/release-102/segmented/19_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190910> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 51, external: Job <2190910> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.51.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 7
+    output: ../introgression/release-102/segmented/3_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_2.emf $i ../introgression/release-102/segmented/3_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190912> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 7, external: Job <2190912> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.7.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 15
+    output: ../introgression/release-102/segmented/4_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_2.emf $i ../introgression/release-102/segmented/4_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190921> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 15, external: Job <2190921> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.15.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 10
+    output: ../introgression/release-102/segmented/3_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_1.emf $i ../introgression/release-102/segmented/3_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190938> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 10, external: Job <2190938> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.10.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 17
+    output: ../introgression/release-102/segmented/5_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_1.emf $i ../introgression/release-102/segmented/5_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190941> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 17, external: Job <2190941> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.17.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 32
+    output: ../introgression/release-102/segmented/17_1 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_1.emf $i ../introgression/release-102/segmented/17_1 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190947> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 32, external: Job <2190947> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.32.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 33
+    output: ../introgression/release-102/segmented/16_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_2.emf $i ../introgression/release-102/segmented/16_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190969> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 33, external: Job <2190969> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.33.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:23:43 2021]
+Error in rule split_segments:
+    jobid: 19
+    output: ../introgression/release-102/segmented/9_2 (dynamic)
+    shell:
+        segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_2.emf $i ../introgression/release-102/segmented/9_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2190988> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 19, external: Job <2190988> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.o0xs5i_u/snakejob.split_segments.19.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-11T112208.472598.snakemake.log

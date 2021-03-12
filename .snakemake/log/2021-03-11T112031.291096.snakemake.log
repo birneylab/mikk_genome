@@ -1,0 +1,26 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	57	split_segments
+	58
+Select jobs to execute...
+
+[Thu Mar 11 11:20:36 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_1.emf
+    output: ../introgression/release-102/segmented/13_1 (dynamic)
+    jobid: 34
+    wildcards: chr=13, sub=1
+Downstream jobs will be updated after completion.
+
+RuleException in line 45 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+'Wildcards' object has no attribute 'input'
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 136, in run_jobs
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 935, in run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 722, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 230, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 156, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 162, in printjob

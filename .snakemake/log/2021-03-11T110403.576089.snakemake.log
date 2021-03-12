@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 43 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Missing input files for rule split_segments:
+../introgression/release-102/unzipped/50_fish.epo.6_2.emf

@@ -1,0 +1,66 @@
+# Bash script to run on EBI cluster:
+#
+# cd /hps/research1/birney/users/ian/opto_res/cos_opto_res
+# conda activate snakemake
+# snakemake \
+#   --jobs 5000 \
+#   --latency-wait 100 \
+#   --cluster-config code/snakemake/20210203/config/cluster.json \
+#   --cluster 'bsub -g /snakemake_bgenie -J {cluster.name} -n {cluster.n} -M {cluster.memory} -o {cluster.output} -e {cluster.error}' \
+#   --keep-going \
+#   --rerun-incomplete \
+#   --use-conda \
+#   --use-singularity \
+#   -s code/snakemake/20210203/Snakefile \
+#   -p
+
+# import functions and packages
+import os
+from os.path import join
+import pandas as pd
+
+# Load config file and provide content as config object
+
+configfile: "code/snakemake/introgression/config/config.yaml"
+
+# Load samples to process
+
+## Get combinations of chr and sub_chr
+chr_subs = [os.path.splitext(file)[0] for file in os.listdir(join(config["target_dir"], "unzipped"))]
+chrs = [chr_sub.split("_")[0] for chr_sub in chr_subs]
+subs = [chr_sub.split("_")[1] for chr_sub in chr_subs]
+## Get number of segments in each file
+segments =
+
+## Get samples
+#SAMPLES = pd.read_csv(config["samples_file"], comment="#", skip_blank_lines=True, sep=",", index_col=0)
+#TRAINING_SAMPLES = pd.read_csv(config["training_samples_file"], comment="#", skip_blank_lines=True, sep=",", index_col=0)
+
+# Rules
+
+rule all:
+    input:
+#        checkpoints.split_segments.get(**wildcards).output[0]
+        dynamic(expand(join(config["target_dir"], "segmented/{chr}_{sub}"), zip, chr=chrs, sub=subs))
+
+
+checkpoint split_segments:
+    input:
+        join(config["target_dir"], "unzipped/{chr}_{sub}.emf")
+    output:
+        dynamic(join(config["target_dir"], "segmented/{chr}_{sub}"))
+    shell:
+        "mkdir {output} ; \
+        segment_count=$(grep \"^DATA\" {input} | wc -l ); \
+        for i in $(seq 1 $segment_count ); do \
+            {config[segments_script]} {input} $i {output} ; \
+        done"
+
+rule add_hdrr_coords:
+    input:
+        join(config["target_dir"], "segmented/{chr}_{sub_chr}/{chr}_{start}_{end}_{strand}.data.txt")
+    output:
+        join(config["target_dir"], "cleaned/{chr}_{sub_chr}/{chr}_{start}_{end}_{strand}.txt")
+    run:
+        if wildcards.strand == "1":
+            shell("tac {input} > tmp/{chr}_{start}_{end}_{strand}.data.txt; Rscript {config[add_coord_script_forward]} $bname $output")

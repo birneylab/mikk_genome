@@ -1,0 +1,752 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	57	split_segments
+	58
+Select jobs to execute...
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_2.emf
+    output: ../introgression/release-102/segmented/7_2 (dynamic)
+    jobid: 4
+    wildcards: chr=7, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/7_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_2.emf $i ../introgression/release-102/segmented/7_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 4 with external jobid 'Job <2193232> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/22_2.emf
+    output: ../introgression/release-102/segmented/22_2 (dynamic)
+    jobid: 26
+    wildcards: chr=22, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/22_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_2.emf $i ../introgression/release-102/segmented/22_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 26 with external jobid 'Job <2193235> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_1.emf
+    output: ../introgression/release-102/segmented/13_1 (dynamic)
+    jobid: 34
+    wildcards: chr=13, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/13_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_1.emf $i ../introgression/release-102/segmented/13_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 34 with external jobid 'Job <2193238> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_3.emf
+    output: ../introgression/release-102/segmented/5_3 (dynamic)
+    jobid: 11
+    wildcards: chr=5, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/5_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_3.emf $i ../introgression/release-102/segmented/5_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 11 with external jobid 'Job <2193241> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_2.emf
+    output: ../introgression/release-102/segmented/9_2 (dynamic)
+    jobid: 19
+    wildcards: chr=9, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/9_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_2.emf $i ../introgression/release-102/segmented/9_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 19 with external jobid 'Job <2193244> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/18_1.emf
+    output: ../introgression/release-102/segmented/18_1 (dynamic)
+    jobid: 41
+    wildcards: chr=18, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/18_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_1.emf $i ../introgression/release-102/segmented/18_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 41 with external jobid 'Job <2193247> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_2.emf
+    output: ../introgression/release-102/segmented/1_2 (dynamic)
+    jobid: 49
+    wildcards: chr=1, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/1_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_2.emf $i ../introgression/release-102/segmented/1_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 49 with external jobid 'Job <2193249> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:51 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/20_2.emf
+    output: ../introgression/release-102/segmented/20_2 (dynamic)
+    jobid: 56
+    wildcards: chr=20, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/20_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_2.emf $i ../introgression/release-102/segmented/20_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 56 with external jobid 'Job <2193252> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/2_1.emf
+    output: ../introgression/release-102/segmented/2_1 (dynamic)
+    jobid: 5
+    wildcards: chr=2, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/2_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_1.emf $i ../introgression/release-102/segmented/2_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 5 with external jobid 'Job <2193254> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/21_2.emf
+    output: ../introgression/release-102/segmented/21_2 (dynamic)
+    jobid: 12
+    wildcards: chr=21, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/21_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_2.emf $i ../introgression/release-102/segmented/21_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 12 with external jobid 'Job <2193257> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/23_1.emf
+    output: ../introgression/release-102/segmented/23_1 (dynamic)
+    jobid: 20
+    wildcards: chr=23, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/23_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_1.emf $i ../introgression/release-102/segmented/23_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 20 with external jobid 'Job <2193260> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_3.emf
+    output: ../introgression/release-102/segmented/7_3 (dynamic)
+    jobid: 27
+    wildcards: chr=7, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/7_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_3.emf $i ../introgression/release-102/segmented/7_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 27 with external jobid 'Job <2193263> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/11_2.emf
+    output: ../introgression/release-102/segmented/11_2 (dynamic)
+    jobid: 35
+    wildcards: chr=11, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/11_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_2.emf $i ../introgression/release-102/segmented/11_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 35 with external jobid 'Job <2193266> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/15_1.emf
+    output: ../introgression/release-102/segmented/15_1 (dynamic)
+    jobid: 42
+    wildcards: chr=15, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/15_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_1.emf $i ../introgression/release-102/segmented/15_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 42 with external jobid 'Job <2193268> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_1.emf
+    output: ../introgression/release-102/segmented/10_1 (dynamic)
+    jobid: 50
+    wildcards: chr=10, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/10_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_1.emf $i ../introgression/release-102/segmented/10_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 50 with external jobid 'Job <2193271> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/21_1.emf
+    output: ../introgression/release-102/segmented/21_1 (dynamic)
+    jobid: 57
+    wildcards: chr=21, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/21_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/21_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/21_1.emf $i ../introgression/release-102/segmented/21_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 57 with external jobid 'Job <2193274> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:52 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/8_2.emf
+    output: ../introgression/release-102/segmented/8_2 (dynamic)
+    jobid: 6
+    wildcards: chr=8, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/8_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_2.emf $i ../introgression/release-102/segmented/8_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 6 with external jobid 'Job <2193277> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/8_1.emf
+    output: ../introgression/release-102/segmented/8_1 (dynamic)
+    jobid: 13
+    wildcards: chr=8, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/8_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/8_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/8_1.emf $i ../introgression/release-102/segmented/8_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 13 with external jobid 'Job <2193281> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/24_1.emf
+    output: ../introgression/release-102/segmented/24_1 (dynamic)
+    jobid: 21
+    wildcards: chr=24, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/24_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_1.emf $i ../introgression/release-102/segmented/24_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 21 with external jobid 'Job <2193285> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/24_2.emf
+    output: ../introgression/release-102/segmented/24_2 (dynamic)
+    jobid: 28
+    wildcards: chr=24, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/24_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/24_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/24_2.emf $i ../introgression/release-102/segmented/24_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 28 with external jobid 'Job <2193288> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_1.emf
+    output: ../introgression/release-102/segmented/1_1 (dynamic)
+    jobid: 36
+    wildcards: chr=1, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/1_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_1.emf $i ../introgression/release-102/segmented/1_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 36 with external jobid 'Job <2193290> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_1.emf
+    output: ../introgression/release-102/segmented/16_1 (dynamic)
+    jobid: 43
+    wildcards: chr=16, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/16_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_1.emf $i ../introgression/release-102/segmented/16_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 43 with external jobid 'Job <2193293> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/19_1.emf
+    output: ../introgression/release-102/segmented/19_1 (dynamic)
+    jobid: 51
+    wildcards: chr=19, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/19_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_1.emf $i ../introgression/release-102/segmented/19_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 51 with external jobid 'Job <2193297> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:53 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/6_2.emf
+    output: ../introgression/release-102/segmented/6_2 (dynamic)
+    jobid: 1
+    wildcards: chr=6, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/6_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_2.emf $i ../introgression/release-102/segmented/6_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 1 with external jobid 'Job <2193300> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_2.emf
+    output: ../introgression/release-102/segmented/3_2 (dynamic)
+    jobid: 7
+    wildcards: chr=3, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/3_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_2.emf $i ../introgression/release-102/segmented/3_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 7 with external jobid 'Job <2193303> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/7_1.emf
+    output: ../introgression/release-102/segmented/7_1 (dynamic)
+    jobid: 14
+    wildcards: chr=7, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/7_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/7_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/7_1.emf $i ../introgression/release-102/segmented/7_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 14 with external jobid 'Job <2193305> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_3.emf
+    output: ../introgression/release-102/segmented/4_3 (dynamic)
+    jobid: 22
+    wildcards: chr=4, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/4_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_3.emf $i ../introgression/release-102/segmented/4_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 22 with external jobid 'Job <2193309> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/15_2.emf
+    output: ../introgression/release-102/segmented/15_2 (dynamic)
+    jobid: 29
+    wildcards: chr=15, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/15_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/15_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/15_2.emf $i ../introgression/release-102/segmented/15_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 29 with external jobid 'Job <2193313> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/14_2.emf
+    output: ../introgression/release-102/segmented/14_2 (dynamic)
+    jobid: 37
+    wildcards: chr=14, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/14_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_2.emf $i ../introgression/release-102/segmented/14_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 37 with external jobid 'Job <2193316> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_3.emf
+    output: ../introgression/release-102/segmented/10_3 (dynamic)
+    jobid: 44
+    wildcards: chr=10, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/10_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_3.emf $i ../introgression/release-102/segmented/10_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 44 with external jobid 'Job <2193317> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/14_1.emf
+    output: ../introgression/release-102/segmented/14_1 (dynamic)
+    jobid: 52
+    wildcards: chr=14, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/14_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/14_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/14_1.emf $i ../introgression/release-102/segmented/14_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 52 with external jobid 'Job <2193318> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/2_2.emf
+    output: ../introgression/release-102/segmented/2_2 (dynamic)
+    jobid: 8
+    wildcards: chr=2, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/2_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_2.emf $i ../introgression/release-102/segmented/2_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 8 with external jobid 'Job <2193319> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:54 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_2.emf
+    output: ../introgression/release-102/segmented/4_2 (dynamic)
+    jobid: 15
+    wildcards: chr=4, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/4_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_2.emf $i ../introgression/release-102/segmented/4_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 15 with external jobid 'Job <2193320> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_3.emf
+    output: ../introgression/release-102/segmented/9_3 (dynamic)
+    jobid: 23
+    wildcards: chr=9, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/9_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_3.emf $i ../introgression/release-102/segmented/9_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 23 with external jobid 'Job <2193321> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/12_1.emf
+    output: ../introgression/release-102/segmented/12_1 (dynamic)
+    jobid: 30
+    wildcards: chr=12, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/12_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_1.emf $i ../introgression/release-102/segmented/12_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 30 with external jobid 'Job <2193322> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_3.emf
+    output: ../introgression/release-102/segmented/16_3 (dynamic)
+    jobid: 38
+    wildcards: chr=16, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/16_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_3.emf $i ../introgression/release-102/segmented/16_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 38 with external jobid 'Job <2193323> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/11_1.emf
+    output: ../introgression/release-102/segmented/11_1 (dynamic)
+    jobid: 45
+    wildcards: chr=11, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/11_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/11_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/11_1.emf $i ../introgression/release-102/segmented/11_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 45 with external jobid 'Job <2193324> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/19_2.emf
+    output: ../introgression/release-102/segmented/19_2 (dynamic)
+    jobid: 53
+    wildcards: chr=19, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/19_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/19_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/19_2.emf $i ../introgression/release-102/segmented/19_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 53 with external jobid 'Job <2193326> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/9_1.emf
+    output: ../introgression/release-102/segmented/9_1 (dynamic)
+    jobid: 9
+    wildcards: chr=9, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/9_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/9_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/9_1.emf $i ../introgression/release-102/segmented/9_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 9 with external jobid 'Job <2193329> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/4_1.emf
+    output: ../introgression/release-102/segmented/4_1 (dynamic)
+    jobid: 16
+    wildcards: chr=4, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/4_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/4_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/4_1.emf $i ../introgression/release-102/segmented/4_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 16 with external jobid 'Job <2193331> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:55 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_3.emf
+    output: ../introgression/release-102/segmented/3_3 (dynamic)
+    jobid: 24
+    wildcards: chr=3, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/3_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_3.emf $i ../introgression/release-102/segmented/3_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 24 with external jobid 'Job <2193334> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/17_2.emf
+    output: ../introgression/release-102/segmented/17_2 (dynamic)
+    jobid: 31
+    wildcards: chr=17, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/17_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_2.emf $i ../introgression/release-102/segmented/17_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 31 with external jobid 'Job <2193337> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/12_2.emf
+    output: ../introgression/release-102/segmented/12_2 (dynamic)
+    jobid: 39
+    wildcards: chr=12, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/12_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/12_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/12_2.emf $i ../introgression/release-102/segmented/12_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 39 with external jobid 'Job <2193341> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_2.emf
+    output: ../introgression/release-102/segmented/13_2 (dynamic)
+    jobid: 46
+    wildcards: chr=13, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/13_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_2.emf $i ../introgression/release-102/segmented/13_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 46 with external jobid 'Job <2193345> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/18_2.emf
+    output: ../introgression/release-102/segmented/18_2 (dynamic)
+    jobid: 54
+    wildcards: chr=18, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/18_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/18_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/18_2.emf $i ../introgression/release-102/segmented/18_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 54 with external jobid 'Job <2193348> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/6_1.emf
+    output: ../introgression/release-102/segmented/6_1 (dynamic)
+    jobid: 2
+    wildcards: chr=6, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/6_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/6_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/6_1.emf $i ../introgression/release-102/segmented/6_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 2 with external jobid 'Job <2193350> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/3_1.emf
+    output: ../introgression/release-102/segmented/3_1 (dynamic)
+    jobid: 10
+    wildcards: chr=3, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/3_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/3_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/3_1.emf $i ../introgression/release-102/segmented/3_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 10 with external jobid 'Job <2193353> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_1.emf
+    output: ../introgression/release-102/segmented/5_1 (dynamic)
+    jobid: 17
+    wildcards: chr=5, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/5_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_1.emf $i ../introgression/release-102/segmented/5_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 17 with external jobid 'Job <2193355> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:56 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/5_2.emf
+    output: ../introgression/release-102/segmented/5_2 (dynamic)
+    jobid: 25
+    wildcards: chr=5, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/5_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_2.emf $i ../introgression/release-102/segmented/5_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 25 with external jobid 'Job <2193359> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:57 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/17_1.emf
+    output: ../introgression/release-102/segmented/17_1 (dynamic)
+    jobid: 32
+    wildcards: chr=17, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/17_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/17_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/17_1.emf $i ../introgression/release-102/segmented/17_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 32 with external jobid 'Job <2193363> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:57 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/10_2.emf
+    output: ../introgression/release-102/segmented/10_2 (dynamic)
+    jobid: 40
+    wildcards: chr=10, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/10_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/10_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/10_2.emf $i ../introgression/release-102/segmented/10_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 40 with external jobid 'Job <2193367> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:57 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/13_3.emf
+    output: ../introgression/release-102/segmented/13_3 (dynamic)
+    jobid: 47
+    wildcards: chr=13, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/13_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_3.emf $i ../introgression/release-102/segmented/13_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 47 with external jobid 'Job <2193372> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:57 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/20_1.emf
+    output: ../introgression/release-102/segmented/20_1 (dynamic)
+    jobid: 55
+    wildcards: chr=20, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/20_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/20_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/20_1.emf $i ../introgression/release-102/segmented/20_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 55 with external jobid 'Job <2193376> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:57 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/23_2.emf
+    output: ../introgression/release-102/segmented/23_2 (dynamic)
+    jobid: 3
+    wildcards: chr=23, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/23_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/23_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/23_2.emf $i ../introgression/release-102/segmented/23_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 3 with external jobid 'Job <2193379> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:58 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/22_1.emf
+    output: ../introgression/release-102/segmented/22_1 (dynamic)
+    jobid: 18
+    wildcards: chr=22, sub=1
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/22_1 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/22_1.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/22_1.emf $i ../introgression/release-102/segmented/22_1 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 18 with external jobid 'Job <2193383> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:58 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/16_2.emf
+    output: ../introgression/release-102/segmented/16_2 (dynamic)
+    jobid: 33
+    wildcards: chr=16, sub=2
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/16_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_2.emf $i ../introgression/release-102/segmented/16_2 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 33 with external jobid 'Job <2193388> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 11 11:26:58 2021]
+checkpoint split_segments:
+    input: ../introgression/release-102/unzipped/1_3.emf
+    output: ../introgression/release-102/segmented/1_3 (dynamic)
+    jobid: 48
+    wildcards: chr=1, sub=3
+Downstream jobs will be updated after completion.
+
+mkdir ../introgression/release-102/segmented/1_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/1_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/1_3.emf $i ../introgression/release-102/segmented/1_3 ;         done
+Subsequent jobs will be added dynamically depending on the output of this job
+Submitted job 48 with external jobid 'Job <2193391> is submitted to default queue <research-rh74>.'.
+[Thu Mar 11 11:27:20 2021]
+Error in rule split_segments:
+    jobid: 47
+    output: ../introgression/release-102/segmented/13_3 (dynamic)
+    shell:
+        mkdir ../introgression/release-102/segmented/13_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/13_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/13_3.emf $i ../introgression/release-102/segmented/13_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2193372> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 47, external: Job <2193372> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.oufslk7_/snakejob.split_segments.47.sh). For error details see the cluster log and the log files of the involved rule(s).
+Removing output files of failed job split_segments since they might be corrupted:
+../introgression/release-102/segmented/13_3
+Skipped removing non-empty directory ../introgression/release-102/segmented/13_3
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:28:49 2021]
+Error in rule split_segments:
+    jobid: 8
+    output: ../introgression/release-102/segmented/2_2 (dynamic)
+    shell:
+        mkdir ../introgression/release-102/segmented/2_2 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/2_2.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/2_2.emf $i ../introgression/release-102/segmented/2_2 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2193319> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 8, external: Job <2193319> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.oufslk7_/snakejob.split_segments.8.sh). For error details see the cluster log and the log files of the involved rule(s).
+Removing output files of failed job split_segments since they might be corrupted:
+../introgression/release-102/segmented/2_2
+Skipped removing non-empty directory ../introgression/release-102/segmented/2_2
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:31:34 2021]
+Error in rule split_segments:
+    jobid: 11
+    output: ../introgression/release-102/segmented/5_3 (dynamic)
+    shell:
+        mkdir ../introgression/release-102/segmented/5_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/5_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/5_3.emf $i ../introgression/release-102/segmented/5_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2193241> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 11, external: Job <2193241> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.oufslk7_/snakejob.split_segments.11.sh). For error details see the cluster log and the log files of the involved rule(s).
+Removing output files of failed job split_segments since they might be corrupted:
+../introgression/release-102/segmented/5_3
+Skipped removing non-empty directory ../introgression/release-102/segmented/5_3
+Job failed, going on with independent jobs.
+[Thu Mar 11 11:34:08 2021]
+Error in rule split_segments:
+    jobid: 38
+    output: ../introgression/release-102/segmented/16_3 (dynamic)
+    shell:
+        mkdir ../introgression/release-102/segmented/16_3 ;         segment_count=$(grep "^DATA" ../introgression/release-102/unzipped/16_3.emf | wc -l );         for i in $(seq 1 $segment_count ); do             code/scripts/introgression/20200907_extract-emf-segments.sh ../introgression/release-102/unzipped/16_3.emf $i ../introgression/release-102/segmented/16_3 ;         done
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2193323> is submitted to default queue <research-rh74>.
+
+Error executing rule split_segments on cluster (jobid: 38, external: Job <2193323> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.oufslk7_/snakejob.split_segments.38.sh). For error details see the cluster log and the log files of the involved rule(s).
+Removing output files of failed job split_segments since they might be corrupted:
+../introgression/release-102/segmented/16_3
+Skipped removing non-empty directory ../introgression/release-102/segmented/16_3
+Job failed, going on with independent jobs.
+Terminating processes on user request, this might take some time.
+Will exit after finishing currently running jobs.
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-11T112646.466146.snakemake.log
