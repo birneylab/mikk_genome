@@ -14,5 +14,21 @@
     "consolidate_subchrs" :
     {
         "memory" : "30000"
+    },
+    "create_no_sibs_vcf" :
+    {
+        "memory" : "30000"
+    },
+    "compress_no_sibs_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "index_no_sibs_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "remove_missing_no_sibs_vcf" :
+    {
+        "memory" : "10000"
     }
 }

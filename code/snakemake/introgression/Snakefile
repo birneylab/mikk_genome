@@ -1,5 +1,7 @@
-# Bash script to run on EBI cluster:
-#
+#####################
+# Bash script
+#####################
+
 # cd /hps/research1/birney/users/ian/opto_res/cos_opto_res
 # conda activate snakemake
 # snakemake \
@@ -14,10 +16,16 @@
 #   -s code/snakemake/20210203/Snakefile \
 #   -p
 
-# import functions and packages
+#####################
+# Libraries
+#####################
+
 import os.path
-#import pandas as pd
 import glob
+
+#####################
+# Variables
+#####################
 
 # Load config file and provide content as config object
 
@@ -27,6 +35,18 @@ configfile: "code/snakemake/introgression/config/config.yaml"
 
 ### Get list of files
 files = glob.glob(os.path.join(config["target_dir"], "segmented/*/*.data.txt"))
+
+### Remove error files
+errors = ['../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt',
+          '../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt',
+          '../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt',
+          '../introgression/release-102/segmented/24_2/24_16480574_16483416_-1.data.txt',
+          '../introgression/release-102/segmented/11_2/11_21065274_21099126_-1.data.txt']
+
+for error in errors:
+    while error in files:
+        files.remove(error)
+
 ### get chr and sub_chr
 CHRS = []
 SUBCHRS = []
@@ -39,8 +59,9 @@ for file in files:
     SEGMENTS.append("_".join(target_segment))
     STRANDS.append(file.split('/')[5].split('_')[3].split('.')[0])
 
-
+#####################
 # Rules
+#####################
 
 rule all:
     input:
@@ -53,7 +74,11 @@ rule all:
         expand(os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt"),
                 zip,
                 chr = CHRS,
-                subchr = SUBCHRS)
+                subchr = SUBCHRS),
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf"),
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz"),
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz.tbi"),
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz")
 
 rule add_hdrr_coords:
     input:
@@ -72,9 +97,68 @@ rule consolidate_subchrs:
         os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}")
     output:
         os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt")
- #   params:
- #       in_dir = lambda wildcards: os.path.join(config["target_dir"], "cleaned", wildcards.chr + "_" wildcards.subchr)
     singularity:
         config["sing_cont_r"]        
     shell:
         "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_subchr_script]} {input} {output}"
+
+rule create_no_sibs_vcf:
+    input:
+        config["mikk_ill_vcf"]
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view --samples-file {config[no_sibs_cramid]} --output-type u {input} |\
+            bcftools reheader \
+                --samples {config[cramid_2_lineid_key]} \
+                --output {output}
+        """
+
+rule compress_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+rule index_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
+        """    
+
+rule remove_missing_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --genotype ^miss \
+            --output-type z \
+            --output {output} \
+            {input}
+        """
+        
+
+

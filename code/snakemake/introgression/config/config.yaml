@@ -14,3 +14,14 @@ add_coord_script_reverse:
     "code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R"
 consol_subchr_script:
     "code/scripts/introgression/20201015_consolidate_chr_dat.R"
+vcf_dir:
+    "../introgression/vcfs"
+mikk_ill_vcf:
+    "/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf"
+bcftools:
+    "../sing_conts/bcftools.sif"
+no_sibs_cramid:
+    "data/20200227_cram2line_no-sibs_cram-only.txt"    
+cramid_2_lineid_key:
+    "data/20200206_cram_id_to_line_id.txt"
+
