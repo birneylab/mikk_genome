@@ -2,18 +2,20 @@
 # Bash script
 #####################
 
-# cd /hps/research1/birney/users/ian/opto_res/cos_opto_res
+# cd /hps/research1/birney/users/ian/mikk_paper/mikk_genome
 # conda activate snakemake
+# module load singularity
+# snmk_proj="introgression"
 # snakemake \
 #   --jobs 5000 \
 #   --latency-wait 100 \
-#   --cluster-config code/snakemake/20210203/config/cluster.json \
+#   --cluster-config code/snakemake/$snmk_proj/config/cluster.json \
 #   --cluster 'bsub -g /snakemake_bgenie -J {cluster.name} -n {cluster.n} -M {cluster.memory} -o {cluster.output} -e {cluster.error}' \
 #   --keep-going \
 #   --rerun-incomplete \
 #   --use-conda \
 #   --use-singularity \
-#   -s code/snakemake/20210203/Snakefile \
+#   -s code/snakemake/$snmk_proj/Snakefile \
 #   -p
 
 #####################
@@ -36,7 +38,7 @@ configfile: "code/snakemake/introgression/config/config.yaml"
 ### Get list of files
 files = glob.glob(os.path.join(config["target_dir"], "segmented/*/*.data.txt"))
 
-### Remove error files
+### Remove files generating errors at the `add_hdrr_coords` stage
 errors = ['../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt',
           '../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt',
           '../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt',
@@ -156,7 +158,7 @@ rule remove_missing_no_sibs_vcf:
         bcftools view \
             --genotype ^miss \
             --output-type z \
-            --output {output} \
+            --output-file {output} \
             {input}
         """
         

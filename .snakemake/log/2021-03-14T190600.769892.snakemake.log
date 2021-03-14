@@ -1,0 +1,66 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	compress_no_sibs_vcf
+	1	index_no_sibs_vcf
+	1	remove_missing_no_sibs_vcf
+	4
+Select jobs to execute...
+
+[Sun Mar 14 19:08:05 2021]
+rule compress_no_sibs_vcf:
+    input: ../introgression/vcfs/ill_no-sibs.vcf
+    output: ../introgression/vcfs/ill_no-sibs.vcf.gz
+    jobid: 9005
+
+
+        bcftools view             --output-type z             --output-file ../introgression/vcfs/ill_no-sibs.vcf.gz             ../introgression/vcfs/ill_no-sibs.vcf
+        
+Submitted job 9005 with external jobid 'Job <2472762> is submitted to default queue <research-rh74>.'.
+[Sun Mar 14 19:30:53 2021]
+Finished job 9005.
+1 of 4 steps (25%) done
+Select jobs to execute...
+
+[Sun Mar 14 19:30:53 2021]
+rule remove_missing_no_sibs_vcf:
+    input: ../introgression/vcfs/ill_no-sibs.vcf.gz
+    output: ../introgression/vcfs/ill_no-sibs_no-missing.vcf.gz
+    jobid: 9007
+
+
+        bcftools view             --genotype ^miss             --output-type z             --output ../introgression/vcfs/ill_no-sibs_no-missing.vcf.gz             ../introgression/vcfs/ill_no-sibs.vcf.gz
+        
+Submitted job 9007 with external jobid 'Job <2473256> is submitted to default queue <research-rh74>.'.
+
+[Sun Mar 14 19:30:53 2021]
+rule index_no_sibs_vcf:
+    input: ../introgression/vcfs/ill_no-sibs.vcf.gz
+    output: ../introgression/vcfs/ill_no-sibs.vcf.gz.tbi
+    jobid: 9006
+
+
+        bcftools index --tbi ../introgression/vcfs/ill_no-sibs.vcf.gz
+        
+Submitted job 9006 with external jobid 'Job <2473257> is submitted to default queue <research-rh74>.'.
+[Sun Mar 14 19:31:03 2021]
+Error in rule remove_missing_no_sibs_vcf:
+    jobid: 9007
+    output: ../introgression/vcfs/ill_no-sibs_no-missing.vcf.gz
+    shell:
+        
+        bcftools view             --genotype ^miss             --output-type z             --output ../introgression/vcfs/ill_no-sibs_no-missing.vcf.gz             ../introgression/vcfs/ill_no-sibs.vcf.gz
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2473256> is submitted to default queue <research-rh74>.
+
+Error executing rule remove_missing_no_sibs_vcf on cluster (jobid: 9007, external: Job <2473256> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.icx42m17/snakejob.remove_missing_no_sibs_vcf.9007.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Sun Mar 14 19:34:37 2021]
+Finished job 9006.
+2 of 4 steps (50%) done
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-14T190600.769892.snakemake.log
