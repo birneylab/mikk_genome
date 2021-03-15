@@ -110,7 +110,7 @@ rule all:
                 p1 = P1S,
                 p2 = P2S,
                 p3 = P3S),
-        "data/introgression/20210315_f_stat_final.txt"
+        os.path.join(config["abba_baba_dir"], "final/f_stat_final.txt")
 
 rule add_hdrr_coords:
     input:
@@ -330,7 +330,7 @@ rule combine_rlists:
     input:
         os.path.join(config["abba_baba_dir"], "rlists")
     output:
-        "data/introgression/20210315_f_stat_final.txt"
+        os.path.join(config["abba_baba_dir"], "final/f_stat_final.txt")
     singularity:
         config["sing_cont_r"]
     shell:

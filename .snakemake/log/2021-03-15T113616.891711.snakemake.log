@@ -1,0 +1,1211 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	48	combine_emf_and_maf
+	49
+Select jobs to execute...
+
+[Mon Mar 15 11:39:27 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/2.txt, ../introgression/mafs/split_by_chr_1/2.txt
+    output: ../introgression/freq_tables/mikk_1/2.txt
+    jobid: 9101
+    wildcards: group=1, chr=2
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 2 ../introgression/release-102/final/2.txt ../introgression/mafs/split_by_chr_1/2.txt ../introgression/freq_tables/mikk_1/2.txt
+        
+Submitted job 9101 with external jobid 'Job <2552184> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:27 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/18.txt, ../introgression/mafs/split_by_chr_1/18.txt
+    output: ../introgression/freq_tables/mikk_1/18.txt
+    jobid: 9108
+    wildcards: group=1, chr=18
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 18 ../introgression/release-102/final/18.txt ../introgression/mafs/split_by_chr_1/18.txt ../introgression/freq_tables/mikk_1/18.txt
+        
+Submitted job 9108 with external jobid 'Job <2552185> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:27 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/22.txt, ../introgression/mafs/split_by_chr_1/22.txt
+    output: ../introgression/freq_tables/mikk_1/22.txt
+    jobid: 9086
+    wildcards: group=1, chr=22
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 22 ../introgression/release-102/final/22.txt ../introgression/mafs/split_by_chr_1/22.txt ../introgression/freq_tables/mikk_1/22.txt
+        
+Submitted job 9086 with external jobid 'Job <2552186> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:27 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/15.txt, ../introgression/mafs/split_by_chr_1/15.txt
+    output: ../introgression/freq_tables/mikk_1/15.txt
+    jobid: 9093
+    wildcards: group=1, chr=15
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 15 ../introgression/release-102/final/15.txt ../introgression/mafs/split_by_chr_1/15.txt ../introgression/freq_tables/mikk_1/15.txt
+        
+Submitted job 9093 with external jobid 'Job <2552187> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:27 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/6.txt, ../introgression/mafs/split_by_chr_2/6.txt
+    output: ../introgression/freq_tables/mikk_2/6.txt
+    jobid: 9116
+    wildcards: group=2, chr=6
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 6 ../introgression/release-102/final/6.txt ../introgression/mafs/split_by_chr_2/6.txt ../introgression/freq_tables/mikk_2/6.txt
+        
+Submitted job 9116 with external jobid 'Job <2552189> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/4.txt, ../introgression/mafs/split_by_chr_2/4.txt
+    output: ../introgression/freq_tables/mikk_2/4.txt
+    jobid: 9123
+    wildcards: group=2, chr=4
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 4 ../introgression/release-102/final/4.txt ../introgression/mafs/split_by_chr_2/4.txt ../introgression/freq_tables/mikk_2/4.txt
+        
+Submitted job 9123 with external jobid 'Job <2552190> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/9.txt, ../introgression/mafs/split_by_chr_2/9.txt
+    output: ../introgression/freq_tables/mikk_2/9.txt
+    jobid: 9131
+    wildcards: group=2, chr=9
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 9 ../introgression/release-102/final/9.txt ../introgression/mafs/split_by_chr_2/9.txt ../introgression/freq_tables/mikk_2/9.txt
+        
+Submitted job 9131 with external jobid 'Job <2552192> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/16.txt, ../introgression/mafs/split_by_chr_1/16.txt
+    output: ../introgression/freq_tables/mikk_1/16.txt
+    jobid: 9087
+    wildcards: group=1, chr=16
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 16 ../introgression/release-102/final/16.txt ../introgression/mafs/split_by_chr_1/16.txt ../introgression/freq_tables/mikk_1/16.txt
+        
+Submitted job 9087 with external jobid 'Job <2552193> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/1.txt, ../introgression/mafs/split_by_chr_1/1.txt
+    output: ../introgression/freq_tables/mikk_1/1.txt
+    jobid: 9094
+    wildcards: group=1, chr=1
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 1 ../introgression/release-102/final/1.txt ../introgression/mafs/split_by_chr_1/1.txt ../introgression/freq_tables/mikk_1/1.txt
+        
+Submitted job 9094 with external jobid 'Job <2552194> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/7.txt, ../introgression/mafs/split_by_chr_1/7.txt
+    output: ../introgression/freq_tables/mikk_1/7.txt
+    jobid: 9102
+    wildcards: group=1, chr=7
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 7 ../introgression/release-102/final/7.txt ../introgression/mafs/split_by_chr_1/7.txt ../introgression/freq_tables/mikk_1/7.txt
+        
+Submitted job 9102 with external jobid 'Job <2552195> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:28 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/8.txt, ../introgression/mafs/split_by_chr_2/8.txt
+    output: ../introgression/freq_tables/mikk_2/8.txt
+    jobid: 9109
+    wildcards: group=2, chr=8
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 8 ../introgression/release-102/final/8.txt ../introgression/mafs/split_by_chr_2/8.txt ../introgression/freq_tables/mikk_2/8.txt
+        
+Submitted job 9109 with external jobid 'Job <2552196> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/15.txt, ../introgression/mafs/split_by_chr_2/15.txt
+    output: ../introgression/freq_tables/mikk_2/15.txt
+    jobid: 9117
+    wildcards: group=2, chr=15
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 15 ../introgression/release-102/final/15.txt ../introgression/mafs/split_by_chr_2/15.txt ../introgression/freq_tables/mikk_2/15.txt
+        
+Submitted job 9117 with external jobid 'Job <2552197> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/10.txt, ../introgression/mafs/split_by_chr_2/10.txt
+    output: ../introgression/freq_tables/mikk_2/10.txt
+    jobid: 9124
+    wildcards: group=2, chr=10
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 10 ../introgression/release-102/final/10.txt ../introgression/mafs/split_by_chr_2/10.txt ../introgression/freq_tables/mikk_2/10.txt
+        
+Submitted job 9124 with external jobid 'Job <2552198> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/18.txt, ../introgression/mafs/split_by_chr_2/18.txt
+    output: ../introgression/freq_tables/mikk_2/18.txt
+    jobid: 9132
+    wildcards: group=2, chr=18
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 18 ../introgression/release-102/final/18.txt ../introgression/mafs/split_by_chr_2/18.txt ../introgression/freq_tables/mikk_2/18.txt
+        
+Submitted job 9132 with external jobid 'Job <2552199> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/1.txt, ../introgression/mafs/split_by_chr_2/1.txt
+    output: ../introgression/freq_tables/mikk_2/1.txt
+    jobid: 9118
+    wildcards: group=2, chr=1
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 1 ../introgression/release-102/final/1.txt ../introgression/mafs/split_by_chr_2/1.txt ../introgression/freq_tables/mikk_2/1.txt
+        
+Submitted job 9118 with external jobid 'Job <2552200> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/5.txt, ../introgression/mafs/split_by_chr_1/5.txt
+    output: ../introgression/freq_tables/mikk_1/5.txt
+    jobid: 9088
+    wildcards: group=1, chr=5
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 5 ../introgression/release-102/final/5.txt ../introgression/mafs/split_by_chr_1/5.txt ../introgression/freq_tables/mikk_1/5.txt
+        
+Submitted job 9088 with external jobid 'Job <2552201> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:29 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/23.txt, ../introgression/mafs/split_by_chr_1/23.txt
+    output: ../introgression/freq_tables/mikk_1/23.txt
+    jobid: 9095
+    wildcards: group=1, chr=23
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 23 ../introgression/release-102/final/23.txt ../introgression/mafs/split_by_chr_1/23.txt ../introgression/freq_tables/mikk_1/23.txt
+        
+Submitted job 9095 with external jobid 'Job <2552202> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/24.txt, ../introgression/mafs/split_by_chr_1/24.txt
+    output: ../introgression/freq_tables/mikk_1/24.txt
+    jobid: 9103
+    wildcards: group=1, chr=24
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 24 ../introgression/release-102/final/24.txt ../introgression/mafs/split_by_chr_1/24.txt ../introgression/freq_tables/mikk_1/24.txt
+        
+Submitted job 9103 with external jobid 'Job <2552203> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/22.txt, ../introgression/mafs/split_by_chr_2/22.txt
+    output: ../introgression/freq_tables/mikk_2/22.txt
+    jobid: 9110
+    wildcards: group=2, chr=22
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 22 ../introgression/release-102/final/22.txt ../introgression/mafs/split_by_chr_2/22.txt ../introgression/freq_tables/mikk_2/22.txt
+        
+Submitted job 9110 with external jobid 'Job <2552204> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/2.txt, ../introgression/mafs/split_by_chr_2/2.txt
+    output: ../introgression/freq_tables/mikk_2/2.txt
+    jobid: 9125
+    wildcards: group=2, chr=2
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 2 ../introgression/release-102/final/2.txt ../introgression/mafs/split_by_chr_2/2.txt ../introgression/freq_tables/mikk_2/2.txt
+        
+Submitted job 9125 with external jobid 'Job <2552205> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/13.txt, ../introgression/mafs/split_by_chr_1/13.txt
+    output: ../introgression/freq_tables/mikk_1/13.txt
+    jobid: 9089
+    wildcards: group=1, chr=13
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 13 ../introgression/release-102/final/13.txt ../introgression/mafs/split_by_chr_1/13.txt ../introgression/freq_tables/mikk_1/13.txt
+        
+Submitted job 9089 with external jobid 'Job <2552206> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/12.txt, ../introgression/mafs/split_by_chr_1/12.txt
+    output: ../introgression/freq_tables/mikk_1/12.txt
+    jobid: 9096
+    wildcards: group=1, chr=12
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 12 ../introgression/release-102/final/12.txt ../introgression/mafs/split_by_chr_1/12.txt ../introgression/freq_tables/mikk_1/12.txt
+        
+Submitted job 9096 with external jobid 'Job <2552207> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:30 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/21.txt, ../introgression/mafs/split_by_chr_1/21.txt
+    output: ../introgression/freq_tables/mikk_1/21.txt
+    jobid: 9104
+    wildcards: group=1, chr=21
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 21 ../introgression/release-102/final/21.txt ../introgression/mafs/split_by_chr_1/21.txt ../introgression/freq_tables/mikk_1/21.txt
+        
+Submitted job 9104 with external jobid 'Job <2552208> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:31 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/16.txt, ../introgression/mafs/split_by_chr_2/16.txt
+    output: ../introgression/freq_tables/mikk_2/16.txt
+    jobid: 9111
+    wildcards: group=2, chr=16
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 16 ../introgression/release-102/final/16.txt ../introgression/mafs/split_by_chr_2/16.txt ../introgression/freq_tables/mikk_2/16.txt
+        
+Submitted job 9111 with external jobid 'Job <2552209> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:31 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/23.txt, ../introgression/mafs/split_by_chr_2/23.txt
+    output: ../introgression/freq_tables/mikk_2/23.txt
+    jobid: 9119
+    wildcards: group=2, chr=23
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 23 ../introgression/release-102/final/23.txt ../introgression/mafs/split_by_chr_2/23.txt ../introgression/freq_tables/mikk_2/23.txt
+        
+Submitted job 9119 with external jobid 'Job <2552210> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:31 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/7.txt, ../introgression/mafs/split_by_chr_2/7.txt
+    output: ../introgression/freq_tables/mikk_2/7.txt
+    jobid: 9126
+    wildcards: group=2, chr=7
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 7 ../introgression/release-102/final/7.txt ../introgression/mafs/split_by_chr_2/7.txt ../introgression/freq_tables/mikk_2/7.txt
+        
+Submitted job 9126 with external jobid 'Job <2552211> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:31 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/3.txt, ../introgression/mafs/split_by_chr_1/3.txt
+    output: ../introgression/freq_tables/mikk_1/3.txt
+    jobid: 9090
+    wildcards: group=1, chr=3
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 3 ../introgression/release-102/final/3.txt ../introgression/mafs/split_by_chr_1/3.txt ../introgression/freq_tables/mikk_1/3.txt
+        
+Submitted job 9090 with external jobid 'Job <2552212> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:31 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/20.txt, ../introgression/mafs/split_by_chr_1/20.txt
+    output: ../introgression/freq_tables/mikk_1/20.txt
+    jobid: 9097
+    wildcards: group=1, chr=20
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 20 ../introgression/release-102/final/20.txt ../introgression/mafs/split_by_chr_1/20.txt ../introgression/freq_tables/mikk_1/20.txt
+        
+Submitted job 9097 with external jobid 'Job <2552213> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:32 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/14.txt, ../introgression/mafs/split_by_chr_1/14.txt
+    output: ../introgression/freq_tables/mikk_1/14.txt
+    jobid: 9105
+    wildcards: group=1, chr=14
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 14 ../introgression/release-102/final/14.txt ../introgression/mafs/split_by_chr_1/14.txt ../introgression/freq_tables/mikk_1/14.txt
+        
+Submitted job 9105 with external jobid 'Job <2552214> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:32 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/5.txt, ../introgression/mafs/split_by_chr_2/5.txt
+    output: ../introgression/freq_tables/mikk_2/5.txt
+    jobid: 9112
+    wildcards: group=2, chr=5
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 5 ../introgression/release-102/final/5.txt ../introgression/mafs/split_by_chr_2/5.txt ../introgression/freq_tables/mikk_2/5.txt
+        
+Submitted job 9112 with external jobid 'Job <2552215> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/12.txt, ../introgression/mafs/split_by_chr_2/12.txt
+    output: ../introgression/freq_tables/mikk_2/12.txt
+    jobid: 9120
+    wildcards: group=2, chr=12
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 12 ../introgression/release-102/final/12.txt ../introgression/mafs/split_by_chr_2/12.txt ../introgression/freq_tables/mikk_2/12.txt
+        
+Submitted job 9120 with external jobid 'Job <2552216> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/24.txt, ../introgression/mafs/split_by_chr_2/24.txt
+    output: ../introgression/freq_tables/mikk_2/24.txt
+    jobid: 9127
+    wildcards: group=2, chr=24
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 24 ../introgression/release-102/final/24.txt ../introgression/mafs/split_by_chr_2/24.txt ../introgression/freq_tables/mikk_2/24.txt
+        
+Submitted job 9127 with external jobid 'Job <2552217> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/17.txt, ../introgression/mafs/split_by_chr_1/17.txt
+    output: ../introgression/freq_tables/mikk_1/17.txt
+    jobid: 9091
+    wildcards: group=1, chr=17
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 17 ../introgression/release-102/final/17.txt ../introgression/mafs/split_by_chr_1/17.txt ../introgression/freq_tables/mikk_1/17.txt
+        
+Submitted job 9091 with external jobid 'Job <2552220> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/19.txt, ../introgression/mafs/split_by_chr_1/19.txt
+    output: ../introgression/freq_tables/mikk_1/19.txt
+    jobid: 9098
+    wildcards: group=1, chr=19
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 19 ../introgression/release-102/final/19.txt ../introgression/mafs/split_by_chr_1/19.txt ../introgression/freq_tables/mikk_1/19.txt
+        
+Submitted job 9098 with external jobid 'Job <2552221> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/11.txt, ../introgression/mafs/split_by_chr_1/11.txt
+    output: ../introgression/freq_tables/mikk_1/11.txt
+    jobid: 9106
+    wildcards: group=1, chr=11
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 11 ../introgression/release-102/final/11.txt ../introgression/mafs/split_by_chr_1/11.txt ../introgression/freq_tables/mikk_1/11.txt
+        
+Submitted job 9106 with external jobid 'Job <2552222> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:33 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/13.txt, ../introgression/mafs/split_by_chr_2/13.txt
+    output: ../introgression/freq_tables/mikk_2/13.txt
+    jobid: 9113
+    wildcards: group=2, chr=13
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 13 ../introgression/release-102/final/13.txt ../introgression/mafs/split_by_chr_2/13.txt ../introgression/freq_tables/mikk_2/13.txt
+        
+Submitted job 9113 with external jobid 'Job <2552223> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:34 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/20.txt, ../introgression/mafs/split_by_chr_2/20.txt
+    output: ../introgression/freq_tables/mikk_2/20.txt
+    jobid: 9121
+    wildcards: group=2, chr=20
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 20 ../introgression/release-102/final/20.txt ../introgression/mafs/split_by_chr_2/20.txt ../introgression/freq_tables/mikk_2/20.txt
+        
+Submitted job 9121 with external jobid 'Job <2552224> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:34 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/21.txt, ../introgression/mafs/split_by_chr_2/21.txt
+    output: ../introgression/freq_tables/mikk_2/21.txt
+    jobid: 9128
+    wildcards: group=2, chr=21
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 21 ../introgression/release-102/final/21.txt ../introgression/mafs/split_by_chr_2/21.txt ../introgression/freq_tables/mikk_2/21.txt
+        
+Submitted job 9128 with external jobid 'Job <2552225> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:34 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/6.txt, ../introgression/mafs/split_by_chr_1/6.txt
+    output: ../introgression/freq_tables/mikk_1/6.txt
+    jobid: 9092
+    wildcards: group=1, chr=6
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 6 ../introgression/release-102/final/6.txt ../introgression/mafs/split_by_chr_1/6.txt ../introgression/freq_tables/mikk_1/6.txt
+        
+Submitted job 9092 with external jobid 'Job <2552226> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:34 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/4.txt, ../introgression/mafs/split_by_chr_1/4.txt
+    output: ../introgression/freq_tables/mikk_1/4.txt
+    jobid: 9099
+    wildcards: group=1, chr=4
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 4 ../introgression/release-102/final/4.txt ../introgression/mafs/split_by_chr_1/4.txt ../introgression/freq_tables/mikk_1/4.txt
+        
+Submitted job 9099 with external jobid 'Job <2552227> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:34 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/9.txt, ../introgression/mafs/split_by_chr_1/9.txt
+    output: ../introgression/freq_tables/mikk_1/9.txt
+    jobid: 9107
+    wildcards: group=1, chr=9
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 9 ../introgression/release-102/final/9.txt ../introgression/mafs/split_by_chr_1/9.txt ../introgression/freq_tables/mikk_1/9.txt
+        
+Submitted job 9107 with external jobid 'Job <2552228> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/3.txt, ../introgression/mafs/split_by_chr_2/3.txt
+    output: ../introgression/freq_tables/mikk_2/3.txt
+    jobid: 9114
+    wildcards: group=2, chr=3
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 3 ../introgression/release-102/final/3.txt ../introgression/mafs/split_by_chr_2/3.txt ../introgression/freq_tables/mikk_2/3.txt
+        
+Submitted job 9114 with external jobid 'Job <2552229> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/19.txt, ../introgression/mafs/split_by_chr_2/19.txt
+    output: ../introgression/freq_tables/mikk_2/19.txt
+    jobid: 9122
+    wildcards: group=2, chr=19
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 19 ../introgression/release-102/final/19.txt ../introgression/mafs/split_by_chr_2/19.txt ../introgression/freq_tables/mikk_2/19.txt
+        
+Submitted job 9122 with external jobid 'Job <2552230> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/14.txt, ../introgression/mafs/split_by_chr_2/14.txt
+    output: ../introgression/freq_tables/mikk_2/14.txt
+    jobid: 9129
+    wildcards: group=2, chr=14
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 14 ../introgression/release-102/final/14.txt ../introgression/mafs/split_by_chr_2/14.txt ../introgression/freq_tables/mikk_2/14.txt
+        
+Submitted job 9129 with external jobid 'Job <2552231> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/8.txt, ../introgression/mafs/split_by_chr_1/8.txt
+    output: ../introgression/freq_tables/mikk_1/8.txt
+    jobid: 9085
+    wildcards: group=1, chr=8
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 8 ../introgression/release-102/final/8.txt ../introgression/mafs/split_by_chr_1/8.txt ../introgression/freq_tables/mikk_1/8.txt
+        
+Submitted job 9085 with external jobid 'Job <2552232> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/10.txt, ../introgression/mafs/split_by_chr_1/10.txt
+    output: ../introgression/freq_tables/mikk_1/10.txt
+    jobid: 9100
+    wildcards: group=1, chr=10
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 10 ../introgression/release-102/final/10.txt ../introgression/mafs/split_by_chr_1/10.txt ../introgression/freq_tables/mikk_1/10.txt
+        
+Submitted job 9100 with external jobid 'Job <2552233> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:35 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/17.txt, ../introgression/mafs/split_by_chr_2/17.txt
+    output: ../introgression/freq_tables/mikk_2/17.txt
+    jobid: 9115
+    wildcards: group=2, chr=17
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 17 ../introgression/release-102/final/17.txt ../introgression/mafs/split_by_chr_2/17.txt ../introgression/freq_tables/mikk_2/17.txt
+        
+Submitted job 9115 with external jobid 'Job <2552234> is submitted to default queue <research-rh74>.'.
+
+[Mon Mar 15 11:39:36 2021]
+rule combine_emf_and_maf:
+    input: ../introgression/release-102/final/11.txt, ../introgression/mafs/split_by_chr_2/11.txt
+    output: ../introgression/freq_tables/mikk_2/11.txt
+    jobid: 9130
+    wildcards: group=2, chr=11
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 11 ../introgression/release-102/final/11.txt ../introgression/mafs/split_by_chr_2/11.txt ../introgression/freq_tables/mikk_2/11.txt
+        
+[Mon Mar 15 11:39:36 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9101
+    output: ../introgression/freq_tables/mikk_1/2.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 2 ../introgression/release-102/final/2.txt ../introgression/mafs/split_by_chr_1/2.txt ../introgression/freq_tables/mikk_1/2.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552184> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9101, external: Job <2552184> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9101.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:36 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9108
+    output: ../introgression/freq_tables/mikk_1/18.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 18 ../introgression/release-102/final/18.txt ../introgression/mafs/split_by_chr_1/18.txt ../introgression/freq_tables/mikk_1/18.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552185> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9108, external: Job <2552185> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9108.sh). For error details see the cluster log and the log files of the involved rule(s).
+Submitted job 9130 with external jobid 'Job <2552235> is submitted to default queue <research-rh74>.'.
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:36 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9086
+    output: ../introgression/freq_tables/mikk_1/22.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 22 ../introgression/release-102/final/22.txt ../introgression/mafs/split_by_chr_1/22.txt ../introgression/freq_tables/mikk_1/22.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552186> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9086, external: Job <2552186> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9086.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:36 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9093
+    output: ../introgression/freq_tables/mikk_1/15.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 15 ../introgression/release-102/final/15.txt ../introgression/mafs/split_by_chr_1/15.txt ../introgression/freq_tables/mikk_1/15.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552187> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9093, external: Job <2552187> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9093.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:37 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9109
+    output: ../introgression/freq_tables/mikk_2/8.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 8 ../introgression/release-102/final/8.txt ../introgression/mafs/split_by_chr_2/8.txt ../introgression/freq_tables/mikk_2/8.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552196> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9109, external: Job <2552196> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9109.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:37 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9088
+    output: ../introgression/freq_tables/mikk_1/5.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 5 ../introgression/release-102/final/5.txt ../introgression/mafs/split_by_chr_1/5.txt ../introgression/freq_tables/mikk_1/5.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552201> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9088, external: Job <2552201> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9088.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:37 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9095
+    output: ../introgression/freq_tables/mikk_1/23.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 23 ../introgression/release-102/final/23.txt ../introgression/mafs/split_by_chr_1/23.txt ../introgression/freq_tables/mikk_1/23.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552202> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9095, external: Job <2552202> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9095.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:38 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9089
+    output: ../introgression/freq_tables/mikk_1/13.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 13 ../introgression/release-102/final/13.txt ../introgression/mafs/split_by_chr_1/13.txt ../introgression/freq_tables/mikk_1/13.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552206> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9089, external: Job <2552206> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9089.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:39 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9127
+    output: ../introgression/freq_tables/mikk_2/24.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 24 ../introgression/release-102/final/24.txt ../introgression/mafs/split_by_chr_2/24.txt ../introgression/freq_tables/mikk_2/24.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552217> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9127, external: Job <2552217> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9127.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:39 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9121
+    output: ../introgression/freq_tables/mikk_2/20.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 20 ../introgression/release-102/final/20.txt ../introgression/mafs/split_by_chr_2/20.txt ../introgression/freq_tables/mikk_2/20.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552224> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9121, external: Job <2552224> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9121.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:39 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9128
+    output: ../introgression/freq_tables/mikk_2/21.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 21 ../introgression/release-102/final/21.txt ../introgression/mafs/split_by_chr_2/21.txt ../introgression/freq_tables/mikk_2/21.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552225> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9128, external: Job <2552225> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9128.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:39 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9099
+    output: ../introgression/freq_tables/mikk_1/4.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 4 ../introgression/release-102/final/4.txt ../introgression/mafs/split_by_chr_1/4.txt ../introgression/freq_tables/mikk_1/4.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552227> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9099, external: Job <2552227> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9099.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:40 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9107
+    output: ../introgression/freq_tables/mikk_1/9.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 9 ../introgression/release-102/final/9.txt ../introgression/mafs/split_by_chr_1/9.txt ../introgression/freq_tables/mikk_1/9.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552228> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9107, external: Job <2552228> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9107.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:40 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9085
+    output: ../introgression/freq_tables/mikk_1/8.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 8 ../introgression/release-102/final/8.txt ../introgression/mafs/split_by_chr_1/8.txt ../introgression/freq_tables/mikk_1/8.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552232> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9085, external: Job <2552232> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9085.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:40 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9100
+    output: ../introgression/freq_tables/mikk_1/10.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 10 ../introgression/release-102/final/10.txt ../introgression/mafs/split_by_chr_1/10.txt ../introgression/freq_tables/mikk_1/10.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552233> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9100, external: Job <2552233> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9100.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:40 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9115
+    output: ../introgression/freq_tables/mikk_2/17.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 17 ../introgression/release-102/final/17.txt ../introgression/mafs/split_by_chr_2/17.txt ../introgression/freq_tables/mikk_2/17.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552234> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9115, external: Job <2552234> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9115.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:50 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9130
+    output: ../introgression/freq_tables/mikk_2/11.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 11 ../introgression/release-102/final/11.txt ../introgression/mafs/split_by_chr_2/11.txt ../introgression/freq_tables/mikk_2/11.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552235> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9130, external: Job <2552235> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9130.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:50 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9116
+    output: ../introgression/freq_tables/mikk_2/6.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 6 ../introgression/release-102/final/6.txt ../introgression/mafs/split_by_chr_2/6.txt ../introgression/freq_tables/mikk_2/6.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552189> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9116, external: Job <2552189> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9116.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:50 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9123
+    output: ../introgression/freq_tables/mikk_2/4.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 4 ../introgression/release-102/final/4.txt ../introgression/mafs/split_by_chr_2/4.txt ../introgression/freq_tables/mikk_2/4.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552190> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9123, external: Job <2552190> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9123.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9131
+    output: ../introgression/freq_tables/mikk_2/9.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 9 ../introgression/release-102/final/9.txt ../introgression/mafs/split_by_chr_2/9.txt ../introgression/freq_tables/mikk_2/9.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552192> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9131, external: Job <2552192> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9131.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9087
+    output: ../introgression/freq_tables/mikk_1/16.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 16 ../introgression/release-102/final/16.txt ../introgression/mafs/split_by_chr_1/16.txt ../introgression/freq_tables/mikk_1/16.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552193> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9087, external: Job <2552193> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9087.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9094
+    output: ../introgression/freq_tables/mikk_1/1.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 1 ../introgression/release-102/final/1.txt ../introgression/mafs/split_by_chr_1/1.txt ../introgression/freq_tables/mikk_1/1.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552194> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9094, external: Job <2552194> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9094.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9102
+    output: ../introgression/freq_tables/mikk_1/7.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 7 ../introgression/release-102/final/7.txt ../introgression/mafs/split_by_chr_1/7.txt ../introgression/freq_tables/mikk_1/7.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552195> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9102, external: Job <2552195> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9102.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9117
+    output: ../introgression/freq_tables/mikk_2/15.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 15 ../introgression/release-102/final/15.txt ../introgression/mafs/split_by_chr_2/15.txt ../introgression/freq_tables/mikk_2/15.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552197> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9117, external: Job <2552197> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9117.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9124
+    output: ../introgression/freq_tables/mikk_2/10.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 10 ../introgression/release-102/final/10.txt ../introgression/mafs/split_by_chr_2/10.txt ../introgression/freq_tables/mikk_2/10.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552198> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9124, external: Job <2552198> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9124.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9132
+    output: ../introgression/freq_tables/mikk_2/18.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 18 ../introgression/release-102/final/18.txt ../introgression/mafs/split_by_chr_2/18.txt ../introgression/freq_tables/mikk_2/18.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552199> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9132, external: Job <2552199> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9132.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:51 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9118
+    output: ../introgression/freq_tables/mikk_2/1.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 1 ../introgression/release-102/final/1.txt ../introgression/mafs/split_by_chr_2/1.txt ../introgression/freq_tables/mikk_2/1.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552200> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9118, external: Job <2552200> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9118.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9103
+    output: ../introgression/freq_tables/mikk_1/24.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 24 ../introgression/release-102/final/24.txt ../introgression/mafs/split_by_chr_1/24.txt ../introgression/freq_tables/mikk_1/24.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552203> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9103, external: Job <2552203> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9103.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9110
+    output: ../introgression/freq_tables/mikk_2/22.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 22 ../introgression/release-102/final/22.txt ../introgression/mafs/split_by_chr_2/22.txt ../introgression/freq_tables/mikk_2/22.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552204> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9110, external: Job <2552204> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9110.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9125
+    output: ../introgression/freq_tables/mikk_2/2.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 2 ../introgression/release-102/final/2.txt ../introgression/mafs/split_by_chr_2/2.txt ../introgression/freq_tables/mikk_2/2.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552205> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9125, external: Job <2552205> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9125.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9096
+    output: ../introgression/freq_tables/mikk_1/12.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 12 ../introgression/release-102/final/12.txt ../introgression/mafs/split_by_chr_1/12.txt ../introgression/freq_tables/mikk_1/12.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552207> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9096, external: Job <2552207> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9096.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9104
+    output: ../introgression/freq_tables/mikk_1/21.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 21 ../introgression/release-102/final/21.txt ../introgression/mafs/split_by_chr_1/21.txt ../introgression/freq_tables/mikk_1/21.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552208> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9104, external: Job <2552208> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9104.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9111
+    output: ../introgression/freq_tables/mikk_2/16.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 16 ../introgression/release-102/final/16.txt ../introgression/mafs/split_by_chr_2/16.txt ../introgression/freq_tables/mikk_2/16.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552209> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9111, external: Job <2552209> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9111.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9119
+    output: ../introgression/freq_tables/mikk_2/23.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 23 ../introgression/release-102/final/23.txt ../introgression/mafs/split_by_chr_2/23.txt ../introgression/freq_tables/mikk_2/23.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552210> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9119, external: Job <2552210> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9119.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9126
+    output: ../introgression/freq_tables/mikk_2/7.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 7 ../introgression/release-102/final/7.txt ../introgression/mafs/split_by_chr_2/7.txt ../introgression/freq_tables/mikk_2/7.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552211> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9126, external: Job <2552211> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9126.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:52 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9090
+    output: ../introgression/freq_tables/mikk_1/3.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 3 ../introgression/release-102/final/3.txt ../introgression/mafs/split_by_chr_1/3.txt ../introgression/freq_tables/mikk_1/3.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552212> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9090, external: Job <2552212> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9090.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9097
+    output: ../introgression/freq_tables/mikk_1/20.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 20 ../introgression/release-102/final/20.txt ../introgression/mafs/split_by_chr_1/20.txt ../introgression/freq_tables/mikk_1/20.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552213> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9097, external: Job <2552213> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9097.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9105
+    output: ../introgression/freq_tables/mikk_1/14.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 14 ../introgression/release-102/final/14.txt ../introgression/mafs/split_by_chr_1/14.txt ../introgression/freq_tables/mikk_1/14.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552214> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9105, external: Job <2552214> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9105.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9112
+    output: ../introgression/freq_tables/mikk_2/5.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 5 ../introgression/release-102/final/5.txt ../introgression/mafs/split_by_chr_2/5.txt ../introgression/freq_tables/mikk_2/5.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552215> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9112, external: Job <2552215> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9112.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9120
+    output: ../introgression/freq_tables/mikk_2/12.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 12 ../introgression/release-102/final/12.txt ../introgression/mafs/split_by_chr_2/12.txt ../introgression/freq_tables/mikk_2/12.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552216> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9120, external: Job <2552216> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9120.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9091
+    output: ../introgression/freq_tables/mikk_1/17.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 17 ../introgression/release-102/final/17.txt ../introgression/mafs/split_by_chr_1/17.txt ../introgression/freq_tables/mikk_1/17.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552220> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9091, external: Job <2552220> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9091.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9098
+    output: ../introgression/freq_tables/mikk_1/19.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 19 ../introgression/release-102/final/19.txt ../introgression/mafs/split_by_chr_1/19.txt ../introgression/freq_tables/mikk_1/19.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552221> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9098, external: Job <2552221> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9098.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9106
+    output: ../introgression/freq_tables/mikk_1/11.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 11 ../introgression/release-102/final/11.txt ../introgression/mafs/split_by_chr_1/11.txt ../introgression/freq_tables/mikk_1/11.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552222> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9106, external: Job <2552222> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9106.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9113
+    output: ../introgression/freq_tables/mikk_2/13.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 13 ../introgression/release-102/final/13.txt ../introgression/mafs/split_by_chr_2/13.txt ../introgression/freq_tables/mikk_2/13.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552223> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9113, external: Job <2552223> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9113.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9092
+    output: ../introgression/freq_tables/mikk_1/6.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 6 ../introgression/release-102/final/6.txt ../introgression/mafs/split_by_chr_1/6.txt ../introgression/freq_tables/mikk_1/6.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552226> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9092, external: Job <2552226> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9092.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:53 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9114
+    output: ../introgression/freq_tables/mikk_2/3.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 3 ../introgression/release-102/final/3.txt ../introgression/mafs/split_by_chr_2/3.txt ../introgression/freq_tables/mikk_2/3.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552229> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9114, external: Job <2552229> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9114.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:54 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9122
+    output: ../introgression/freq_tables/mikk_2/19.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 19 ../introgression/release-102/final/19.txt ../introgression/mafs/split_by_chr_2/19.txt ../introgression/freq_tables/mikk_2/19.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552230> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9122, external: Job <2552230> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9122.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Mon Mar 15 11:39:54 2021]
+Error in rule combine_emf_and_maf:
+    jobid: 9129
+    output: ../introgression/freq_tables/mikk_2/14.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file scripts/20210315_combine_final_and_af_data.R 14 ../introgression/release-102/final/14.txt ../introgression/mafs/split_by_chr_2/14.txt ../introgression/freq_tables/mikk_2/14.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2552231> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_emf_and_maf on cluster (jobid: 9129, external: Job <2552231> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.tg1tvrx_/snakejob.combine_emf_and_maf.9129.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-15T113616.891711.snakemake.log

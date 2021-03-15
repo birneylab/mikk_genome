@@ -1,0 +1,35 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	combine_rlists
+	2
+Select jobs to execute...
+
+[Mon Mar 15 15:21:58 2021]
+rule combine_rlists:
+    input: ../introgression/abba_baba/rlists
+    output: ../introgression/abba_baba/final/f_stat_final.txt
+    jobid: 9193
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/combine_rlists.R ../introgression/abba_baba/rlists ../introgression/abba_baba/final/f_stat_final.txt
+        
+Submitted job 9193 with external jobid 'Job <2566545> is submitted to default queue <research-rh74>.'.
+[Mon Mar 15 15:22:37 2021]
+Error in rule combine_rlists:
+    jobid: 9193
+    output: ../introgression/abba_baba/final/f_stat_final.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/combine_rlists.R ../introgression/abba_baba/rlists ../introgression/abba_baba/final/f_stat_final.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2566545> is submitted to default queue <research-rh74>.
+
+Error executing rule combine_rlists on cluster (jobid: 9193, external: Job <2566545> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.auyya_qg/snakejob.combine_rlists.9193.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-15T151803.170043.snakemake.log

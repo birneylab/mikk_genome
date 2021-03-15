@@ -15,6 +15,10 @@
     {
         "memory" : "30000"
     },
+    "consolidate_chrs" :
+    {
+        "memory" : "50000"
+    },
     "create_no_sibs_vcf" :
     {
         "memory" : "30000"
@@ -30,5 +34,29 @@
     "remove_missing_no_sibs_vcf" :
     {
         "memory" : "10000"
+    },
+    "split_mikk_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "combine_emf_and_maf" :
+    {
+        "memory" : "30000"
+    },
+    "combine_chr_freq_tables" :
+    {
+        "memory" : "20000"
+    },
+    "combine_all_mikk_freq_tables" :
+    {
+        "memory" : "50000"
+    },
+    "run_abba_baba" :
+    {
+        "memory" : "30000"
+    },
+    "combine_rlists" :
+    {
+        "memory" : "20000"
     }
 }

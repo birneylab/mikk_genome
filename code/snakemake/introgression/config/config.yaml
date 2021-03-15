@@ -14,6 +14,8 @@ add_coord_script_reverse:
     "code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R"
 consol_subchr_script:
     "code/scripts/introgression/20201015_consolidate_chr_dat.R"
+consol_chr_script:
+    "code/scripts/introgression/20201015_consolidate_chr_files.R"
 vcf_dir:
     "../introgression/vcfs"
 mikk_ill_vcf:
@@ -24,4 +26,25 @@ no_sibs_cramid:
     "data/20200227_cram2line_no-sibs_cram-only.txt"    
 cramid_2_lineid_key:
     "data/20200206_cram_id_to_line_id.txt"
+no_sibs_lineid:
+    "data/20200914_samples_no-sibs.txt"
+split_mikk_file_script:
+    "scripts/20210315_split_mikk_file.R"
+maf_dir:
+    "../introgression/mafs"
+freq_tables_dir:
+    "../introgression/freq_tables"
+combine_emf_maf_script:
+    "code/scripts/introgression/20210315_combine_final_and_af_data.R"
+combine_chr_freq_tables_script:
+    "code/scripts/introgression/20210315_combine_chr_freq_tables.R"
+combine_all_mikk_freq_tables_script:
+    "code/scripts/introgression/20210315_combine_all_mikk_freq_tables.R"
+abba_baba_dir:
+    "../introgression/abba_baba"    
+abba_baba_script:
+    "code/scripts/introgression/run_abbababa.R"
+combine_rlists_script:
+    "code/scripts/introgression/combine_rlists.R"
+
 
