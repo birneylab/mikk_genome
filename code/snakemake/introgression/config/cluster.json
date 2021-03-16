@@ -19,6 +19,18 @@
     {
         "memory" : "50000"
     },
+    "rehead_full_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "compress_full_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "index_full_vcf" :
+    {
+        "memory" : "10000"
+    },
     "create_no_sibs_vcf" :
     {
         "memory" : "30000"
@@ -56,6 +68,10 @@
         "memory" : "30000"
     },
     "combine_rlists" :
+    {
+        "memory" : "20000"
+    },
+    "make_geno" :
     {
         "memory" : "20000"
     }

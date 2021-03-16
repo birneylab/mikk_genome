@@ -1,11 +1,7 @@
-samples_file:
-    "code/snakemake/20210203/config/samples.csv"
 target_dir:
     "../introgression/release-102"
 sing_cont_r:
     "../sing_conts/baseR.sif"
-conda_r:
-    "envs/baseR.yaml"    
 segments_script:
     "code/scripts/introgression/20200907_extract-emf-segments.sh"
 add_coord_script_forward:
@@ -22,6 +18,8 @@ mikk_ill_vcf:
     "/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf"
 bcftools:
     "../sing_conts/bcftools.sif"
+cramid_2_lineid_key_dupes_edited:
+    "data/20200305_cram2line_full_dupes-edited.txt"    
 no_sibs_cramid:
     "data/20200227_cram2line_no-sibs_cram-only.txt"    
 cramid_2_lineid_key:
@@ -46,5 +44,6 @@ abba_baba_script:
     "code/scripts/introgression/run_abbababa.R"
 combine_rlists_script:
     "code/scripts/introgression/combine_rlists.R"
-
+geno_dir:
+    "../introgression/genos"
 
