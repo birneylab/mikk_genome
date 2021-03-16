@@ -1,0 +1,813 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	emf_2_geno_remove_sibs
+	144	run_abba_baba_sliding
+	146
+Select jobs to execute...
+
+[Tue Mar 16 12:32:11 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/14.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hdrr_14.txt
+    jobid: 9365
+    wildcards: p1=javanicus, p2=hdrr, chr=14
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/14.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_14.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9365 with external jobid 'Job <2695040> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:11 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/4.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_4.txt
+    jobid: 9335
+    wildcards: p1=melastigma, p2=hsok, chr=4
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/4.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_4.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9335 with external jobid 'Job <2695041> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:11 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/22.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_22.txt
+    jobid: 9274
+    wildcards: p1=melastigma, p2=hdrr, chr=22
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/22.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_22.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9274 with external jobid 'Job <2695042> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/7.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_7.txt
+    jobid: 9290
+    wildcards: p1=melastigma, p2=hdrr, chr=7
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/7.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_7.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9290 with external jobid 'Job <2695043> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/15.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_15.txt
+    jobid: 9305
+    wildcards: p1=melastigma, p2=hni, chr=15
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/15.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_15.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9305 with external jobid 'Job <2695044> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/12.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_12.txt
+    jobid: 9380
+    wildcards: p1=javanicus, p2=hni, chr=12
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/12.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_12.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9380 with external jobid 'Job <2695045> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/16.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_16.txt
+    jobid: 9275
+    wildcards: p1=melastigma, p2=hdrr, chr=16
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/16.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_16.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9275 with external jobid 'Job <2695046> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/24.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_24.txt
+    jobid: 9291
+    wildcards: p1=melastigma, p2=hdrr, chr=24
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/24.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_24.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9291 with external jobid 'Job <2695047> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:12 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/1.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_1.txt
+    jobid: 9306
+    wildcards: p1=melastigma, p2=hni, chr=1
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/1.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_1.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9306 with external jobid 'Job <2695048> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:13 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/10.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_10.txt
+    jobid: 9336
+    wildcards: p1=melastigma, p2=hsok, chr=10
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/10.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_10.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9336 with external jobid 'Job <2695049> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:13 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/11.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hdrr_11.txt
+    jobid: 9366
+    wildcards: p1=javanicus, p2=hdrr, chr=11
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/11.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_11.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9366 with external jobid 'Job <2695050> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:13 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/20.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_20.txt
+    jobid: 9381
+    wildcards: p1=javanicus, p2=hni, chr=20
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/20.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_20.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9381 with external jobid 'Job <2695051> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:13 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/13.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_13.txt
+    jobid: 9277
+    wildcards: p1=melastigma, p2=hdrr, chr=13
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/13.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_13.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9277 with external jobid 'Job <2695052> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:14 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/23.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_23.txt
+    jobid: 9307
+    wildcards: p1=melastigma, p2=hni, chr=23
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/23.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_23.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9307 with external jobid 'Job <2695053> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:14 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/2.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_2.txt
+    jobid: 9337
+    wildcards: p1=melastigma, p2=hsok, chr=2
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/2.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_2.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9337 with external jobid 'Job <2695054> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:15 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/9.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hdrr_9.txt
+    jobid: 9367
+    wildcards: p1=javanicus, p2=hdrr, chr=9
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/9.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_9.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9367 with external jobid 'Job <2695055> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:15 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/19.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_19.txt
+    jobid: 9382
+    wildcards: p1=javanicus, p2=hni, chr=19
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/19.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_19.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9382 with external jobid 'Job <2695056> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:16 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/3.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_3.txt
+    jobid: 9278
+    wildcards: p1=melastigma, p2=hdrr, chr=3
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/3.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_3.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9278 with external jobid 'Job <2695057> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:17 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/14.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_14.txt
+    jobid: 9293
+    wildcards: p1=melastigma, p2=hdrr, chr=14
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/14.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_14.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9293 with external jobid 'Job <2695058> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:17 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/12.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_12.txt
+    jobid: 9308
+    wildcards: p1=melastigma, p2=hni, chr=12
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/12.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_12.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9308 with external jobid 'Job <2695059> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:17 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/7.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_7.txt
+    jobid: 9338
+    wildcards: p1=melastigma, p2=hsok, chr=7
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/7.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_7.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9338 with external jobid 'Job <2695060> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:17 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/18.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hdrr_18.txt
+    jobid: 9368
+    wildcards: p1=javanicus, p2=hdrr, chr=18
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/18.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_18.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9368 with external jobid 'Job <2695062> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:17 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/4.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_4.txt
+    jobid: 9383
+    wildcards: p1=javanicus, p2=hni, chr=4
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/4.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_4.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9383 with external jobid 'Job <2695063> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/17.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_17.txt
+    jobid: 9279
+    wildcards: p1=melastigma, p2=hdrr, chr=17
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/17.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_17.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9279 with external jobid 'Job <2695064> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/11.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_11.txt
+    jobid: 9294
+    wildcards: p1=melastigma, p2=hdrr, chr=11
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/11.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_11.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9294 with external jobid 'Job <2695065> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/20.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_20.txt
+    jobid: 9309
+    wildcards: p1=melastigma, p2=hni, chr=20
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/20.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_20.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9309 with external jobid 'Job <2695066> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/24.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_24.txt
+    jobid: 9339
+    wildcards: p1=melastigma, p2=hsok, chr=24
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/24.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_24.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9339 with external jobid 'Job <2695067> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/8.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_8.txt
+    jobid: 9369
+    wildcards: p1=javanicus, p2=hni, chr=8
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/8.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_8.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9369 with external jobid 'Job <2695068> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:18 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/10.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_10.txt
+    jobid: 9384
+    wildcards: p1=javanicus, p2=hni, chr=10
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/10.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_10.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9384 with external jobid 'Job <2695069> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:19 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/6.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_6.txt
+    jobid: 9280
+    wildcards: p1=melastigma, p2=hdrr, chr=6
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/6.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_6.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9280 with external jobid 'Job <2695070> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:19 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/9.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_9.txt
+    jobid: 9295
+    wildcards: p1=melastigma, p2=hdrr, chr=9
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/9.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_9.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9295 with external jobid 'Job <2695071> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:19 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/19.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_19.txt
+    jobid: 9310
+    wildcards: p1=melastigma, p2=hni, chr=19
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/19.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_19.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9310 with external jobid 'Job <2695072> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:19 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/22.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_22.txt
+    jobid: 9370
+    wildcards: p1=javanicus, p2=hni, chr=22
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/22.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_22.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9370 with external jobid 'Job <2695073> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:19 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/2.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_2.txt
+    jobid: 9385
+    wildcards: p1=javanicus, p2=hni, chr=2
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/2.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_2.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9385 with external jobid 'Job <2695074> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/15.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_15.txt
+    jobid: 9281
+    wildcards: p1=melastigma, p2=hdrr, chr=15
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/15.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_15.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9281 with external jobid 'Job <2695075> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/18.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_18.txt
+    jobid: 9296
+    wildcards: p1=melastigma, p2=hdrr, chr=18
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/18.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_18.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9296 with external jobid 'Job <2695076> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/4.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_4.txt
+    jobid: 9311
+    wildcards: p1=melastigma, p2=hni, chr=4
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/4.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_4.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9311 with external jobid 'Job <2695078> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/14.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_14.txt
+    jobid: 9341
+    wildcards: p1=melastigma, p2=hsok, chr=14
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/14.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_14.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9341 with external jobid 'Job <2695079> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/16.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_16.txt
+    jobid: 9371
+    wildcards: p1=javanicus, p2=hni, chr=16
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/16.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_16.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+[Tue Mar 16 12:32:20 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9365
+    output: data/introgression/abba_sliding/javanicus_hdrr_14.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/14.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_14.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695040> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9365, external: Job <2695040> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9365.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 16 12:32:20 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9290
+    output: data/introgression/abba_sliding/melastigma_hdrr_7.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/7.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_7.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695043> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9290, external: Job <2695043> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9290.sh). For error details see the cluster log and the log files of the involved rule(s).
+Submitted job 9371 with external jobid 'Job <2695080> is submitted to default queue <research-rh74>.'.
+Job failed, going on with independent jobs.
+[Tue Mar 16 12:32:20 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9305
+    output: data/introgression/abba_sliding/melastigma_hni_15.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/15.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_15.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695044> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9305, external: Job <2695044> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9305.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 16 12:32:20 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9380
+    output: data/introgression/abba_sliding/javanicus_hni_12.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/12.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_12.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695045> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9380, external: Job <2695045> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9380.sh). For error details see the cluster log and the log files of the involved rule(s).
+
+[Tue Mar 16 12:32:20 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/7.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_7.txt
+    jobid: 9386
+    wildcards: p1=javanicus, p2=hni, chr=7
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/7.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_7.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Job failed, going on with independent jobs.
+[Tue Mar 16 12:32:20 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9275
+    output: data/introgression/abba_sliding/melastigma_hdrr_16.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/16.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_16.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695046> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9275, external: Job <2695046> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9275.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Submitted job 9386 with external jobid 'Job <2695081> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:21 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/1.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_1.txt
+    jobid: 9282
+    wildcards: p1=melastigma, p2=hdrr, chr=1
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/1.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_1.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9282 with external jobid 'Job <2695082> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:21 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/8.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_8.txt
+    jobid: 9297
+    wildcards: p1=melastigma, p2=hni, chr=8
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/8.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_8.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9297 with external jobid 'Job <2695083> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:21 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/10.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_10.txt
+    jobid: 9312
+    wildcards: p1=melastigma, p2=hni, chr=10
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/10.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_10.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9312 with external jobid 'Job <2695084> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:21 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/11.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_11.txt
+    jobid: 9342
+    wildcards: p1=melastigma, p2=hsok, chr=11
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/11.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_11.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+[Tue Mar 16 12:32:21 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9366
+    output: data/introgression/abba_sliding/javanicus_hdrr_11.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/11.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hdrr_11.txt             -P1 javanicus             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695050> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9366, external: Job <2695050> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9366.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 16 12:32:21 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9277
+    output: data/introgression/abba_sliding/melastigma_hdrr_13.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/13.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_13.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695052> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9277, external: Job <2695052> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9277.sh). For error details see the cluster log and the log files of the involved rule(s).
+Submitted job 9342 with external jobid 'Job <2695085> is submitted to default queue <research-rh74>.'.
+Job failed, going on with independent jobs.
+
+[Tue Mar 16 12:32:21 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/5.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_5.txt
+    jobid: 9372
+    wildcards: p1=javanicus, p2=hni, chr=5
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/5.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_5.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+[Tue Mar 16 12:32:21 2021]
+Error in rule run_abba_baba_sliding:
+    jobid: 9307
+    output: data/introgression/abba_sliding/melastigma_hni_23.txt
+    shell:
+        
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/23.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_23.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <2695053> is submitted to default queue <research-rh74>.
+
+Error executing rule run_abba_baba_sliding on cluster (jobid: 9307, external: Job <2695053> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.mzetksb4/snakejob.run_abba_baba_sliding.9307.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Submitted job 9372 with external jobid 'Job <2695086> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/24.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_24.txt
+    jobid: 9387
+    wildcards: p1=javanicus, p2=hni, chr=24
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/24.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_24.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9387 with external jobid 'Job <2695087> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/23.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_23.txt
+    jobid: 9283
+    wildcards: p1=melastigma, p2=hdrr, chr=23
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/23.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_23.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9283 with external jobid 'Job <2695088> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/22.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_22.txt
+    jobid: 9298
+    wildcards: p1=melastigma, p2=hni, chr=22
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/22.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_22.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9298 with external jobid 'Job <2695089> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/2.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_2.txt
+    jobid: 9313
+    wildcards: p1=melastigma, p2=hni, chr=2
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/2.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_2.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9313 with external jobid 'Job <2695090> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/9.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hsok_9.txt
+    jobid: 9343
+    wildcards: p1=melastigma, p2=hsok, chr=9
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/9.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hsok_9.txt             -P1 melastigma             -P2 hsok             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9343 with external jobid 'Job <2695091> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:22 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/13.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/javanicus_hni_13.txt
+    jobid: 9373
+    wildcards: p1=javanicus, p2=hni, chr=13
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/13.txt             -f phased             -o data/introgression/abba_sliding/javanicus_hni_13.txt             -P1 javanicus             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9373 with external jobid 'Job <2695092> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:23 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/12.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hdrr_12.txt
+    jobid: 9284
+    wildcards: p1=melastigma, p2=hdrr, chr=12
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/12.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hdrr_12.txt             -P1 melastigma             -P2 hdrr             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Submitted job 9284 with external jobid 'Job <2695093> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 16 12:32:23 2021]
+rule run_abba_baba_sliding:
+    input: ../introgression/genos/final_no-sibs/16.txt, data/20201021_abba.pop.txt
+    output: data/introgression/abba_sliding/melastigma_hni_16.txt
+    jobid: 9299
+    wildcards: p1=melastigma, p2=hni, chr=16
+
+
+        mkdir -p data/introgression/abba_sliding ;
+        python code/scripts/introgression/ABBABABAwindows.py             -g ../introgression/genos/final_no-sibs/16.txt             -f phased             -o data/introgression/abba_sliding/melastigma_hni_16.txt             -P1 melastigma             -P2 hni             -P3 mikk             -O ancestor             --popsFile data/20201021_abba.pop.txt             -w 25000             -m 250
+        
+Terminating processes on user request, this might take some time.
+Will exit after finishing currently running jobs.
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-16T122756.867975.snakemake.log

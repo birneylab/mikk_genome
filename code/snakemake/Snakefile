@@ -87,6 +87,9 @@ rule all:
                 subchr = SUBCHRS),
         expand(os.path.join(config["target_dir"], "final/{chr}.txt"),
                 chr = CHRS),
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf"),
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz"),
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz.tbi"),
         os.path.join(config["vcf_dir"], "ill_no-sibs.vcf"),
         os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz"),
         os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz.tbi"),
@@ -110,7 +113,23 @@ rule all:
                 p1 = P1S,
                 p2 = P2S,
                 p3 = P3S),
-        os.path.join(config["abba_baba_dir"], "final/f_stat_final.txt")
+        "data/introgression/20210315_f_stat_final.txt",
+        os.path.join(config["geno_dir"], "full_vcf.geno"),
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
+        expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+                chr = CHRS),
+        config["full_run_line_ids"],
+        expand(os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+                chr = CHRS),
+        expand(os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+                chr = CHRS),
+        config["pop_file"],
+        expand(os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = CHRS)
+
+# EMFs
 
 rule add_hdrr_coords:
     input:
@@ -145,6 +164,53 @@ rule consolidate_chrs:
         config["sing_cont_r"]
     shell:
         "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_chr_script]} {params.chr} {input} {output}"
+
+# Full VCF
+
+rule rehead_full_vcf:
+    input:
+        vcf = config["mikk_ill_vcf"],
+        samples_key = config["cramid_2_lineid_key_dupes_edited"]
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools reheader \
+            --output  {output} \
+            --samples {input.samples_key} \
+            {input.vcf}
+        """
+
+rule compress_full_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+rule index_full_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
+        """
+
+# No-sibs VCF
 
 rule create_no_sibs_vcf:
     input:
@@ -203,7 +269,9 @@ rule remove_missing_no_sibs_vcf:
             --output-file {output} \
             {input}
         """
-        
+
+# ABBA-BABA  
+
 rule split_mikk_file:
     input:
         config["no_sibs_lineid"]
@@ -330,10 +398,136 @@ rule combine_rlists:
     input:
         os.path.join(config["abba_baba_dir"], "rlists")
     output:
-        os.path.join(config["abba_baba_dir"], "final/f_stat_final.txt")
+        "data/introgression/20210315_f_stat_final.txt"
     singularity:
         config["sing_cont_r"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_rlists_script]} {input} {output}
+        """
+
+# Sliding windows
+
+rule make_geno:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+                bcftools query \
+                --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT[\t%TGT]\n' \
+                --output {output}
+        """
+
+rule replace_missing:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf.geno")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        sed 's/\./N/g' {input} > {output}
+        """
+
+rule split_geno_by_chr:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    output:
+        os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        """
+
+rule make_samples_file:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        config["full_run_line_ids"]
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query -l {input} > {output}
+        """
+
+rule emf_2_geno_full_run:
+    input:
+        emf = os.path.join(config["target_dir"], "final/{chr}.txt"),
+        vcf_geno = os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+        vcf_samples = config["full_run_line_ids"]
+    output:
+        os.path.join(config["geno_dir"], "final_full-run/{chr}.txt")
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        """
+rule emf_2_geno_remove_sibs:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        excluded_sibs = config["excluded_sib_lines"]
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule make_pop_file:
+    input:
+        config["full_run_line_ids"]
+    output:
+        config["pop_file"]
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[make_pop_file_script]} {input} {output}
+        """
+
+rule run_abba_baba_sliding:
+    input:
+        data = os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+        pop_file = config["pop_file"]
+    output:
+        os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length"],
+        minimum_sites = config["minimum_sites"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
         """

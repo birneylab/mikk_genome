@@ -46,4 +46,31 @@ combine_rlists_script:
     "code/scripts/introgression/combine_rlists.R"
 geno_dir:
     "../introgression/genos"
+split_geno_by_chr_script:
+    "code/scripts/introgression/20201021_split_geno_by_chr.R"
+full_run_line_ids:
+    "data/20201021_full-run_line-ids_samples.txt"
+emf_2_geno_script:
+    "code/scripts/introgression/20201021_emf_to_geno.R"
+excluded_sib_lines:
+    "data/20200227_panel_lines_excluded.txt"
+remove_sibs_script:
+    "code/scripts/introgression/20201022_remove_sibs.R"
+pop_file_full_run:
+    "data/introgression/full_run.pop.txt"
+pop_file_no_sibs:
+    "data/introgression/no_sibs.pop.txt"    
+make_pop_file_script:
+    "code/scripts/introgression/20210315_make_pop_file.R"
+abba_sliding_dir:
+    "data/introgression/abba_sliding"
+abba_sliding_script:
+    "code/scripts/introgression/ABBABABAwindows.py"
+numpy:
+    "../sing_conts/numpy_1.15.4.sif"
+sliding_window_length:
+    "25000"
+minimum_sites:
+    "250"
+
 

@@ -115,7 +115,20 @@ rule all:
                 p3 = P3S),
         "data/introgression/20210315_f_stat_final.txt",
         os.path.join(config["geno_dir"], "full_vcf.geno"),
-        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
+        expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+                chr = CHRS),
+        config["full_run_line_ids"],
+        expand(os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+                chr = CHRS),
+        expand(os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+                chr = CHRS),
+        config["pop_file_full_run"],
+        config["pop_file_no_sibs"],
+        expand(os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = CHRS)
 
 # EMFs
 
@@ -426,4 +439,99 @@ rule replace_missing:
     shell:
         """
         sed 's/\./N/g' {input} > {output}
+        """
+
+rule split_geno_by_chr:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    output:
+        os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        """
+
+rule make_samples_file:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        config["full_run_line_ids"]
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query -l {input} > {output}
+        """
+
+rule emf_2_geno_full_run:
+    input:
+        emf = os.path.join(config["target_dir"], "final/{chr}.txt"),
+        vcf_geno = os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+        vcf_samples = config["full_run_line_ids"]
+    output:
+        os.path.join(config["geno_dir"], "final_full-run/{chr}.txt")
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        """
+rule emf_2_geno_remove_sibs:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        excluded_sibs = config["excluded_sib_lines"]
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule make_pop_file:
+    input:
+        full_run = config["full_run_line_ids"],
+        no_sibs = config["no_sibs_lineid"]
+    output:
+        full_run = config["pop_file_full_run"],
+        no_sibs = config["pop_file_no_sibs"]
+    singularity:
+        config["sing_cont_r"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[make_pop_file_script]} {input.full_run} {input.no_sibs} {output.full_run} {output.no_sibs}
+        """
+
+rule run_abba_baba_sliding:
+    input:
+        data = os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+        pop_file = config["pop_file_no_sibs"]
+    output:
+        os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length"],
+        minimum_sites = config["minimum_sites"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {config[abba_sliding_dir]} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
         """
