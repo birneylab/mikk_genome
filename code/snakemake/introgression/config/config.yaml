@@ -1,6 +1,6 @@
 target_dir:
     "../introgression/release-102"
-sing_cont_r:
+baseR:
     "../sing_conts/baseR.sif"
 segments_script:
     "code/scripts/introgression/20200907_extract-emf-segments.sh"
@@ -69,8 +69,13 @@ abba_sliding_script:
 numpy:
     "../sing_conts/numpy_1.15.4.sif"
 sliding_window_length:
-    "25000"
+    "50000"
 minimum_sites:
-    "250"
+    "100"
+abba_sliding_dir_final:
+    "data/introgression/abba_sliding_final"
+combine_sliding_window_data_script:
+    "code/scripts/introgression/combine_sliding_window_data.R"
+
 
 

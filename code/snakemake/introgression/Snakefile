@@ -125,10 +125,11 @@ rule all:
                 chr = CHRS),
         config["pop_file_full_run"],
         config["pop_file_no_sibs"],
-        expand(os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt"),
+        expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
                 p1 = P1S,
                 p2 = P2S,
-                chr = CHRS)
+                chr = CHRS),
+        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt")
 
 # EMFs
 
@@ -140,7 +141,7 @@ rule add_hdrr_coords:
     params:
         command = lambda wildcards: "Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         "input={input}; output={output}; {params.command}"
 
@@ -150,7 +151,7 @@ rule consolidate_subchrs:
     output:
         os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt")
     singularity:
-        config["sing_cont_r"]        
+        config["baseR"]        
     shell:
         "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_subchr_script]} {input} {output}"
 
@@ -162,7 +163,7 @@ rule consolidate_chrs:
     params:
         chr = lambda wildcards: wildcards.chr
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_chr_script]} {params.chr} {input} {output}"
 
@@ -280,7 +281,7 @@ rule split_mikk_file:
         expand("data/introgression/20200914_abbababa_mikk_{group}.txt",
             group = GROUPS)
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     script:
         config["split_mikk_file_script"]
 
@@ -346,7 +347,7 @@ rule combine_emf_and_maf:
     params:
         chr = lambda wildcards: wildcards.chr
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_emf_maf_script]} {params.chr} {input.emf} {input.maf} {output}
@@ -360,7 +361,7 @@ rule combine_chr_freq_tables:
     params:
         group = lambda wildcards: wildcards.group
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_chr_freq_tables_script]} {group} {input} {output}
@@ -373,7 +374,7 @@ rule combine_all_mikk_freq_tables:
     output:
         os.path.join(config["freq_tables_dir"], "all.txt")
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_all_mikk_freq_tables_script]} {input} {output}
@@ -389,7 +390,7 @@ rule run_abba_baba:
         p2 = lambda wildcards: wildcards.p2,
         p3 = lambda wildcards: wildcards.p3
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[abba_baba_script]} {params.p1} {params.p2} {params.p3} {input} {output}
@@ -401,7 +402,7 @@ rule combine_rlists:
     output:
         "data/introgression/20210315_f_stat_final.txt"
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_rlists_script]} {input} {output}
@@ -449,7 +450,7 @@ rule split_geno_by_chr:
     params:
         chr = lambda wildcards: wildcards.chr
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
@@ -475,7 +476,7 @@ rule emf_2_geno_full_run:
     output:
         os.path.join(config["geno_dir"], "final_full-run/{chr}.txt")
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
@@ -487,7 +488,7 @@ rule emf_2_geno_remove_sibs:
     output:
         os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
@@ -501,7 +502,7 @@ rule make_pop_file:
         full_run = config["pop_file_full_run"],
         no_sibs = config["pop_file_no_sibs"]
     singularity:
-        config["sing_cont_r"]
+        config["baseR"]
     shell:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[make_pop_file_script]} {input.full_run} {input.no_sibs} {output.full_run} {output.no_sibs}
@@ -512,7 +513,7 @@ rule run_abba_baba_sliding:
         data = os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
         pop_file = config["pop_file_no_sibs"]
     output:
-        os.path.join(config["abba_sliding_dir"], "{p1}_{p2}_{chr}.txt")
+        os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt")
     params:
         p1 = lambda wildcards: wildcards.p1,
         p2 = lambda wildcards: wildcards.p2,
@@ -534,4 +535,19 @@ rule run_abba_baba_sliding:
             --popsFile {input.pop_file} \
             -w {params.window_length} \
             -m {params.minimum_sites}
+        """
+
+rule combine_sliding_windows_data:
+    input:
+        expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt")
+    singularity:
+        config["baseR"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_sliding_window_data_script]} --input {input} --output {output}
         """

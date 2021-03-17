@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 540 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Missing input files for rule combine_sliding_windows_data:
+data/introgression/abba_sliding_wsize_50000_msites_100

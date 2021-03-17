@@ -1,2 +1,5 @@
 Bootstrap: docker
 From: julia:1.6.0
+
+%environment
+    export JULIA_DEPOT_PATH=/nfs/research1/birney/users/brettell/julia
