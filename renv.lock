@@ -310,6 +310,13 @@
       "Repository": "CRAN",
       "Hash": "08310cebe9ad2da068486b26b05e6030"
     },
+    "argparser": {
+      "Package": "argparser",
+      "Version": "0.7.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ef22bb1e708cb17be24197f9d85ff481"
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
