@@ -1,7 +1,7 @@
 target_dir:
     "../introgression/release-102"
-baseR:
-    "../sing_conts/baseR.sif"
+r-base:
+    "../sing_conts/r-base_4.0.4.sif"
 segments_script:
     "code/scripts/introgression/20200907_extract-emf-segments.sh"
 add_coord_script_forward:
@@ -17,7 +17,7 @@ vcf_dir:
 mikk_ill_vcf:
     "/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf"
 bcftools:
-    "../sing_conts/bcftools.sif"
+    "../sing_conts/bcftools_1.9.sif"
 cramid_2_lineid_key_dupes_edited:
     "data/20200305_cram2line_full_dupes-edited.txt"    
 no_sibs_cramid:
