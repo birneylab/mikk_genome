@@ -15,7 +15,7 @@ From: r-base:4.0.4
 
     # Install linux libraries
 #    apt-get -y install libzstd-dev libwebp-dev libtiff5-dev libmagick++-dev
-    apt-get -y install libbz2-dev liblzma-dev libicu-dev libicu67 libssl-dev libxml2
+    apt-get -y install libbz2-dev liblzma-dev libicu-dev libicu67 libssl-dev libxml2 libjpeg-dev
 
     R --slave -e 'install.packages(c("renv"), repos="https://cloud.r-project.org/")'
 

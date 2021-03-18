@@ -86,7 +86,7 @@ rule all:
                 chr = CHRS,
                 subchr = SUBCHRS),
         expand(os.path.join(config["target_dir"], "final/{chr}.txt"),
-                chr = CHRS),
+                chr = list(set(CHRS))),
         os.path.join(config["vcf_dir"], "full-run_line-ids.vcf"),
         os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz"),
         os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz.tbi"),
@@ -102,10 +102,10 @@ rule all:
                 group = GROUPS),
         expand(os.path.join(config["maf_dir"], "split_by_chr_{group}/{chr}.txt"),
                 group = GROUPS,
-                chr = CHRS),
+                chr = list(set(CHRS))),
         expand(os.path.join(config["freq_tables_dir"], "mikk_{group}", "{chr}.txt"),
                 group = GROUPS,
-                chr = CHRS),
+                chr = list(set(CHRS))),
         expand(os.path.join(config["freq_tables_dir"], "mikk_{group}.txt"),
                 group = GROUPS),
         os.path.join(config["freq_tables_dir"], "all.txt"),
@@ -117,19 +117,24 @@ rule all:
         os.path.join(config["geno_dir"], "full_vcf.geno"),
         os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
         expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
-                chr = CHRS),
+                chr = list(set(CHRS))),
         config["full_run_line_ids"],
         expand(os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
-                chr = CHRS),
+                chr = list(set(CHRS))),
         expand(os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
-                chr = CHRS),
+                chr = list(set(CHRS))),
         config["pop_file_full_run"],
         config["pop_file_no_sibs"],
         expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
                 p1 = P1S,
                 p2 = P2S,
-                chr = CHRS),
-        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt")
+                chr = list(set(CHRS))),
+        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt"),
+        expand(os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt"),
+                chr = list(set(CHRS))),
+        "data/introgression/hni_hsok.txt.gz",
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt"),
+        "data/introgression/mikk.txt.gz"
 
 # EMFs
 
@@ -554,7 +559,7 @@ rule combine_sliding_windows_data:
 
 # Karyoplot extras
 
-rule get_snp_density:
+rule get_latipes_snp_density:
     input:
         os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
     output:
@@ -563,6 +568,50 @@ rule get_snp_density:
         config["bash"]
     shell:
         """
-        
+        awk '{{print $1,$2,$4,$5}}' {input} > {output}
         """
     
+rule process_latipes_snp_density:
+    input:
+        expand(os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt"),
+                chr = list(set(CHRS)))
+    output:
+        "data/introgression/hni_hsok.txt.gz"
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[process_snp_density_script]} --input {input} --output {output}
+        """
+
+rule get_mikk_snp_density:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+              bcftools query \
+                --format '%CHROM\t%POS\n' \
+                --output-file {output}
+        """
+
+rule compress_mikk_snp_density:
+    input:
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt")
+    output:
+        "data/introgression/mikk.txt.gz"
+    singularity:
+        config["bash"]
+    shell:
+        """
+        gzip -k {input} && mv {input}.gz {output}
+        """

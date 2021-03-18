@@ -76,6 +76,10 @@ abba_sliding_dir_final:
     "data/introgression/abba_sliding_final"
 combine_sliding_window_data_script:
     "code/scripts/introgression/combine_sliding_window_data.R"
+bash:
+    "../sing_conts/bash_3.0.22.sif"
+process_snp_density_script:
+    "code/scripts/introgression/process_snp_density.R"
 
 
 

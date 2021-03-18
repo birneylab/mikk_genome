@@ -1,0 +1,23 @@
+BootStrap: docker
+From: rocker/r-ver:4.0.4
+
+%environment
+    LD_LIBRARY_PATH=/usr/local/lib
+#    DEBIAN_FRONTEND=noninteractive
+#    TZ=Europe/London
+#    RENV_PATHS_CACHE=/homes/brettell/.local/share/renv/cache/v5/R-4.0/x86_64-pc-linux-gnu
+
+%post
+    # Set timezone
+#    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    # Update
+    apt-get update
+
+    # Install linux libraries
+#    apt-get -y install libzstd-dev libwebp-dev libtiff5-dev libmagick++-dev
+#    apt-get -y install libbz2-dev liblzma-dev libicu-dev libicu67 libssl-dev libxml2 libjpeg-dev
+    apt-get -y install libxml2
+
+    R --slave -e 'install.packages(c("renv"), repos="https://cloud.r-project.org/")'
+
+#    R --slave -e 'BiocManager::install(c("karyoploteR"))'

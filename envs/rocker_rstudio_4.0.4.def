@@ -1,0 +1,9 @@
+Bootstrap: docker
+From: rocker/rstudio:4.0.4
+
+%post
+    apt-get update
+
+    wget https://s3.amazonaws.com/rstudio-ide-build/server/bionic/amd64/rstudio-server-1.4.1625-amd64.deb
+
+    sudo dpkg -i rstudio-server-1.4.1625-amd64.deb
