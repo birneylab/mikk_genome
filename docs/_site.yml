@@ -10,7 +10,7 @@ navbar:
     - text: "Linkage Disequilibrium"
       href: 20210305_ld-decay.html
     - text: "Introgression"
-      href: 20201125_markdown_introgression.html
+      href: 20210318_introgression.html
     - text: "Repeat Elements"
       href: 20210301_repeats.html
 output:

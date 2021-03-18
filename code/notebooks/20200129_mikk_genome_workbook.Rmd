@@ -8579,7 +8579,7 @@ for i in $( echo melastigma javanicus ) ; do
           -O ancestor \
           --popsFile $popsfile \
           -w 25000 \
-          -m 250"      
+          -m 250"
     done ;
   done ;
 done
@@ -8940,6 +8940,7 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
             label.margin = 0.035,
             cex = 0.6)
 ```
+
 ## Save chr 2 only
 
 ```{r}
@@ -9427,6 +9428,7 @@ cor_df_means %>%
     theme(panel.grid = element_blank()) +
     scale_fill_manual(values = cols)
 ```
+
 ```{r}
 ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""),
        device = "png",

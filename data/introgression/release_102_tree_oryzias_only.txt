@@ -1,0 +1,13 @@
+(
+  (
+    Oryzias_javanicus:0.0375793,
+    Oryzias_melastigma:0.0448107
+  ):0.0167863,
+  (
+    (
+      Oryzias_latipes_HdrR:0.0148368,
+      Oryzias_latipes_HNI:0.0165232
+    ):0.00101757,
+    Oryzias_latipes_HSOK:0.0171124
+  ):0.047302842
+);

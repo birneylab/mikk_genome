@@ -271,6 +271,7 @@ lapply(test, function(class){
 
 circos.clear()
 ```
+
 ### Save plot
 
 ```{r, eval = F}
@@ -367,9 +368,8 @@ dev.off()
 ```
 
 ```{r, fig.width=20, fig.height=20}
-knitr::include_graphics(here::here("plots", "repeats", "20210302_hdrr_repeats_true.png"))
+knitr::include_graphics("20210302_hdrr_repeats_true.png")
 ```
-
 
 ## Coverage of region by repeats
 

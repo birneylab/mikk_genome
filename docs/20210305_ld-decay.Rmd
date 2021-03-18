@@ -1047,7 +1047,7 @@ ggsave(out_path,
 ```
 
 ```{r}
-knitr::include_graphics(here::here("plots", "ld_decay", "20210305_final_figure.png"))
+knitr::include_graphics("20210305_final_figure.png")
 ```
 
 # Investigation of LD decay in chr 2
