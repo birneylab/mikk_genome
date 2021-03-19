@@ -11,6 +11,7 @@ library(circlize)
 library(karyoploteR)
 library(magick)
 library(plotly)
+library(fishualize)
 
 
 #############################

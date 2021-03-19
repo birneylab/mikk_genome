@@ -2,18 +2,18 @@
 title: "Structural variants"
 author: "Ian Brettell"
 date: '`r format(Sys.Date())`'
-output: html_notebook
-editor_options: 
-  chunk_output_type: inline
-#output:
-#  html_document:
-#    toc: true
-#    toc_float: true
-#    dev: 'svg'
-#    number_sections: true
-#    keep_md: true
-#    pandoc_args: --lua-filter=color-text.lua
-#    highlight: pygments  
+#output: html_notebook
+#editor_options: 
+#  chunk_output_type: inline
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'svg'
+    number_sections: true
+    keep_md: true
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments  
 ---
 
 Email from Tom, 18 January:
@@ -30,20 +30,19 @@ Nanopore VCF files:
 * [WITHOUT SEQUENCES]{color="red"}:`/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/brain_run2/DNA_analysis/results/SV/sniffles_all/merged.vcf`
 
 `SViper` says:
->The vcf file must be a structural variant format (tags instead of sequences, e.g. <DEL>). ALso the INFO field must include the END tag, giving the end position of the variant, as well as the SVLEN tag in case of insertions.
+>The vcf file must be a structural variant format (tags instead of sequences, e.g. \<DEL\>). Also the INFO field must include the END tag, giving the end position of the variant, as well as the SVLEN tag in case of insertions.
 
 Then we need to map Illumina ID to the Nanopore VCF and figure out how to run the polishing.
 
-Once done we need to summarise and describe the SV’s a little with some annotations etc
-- i will make a start with doing this part and we catchup once you have looked at the polishing
+Once done we need to summarise and describe the SV’s a little with some annotations etc - I will make a start with doing this part and we catchup once you have looked at the polishing
 
 [2.]{color="purple"} catchup with Jack on repeats (both MIKK panel and Nanopore assemblies).
-- create one plot for each paper
+  - create one plot for each paper
 
-3. Fecundity - i will send you the data and a description of what exactly it is later today.
-- we will need a general description of the data, descriptive stats and a heritability estimate - plus a single plot or table (for MIKK panel paper)
+[3.] Fecundity - I will send you the data and a description of what exactly it is later today.
+  - we will need a general description of the data, descriptive stats and a heritability estimate - plus a single plot or table (for MIKK panel paper)
 
-4. Add to txt within the two documents - we can catch-up on this later in the week.
+[4.] Add to txt within the two documents - we can catch-up on this later in the week.
 
 # Polish SV calls with Illumina data
 
@@ -89,7 +88,7 @@ renv::restore()
 
 #### Source
 
-```{r}
+```{r, message = F}
 library(here)
 source(here::here("code", "scripts", "sv_analysis", "source.R"))
 ```
@@ -99,7 +98,7 @@ source(here::here("code", "scripts", "sv_analysis", "source.R"))
 `/hps/research1/birney/users/adrien/analyses/medaka_DNA_promethion/brain_run2/DNA_analysis/results/SV/sniffles_all/merged.vcf`
 
 Created with:
-```{bash}
+```{bash, eval = F}
 # First used:
 sniffles \
   --min_support 3 \
@@ -112,8 +111,11 @@ sniffles \
   -t {threads} \
   -m {input_bam} \
   -v {output_vcf}
-# Then I filtered and merged all the variants from the different samples together with survivor and recalled variants a second time in forced mode using the merged set with sniffles again using the same options.
+
 ```
+
+Adrien:
+>Then I filtered and merged all the variants from the different samples together with survivor and recalled variants a second time in forced mode using the merged set with sniffles again using the same options.
 
 #### Copy to working directory
 
@@ -215,7 +217,7 @@ bcftools stats \
 
 ##### With sequences
 
-```{bash}
+```{bash, eval = F}
 conda activate sv_mikk
 
 in_vcf=../sv_analysis/vcfs/ont_raw_with_seq_rehead.vcf
@@ -231,7 +233,7 @@ bcftools +split \
 
 ##### Without sequences
 
-```{bash}
+```{bash, eval = F}
 conda activate sv_mikk
 
 in_vcf=../sv_analysis/vcfs/ont_raw_rehead.vcf
@@ -275,8 +277,6 @@ bsub -Is bash \
 ##### Pull out IDs for relevant samples
 
 ```{r, eval = F}
-library(here)
-library(tidyverse)
 ont_samples = here::here("data", "sv_analysis", "20210205_ont_raw_samples_file.txt")
 ill_samples = here::here("data","20200206_cram_id_to_line_id.txt")
 out_file = here::here("data", "sv_analysis", "20210205_ill_key_ont_samples.txt")
@@ -356,7 +356,7 @@ Sit here: `/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopor
 ## Polish Nanopore reads with `SViper`
 
 ### Create Singularity container
-```{bash}
+```{bash, eval = F}
 module load singularity
 
 # Build
@@ -371,7 +371,7 @@ bsub -Is "singularity shell ../sing_conts/sviper.sif"
 
 ### Test
 
-```{bash}
+```{bash, eval = F}
 # Load singularity
 module load singularity
 # Pull image built with `envs/sviper/20210204_sviper.def`
@@ -414,7 +414,7 @@ sviper \
 
 ### True
 
-```{bash}
+```{bash, eval = F}
 # Load singularity
 module load singularity
 # Pull image built with `envs/sviper/20210204_sviper.def`
@@ -532,26 +532,6 @@ rm tmp.list
 #Exception in thread "main" java.lang.IllegalArgumentException: Input file /hps/research1/birney/users/ian/mikk_paper/mikk_genome/../sv_analysis/vcfs/sviper/117-2.vcf has sample entries that don't match the other files.
 ```
 
-<!--
-### Try `SURVIVOR`
-
-<https://github.com/fritzsedlazeck/SURVIVOR>
-
-```{bash, eval = F}
-module load singularity
-
-# Build
-singularity build \
-  --remote ../sing_conts/survivor.sif \
-  envs/survivor/20210217_survivor.def
-  
-# Open interactive shell
-bsub -Is "singularity shell ../sing_conts/survivor.sif"
-# Works! 
-```
-
--->
-
 ### Get data from `SViper`
 
 ```{bash, eval = F}
@@ -565,7 +545,7 @@ for in_vcf in $(find $in_dir/*vcf) ; do
   bcftools query \
     --include 'FILTER="PASS"' \
     --exclude 'GT~"\."' \
-    --format '%CHROM,%POS,%ALT,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
+    --format '%CHROM,%POS,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
   --output $out_dir/$sample.csv \
   $in_vcf ;
 done
@@ -573,7 +553,7 @@ done
 
 ### Get data from original VCF
 
-```{bash}
+```{bash, eval = F}
 in_dir=../sv_analysis/vcfs/ont_raw_rehead_per_sample
 out_dir=data/sv_analysis/20210217_raw_ont_filter_pass
 
@@ -608,8 +588,6 @@ for in_vcf in $(find $in_dir/*vcf) ; do
   $in_vcf ;
 done
 ```
-
-
 
 # Analysis
 
@@ -668,51 +646,49 @@ sv_df = list("polished" = sv_df_pol,
                 DATASET = factor(DATASET, levels = c("raw", "polished")))
 ```
 
-## Preliminary plotting of SV type
+## Plot counts of SV types (total)
 
 ```{r}
-svtype_hist_pal = darker(colorRampPalette(pal_brainbow)(4),amount = 75)
+svtype_hist_pal = colorRampPalette(pal_paddle)(5)[c(1:2, 4:5)]
 
 # Histogram of LN
-svtype_distinct_list = sv_df %>% 
+svtype_distinct_df = sv_df %>% 
   dplyr::filter(DATASET == "polished",
                 SVTYPE != "TRA") %>% 
   dplyr::mutate(SVTYPE = factor(SVTYPE, levels = c("DEL", "INS", "DUP", "INV"))) %>% 
   dplyr::select(SVTYPE, CHROM, POS, END, LN) %>% 
-  dplyr::distinct() %>% 
-  split(., f = .$SVTYPE)
+  dplyr::distinct()
+  
+svlen_counts_plot = svtype_distinct_df %>% 
+  ggplot(aes(x = log10(LN),
+             y = ifelse(log10(..count..) < 0,
+                        0,
+                        log10(..count..)),
+             fill = SVTYPE,
+             colour = SVTYPE)) +
+    geom_area(stat = "bin",
+              bins = 100) +
+    scale_fill_manual(values = svtype_hist_pal) +
+    scale_colour_manual(values = karyoploteR::darker(svtype_hist_pal)) +
+    guides(fill = F) +
+    guides(colour = F) +
+    scale_x_continuous(breaks = seq(1, 6, 1),
+                       limits = c(1, 6)) +
+    facet_wrap(~SVTYPE, nrow = 2, ncol = 2) +
+    xlab(expression(log[10](length))) +
+    ylab(expression(log[10](count))) +
+    theme_cowplot() +
+    theme(axis.text.x = element_text(size = 6),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_blank()
+          )  
 
-counter = 0
-svtype_hists = lapply(svtype_distinct_list, function(svtype){
-  counter <<- counter + 1
-  svtype %>% 
-    ggplot() +
-      geom_histogram(aes(LN, fill = SVTYPE),
-                     binwidth = 1e3) +
-      scale_fill_manual(values = svtype_hist_pal[counter]) +
-      guides(fill = F) +
-      xlim(-1000,1e5) +
-      xlab("Length") +
-      ylab("Count") +
-      theme_cowplot() +
-      ggtitle(names(svtype_distinct_list)[counter]) +
-      theme(axis.text.x = element_text(size = 6),
-            plot.title = element_text(colour = svtype_hist_pal[counter]))
-
-})
-
-svtype_hists
+svlen_counts_plot
 ```
 
-```{r}
-# Arrange
-plot_grid(svtype_hists[[1]],
-          svtype_hists[[2]],
-          svtype_hists[[3]],
-          svtype_hists[[4]],
-          labels = c('A', 'B', 'C', 'D'), label_size = 12)
-```
+## Plot counts of SV types (per sample)
 
+Get order of SV type by frequency
 
 ```{r}
 # Get order
@@ -721,76 +697,96 @@ type_order = dplyr::count(sv_df, SVTYPE) %>%
   dplyr::pull(SVTYPE)
 
 # Set palette
-pal_svtype = grDevices::colorRampPalette(pal_brainbow)(length(ont_samples))
-names(pal_svtype) = ont_samples
+pal_svtype = grDevices::colorRampPalette(pal_brainbow)(length(ont_samples_pol))
+names(pal_svtype) = ont_samples_pol
+```
+
+### All
+
+```{r}
+sv_counts_all = sv_df %>% 
+  dplyr::filter(DATASET == "polished") %>%
+  group_by(SAMPLE, SVTYPE) %>% 
+  summarise(N = n()) %>% 
+  dplyr::mutate(FACET = "TOTAL") %>% 
+  dplyr::ungroup()
+```
+
+### Singletons
+
+```{r, results = 'asis'}
+# Create DF with SAMPLE for binding later
+sv_df_pol_samps = sv_df %>% 
+  # exclude raw data, take only polished
+  dplyr::filter(DATASET == "polished") %>% 
+  # select only target cols
+  dplyr::select(CHROM, POS, SVTYPE, LN, SAMPLE)
+
+# Create DF without SAMPLE for detecting duplicates
+sv_df_pol_dupes = sv_df %>% 
+  # exclude raw data, take only polished
+  dplyr::filter(DATASET == "polished") %>% 
+  # select only target cols
+  dplyr::select(CHROM, POS, SVTYPE, LN)
+
+## Get unique rows
+uq_svs = sv_df_pol_dupes[!(duplicated(sv_df_pol_dupes) | duplicated(sv_df_pol_dupes, fromLast = T)), ]
+
+# Join back with other variables
+sv_sings = dplyr::right_join(sv_df_pol_samps, uq_svs)
+
+knitr::kable(head(sv_sings))
+```
+
+```{r}
+# Get singleton counts
+sv_counts_sings = sv_sings %>%
+  dplyr::group_by(SAMPLE, SVTYPE) %>% 
+  dplyr::summarise(N = n()) %>% 
+  dplyr::mutate(FACET = "SINGLETONS") %>% 
+  dplyr::ungroup()
+```
+
+### Bind together and plot
+
+```{r}
+# Bind DFs
+sv_counts = dplyr::bind_rows(sv_counts_all,
+                             sv_counts_sings) %>% 
+  dplyr::mutate(FACET = factor(FACET, levels = c("TOTAL", "SINGLETONS")),
+                SVTYPE = factor(SVTYPE, levels = type_order))
+
+# Set palette
+pal_svcounts = grDevices::colorRampPalette(pal_smrarvo)(length(ont_samples))
+names(pal_svcounts) = ont_samples
 
 # Plot
-svtype_plt = sv_df %>% 
-  dplyr::mutate(DATASET = dplyr::recode(DATASET,
-                                        raw = "Unpolished",
-                                        polished = "Polished")) %>% 
-  group_by(DATASET, SVTYPE, SAMPLE) %>% 
-  summarise(MEAN = mean(LN),
-            MEDIAN = median(LN),
-            COUNT = n()) %>% 
+svtype_counts_plot = sv_counts %>% 
   ggplot() +
-    geom_jitter(aes(factor(SVTYPE, levels = type_order),
-                    COUNT,
-                    colour = SAMPLE,
-#                    size = MEDIAN,
-                    ),
- #               alpha = 0.7,
-                height = 0) +
-#    geom_point(aes(factor(SVTYPE, levels = type_order),
-#                    COUNT,
-#                    colour = SAMPLE,
-#                    size = MEDIAN),
-#                alpha = 0.7) +  
-    facet_wrap(~DATASET) +
-    scale_colour_manual(values = pal_svtype) +
+    geom_col(aes(SAMPLE, N, fill = SAMPLE)) +
+    facet_grid(rows = vars(FACET),
+               cols = vars(SVTYPE),scales = "free_y") +
+    scale_fill_manual(values = pal_svcounts) +
     theme_cowplot() +
-    theme(strip.background = element_blank()) +
-    xlab("Structural variant type") +
-    ylab("Count") +
-    labs(color = "Sample") +
-    guides(fill = F)
-    
-svtype_plt
+    theme(strip.background = element_blank(),
+          axis.text.x = element_text(size = 5,angle = 45,hjust = 1),
+          strip.text.x = element_text(face = "bold")) +
+    guides(fill = F) +
+    xlab("Sample") +
+    ylab("Count")
+
 ```
 
 ```{r}
-ggplotly(svtype_plt)
-```
-```{r}
-final_svtype = ggdraw() +
-  draw_plot(svtype_plt, x = 0, y = 0, width = .6, height = 1) +
-  draw_plot(svtype_hists[[1]], x = .6, y = .5, width =0.2, height = 0.5) +
-  draw_plot(svtype_hists[[2]], x = .8, y = .5, width =0.2, height = 0.5) +
-  draw_plot(svtype_hists[[3]], x = .6, y = 0, width =0.2, height = 0.5) +
-  draw_plot(svtype_hists[[4]], x = .8, y = 0, width =0.2, height = 0.5) +
-  draw_plot_label(label = c("A", "B"), size = 15,
-                  x = c(0, .6), y = c(1, 1))
-
-final_svtype
+ggplotly(svtype_counts_plot)
 ```
 
-
-```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210225_sv_type_counts.svg"),
-       device = "svg",
-       units = "cm",
-       width = 30,
-       height = 10)
-
-ggsave(here::here("plots", "sv_analysis", "20210225_sv_type_counts.png"),
-       device = "png",
-       dpi = 400,
-       units = "cm",
-       width = 30,
-       height = 10)
-```
 
 ## Circos plots
+
+SVGs become very large (~80 MB). Hence PNG.
+
+Create scaffold
 
 ```{r}
 # Read in chromosome data
@@ -802,67 +798,7 @@ chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa
   dplyr::select(chr, start, end)
 ```
 
-```{r}
-# Get deletions data
-sv_dels = sv_df %>% 
-  dplyr::filter(SVTYPE == "DEL") %>% 
-  dplyr::select(CHROM, POS, END, SAMPLE) %>% 
-#  dplyr::slice_sample(n = 30000) %>% 
-  split(., f = .$SAMPLE)
-#  dplyr::filter(SAMPLE == "11-1")
-
-# Transform the data to densities
-#sv_dels_dens = lapply(sv_dels, function(sample){
-#  genomicDensity(sample, window.size = 1e6, count_by = "number")
-#})  
-```
-
-
-```{r, eval = F}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_density_500kb.svg")
-svg(out_plot,
-    width = 20,
-    height = 20)
-
-# Choose palette
-pal = grDevices::colorRampPalette(pal_smrarvo)(length(sv_dels))
-
-# Set parameters
-## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
-circos.par(cell.padding = c(0, 0, 0, 0),
-           track.margin = c(0, 0),
-           gap.degree = c(rep(1, nrow(chroms) - 1), 5))
-
-# Initialize plot
-circos.initializeWithIdeogram(chroms,
-                              plotType = c("axis", "labels"),
-                              major.by = 1e7,
-                              axis.labels.cex = 0.25*par("cex"))
-
-# Create densities
-counter = 0
-lapply(sv_dels, function(sample) {
-  # Set counter
-  counter <<- counter + 1
-  circos.genomicDensity(sample,
-                        ylim.force = T,
-                        window.size = 5e5,
-                        col = pal[counter],
-                        track.height = 0.07,
-                        border = karyoploteR::darker(pal[counter]),
-                        bg.border = NA)
-  circos.yaxis(side = "right",
-               at = c(0, 0.5),
-               labels.cex = 0.25*par("cex"),
-               tick.length = 0.5)
-})
-
-circos.clear()
-
-dev.off() 
-```
-
-### Try with lines, with `y` indicating deletion length
+### DEL
 
 ```{r}
 sv_dels = sv_df %>% 
@@ -870,19 +806,15 @@ sv_dels = sv_df %>%
                 SVTYPE == "DEL") %>% 
   dplyr::select(CHROM, POS, END, SAMPLE, LN) %>%
   dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
-#  dplyr::slice_sample(n = 10000) %>% 
-  split(., f = .$SAMPLE)# %>% 
-#  lapply(., function(sample){
-#    sample %>% 
-#      dplyr::select(-SAMPLE)
-#  })
+  split(., f = .$SAMPLE)
+
 ```
 
-
-### Try with lines
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
+```
 
 ```{r, eval = F}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
 png(out_plot,
     width = 20,
     height = 20,
@@ -906,6 +838,9 @@ circos.initializeWithIdeogram(chroms,
                               plotType = c("axis", "labels"),
                               major.by = 1e7,
                               axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "DEL")
 
 counter = 0
 lapply(sv_dels, function(sample) {
@@ -944,59 +879,23 @@ circos.clear()
 
 dev.off()
 ```
-SVG was a 84 MB file. Hence PNG.
 
-Build into final plot
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
-```{r}
-# Pull del circos
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
+new_path = file.path(current_dir, basename(out_plot))
 
-final_svtype = ggdraw() +
-  draw_plot(svtype_plt,
-            x = 0, y = .7, width = .6, height = .3) +
-  draw_plot(svtype_hists[[1]],
-            x = .6, y = .85, width =0.2, height = 0.15) +
-  draw_plot(svtype_hists[[2]],
-            x = .8, y = .85, width =0.2, height = 0.15) +
-  draw_plot(svtype_hists[[3]],
-            x = .6, y = .7, width =0.2, height = 0.15) +
-  draw_plot(svtype_hists[[4]],
-            x = .8, y = .7, width =0.2, height = 0.15) +
-  draw_image(here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png"),
-             x = 0, y = 0, width = 1, height = .7) +
-  draw_plot_label(label = c("A", "B", "C"), size = 15,
-                  x = c(0, .6, 0), y = c(1, 1, .7))
-
-final_svtype
+file.copy(out_plot, new_path, overwrite = T)
 ```
 
 ```{r}
-ggsave(here::here("plots", "sv_analysis", "20210225_sv_main.png"),
-       device = "png",
-       dpi = 400,
-       units = "cm",
-       width = 30,
-       height = 36)
+knitr::include_graphics(basename(out_plot))
 ```
 
+### INS
 
-
-Palettes
-
-```{r}
-library(fishualize)
-fishualize(n = 10, option = "Cirrhilabrus_solorensis")
-fishualize(n = 10, option = "Gramma_loreto")
-fishualize(n = 10, option = "Hypsypops_rubicundus", end = 0.9)
-fishualize(n = 10, option = "Lepomis_megalotis")
-fishualize(n = 10, option = "Variola_louti")
-```
-
-
-### Insertions
-
-[NOTE]{color="red"}: 25982/351996 insertions have an END that is less than POS. Make the END the same as POS.
+[NOTE]{color="red"}: 25982/351996 insertions have an END that is less than POS. Make the END the same as POS for the purposes of plotting their location.
 
 ```{r}
 sv_ins = sv_df %>% 
@@ -1013,6 +912,9 @@ sv_ins = sv_df %>%
 
 ```{r}
 out_plot = here::here("plots", "sv_analysis", "20210224_sv_ins_lines.png")
+```
+
+```{r, eval = F}
 png(out_plot,
     width = 20,
     height = 20,
@@ -1036,6 +938,9 @@ circos.initializeWithIdeogram(chroms,
                               plotType = c("axis", "labels"),
                               major.by = 1e7,
                               axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "INS")
 
 counter = 0
 lapply(sv_ins, function(sample) {
@@ -1075,7 +980,21 @@ circos.clear()
 dev.off()
 ```
 
-### Duplications
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+### DUP
 
 [NOTE]{color="red"}: 307/26823 duplications have an END that is less than POS. Make the END the same as POS.
 
@@ -1093,6 +1012,9 @@ sv_dups = sv_df %>%
 
 ```{r}
 out_plot = here::here("plots", "sv_analysis", "20210224_sv_dups_lines.png")
+```
+
+```{r, eval = F}
 png(out_plot,
     width = 20,
     height = 20,
@@ -1116,6 +1038,9 @@ circos.initializeWithIdeogram(chroms,
                               plotType = c("axis", "labels"),
                               major.by = 1e7,
                               axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "DUP")
 
 counter = 0
 lapply(sv_dups, function(sample) {
@@ -1155,7 +1080,20 @@ circos.clear()
 dev.off()
 ```
 
-### Inversions
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+### INV
 
 ```{r}
 sv_invs = sv_df %>% 
@@ -1171,6 +1109,9 @@ sv_invs = sv_df %>%
 
 ```{r}
 out_plot = here::here("plots", "sv_analysis", "20210224_sv_invs_lines.png")
+```
+
+```{r, eval = F}
 png(out_plot,
     width = 20,
     height = 20,
@@ -1194,6 +1135,9 @@ circos.initializeWithIdeogram(chroms,
                               plotType = c("axis", "labels"),
                               major.by = 1e7,
                               axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "INV")
 
 counter = 0
 lapply(sv_invs, function(sample) {
@@ -1233,154 +1177,52 @@ circos.clear()
 dev.off()
 ```
 
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
-### Stats for paper
+new_path = file.path(current_dir, basename(out_plot))
 
-```{r}
-# How many short deletions?
-lapply(sv_dels, function(sample){
-  quantile(sample$LN, 0.9)
-})
+file.copy(out_plot, new_path, overwrite = T)
 ```
 
 ```{r}
-# How many insertions and duplications?
-## Combine
-list("INS" = sv_ins,
-                   "DUP" = sv_dups) %>% 
-  lapply(., dplyr::bind_rows) %>% 
-  dplyr::bind_rows(.id = "SVTYPE") %>% 
-  dplyr::group_by(SAMPLE) %>% 
-  dplyr::summarise(n(),
-                   quantile(LN, .96)) %>% 
-  dplyr::summarise(mean(`n()`))
+knitr::include_graphics(basename(out_plot))
 ```
 
-```{r}
-# How many translocations?
-sv_df %>% 
-  dplyr::filter(DATASET == "polished") %>% 
-  dplyr::filter(SVTYPE == "TRA") %>% 
-  dplyr::group_by(SAMPLE) %>% 
-  dplyr::summarise(n()) %>% 
-  dplyr::summarise(mean(`n()`))
-```
-```{r}
-# How many inversions?
-sv_df %>% 
-  dplyr::filter(DATASET == "polished") %>% 
-  dplyr::filter(SVTYPE == "INV") %>% 
-  dplyr::group_by(SAMPLE) %>% 
-  dplyr::summarise(n(),
-                   quantile(LN, 0.5))
+# Final figure
+
+```{r, fig.width=12, fig.height=16.8}
+final_svtype = ggdraw() +
+  draw_image(here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png"),
+           x = 0, y = 0, width = 1, height = .75, scale = 1.12) +
+  draw_plot(svtype_counts_plot,
+            x = 0, y = .75, width = .5, height = .25) +
+  draw_plot(svlen_counts_plot,
+            x = .5, y = .75, width =.5, height = .25) +
+  draw_plot_label(label = c("A", "B", "C"), size = 25,
+                  x = c(0, .5, 0), y = c(1, 1, .75),color = "#4f0943")
+
+final_svtype
 ```
 
-
-## Get stats for table
-
-### Total counts for polished / unpolished
-
-```{r}
-sv_df %>% 
-  group_by(SAMPLE, DATASET) %>% 
-  count()
-```
-Unpolished and polished have the same counts! Look only at polished...
-
-```{r}
-sv_df %>%
-  dplyr::filter(DATASET == "polished") %>% 
-  group_by(SVTYPE) %>% 
-  summarise(TOTAL_COUNT = n(),
-            UNDER_1KB = sum(LN < 1000),
-            UNDER_5KB = sum(LN < 5000),
-            PROP_UNDER_1KB = UNDER_1KB/TOTAL_COUNT,
-            PROP_UNDER_5KB = UNDER_5KB/TOTAL_COUNT)
-```
-```{r}
-sv_df %>% 
-  filter(DATASET == "polished") %>% 
-  group_by(SAMPLE) %>% 
-  summarise(`Total SV count` = n()) %>% 
-  rename(`Sample` = SAMPLE)
+```{r, eval = F}
+ggsave(here::here("plots", "sv_analysis", "20210319_sv_main.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       width = 30,
+       height = 42)
 ```
 
-```{r}
-sv_df %>% 
-  filter(DATASET == "polished") %>% 
-  group_by(SAMPLE, SVTYPE) %>% 
-  count() %>% 
-  pivot_wider(names_from = SVTYPE, values_from = n)
-```
+# Investigate interesting variants
 
-## Get singleton counts
+## Large insertion on chr 17
 
 ```{r}
-sv_df_pol = sv_df %>% 
-  dplyr::filter(DATASET == "polished")
-
-sv_df_pol %>% 
-  distinct(CHROM, POS, SVTYPE, LN)
-
-# Test
-sample = "4-1"
-
-sample_in = sv_df_pol %>% 
-  dplyr::filter(SAMPLE == sample) %>% 
-  dplyr::select(CHROM, POS, SVTYPE, LN)
-
-sample_out = sv_df_pol %>% 
-  dplyr::filter(SAMPLE != sample) %>% 
-  dplyr::select(CHROM, POS, SVTYPE, LN)
-
-sample
-
-lapply(ont_samples_pol, function(sample){
-  target_df
-})
-```
-```{r}
-sv_df_pol %>% 
-  dplyr::select(CHROM, POS, SVTYPE, LN)
-```
-
-
-```{r}
-test = sv_df_pol %>% 
-  distinct(CHROM,POS, SVTYPE, LN, .keep_all = T)
-
-
-```
-
-```{r}
-# check
-test %>% 
-  filter(CHROM == "chr1" & POS == 6774 & SVTYPE == "TRA" & LN == 1)
-
-sv_df_pol %>% 
-  filter(CHROM == "chr1" & POS == 9516 & SVTYPE == "TRA" & LN == 1)
-```
-
-```{r}
-# Try with duplicated
-## Select only target cols
-sv_df_pol_new = sv_df_pol %>% 
-  dplyr::select(CHROM, POS, SVTYPE, LN)
-
-## Get unique rows
-uq_svs = sv_df_pol_new[!(duplicated(sv_df_pol_new) | duplicated(sv_df_pol_new, fromLast = T)), ]
-
-# Join back with other variables
-sv_sings = dplyr::right_join(sv_df_pol, uq_svs)
-
-
-sv_sings
-
-```
-```{r}
-# Check counts
-sv_sings %>%
-  group_by(SAMPLE, SVTYPE) %>% 
-  count()
+# Get locations of insertions longer than 300 kb on chr 17
+sv_ins %>% 
+  dplyr::bind_rows() %>% 
+  dplyr::filter(CHROM == "chr17" & LN > 3e5)
 ```
 
