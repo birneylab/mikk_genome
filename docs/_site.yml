@@ -13,6 +13,8 @@ navbar:
       href: 20210318_introgression.html
     - text: "Repeat Elements"
       href: 20210301_repeats.html
+    - text: "Structural variation"
+      href: 20210319_sv_notebook.html
 output:
   html_document:
     theme: flatly

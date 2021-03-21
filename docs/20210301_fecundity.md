@@ -1,6 +1,6 @@
 ---
 title: "Fecundity"
-date: '2021-03-18'
+date: '2021-03-19'
 #output: html_notebook
 #editor_options: 
 #  chunk_output_type: inline
@@ -38,7 +38,7 @@ inbreed_df = readr::read_csv(raw_dat)
 
 ```
 ## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   MIKK = col_character(),
 ##   `Inbreeding (Generation)` = col_character(),
@@ -162,7 +162,7 @@ out2 = ggplot(test) +
 out2
 ```
 
-![](20210301_fecundity_files/figure-html/unnamed-chunk-89-1.svg)<!-- -->
+![](20210301_fecundity_files/figure-html/unnamed-chunk-3-1.svg)<!-- -->
 
 # Fecundity
 
@@ -256,7 +256,7 @@ fec_count = final_hor_df %>%
 fec_count
 ```
 
-![](20210301_fecundity_files/figure-html/unnamed-chunk-91-1.svg)<!-- -->
+![](20210301_fecundity_files/figure-html/unnamed-chunk-5-1.svg)<!-- -->
 
 # Final figure
 
@@ -271,7 +271,7 @@ final = ggdraw() +
 final
 ```
 
-![](20210301_fecundity_files/figure-html/unnamed-chunk-92-1.svg)<!-- -->
+![](20210301_fecundity_files/figure-html/unnamed-chunk-6-1.svg)<!-- -->
 
 
 ```r

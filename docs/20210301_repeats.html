@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2021-03-18" />
+<meta name="date" content="2021-03-19" />
 
 <title>Repeats</title>
 
@@ -416,6 +416,9 @@ div.tocify {
 <li>
   <a href="20210301_repeats.html">Repeat Elements</a>
 </li>
+<li>
+  <a href="20210319_sv_notebook.html">Structural variation</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -429,7 +432,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Repeats</h1>
-<h4 class="date">2021-03-18</h4>
+<h4 class="date">2021-03-19</h4>
 
 </div>
 
@@ -562,8 +565,10 @@ div.tocify {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find types of class other than &quot;(GATCCA)n&quot; types</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>class_types <span class="ot">=</span> <span class="fu">unique</span>(hdrr_reps<span class="sc">$</span>class[<span class="fu">grep</span>(<span class="st">&quot;)n&quot;</span>, hdrr_reps<span class="sc">$</span>class, <span class="at">invert =</span> T)])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>class_types</span></code></pre></div>
-<p>[1] “DNA” “Unknown” “SINE” “LINE” “LTR” “Simple_repeat” [7] “Satellite” “RC” “tRNA” “rRNA” “Retroposon” “snRNA”<br />
-[13] "" “buffer” “ARTEFACT” “scRNA”</p>
+<p>[1] “DNA” “Unknown” “SINE” “LINE” “LTR”<br />
+[6] “Simple_repeat” “Satellite” “RC” “tRNA” “rRNA”<br />
+[11] “Retroposon” “snRNA” "" “buffer” “ARTEFACT”<br />
+[16] “scRNA”</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many in the blank class?</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">which</span>(hdrr_reps<span class="sc">$</span>class <span class="sc">==</span> <span class="st">&quot;&quot;</span>))</span></code></pre></div>
 <p>[1] 8</p>

@@ -543,7 +543,6 @@ mkdir -p $out_dir
 for in_vcf in $(find $in_dir/*vcf) ; do
   sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
   bcftools query \
-    --include 'FILTER="PASS"' \
     --exclude 'GT~"\."' \
     --format '%CHROM,%POS,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
   --output $out_dir/$sample.csv \
@@ -564,7 +563,7 @@ for in_vcf in $(find $in_dir/*vcf) ; do
   bcftools query \
     --include 'FILTER="PASS"' \
     --exclude 'GT~"\."' \
-    --format '%CHROM,%POS,%ALT,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
+    --format '%CHROM,%POS,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
   --output $out_dir/$sample.csv \
   $in_vcf ;
 done
@@ -604,8 +603,8 @@ names(in_files) = basename(in_files) %>%
 
 sv_df_pol = lapply(in_files, function(in_file){
   df = readr::read_csv(in_file,
-                       col_names = c("CHROM", "POS", "ALT", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
-                       col_types = c("ciciccicic"))
+                       col_names = c("CHROM", "POS", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("cicciccicic"))
   
   return(df)
 }) %>% 
@@ -613,6 +612,62 @@ sv_df_pol = lapply(in_files, function(in_file){
   # add "chr" to beginning of CHROM column
   dplyr::mutate(CHROM = paste("chr", CHROM, sep = ""))
 ```
+
+Counts for FILTER by SVTYPE
+
+```{r}
+sv_df_pol %>%
+  dplyr::group_by(SVTYPE, FILTER) %>% 
+  dplyr::count()
+```
+**`SViper` only polishes insertions and deletions! Actually says that in the first line of the README. Will have to conditionally filter.
+
+### Plot frequency of different types of fails
+
+```{r}
+sv_filter_desc = sv_df_pol %>%
+  dplyr::group_by(SVTYPE, FILTER) %>% 
+#  dplyr::count() %>%   
+  dplyr::mutate(FILTER = factor(FILTER, levels = names(filter_recode)),
+                FILTER_DESC = dplyr::recode(FILTER, !!!filter_recode)) %>% 
+  dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>% 
+#  dplyr::count(FILTER)
+  ggplot() +
+    geom_bar(aes(FILTER_DESC, fill = SVTYPE)) +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 5)) +
+    facet_wrap(~SVTYPE) +
+    scale_fill_manual(values = svtype_hist_pal) +
+    xlab("Filter description") +
+    guides(fill = F)
+
+```
+
+```{r, eval = F}
+ggsave(here::here("plots", "sv_analysis", "20210319_sv_filter.png"),
+       device = "png",
+       width = 20,
+       height = 9.375,
+       units = "cm",
+       dpi = 400)
+```
+
+```{r}
+ggplotly(sv_filter_desc)
+```
+
+
+```{r}
+# Filter out non-passes for DEL and INS STYPEs
+sv_df_pol = sv_df_pol %>% 
+  dplyr::filter(!(SVTYPE %in% c("DEL", "INS") & FILTER != "PASS"))
+
+
+sv_df_pol %>% 
+  dplyr::group_by(SVTYPE, FILTER) %>% 
+  dplyr::count()
+```
+
 
 ### ONT raw
 
@@ -625,8 +680,8 @@ names(in_files) = basename(in_files) %>%
 
 sv_df_raw = lapply(in_files, function(in_file){
   df = readr::read_csv(in_file,
-                       col_names = c("CHROM", "POS", "ALT", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
-                       col_types = c("ciciccicic"))
+                       col_names = c("CHROM", "POS", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("cicciccicic"))
   
   return(df)
 }) %>% 
@@ -649,8 +704,6 @@ sv_df = list("polished" = sv_df_pol,
 ## Plot counts of SV types (total)
 
 ```{r}
-svtype_hist_pal = colorRampPalette(pal_paddle)(5)[c(1:2, 4:5)]
-
 # Histogram of LN
 svtype_distinct_df = sv_df %>% 
   dplyr::filter(DATASET == "polished",
@@ -685,6 +738,52 @@ svlen_counts_plot = svtype_distinct_df %>%
 
 svlen_counts_plot
 ```
+
+### Compare counts of DEL and INS before and after polishing
+
+```{r}
+# Histogram of LN
+polish_comp_plot = sv_df %>% 
+  dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>% 
+  dplyr::mutate(SVTYPE = factor(SVTYPE, levels = c("DEL", "INS", "DUP", "INV"))) %>% 
+  dplyr::select(DATASET, CHROM, POS, END, SVTYPE, LN) %>% 
+  dplyr::distinct() %>% 
+  ggplot(aes(x = log10(LN),
+             y = ifelse(log10(..count..) < 0,
+                        0,
+                        log10(..count..)),
+             fill = SVTYPE,
+             colour = SVTYPE)) +
+    geom_area(stat = "bin",
+              bins = 100) +
+    scale_fill_manual(values = svtype_hist_pal) +
+    scale_colour_manual(values = karyoploteR::darker(svtype_hist_pal)) +
+    guides(fill = F) +
+    guides(colour = F) +
+    scale_x_continuous(breaks = seq(1, 6, 1),
+                       limits = c(1, 6)) +
+    facet_grid(rows = vars(DATASET),
+               cols = vars(SVTYPE)) +
+    xlab(expression(log[10](length))) +
+    ylab(expression(log[10](count))) +
+    theme_cowplot() +
+    theme(axis.text.x = element_text(size = 6),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_blank()
+          )
+
+polish_comp_plot
+```
+
+```{r, eval = F}
+ggsave(here::here("plots", "sv_analysis", "20210319_polish_count_comparison.png"),
+       device = "png",
+       width = 15,
+       height = 9.375,
+       units = "cm",
+       dpi = 400)
+```
+
 
 ## Plot counts of SV types (per sample)
 
@@ -780,7 +879,6 @@ svtype_counts_plot = sv_counts %>%
 ```{r}
 ggplotly(svtype_counts_plot)
 ```
-
 
 ## Circos plots
 
@@ -908,6 +1006,7 @@ sv_ins = sv_df %>%
   dplyr::mutate(END = dplyr::if_else(END < POS, POS, END)) %>% 
 #  dplyr::slice_sample(n = 10000) %>% 
   split(., f = .$SAMPLE)
+
 ```
 
 ```{r}
@@ -923,7 +1022,7 @@ png(out_plot,
 
 # Get max value for `ylim`
 max_len = max(sapply(sv_ins, function(sample) max(sample$LN)))
-max_len = round.choose(max_len, 1e5, dir = 1)
+max_len = round.choose(max_len, 1e4, dir = 1)
 
 # Choose palette
 pal = fishualize::fish(n = length(sv_ins), option = "Cirrhilabrus_solorensis")
@@ -968,7 +1067,7 @@ lapply(sv_ins, function(sample) {
   
 
   # Add SAMPLE y-axis label
-  circos.text(2e6, 2.5e5,
+  circos.text(2e6, 1e4,
               labels = names(sv_ins)[counter],
               sector.index = "chr1",
               cex = 0.4*par("cex"))
@@ -1217,12 +1316,18 @@ ggsave(here::here("plots", "sv_analysis", "20210319_sv_main.png"),
 
 # Investigate interesting variants
 
-## Large insertion on chr 17
+## Large insertion on chr 5
 
 ```{r}
 # Get locations of insertions longer than 300 kb on chr 17
 sv_ins %>% 
   dplyr::bind_rows() %>% 
-  dplyr::filter(CHROM == "chr17" & LN > 3e5)
+  dplyr::filter(CHROM == "chr5" & LN > 10000)
+```
+
+```{bash, eval = F}
+grep "23770083"  ../sv_analysis/vcfs/ont_raw_with_seq_rehead_per_sample/4-1.vcf 
+# Returns a sequence that is only 1000 bases long?
+#5	23770083	51143	N	<INS>	.	PASS	SUPP=12;SUPP_VEC=111111111111;SVLEN=13649;SVTYPE=INS;SVMETHOD=SURVIVOR1.0.7;CHR2=5;END=23770083;CIPOS=0,0;CIEND=0,0;STRANDS=-+GT:PSV:LN:DR:ST:QV:TY:ID:RAL:AAL:CO	1/1:NA:13649:0,6:-+:.:INS:51143:N:TATGAGGGGCTTTATAAGACATTATTTATTCTGAACCATTCACATTCATACATTCTGCTCTCACAGTCATATACTCTTTCGCATACATATATTCTCTTACGCATCCATATATTCTCTCTCACATTCATACATTCTTTGCTCTCACAGTCATATATACTCTCTTTCGCATACATATATTCTCACTTGCACATTCATATATTCTCTCTCGCATGCATATATATTACTTTTACACATACATACATTCTCACTCTATTGTCACTCTTAAAAAGAATGTATGTGTGAAAGACAAGTATATATGAACGTGTGAGGAAGAGTTTATATGTGTGTGTGTGAGAGAGGAGTATGCATGAAACGGAAGTGACTTTGCATGAAAAGGAAGGCACTTGAATGAAAAGAAGGCACTTTGCATGAAACGGAAGGCAGATGATTTCTCGTGCTCTGATTGGACGAGAGGCCGCCACCTCCCATTTTGAACACACTCTAAACCCTATCACTTGTACTGACTCATAACTATTAAGGTTACACAACTCAAATGTCATTTCGTAGTTGGATTCAACTATAAAGTATTAAGCTCTATCAAGATTTTTTCAAATTTAACTTAACAGTGTTAAATATTTTAAAGCTTATTTGTATCTAGCACTCTAAAATTTTAAGATTCCTGAAGTAGCGTCATGATCGTCACACACTGGTGGGAGGGTCTTTCGTTTTCTACGTTAGCTCAGGTGGCCATGTTGGATTTGTCAATGCGAGTATGCGACGTTTTGAAATTGAAAGTCGAGCATTTTATTTTTCTGCAAAGCATTTCGCTCCCGCTTCAAGACGCCCAACTCGGGTTTTTTCATCCGCCTCATCGCTGATGGTGCCGTCTTGTCTTCAGCCCTGATTTAAATTTGGTAAGTATCGTTCATGGTTTATTTTGAACGAATGTTTAAAATGCTCTTATACCACCGTAAATGTGGTTTACTGTTGTTTAAACATATGTGTGTTATGATTGTTTTA:5_23770083-5_23770083
 ```
 
