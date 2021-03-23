@@ -1,0 +1,612 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	24	emf_2_geno_extract_131_1
+	144	run_abba_baba_sliding_131_1
+	169
+Select jobs to execute...
+
+[Tue Mar 23 09:29:39 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/1.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/1.txt
+    jobid: 9449
+    wildcards: chr=1
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/1.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/1.txt
+        
+Submitted job 9449 with external jobid 'Job <4079588> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:39 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/3.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/3.txt
+    jobid: 9464
+    wildcards: chr=3
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/3.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/3.txt
+        
+Submitted job 9464 with external jobid 'Job <4079589> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:40 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/16.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/16.txt
+    jobid: 9456
+    wildcards: chr=16
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/16.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/16.txt
+        
+Submitted job 9456 with external jobid 'Job <4079590> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:40 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/18.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/18.txt
+    jobid: 9450
+    wildcards: chr=18
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/18.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/18.txt
+        
+Submitted job 9450 with external jobid 'Job <4079591> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:40 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/11.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/11.txt
+    jobid: 9457
+    wildcards: chr=11
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/11.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/11.txt
+        
+Submitted job 9457 with external jobid 'Job <4079592> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:40 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/2.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/2.txt
+    jobid: 9465
+    wildcards: chr=2
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/2.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/2.txt
+        
+Submitted job 9465 with external jobid 'Job <4079593> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:41 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/17.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/17.txt
+    jobid: 9451
+    wildcards: chr=17
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/17.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/17.txt
+        
+Submitted job 9451 with external jobid 'Job <4079594> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:41 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/15.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/15.txt
+    jobid: 9458
+    wildcards: chr=15
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/15.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/15.txt
+        
+Submitted job 9458 with external jobid 'Job <4079595> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:41 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/5.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/5.txt
+    jobid: 9466
+    wildcards: chr=5
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/5.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/5.txt
+        
+Submitted job 9466 with external jobid 'Job <4079596> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:41 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/20.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/20.txt
+    jobid: 9452
+    wildcards: chr=20
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/20.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/20.txt
+        
+Submitted job 9452 with external jobid 'Job <4079597> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:41 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/19.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/19.txt
+    jobid: 9459
+    wildcards: chr=19
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/19.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/19.txt
+        
+Submitted job 9459 with external jobid 'Job <4079598> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:42 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/12.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/12.txt
+    jobid: 9467
+    wildcards: chr=12
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/12.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/12.txt
+        
+Submitted job 9467 with external jobid 'Job <4079602> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:42 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/4.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/4.txt
+    jobid: 9445
+    wildcards: chr=4
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/4.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/4.txt
+        
+Submitted job 9445 with external jobid 'Job <4079603> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:42 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/6.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/6.txt
+    jobid: 9453
+    wildcards: chr=6
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/6.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/6.txt
+        
+Submitted job 9453 with external jobid 'Job <4079604> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:43 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/22.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/22.txt
+    jobid: 9460
+    wildcards: chr=22
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/22.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/22.txt
+        
+Submitted job 9460 with external jobid 'Job <4079605> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:43 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/21.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/21.txt
+    jobid: 9468
+    wildcards: chr=21
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/21.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/21.txt
+        
+Submitted job 9468 with external jobid 'Job <4079606> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:43 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/8.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/8.txt
+    jobid: 9446
+    wildcards: chr=8
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/8.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/8.txt
+        
+Submitted job 9446 with external jobid 'Job <4079607> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:43 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/23.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/23.txt
+    jobid: 9454
+    wildcards: chr=23
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/23.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/23.txt
+        
+Submitted job 9454 with external jobid 'Job <4079610> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:43 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/24.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/24.txt
+    jobid: 9461
+    wildcards: chr=24
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/24.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/24.txt
+        
+Submitted job 9461 with external jobid 'Job <4079611> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:44 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/9.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/9.txt
+    jobid: 9447
+    wildcards: chr=9
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/9.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/9.txt
+        
+Submitted job 9447 with external jobid 'Job <4079612> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:44 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/7.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/7.txt
+    jobid: 9455
+    wildcards: chr=7
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/7.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/7.txt
+        
+Submitted job 9455 with external jobid 'Job <4079613> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:44 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/13.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/13.txt
+    jobid: 9462
+    wildcards: chr=13
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/13.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/13.txt
+        
+Submitted job 9462 with external jobid 'Job <4079614> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:45 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/14.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/14.txt
+    jobid: 9448
+    wildcards: chr=14
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/14.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/14.txt
+        
+Submitted job 9448 with external jobid 'Job <4079615> is submitted to default queue <research-rh74>.'.
+
+[Tue Mar 23 09:29:45 2021]
+rule emf_2_geno_extract_131_1:
+    input: ../introgression/genos/final_full-run/10.txt, data/sv_analysis/20210323_full-run_except_131-1.txt
+    output: ../introgression/genos/final_131-1/10.txt
+    jobid: 9463
+    wildcards: chr=10
+
+
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/10.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/10.txt
+        
+Submitted job 9463 with external jobid 'Job <4079616> is submitted to default queue <research-rh74>.'.
+[Tue Mar 23 09:30:35 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9464
+    output: ../introgression/genos/final_131-1/3.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/3.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/3.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079589> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9464, external: Job <4079589> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9464.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:35 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9456
+    output: ../introgression/genos/final_131-1/16.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/16.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/16.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079590> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9456, external: Job <4079590> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9456.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:35 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9457
+    output: ../introgression/genos/final_131-1/11.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/11.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/11.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079592> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9457, external: Job <4079592> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9457.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:35 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9465
+    output: ../introgression/genos/final_131-1/2.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/2.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/2.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079593> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9465, external: Job <4079593> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9465.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:35 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9451
+    output: ../introgression/genos/final_131-1/17.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/17.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/17.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079594> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9451, external: Job <4079594> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9451.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9458
+    output: ../introgression/genos/final_131-1/15.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/15.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/15.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079595> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9458, external: Job <4079595> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9458.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9466
+    output: ../introgression/genos/final_131-1/5.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/5.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/5.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079596> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9466, external: Job <4079596> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9466.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9452
+    output: ../introgression/genos/final_131-1/20.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/20.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/20.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079597> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9452, external: Job <4079597> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9452.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9459
+    output: ../introgression/genos/final_131-1/19.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/19.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/19.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079598> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9459, external: Job <4079598> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9459.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9467
+    output: ../introgression/genos/final_131-1/12.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/12.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/12.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079602> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9467, external: Job <4079602> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9467.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9453
+    output: ../introgression/genos/final_131-1/6.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/6.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/6.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079604> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9453, external: Job <4079604> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9453.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9460
+    output: ../introgression/genos/final_131-1/22.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/22.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/22.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079605> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9460, external: Job <4079605> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9460.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:36 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9468
+    output: ../introgression/genos/final_131-1/21.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/21.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/21.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079606> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9468, external: Job <4079606> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9468.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:37 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9447
+    output: ../introgression/genos/final_131-1/9.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/9.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/9.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079612> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9447, external: Job <4079612> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9447.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9450
+    output: ../introgression/genos/final_131-1/18.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/18.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/18.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079591> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9450, external: Job <4079591> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9450.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9445
+    output: ../introgression/genos/final_131-1/4.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/4.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/4.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079603> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9445, external: Job <4079603> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9445.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9446
+    output: ../introgression/genos/final_131-1/8.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/8.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/8.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079607> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9446, external: Job <4079607> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9446.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9461
+    output: ../introgression/genos/final_131-1/24.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/24.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/24.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079611> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9461, external: Job <4079611> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9461.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9455
+    output: ../introgression/genos/final_131-1/7.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/7.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/7.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079613> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9455, external: Job <4079613> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9455.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9462
+    output: ../introgression/genos/final_131-1/13.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/13.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/13.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079614> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9462, external: Job <4079614> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9462.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:48 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9463
+    output: ../introgression/genos/final_131-1/10.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/10.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/10.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079616> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9463, external: Job <4079616> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9463.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:59 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9449
+    output: ../introgression/genos/final_131-1/1.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/1.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/1.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079588> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9449, external: Job <4079588> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9449.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:59 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9454
+    output: ../introgression/genos/final_131-1/23.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/23.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/23.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079610> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9454, external: Job <4079610> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9454.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+[Tue Mar 23 09:30:59 2021]
+Error in rule emf_2_geno_extract_131_1:
+    jobid: 9448
+    output: ../introgression/genos/final_131-1/14.txt
+    shell:
+        
+        Rscript --no-save --no-restore --no-environ --no-site-file code/scripts/introgression/20201022_remove_sibs.R ../introgression/genos/final_full-run/14.txt data/sv_analysis/20210323_full-run_except_131-1.txt ../introgression/genos/final_131-1/14.txt
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <4079615> is submitted to default queue <research-rh74>.
+
+Error executing rule emf_2_geno_extract_131_1 on cluster (jobid: 9448, external: Job <4079615> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.ehvels5k/snakejob.emf_2_geno_extract_131_1.9448.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-23T092747.678651.snakemake.log

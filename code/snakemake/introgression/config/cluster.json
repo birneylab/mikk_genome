@@ -90,5 +90,13 @@
     "run_abba_baba_sliding" :
     {
         "memory" : "20000"
+    },
+    "emf_2_geno_extract_131_1" :
+    {
+        "memory" : "20000"
+    },
+    "run_abba_baba_sliding_131_1" :
+    {
+        "memory" : "20000"
     }
 }

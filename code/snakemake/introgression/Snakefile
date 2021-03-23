@@ -134,7 +134,14 @@ rule all:
                 chr = list(set(CHRS))),
         "data/introgression/hni_hsok.txt.gz",
         os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt"),
-        "data/introgression/mikk.txt.gz"
+        "data/introgression/mikk.txt.gz",
+        expand(os.path.join(config["geno_dir"], "final_131-1/{chr}.txt"),
+                chr = list(set(CHRS))),
+        expand(os.path.join(config["abba_sliding_dir_131-1"] + "_wsize_" + config["sliding_window_length_131-1"] + "_msites_" + config["minimum_sites_131-1"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+        
 
 # EMFs
 
@@ -614,4 +621,48 @@ rule compress_mikk_snp_density:
     shell:
         """
         gzip -k {input} && mv {input}.gz {output}
+        """
+
+# 131-1 investigation
+
+rule emf_2_geno_extract_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        excluded_sibs = config["excluded_lines_except_131-1"]
+    output:
+        os.path.join(config["geno_dir"], "final_131-1/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule run_abba_baba_sliding_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_131-1/{chr}.txt"),
+        pop_file = config["pop_file_131-1"]
+    output:
+        os.path.join(config["abba_sliding_dir_131-1"] + "_wsize_" + config["sliding_window_length_131-1"] + "_msites_" + config["minimum_sites_131-1"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length_131-1"],
+        minimum_sites = config["minimum_sites_131-1"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {config[abba_sliding_dir_131-1]} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
         """

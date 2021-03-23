@@ -21,6 +21,9 @@ df = read.table(in_file,
                 comment.char = "*",
                 check.names = F)
 
+## Substitute dashes for underscores in column names
+colnames(df) = gsub("-", "_", colnames(df))
+
 # Remove siblings
 
 ## Read in siblings file
