@@ -90,3 +90,5 @@ minimum_sites_131-1:
     "250"
 abba_sliding_dir_131-1:
     "data/introgression/abba_sliding_131-1"
+abba_sliding_dir_final_131-1:
+    "data/introgression/abba_sliding_final_131-1"

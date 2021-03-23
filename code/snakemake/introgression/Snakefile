@@ -140,7 +140,8 @@ rule all:
         expand(os.path.join(config["abba_sliding_dir_131-1"] + "_wsize_" + config["sliding_window_length_131-1"] + "_msites_" + config["minimum_sites_131-1"], "{p1}_{p2}_{chr}.txt"),
                 p1 = P1S,
                 p2 = P2S,
-                chr = list(set(CHRS)))
+                chr = list(set(CHRS))),
+        os.path.join(config["abba_sliding_dir_final_131-1"], config["sliding_window_length_131-1"] + "_" + config["minimum_sites_131-1"] + ".txt")
         
 
 # EMFs
@@ -665,4 +666,19 @@ rule run_abba_baba_sliding_131_1:
             --popsFile {input.pop_file} \
             -w {params.window_length} \
             -m {params.minimum_sites}
+        """
+
+rule combine_sliding_windows_data_131_1:
+    input:
+        expand(os.path.join(config["abba_sliding_dir_131-1"] + "_wsize_" + config["sliding_window_length_131-1"] + "_msites_" + config["minimum_sites_131-1"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join(config["abba_sliding_dir_final_131-1"], config["sliding_window_length_131-1"] + "_" + config["minimum_sites_131-1"] + ".txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_sliding_window_data_script]} --input {input} --output {output}
         """
