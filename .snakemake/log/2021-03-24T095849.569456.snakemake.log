@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 731 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Missing input files for rule download_kaga_reads:
+ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002225/DRR002226_1.fastq.gz

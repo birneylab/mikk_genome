@@ -1,0 +1,50 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_call_haplotypes
+	1	kaga_genotype
+	3
+Select jobs to execute...
+
+[Wed Mar 24 08:27:44 2021]
+rule kaga_call_haplotypes:
+    input: ../introgression/bams/kaga_marked.bam, ../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa
+    output: ../introgression/vcfs/kaga.g.vcf.gz
+    jobid: 7
+
+
+        gatk --java-options "-Xmx12g" HaplotypeCaller              -R ../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa             -I ../introgression/bams/kaga_marked.bam             -O ../introgression/vcfs/kaga.g.vcf.gz             -ERC GVCF
+        
+Submitted job 7 with external jobid 'Job <4479469> is submitted to default queue <research-rh74>.'.
+[Wed Mar 24 09:04:40 2021]
+Finished job 7.
+1 of 3 steps (33%) done
+Select jobs to execute...
+
+[Wed Mar 24 09:04:41 2021]
+rule kaga_genotype:
+    input: ../introgression/vcfs/kaga.g.vcf.gz, ../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa
+    output: ../introgression/vcfs/kaga.vcf.gz
+    jobid: 8
+
+
+        gatk --java-options "-Xmx12g" GenotypeGVCFs             -R ../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa             -V ../introgression/vcfs/kaga.g.vcf.gz             -O ../introgression/vcfs/kaga.vcf.gz
+        
+Submitted job 8 with external jobid 'Job <4488365> is submitted to default queue <research-rh74>.'.
+[Wed Mar 24 09:06:01 2021]
+Finished job 8.
+2 of 3 steps (67%) done
+Select jobs to execute...
+
+[Wed Mar 24 09:06:02 2021]
+localrule all:
+    input: ../introgression/fastas/Kaga_DRR001980_1.fastq.gz, ../introgression/fastas/Kaga_DRR001980_2.fastq.gz, ../introgression/sams/kaga.sam, ../introgression/bams/kaga_with_read_groups.bam, ../introgression/bams/kaga_sorted.bam, ../introgression/bams/kaga_marked.bam, ../introgression/bams/kaga_marked.bai, ../introgression/vcfs/kaga.g.vcf.gz, ../introgression/vcfs/kaga.vcf.gz
+    jobid: 0
+
+[Wed Mar 24 09:06:02 2021]
+Finished job 0.
+3 of 3 steps (100%) done
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-24T082739.095276.snakemake.log

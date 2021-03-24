@@ -1,0 +1,66 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	4	add_kaga_read_groups
+	4	align_kaga_to_hdrr
+	1	all
+	8	download_kaga_reads
+	17
+Select jobs to execute...
+Downloading from remote: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002227/DRR002227_1.fastq.gz
+Finished download.
+
+[Wed Mar 24 10:01:34 2021]
+rule download_kaga_reads:
+    input: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002227/DRR002227_1.fastq.gz
+    output: ../introgression/fastas/DRR002227_1.fastq.gz
+    jobid: 5
+    wildcards: kaga_sample=DRR002227, read=1
+
+
+        mv ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002227/DRR002227_1.fastq.gz ../introgression/fastas/DRR002227_1.fastq.gz
+        
+Submitted job 5 with external jobid 'Job <4501268> is submitted to default queue <research-rh74>.'.
+Downloading from remote: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002228/DRR002228_1.fastq.gz
+[Wed Mar 24 10:01:51 2021]
+Finished job 5.
+1 of 17 steps (6%) done
+Finished download.
+
+[Wed Mar 24 10:02:56 2021]
+rule download_kaga_reads:
+    input: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002228/DRR002228_1.fastq.gz
+    output: ../introgression/fastas/DRR002228_1.fastq.gz
+    jobid: 7
+    wildcards: kaga_sample=DRR002228, read=1
+
+
+        mv ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002228/DRR002228_1.fastq.gz ../introgression/fastas/DRR002228_1.fastq.gz
+        
+Submitted job 7 with external jobid 'Job <4501744> is submitted to default queue <research-rh74>.'.
+Downloading from remote: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002226/DRR002226_1.fastq.gz
+[Wed Mar 24 10:03:12 2021]
+Finished job 7.
+2 of 17 steps (12%) done
+Finished download.
+
+[Wed Mar 24 10:04:46 2021]
+rule download_kaga_reads:
+    input: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002226/DRR002226_1.fastq.gz
+    output: ../introgression/fastas/DRR002226_1.fastq.gz
+    jobid: 3
+    wildcards: kaga_sample=DRR002226, read=1
+
+
+        mv ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002226/DRR002226_1.fastq.gz ../introgression/fastas/DRR002226_1.fastq.gz
+        
+Submitted job 3 with external jobid 'Job <4501852> is submitted to default queue <research-rh74>.'.
+Downloading from remote: ftp.sra.ebi.ac.uk/vol1/fastq/DRR002/DRR002225/DRR002225_2.fastq.gz
+[Wed Mar 24 10:05:02 2021]
+Finished job 3.
+3 of 17 steps (18%) done
+Terminating processes on user request, this might take some time.
+Will exit after finishing currently running jobs.
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-24T100103.367435.snakemake.log

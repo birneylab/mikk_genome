@@ -91,12 +91,46 @@
     {
         "memory" : "20000"
     },
-    "emf_2_geno_extract_131_1" :
+    "emf_2_geno_extract_131" :
     {
         "memory" : "20000"
     },
-    "run_abba_baba_sliding_131_1" :
+    "run_abba_baba_sliding_131" :
     {
         "memory" : "20000"
+    },
+    "align_kaga_to_hdrr" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "add_kaga_read_groups" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "sort_kaga_sam" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "mark_kaga_duplicates" :
+    {
+        "memory" : "30000",
+        "n" : "16"
+    },
+    "kaga_index_bam" :
+    {
+        "n" : "4"
+    },
+    "kaga_call_haplotypes" :
+    {
+        "memory" : "10000",
+        "n" : "16"
+    },
+    "kaga_genotype" :
+    {
+        "memory" : "10000",
+        "n" : "16"
     }
 }

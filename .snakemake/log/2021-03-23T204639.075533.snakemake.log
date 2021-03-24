@@ -1,0 +1,28 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	add_kaga_read_groups
+	1	all
+	3	combine_sliding_windows_data_131
+	1	mark_kaga_duplicates
+	288	run_abba_baba_sliding_131
+	294
+Select jobs to execute...
+
+[Tue Mar 23 20:48:38 2021]
+rule run_abba_baba_sliding_131:
+    input: ../introgression/genos/final_131-2/24.txt
+    output: data/introgression/abba_sliding_131-2_wsize_1000000_msites_250/javanicus_hsok_24.txt
+    jobid: 9786
+    wildcards: line_131_sib=131-2, p1=javanicus, p2=hsok, chr=24
+
+RuleException in line 655 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+NameError: The name 'line_131_sib' is unknown in this context. Did you mean 'wildcards.line_131_sib'?
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 136, in run_jobs
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 935, in run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 722, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 230, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 156, in _run
+  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 162, in printjob

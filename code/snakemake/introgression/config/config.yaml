@@ -80,15 +80,27 @@ bash:
     "../sing_conts/bash_3.0.22.sif"
 process_snp_density_script:
     "code/scripts/introgression/process_snp_density.R"
-excluded_lines_except_131-1:
-    "data/sv_analysis/20210323_full-run_except_131-1.txt"
-pop_file_131-1:
-    "data/introgression/131-1.pop.txt"
-sliding_window_length_131-1:
+sliding_window_length_131:
     "1000000"
-minimum_sites_131-1:
+minimum_sites_131:
     "250"
-abba_sliding_dir_131-1:
-    "data/introgression/abba_sliding_131-1"
 abba_sliding_dir_final_131-1:
     "data/introgression/abba_sliding_final_131-1"
+kaga_ftp_dir:
+    "ftp.sra.ebi.ac.uk/vol1/fastq/DRR002"
+fasta_dir:
+    "../introgression/fastas"
+sam_dir:
+    "../introgression/sams"
+minimap2:
+    "../sing_conts/minimap2_2.17.sif"
+hdrr_reference:
+    "../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa"
+bam_dir:
+    "../introgression/bams"
+picard:
+    "../sing_conts/picard_2.25.0.sif"
+gatk:
+    "../sing_conts/gatk_4.2.0.0.sif"
+vcf_dir:
+    "../introgression/vcfs"
