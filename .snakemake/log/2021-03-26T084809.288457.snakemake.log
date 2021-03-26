@@ -1,0 +1,42 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_call_haplotypes
+	1	kaga_genotype
+	1	kaga_index_bam
+	1	kaga_index_vcf
+	1	kaga_merge_bams
+	6
+Select jobs to execute...
+
+[Fri Mar 26 08:48:22 2021]
+rule kaga_merge_bams:
+    input: ../introgression/bams/marked/DRR002225.bam, ../introgression/bams/marked/DRR002226.bam, ../introgression/bams/marked/DRR002227.bam, ../introgression/bams/marked/DRR002228.bam
+    output: ../introgression/bams/merged/kaga.bam
+    jobid: 25
+
+
+        java -jar /usr/picard/picard.jar MergeSamFiles             I=../introgression/bams/marked/DRR002225.bam I=../introgression/bams/marked/DRR002226.bam I=../introgression/bams/marked/DRR002227.bam I=../introgression/bams/marked/DRR002228.bam             O=../introgression/bams/merged/kaga.bam             TMP_DIR=../tmp
+        
+Submitted job 25 with external jobid 'Job <5198985> is submitted to default queue <research-rh74>.'.
+[Fri Mar 26 12:59:22 2021]
+Finished job 25.
+1 of 6 steps (17%) done
+Select jobs to execute...
+
+[Fri Mar 26 12:59:23 2021]
+rule kaga_index_bam:
+    input: ../introgression/bams/merged/kaga.bam
+    output: ../introgression/bams/merged/kaga.bai
+    jobid: 26
+
+
+        java -jar /usr/picard/picard.jar BuildBamIndex             I=../introgression/bams/merged/kaga.bam
+        
+Submitted job 26 with external jobid 'Job <5307658> is submitted to default queue <research-rh74>.'.
+Terminating processes on user request, this might take some time.
+Will exit after finishing currently running jobs.
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-26T084809.288457.snakemake.log

@@ -162,7 +162,16 @@ rule all:
         expand(os.path.join(config["sam_dir"], "{kaga_sample}.sam"),
                 kaga_sample = KAGA_SAMPLES),
         expand(os.path.join(config["sam_dir"], "{kaga_sample}_withRGs.sam"),
-                kaga_sample = KAGA_SAMPLES)
+                kaga_sample = KAGA_SAMPLES),
+        expand(os.path.join(config["bam_dir"], "sorted/{kaga_sample}.bam"),
+                kaga_sample = KAGA_SAMPLES),
+        expand(os.path.join(config["bam_dir"], "marked/{kaga_sample}.bam"),
+                kaga_sample = KAGA_SAMPLES),
+        os.path.join(config["bam_dir"], "merged/kaga.bam"),
+        os.path.join(config["bam_dir"], "merged/kaga.bai"),
+        os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz"),
+        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz"),
+        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz.tbi")
 #        os.path.join(config["fasta_dir"], "Kaga_DRR001980_1.fastq.gz"),
 #        os.path.join(config["fasta_dir"], "Kaga_DRR001980_2.fastq.gz"),
 #        os.path.join(config["sam_dir"], "kaga.sam"),
@@ -795,7 +804,7 @@ rule add_kaga_read_groups:
         config["picard"]
     shell:
         """
-        java -jar /usr/picard/picard.jar AddOrReplaceReadGroups \
+        java -Xmx12g -jar /usr/picard/picard.jar AddOrReplaceReadGroups \
             I={input} \
             O={output} \
             RGID={params.id} \
@@ -814,10 +823,11 @@ rule sort_kaga_sam:
         config["picard"]
     shell:
         """
-        java -jar /usr/picard/picard.jar SortSam \
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam \
             I={input} \
             O={output} \
-            SORT_ORDER=coordinate
+            SORT_ORDER=coordinate \
+            TMP_DIR={config[tmp_dir]}
         """
 
 rule mark_kaga_duplicates:
@@ -833,31 +843,33 @@ rule mark_kaga_duplicates:
         java -jar /usr/picard/picard.jar MarkDuplicates \
             I={input} \
             O={output.bam} \
-            M={output.metrics}
+            M={output.metrics} \
+            TMP_DIR={config[tmp_dir]}
         """
 
 rule kaga_merge_bams:
     input:
-        expand(os.path.join(config["bam_dir"], "/marked/{kaga_sample}.bam"),
+        expand(os.path.join(config["bam_dir"], "marked/{kaga_sample}.bam"),
                 kaga_sample = KAGA_SAMPLES)
     output:
-        os.path.join(config["bam_dir"], "/merged/kaga.bam")
+        os.path.join(config["bam_dir"], "merged/kaga.bam")
     params:
         files = lambda wildcards, input: " I=".join(input)
     singularity:
         config["picard"]
     shell:
         """
-        java -jar /usr/picard/picard.jar \
+        java -jar /usr/picard/picard.jar MergeSamFiles \
             I={params.files} \
-            O={output}
+            O={output} \
+            TMP_DIR={config[tmp_dir]}
         """
 
 rule kaga_index_bam:
     input:
-        os.path.join(config["bam_dir"], "/merged/kaga.bam")
+        os.path.join(config["bam_dir"], "merged/kaga.bam")
     output:
-        os.path.join(config["bam_dir"], "/merged/kaga.bai")
+        os.path.join(config["bam_dir"], "merged/kaga.bai")
     singularity:
         config["picard"]
     shell:
@@ -868,8 +880,8 @@ rule kaga_index_bam:
 
 rule kaga_call_haplotypes:
     input:
-        bam = os.path.join(config["bam_dir"], "/merged/kaga.bam"),
-        index = os.path.join(config["bam_dir"], "kaga_marked.bai")
+        bam = os.path.join(config["bam_dir"], "merged/kaga.bam"),
+        index = os.path.join(config["bam_dir"], "merged/kaga.bai")
     output:
         os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz")
     singularity:
@@ -880,14 +892,15 @@ rule kaga_call_haplotypes:
             -R {config[hdrr_reference]} \
             -I {input.bam} \
             -O {output} \
-            -ERC GVCF
+            -ERC GVCF \
+            --tmp-dir {config[tmp_dir]}
         """
 
 rule kaga_genotype:
     input:
         os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz")
     output:
-        os.path.join(config["vcf_dir"], "kaga.vcf.gz")
+        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz")
     singularity:
         config["gatk"]
     shell:
@@ -896,4 +909,16 @@ rule kaga_genotype:
             -R {config[hdrr_reference]} \
             -V {input} \
             -O {output}
+        """
+
+rule kaga_index_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
         """

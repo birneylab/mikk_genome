@@ -1,0 +1,166 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_call_haplotypes
+	1	kaga_genotype
+	1	kaga_index_bam
+	1	kaga_index_vcf
+	1	kaga_merge_bams
+	4	mark_kaga_duplicates
+	4	sort_kaga_sam
+	14
+Select jobs to execute...
+
+[Thu Mar 25 09:42:33 2021]
+rule sort_kaga_sam:
+    input: ../introgression/sams/DRR002226_withRGs.sam
+    output: ../introgression/bams/sorted/DRR002226.bam
+    jobid: 18
+    wildcards: kaga_sample=DRR002226
+
+
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam             I=../introgression/sams/DRR002226_withRGs.sam             O=../introgression/bams/sorted/DRR002226.bam             SORT_ORDER=coordinate             TMP_DIR=../tmp
+        
+Submitted job 18 with external jobid 'Job <4839845> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 25 09:42:34 2021]
+rule sort_kaga_sam:
+    input: ../introgression/sams/DRR002225_withRGs.sam
+    output: ../introgression/bams/sorted/DRR002225.bam
+    jobid: 17
+    wildcards: kaga_sample=DRR002225
+
+
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam             I=../introgression/sams/DRR002225_withRGs.sam             O=../introgression/bams/sorted/DRR002225.bam             SORT_ORDER=coordinate             TMP_DIR=../tmp
+        
+Submitted job 17 with external jobid 'Job <4839847> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 25 09:42:34 2021]
+rule sort_kaga_sam:
+    input: ../introgression/sams/DRR002227_withRGs.sam
+    output: ../introgression/bams/sorted/DRR002227.bam
+    jobid: 19
+    wildcards: kaga_sample=DRR002227
+
+
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam             I=../introgression/sams/DRR002227_withRGs.sam             O=../introgression/bams/sorted/DRR002227.bam             SORT_ORDER=coordinate             TMP_DIR=../tmp
+        
+Submitted job 19 with external jobid 'Job <4839849> is submitted to default queue <research-rh74>.'.
+
+[Thu Mar 25 09:42:35 2021]
+rule sort_kaga_sam:
+    input: ../introgression/sams/DRR002228_withRGs.sam
+    output: ../introgression/bams/sorted/DRR002228.bam
+    jobid: 20
+    wildcards: kaga_sample=DRR002228
+
+
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam             I=../introgression/sams/DRR002228_withRGs.sam             O=../introgression/bams/sorted/DRR002228.bam             SORT_ORDER=coordinate             TMP_DIR=../tmp
+        
+Submitted job 20 with external jobid 'Job <4839850> is submitted to default queue <research-rh74>.'.
+[Thu Mar 25 10:44:48 2021]
+Finished job 19.
+1 of 14 steps (7%) done
+Select jobs to execute...
+
+[Thu Mar 25 10:44:49 2021]
+rule mark_kaga_duplicates:
+    input: ../introgression/bams/sorted/DRR002227.bam
+    output: ../introgression/bams/marked/DRR002227.bam, ../introgression/bams/marked/DRR002227_metrics.txt
+    jobid: 23
+    wildcards: kaga_sample=DRR002227
+
+
+        java -jar /usr/picard/picard.jar MarkDuplicates             I=../introgression/bams/sorted/DRR002227.bam             O=../introgression/bams/marked/DRR002227.bam             M=../introgression/bams/marked/DRR002227_metrics.txt
+        
+Submitted job 23 with external jobid 'Job <4882194> is submitted to default queue <research-rh74>.'.
+[Thu Mar 25 10:57:53 2021]
+Finished job 23.
+2 of 14 steps (14%) done
+[Thu Mar 25 17:58:38 2021]
+Finished job 20.
+3 of 14 steps (21%) done
+Select jobs to execute...
+
+[Thu Mar 25 17:58:39 2021]
+rule mark_kaga_duplicates:
+    input: ../introgression/bams/sorted/DRR002228.bam
+    output: ../introgression/bams/marked/DRR002228.bam, ../introgression/bams/marked/DRR002228_metrics.txt
+    jobid: 24
+    wildcards: kaga_sample=DRR002228
+
+
+        java -jar /usr/picard/picard.jar MarkDuplicates             I=../introgression/bams/sorted/DRR002228.bam             O=../introgression/bams/marked/DRR002228.bam             M=../introgression/bams/marked/DRR002228_metrics.txt
+        
+Submitted job 24 with external jobid 'Job <5003631> is submitted to default queue <research-rh74>.'.
+[Thu Mar 25 19:29:45 2021]
+Finished job 24.
+4 of 14 steps (29%) done
+[Thu Mar 25 21:25:41 2021]
+Finished job 17.
+5 of 14 steps (36%) done
+Select jobs to execute...
+
+[Thu Mar 25 21:25:42 2021]
+rule mark_kaga_duplicates:
+    input: ../introgression/bams/sorted/DRR002225.bam
+    output: ../introgression/bams/marked/DRR002225.bam, ../introgression/bams/marked/DRR002225_metrics.txt
+    jobid: 21
+    wildcards: kaga_sample=DRR002225
+
+
+        java -jar /usr/picard/picard.jar MarkDuplicates             I=../introgression/bams/sorted/DRR002225.bam             O=../introgression/bams/marked/DRR002225.bam             M=../introgression/bams/marked/DRR002225_metrics.txt
+        
+Submitted job 21 with external jobid 'Job <5056483> is submitted to default queue <research-rh74>.'.
+[Thu Mar 25 23:44:14 2021]
+Finished job 21.
+6 of 14 steps (43%) done
+[Fri Mar 26 03:40:07 2021]
+Finished job 18.
+7 of 14 steps (50%) done
+Select jobs to execute...
+
+[Fri Mar 26 03:40:08 2021]
+rule mark_kaga_duplicates:
+    input: ../introgression/bams/sorted/DRR002226.bam
+    output: ../introgression/bams/marked/DRR002226.bam, ../introgression/bams/marked/DRR002226_metrics.txt
+    jobid: 22
+    wildcards: kaga_sample=DRR002226
+
+
+        java -jar /usr/picard/picard.jar MarkDuplicates             I=../introgression/bams/sorted/DRR002226.bam             O=../introgression/bams/marked/DRR002226.bam             M=../introgression/bams/marked/DRR002226_metrics.txt
+        
+Submitted job 22 with external jobid 'Job <5124150> is submitted to default queue <research-rh74>.'.
+[Fri Mar 26 06:12:17 2021]
+Finished job 22.
+8 of 14 steps (57%) done
+Select jobs to execute...
+
+[Fri Mar 26 06:12:18 2021]
+rule kaga_merge_bams:
+    input: ../introgression/bams/marked/DRR002225.bam, ../introgression/bams/marked/DRR002226.bam, ../introgression/bams/marked/DRR002227.bam, ../introgression/bams/marked/DRR002228.bam
+    output: ../introgression/bams/merged/kaga.bam
+    jobid: 25
+
+
+        java -jar /usr/picard/picard.jar             I=../introgression/bams/marked/DRR002225.bam I=../introgression/bams/marked/DRR002226.bam I=../introgression/bams/marked/DRR002227.bam I=../introgression/bams/marked/DRR002228.bam             O=../introgression/bams/merged/kaga.bam
+        
+Submitted job 25 with external jobid 'Job <5158662> is submitted to default queue <research-rh74>.'.
+[Fri Mar 26 06:12:37 2021]
+Error in rule kaga_merge_bams:
+    jobid: 25
+    output: ../introgression/bams/merged/kaga.bam
+    shell:
+        
+        java -jar /usr/picard/picard.jar             I=../introgression/bams/marked/DRR002225.bam I=../introgression/bams/marked/DRR002226.bam I=../introgression/bams/marked/DRR002227.bam I=../introgression/bams/marked/DRR002228.bam             O=../introgression/bams/merged/kaga.bam
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <5158662> is submitted to default queue <research-rh74>.
+
+Error executing rule kaga_merge_bams on cluster (jobid: 25, external: Job <5158662> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.fuov3ewk/snakejob.kaga_merge_bams.25.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-25T094221.191779.snakemake.log

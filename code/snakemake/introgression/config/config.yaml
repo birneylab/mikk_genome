@@ -104,3 +104,5 @@ gatk:
     "../sing_conts/gatk_4.2.0.0.sif"
 vcf_dir:
     "../introgression/vcfs"
+tmp_dir:
+    "../tmp"
