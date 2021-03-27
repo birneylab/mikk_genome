@@ -39,10 +39,10 @@ Once done we need to summarise and describe the SV’s a little with some annota
 [2.]{color="purple"} catchup with Jack on repeats (both MIKK panel and Nanopore assemblies).
   - create one plot for each paper
 
-[3.] Fecundity - I will send you the data and a description of what exactly it is later today.
+[3.]{color="purple"} Fecundity - I will send you the data and a description of what exactly it is later today.
   - we will need a general description of the data, descriptive stats and a heritability estimate - plus a single plot or table (for MIKK panel paper)
 
-[4.] Add to txt within the two documents - we can catch-up on this later in the week.
+[4.]{color="purple"} Add to txt within the two documents - we can catch-up on this later in the week.
 
 # Polish SV calls with Illumina data
 
@@ -330,7 +330,7 @@ bcftools +split \
 
 Copy to local.
 
-```{bash}
+```{bash, eval = F}
 sample_key=data/sv_analysis/20210205_ill_key_ont_samples.txt
 ill_bam_dir=/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/bam
 out_dir=../sv_analysis/bams
@@ -544,7 +544,7 @@ for in_vcf in $(find $in_dir/*vcf) ; do
   sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
   bcftools query \
     --exclude 'GT~"\."' \
-    --format '%CHROM,%POS,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
+    --format '%CHROM,%POS,%ID,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
   --output $out_dir/$sample.csv \
   $in_vcf ;
 done
@@ -563,26 +563,7 @@ for in_vcf in $(find $in_dir/*vcf) ; do
   bcftools query \
     --include 'FILTER="PASS"' \
     --exclude 'GT~"\."' \
-    --format '%CHROM,%POS,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
-  --output $out_dir/$sample.csv \
-  $in_vcf ;
-done
-```
-
-### Get polish stats 
-
-```{bash, eval = F}
-in_dir=../sv_analysis/vcfs/sviper
-out_dir=data/sv_analysis/20210226_polish_stats
-
-mkdir -p $out_dir
-
-for in_vcf in $(find $in_dir/*vcf) ; do
-  sample=$(basename $in_vcf | cut -f1 -d'.' ) ;
-  bcftools query \
-    --include 'FILTER="PASS"' \
-    --exclude 'GT~"\."' \
-    --format '%CHROM,%POS,%FILTER,%INFO/SVTYPE,[%LN]\n' \
+    --format '%CHROM,%POS,%ID,%ALT,%FILTER,%INFO/SVLEN,%INFO/SVTYPE,%INFO/CHR2,%INFO/END,[%GT],[%LN],[%ST]\n' \
   --output $out_dir/$sample.csv \
   $in_vcf ;
 done
@@ -603,8 +584,8 @@ names(in_files) = basename(in_files) %>%
 
 sv_df_pol = lapply(in_files, function(in_file){
   df = readr::read_csv(in_file,
-                       col_names = c("CHROM", "POS", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
-                       col_types = c("cicciccicic"))
+                       col_names = c("CHROM", "POS", "ID", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("ciicciccicic"))
   
   return(df)
 }) %>% 
@@ -617,21 +598,45 @@ Counts for FILTER by SVTYPE
 
 ```{r}
 sv_df_pol %>%
+  # Remove 131-1
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>%
   dplyr::group_by(SVTYPE, FILTER) %>% 
   dplyr::count()
 ```
 **`SViper` only polishes insertions and deletions! Actually says that in the first line of the README. Will have to conditionally filter.
 
+### How many DUP and INS filtered out?
+
+```{r}
+sv_df_pol %>% 
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>% 
+  dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>% 
+  dplyr::group_by(SVTYPE, FILTER) %>% 
+  dplyr::count() %>% 
+  dplyr::ungroup() %>%
+  split(., f = .$SVTYPE) %>% 
+  purrr::map(function(x) {
+    data.frame(TOTAL = sum(x$n),
+               TOTAL_FAILED = sum(x %>% 
+                                    dplyr::filter(FILTER != "PASS") %>%
+                                    dplyr::select(n)),
+               TOTAL_PASSED = x %>% 
+                 dplyr::filter(FILTER == "PASS") %>% 
+                 dplyr::pull(n)) %>% 
+      dplyr::mutate(PROP_FAILED = TOTAL_FAILED / TOTAL)
+    }) %>% 
+  dplyr::bind_rows(.id = "SVTYPE")
+```
 ### Plot frequency of different types of fails
 
 ```{r}
 sv_filter_desc = sv_df_pol %>%
+  # remove 131-1
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>% 
   dplyr::group_by(SVTYPE, FILTER) %>% 
-#  dplyr::count() %>%   
   dplyr::mutate(FILTER = factor(FILTER, levels = names(filter_recode)),
                 FILTER_DESC = dplyr::recode(FILTER, !!!filter_recode)) %>% 
   dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>% 
-#  dplyr::count(FILTER)
   ggplot() +
     geom_bar(aes(FILTER_DESC, fill = SVTYPE)) +
     theme_bw() +
@@ -644,7 +649,7 @@ sv_filter_desc = sv_df_pol %>%
 ```
 
 ```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210319_sv_filter.png"),
+ggsave(here::here("plots", "sv_analysis", "20210325_sv_filter.png"),
        device = "png",
        width = 20,
        height = 9.375,
@@ -656,10 +661,13 @@ ggsave(here::here("plots", "sv_analysis", "20210319_sv_filter.png"),
 ggplotly(sv_filter_desc)
 ```
 
-
 ```{r}
+# Make copy of full polished DF
+sv_df_pol_all = sv_df_pol
+
 # Filter out non-passes for DEL and INS STYPEs
-sv_df_pol = sv_df_pol %>% 
+sv_df_pol = sv_df_pol %>%
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>% 
   dplyr::filter(!(SVTYPE %in% c("DEL", "INS") & FILTER != "PASS"))
 
 
@@ -669,7 +677,7 @@ sv_df_pol %>%
 ```
 
 
-### ONT raw
+### ONT unpolished
 
 ```{r}
 in_dir = here::here("data", "sv_analysis/20210217_raw_ont_filter_pass")
@@ -680,8 +688,8 @@ names(in_files) = basename(in_files) %>%
 
 sv_df_raw = lapply(in_files, function(in_file){
   df = readr::read_csv(in_file,
-                       col_names = c("CHROM", "POS", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
-                       col_types = c("cicciccicic"))
+                       col_names = c("CHROM", "POS", "ID", "ALT", "FILTER", "SVLEN", "SVTYPE", "CHR2", "END", "GT", "LN", "ST"),
+                       col_types = c("ciicciccicic"))
   
   return(df)
 }) %>% 
@@ -693,21 +701,85 @@ sv_df_raw = lapply(in_files, function(in_file){
 ### Combine into single df
 
 ```{r}
-sv_df = list("polished" = sv_df_pol,
-             "raw" = sv_df_raw) %>% 
+# All
+sv_df_all = list("polished" = sv_df_pol_all,
+             "unpolished" = sv_df_raw) %>% 
   dplyr::bind_rows(.id = "DATASET") %>% 
   # factor samples and dataset
   dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples),
-                DATASET = factor(DATASET, levels = c("raw", "polished")))
+                DATASET = factor(DATASET, levels = c("unpolished", "polished")))
+
+# Filtered
+sv_df = list("polished" = sv_df_pol,
+             "unpolished" = sv_df_raw) %>% 
+  dplyr::bind_rows(.id = "DATASET") %>% 
+  # factor samples and dataset
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples),
+                DATASET = factor(DATASET, levels = c("unpolished", "polished")))
 ```
 
-## Plot counts of SV types (total)
+## How many SVs did polishing change? 
+
+[NOTE]{color="red"}: there is a small number of SV IDs that are duplicated, e.g.:
+
+```{r}
+sv_df_all %>% dplyr::filter(SAMPLE == "4-1" & ID == 78181)
+
+# How many duplicates?
+sv_df_all %>% 
+  dplyr::filter(SVTYPE %in% c("DEL", "INS") & FILTER == "PASS") %>% 
+  group_by(DATASET, SAMPLE) %>%
+  summarise(length(which(duplicated(ID))))
+```
+
+Exclude duplicates and get percentages of amended POS, END, and LN
+
+```{r}
+sv_df_all %>%
+  # Refactorise to exclude unpolished ONT samples
+  dplyr::mutate(SAMPLE = factor(SAMPLE, levels = ont_samples_pol)) %>% 
+  # Take only polished samples
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>% 
+  # Take only DEL and INS that passed the filter
+  dplyr::filter(SVTYPE %in% c("DEL", "INS") & FILTER == "PASS") %>%
+  # Remove duplicates
+  dplyr::group_by(DATASET, SAMPLE) %>% 
+  dplyr::filter(!duplicated(ID)) %>% 
+  dplyr::ungroup() %>% 
+  # Take target columns
+  dplyr::select(DATASET, SAMPLE, ID, CHROM, POS, END, LN) %>% 
+#  # Take only 4-1 for testing
+#  dplyr::filter(SAMPLE == "4-1") %>% 
+  # Split by sample and run following on each
+  split(., .$SAMPLE) %>% 
+  purrr::map(., function(sample) sample %>% 
+    # Pivot wider by DATASET to compare POS, END and LN
+    tidyr::pivot_wider(id_cols = c(DATASET, ID),
+                       names_from = DATASET,
+                       values_from = c(POS, END, LN),
+                       ) %>% 
+    # Get proportions of SVs where unpolished and polished differ in POS, END, or LN
+    dplyr::mutate(POS_diff = POS_polished != POS_unpolished,
+                  END_diff = END_polished != END_unpolished,
+                  LN_diff = LN_polished != LN_unpolished) %>% 
+    dplyr::summarise(TOTAL = n(),
+                     dplyr::across(ends_with("_diff"), ~sum(.x, na.rm = T)/TOTAL))
+  ) %>% 
+  dplyr::bind_rows(.id = "SAMPLE")
+
+
+```
+
+## Plot counts of polished SV types
 
 ```{r}
 # Histogram of LN
 svtype_distinct_df = sv_df %>% 
+  # Extract polished data and remove TRA
   dplyr::filter(DATASET == "polished",
-                SVTYPE != "TRA") %>% 
+                SVTYPE != "TRA") %>%
+  # Remove polish-filter fails
+  dplyr::filter(!(SVTYPE %in% c("DEL", "INS") & FILTER != "PASS")) %>% 
   dplyr::mutate(SVTYPE = factor(SVTYPE, levels = c("DEL", "INS", "DUP", "INV"))) %>% 
   dplyr::select(SVTYPE, CHROM, POS, END, LN) %>% 
   dplyr::distinct()
@@ -744,7 +816,10 @@ svlen_counts_plot
 ```{r}
 # Histogram of LN
 polish_comp_plot = sv_df %>% 
-  dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>% 
+  # take only the samples in the polished dataset
+  dplyr::filter(SAMPLE %in% ont_samples_pol) %>% 
+  dplyr::filter(SVTYPE %in% c("DEL", "INS")) %>%
+  # order by SVTYPE
   dplyr::mutate(SVTYPE = factor(SVTYPE, levels = c("DEL", "INS", "DUP", "INV"))) %>% 
   dplyr::select(DATASET, CHROM, POS, END, SVTYPE, LN) %>% 
   dplyr::distinct() %>% 
@@ -776,14 +851,13 @@ polish_comp_plot
 ```
 
 ```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210319_polish_count_comparison.png"),
+ggsave(here::here("plots", "sv_analysis", "20210325_polish_count_comparison.png"),
        device = "png",
        width = 15,
        height = 9.375,
        units = "cm",
        dpi = 400)
 ```
-
 
 ## Plot counts of SV types (per sample)
 
@@ -909,7 +983,7 @@ sv_dels = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png")
+out_plot = here::here("plots", "sv_analysis", "20210325_sv_dels_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1010,7 +1084,7 @@ sv_ins = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_ins_lines.png")
+out_plot = here::here("plots", "sv_analysis", "20210325_sv_ins_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1110,7 +1184,7 @@ sv_dups = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_dups_lines.png")
+out_plot = here::here("plots", "sv_analysis", "20210325_sv_dups_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1207,7 +1281,7 @@ sv_invs = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210224_sv_invs_lines.png")
+out_plot = here::here("plots", "sv_analysis", "20210325_sv_invs_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1289,11 +1363,94 @@ file.copy(out_plot, new_path, overwrite = T)
 knitr::include_graphics(basename(out_plot))
 ```
 
-# Final figure
+### TRA
+
+```{r}
+out_dir = here::here("plots", "sv_analysis", "20210326_tras")
+in_samples = ont_samples_pol
+pal = fishualize::fish(n = length(in_samples), option = "Scarus_quoyi")
+```
+
+```{r, eval = F}
+counter = 0
+lapply(in_samples, function(TARGET_SAMPLE){
+  # Set counter
+  counter <<- counter + 1
+
+  # Get data
+  sv_tras = sv_df %>% 
+    dplyr::filter(DATASET == "polished",
+                  SVTYPE == "TRA") %>% 
+    # test with single sample
+    dplyr::filter(SAMPLE == TARGET_SAMPLE) %>% 
+    # select key columns
+    dplyr::select(CHROM, POS, ALT, CHR2, END)
+  
+  loc_1 = sv_tras %>% 
+    dplyr::select(CHROM, START = POS, END = POS)
+  
+  loc_2 = sv_tras %>% 
+    dplyr::select(CHROM = CHR2, START = END, END = END) %>% 
+    dplyr::mutate(CHROM = paste("chr", CHROM, sep = ""))
+  
+  out_plot = here::here(out_dir, paste(TARGET_SAMPLE, ".png", sep = ""))
+  
+  png(out_plot,
+      width = 20,
+      height = 20,
+      units = "cm",
+      res = 400)
+  
+  # Set parameters
+  ## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+  circos.par(cell.padding = c(0, 0, 0, 0),
+             track.margin = c(0, 0),
+             gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+  # Initialize plot
+  circos.initializeWithIdeogram(chroms,
+                                plotType = c("axis", "labels"),
+                                major.by = 1e7,
+                                axis.labels.cex = 0.25*par("cex"))
+  
+  circos.genomicLink(loc_1, loc_2, 
+                     col = grDevices::adjustcolor(pal[counter], alpha.f = 0.4),
+                     lwd = .25*par("lwd"),
+                     border = NA)
+  
+  circos.text(0, 0,
+              labels = TARGET_SAMPLE,
+              sector.index = "chr1",
+              facing = "clockwise",
+              adj = c(0.5, -0.5),
+              cex = 1.5*par("cex"))
+  
+  circos.clear()
+  
+  dev.off()
+
+})
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+out_plots = here::here(out_dir, paste(ont_samples_pol, ".png", sep = ""))
+new_paths = file.path(current_dir, basename(out_plots))
+
+file.copy(out_plots, new_paths, overwrite = T)
+```
+
+```{r, fig.show='hold', out.width='33%', out.height='33%'}
+knitr::include_graphics(basename(new_paths))
+```
+
+
+# Main figure
 
 ```{r, fig.width=12, fig.height=16.8}
 final_svtype = ggdraw() +
-  draw_image(here::here("plots", "sv_analysis", "20210224_sv_dels_lines.png"),
+  draw_image(here::here("plots", "sv_analysis", "20210325_sv_dels_lines.png"),
            x = 0, y = 0, width = 1, height = .75, scale = 1.12) +
   draw_plot(svtype_counts_plot,
             x = 0, y = .75, width = .5, height = .25) +
@@ -1306,12 +1463,67 @@ final_svtype
 ```
 
 ```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210319_sv_main.png"),
+ggsave(here::here("plots", "sv_analysis", "20210325_sv_main.png"),
        device = "png",
        dpi = 400,
        units = "cm",
        width = 30,
        height = 42)
+```
+
+## Distribution of singletons across chromosomes
+
+```{r}
+sv_sings %>%
+  dplyr::mutate(CHROM = gsub("chr", "", CHROM),
+                CHROM = factor(CHROM, levels = 1:24)) %>% 
+  dplyr::group_by(CHROM, SAMPLE) %>% 
+  dplyr::summarise(N = n()) %>% 
+  dplyr::ungroup() %>% 
+  ggplot() +
+    geom_col(aes(CHROM, N, fill = CHROM)) + 
+    facet_wrap(~SAMPLE) +
+    theme_bw() +
+    theme(axis.text.x = element_text(size = 5)) +
+    guides(fill = F) +
+    ggtitle("Singletons")
+```
+```{r}
+ggsave(here::here(plots_dir, "20210325_singleton_counts_by_chr.png"),
+       device = "png",
+       width = 20,
+       height = 9.375,
+       units = "cm",
+       dpi = 400)
+```
+
+## Distribution of non-singletons across chromosomes
+```{r}
+sv_df %>% 
+  dplyr::filter(DATASET == "polished") %>% 
+  # Exclude singletons
+  dplyr::anti_join(sv_sings, by = c("CHROM", "POS", "LN")) %>%
+  # Order CHROM
+  dplyr::mutate(CHROM = gsub("chr", "", CHROM),
+                CHROM = factor(CHROM, levels = 1:24)) %>% 
+  dplyr::group_by(CHROM) %>% 
+  dplyr::summarise(N = n()) %>% 
+  tidyr::drop_na() %>% 
+  dplyr::ungroup() %>% 
+  ggplot() +
+    geom_col(aes(CHROM, N, fill = CHROM)) + 
+    theme_bw() +
+    guides(fill = F) +
+    ggtitle("Non-singletons (i.e. shared by at least two lines)")  
+```
+
+```{r}
+ggsave(here::here(plots_dir, "20210325_shared_svs_by_chr.png"),
+       device = "png",
+       width = 15,
+       height = 9.375,
+       units = "cm",
+       dpi = 400)
 ```
 
 # Investigate interesting variants
@@ -1326,8 +1538,837 @@ sv_ins %>%
 ```
 
 ```{bash, eval = F}
-grep "23770083"  ../sv_analysis/vcfs/ont_raw_with_seq_rehead_per_sample/4-1.vcf 
+grep "23770083"  ../sv_analysis/vcfs/ont_raw_with_seq_rehead_per_sample/4-1.vcf
 # Returns a sequence that is only 1000 bases long?
 #5	23770083	51143	N	<INS>	.	PASS	SUPP=12;SUPP_VEC=111111111111;SVLEN=13649;SVTYPE=INS;SVMETHOD=SURVIVOR1.0.7;CHR2=5;END=23770083;CIPOS=0,0;CIEND=0,0;STRANDS=-+GT:PSV:LN:DR:ST:QV:TY:ID:RAL:AAL:CO	1/1:NA:13649:0,6:-+:.:INS:51143:N:TATGAGGGGCTTTATAAGACATTATTTATTCTGAACCATTCACATTCATACATTCTGCTCTCACAGTCATATACTCTTTCGCATACATATATTCTCTTACGCATCCATATATTCTCTCTCACATTCATACATTCTTTGCTCTCACAGTCATATATACTCTCTTTCGCATACATATATTCTCACTTGCACATTCATATATTCTCTCTCGCATGCATATATATTACTTTTACACATACATACATTCTCACTCTATTGTCACTCTTAAAAAGAATGTATGTGTGAAAGACAAGTATATATGAACGTGTGAGGAAGAGTTTATATGTGTGTGTGTGAGAGAGGAGTATGCATGAAACGGAAGTGACTTTGCATGAAAAGGAAGGCACTTGAATGAAAAGAAGGCACTTTGCATGAAACGGAAGGCAGATGATTTCTCGTGCTCTGATTGGACGAGAGGCCGCCACCTCCCATTTTGAACACACTCTAAACCCTATCACTTGTACTGACTCATAACTATTAAGGTTACACAACTCAAATGTCATTTCGTAGTTGGATTCAACTATAAAGTATTAAGCTCTATCAAGATTTTTTCAAATTTAACTTAACAGTGTTAAATATTTTAAAGCTTATTTGTATCTAGCACTCTAAAATTTTAAGATTCCTGAAGTAGCGTCATGATCGTCACACACTGGTGGGAGGGTCTTTCGTTTTCTACGTTAGCTCAGGTGGCCATGTTGGATTTGTCAATGCGAGTATGCGACGTTTTGAAATTGAAAGTCGAGCATTTTATTTTTCTGCAAAGCATTTCGCTCCCGCTTCAAGACGCCCAACTCGGGTTTTTTCATCCGCCTCATCGCTGATGGTGCCGTCTTGTCTTCAGCCCTGATTTAAATTTGGTAAGTATCGTTCATGGTTTATTTTGAACGAATGTTTAAAATGCTCTTATACCACCGTAAATGTGGTTTACTGTTGTTTAAACATATGTGTGTTATGATTGTTTTA:5_23770083-5_23770083
+```
+
+# Explore shared variation between 131-1 and HdrR/HNI
+
+Key files:
+
+* 131-1 assembly:
+`/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/graph_genome_analysis/individual_assemblies/131-1_F4_clean.fa`
+
+HNI reference:
+`/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/graph_genome_analysis/references/Oryzias_latipes_HNI_clean.fa`
+
+You may also like to do against HDrR:
+`/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/graph_genome_analysis/references/Oryzias_latipes_HDRR_clean.fa`
+
+## Run `minigraph`
+
+```{bash, eval = F}
+container=../sing_conts/minigraph.sif
+in_fasta=/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/graph_genome_analysis/individual_assemblies/131-1_F4_clean.fa
+ref_pref=/hps/research1/birney/users/adrien/indigene/analyses/indigene_nanopore_DNA/graph_genome_analysis/references/Oryzias_latipes
+out_dir=../sv_analysis/pafs
+
+mkdir -p $out_dir
+
+for target_ref in $(echo HNI HDRR ) ; do
+  bsub \
+    -M 30000 \
+    -n 16 \
+    -o ../log/20210322_minigraph_$target_ref.out \
+    -e ../log/20210322_minigraph_$target_ref.err \
+    """
+    singularity exec $container \
+      /minigraph/minigraph $in_fasta $ref_pref\_$target_ref\_clean.fa \
+        > $out_dir/MIKK_131-1_to_$target_ref.paf
+    """ ;
+done
+
+# Flip other way around
+## Usage: minigraph [options] <target.gfa> <query.fa> [...]
+## So use the reference as the target, 131-1 as the query
+for target_ref in $(echo HNI HDRR ) ; do
+  bsub \
+    -M 20000 \
+    -n 16 \
+    -o ../log/20210322_minigraph_flipped_$target_ref.out \
+    -e ../log/20210322_minigraph_flipped_$target_ref.err \
+    """
+    singularity exec $container \
+      /minigraph/minigraph $ref_pref\_$target_ref\_clean.fa $in_fasta \
+        > $out_dir/$target_ref\_to_MIKK_131-1.paf
+    """ ;
+done
+
+data_dir=data/sv_analysis/pafs
+mkdir -p $data_dir && cp $out_dir/*131-1.paf $data_dir
+```
+
+Documentation for `paf` format: <https://github.com/lh3/miniasm/blob/master/PAF.md>
+
+## Read in data
+
+```{r}
+in_dir = here::here("data/sv_analysis/pafs")
+
+in_files = list.files(in_dir, full.names = T)
+names(in_files) = basename(in_files) %>% 
+  stringr::str_split(., pattern = "_", simplify = T) %>% 
+  subset(select = 1)
+
+col_names = c("QUERY_SEQ_NAME",
+              "QUERY_SEQ_LEN",
+              "QUERY_START",
+              "QUERY_END",
+              "STRAND",
+              "TARGET_NAME",
+              "TARGET_LEN",
+              "TARGET_START",
+              "TARGET_END",
+              "RESIDUE_MATCHES",
+              "BLOCK_LENGTH",
+              "MAPPING_QUALITY")
+
+pafs = purrr::map(in_files, function(x) {
+  readr::read_tsv(x,
+                  col_names = col_names,
+                  col_types = "ciiicciiiiii-----")
+})
+```
+
+## Circos
+
+### Process intrgression data
+
+```{r, message = F}
+in_file = here::here("data/introgression/abba_sliding_final_131-1/1000000_250.txt")
+# Read in data
+df_intro = readr::read_csv(in_file) %>% 
+  dplyr::arrange(p1, p2, scaffold, start)
+
+# Convert fd to 0 if D < 0
+df_intro$fd = ifelse(df_intro$D < 0,
+               0,
+               df_intro$fd)
+
+# Change names
+df_intro = df_intro %>% 
+  dplyr::mutate(p2 = recode(df_intro$p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK"))
+
+# Get mean of javanicus and melastigma
+df_intro = df_intro %>% 
+  pivot_wider(id_cols = c(scaffold, start, end, mid, p2), names_from = p1, values_from = fd) %>%
+  # get mean of melastigma/javanicus
+  dplyr::mutate(mean_fd = rowMeans(dplyr::select(., melastigma, javanicus), na.rm = T)) %>% 
+  dplyr::arrange(p2, scaffold, start) %>% 
+  dplyr::select(scaffold, mid_1 = mid, mid_2 = mid, mean_fd, p2) %>% 
+  dplyr::mutate(scaffold = paste("chr", scaffold, sep ="")) %>% 
+  split(., f = .$p2)
+```
+
+### Process alignment data
+```{r}
+pal_length = 1000
+# Get palette
+pal_viridis = viridis(pal_length)
+names(pal_viridis) = 1:pal_length
+
+pal_inferno = inferno(pal_length)
+names(pal_inferno) = 1:pal_length
+
+counter = 0
+# Process data
+paf_clean = pafs %>%
+  purrr::map(function(x) {
+    # Set counter
+    counter <<- counter + 1
+    # Select palette
+    if (names(pafs)[counter] == "HDRR"){
+      pal_chosen = pal_viridis
+    } else if (names(pafs)[counter] == "HNI"){
+      pal_chosen = pal_inferno
+    }
+    # Clean data
+    x %>% 
+      dplyr::mutate(TARGET_MID = round(TARGET_START + ((TARGET_END - TARGET_START) / 2)),
+                    CHROM = stringr::str_replace_all(TARGET_NAME, c("HDRR_" = "chr", "HNI_" = "chr")),
+                    CHROM = factor(CHROM, levels = paste("chr", 1:24, sep = "")),
+                    PERCENT_MATCHED = RESIDUE_MATCHES / BLOCK_LENGTH,
+                    LOG_BLOCK_LENGTH = log10(BLOCK_LENGTH),
+                    COL = cut(PERCENT_MATCHED, breaks = 1000, labels = F),
+                    COL = dplyr::recode(COL, !!!pal_chosen)) %>%
+#      dplyr::slice_sample(n = 1000) %>% 
+      dplyr::arrange(CHROM, TARGET_START)
+})
+```
+
+### HdrR
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210323_circos_hdrr_alignments.png")
+```
+
+```{r, eval = F}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+ylim = c(1, 6.05)
+target_line = "HdrR"
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "131-1\nto\nHdrR")
+
+###############
+# Introgression
+###############
+
+circos.genomicTrack(df_intro[[target_line]],
+    panel.fun = function(region, value, ...){
+      circos.genomicLines(region,
+                          value[[1]],
+                          col = pal_abba[[target_line]])
+      # Add baseline
+      circos.xaxis(h = "bottom",
+                   labels = F,
+                   major.tick = F)
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 1))
+
+
+
+# Add axis for introgression
+circos.yaxis(side = "right",
+           at = c(.5, 1),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+# Add y-axis label for introgression
+circos.text(0, 0.5,
+            labels = expression(italic(f[d])),
+            sector.index = "chr1",
+            facing = "clockwise",
+            adj = c(.5, -1.5),
+            cex = 0.4*par("cex"))
+
+###############
+# Alignments
+###############
+
+circos.genomicTrack(paf_clean[[stringr::str_to_upper(target_line)]] %>%
+                      dplyr::select(CHROM, TARGET_START, TARGET_END,
+                                    LOG_BLOCK_LENGTH, PERCENT_MATCHED, COL),
+    panel.fun = function(region, value, ...){
+      circos.genomicLines(region,
+                          value[[1]],
+                          type = "segment",
+                          col = value[[3]],
+                          lwd = 1.5)
+}, track.height = 0.7,
+   bg.border = NA,
+   ylim = ylim
+   )
+
+# Add SV length y-axis label
+circos.yaxis(side = "right",
+           at = 1:6,
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+# Add  y-axis label
+circos.text(0, 3.75,
+            labels = expression(log[10](length)),
+            sector.index = "chr1",
+            facing = "clockwise",
+            adj = c(0.5, -0.5),
+            cex = 0.4*par("cex"))
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+### HNI
+
+#### Create chroms file for HNI
+
+```{bash, eval = F}
+# Get chrs
+grep ">" ../refs/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa | cut -f1 -d" " | sed 's/>//g' > tmp1
+# Get lengths
+grep ">" ../refs/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa | cut -f3 -d' ' | cut -f5 -d':' > tmp2
+# Paste and send to file
+paste tmp1 tmp2 > data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt
+# Clean up
+rm tmp1 tmp2
+```
+
+```{r}
+# Read in chromosome data
+chroms_hni = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+```
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210323_circos_hni_alignments.png")
+```
+
+```{r, eval = F}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+ylim = c(1, 6.27)
+
+target_line = "HNI"
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms_hni) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms_hni,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "131-1\nto\nHNI")
+
+###############
+# Introgression
+###############
+
+circos.genomicTrack(df_intro[[target_line]],
+    panel.fun = function(region, value, ...){
+      circos.genomicLines(region,
+                          value[[1]],
+                          col = pal_abba[[target_line]])
+      # Add baseline
+      circos.xaxis(h = "bottom",
+                   labels = F,
+                   major.tick = F)
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 1))
+
+
+
+# Add axis for introgression
+circos.yaxis(side = "right",
+           at = c(.5, 1),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+# Add y-axis label for introgression
+circos.text(0, 0.5,
+            labels = expression(italic(f[d])),
+            sector.index = "chr1",
+            facing = "clockwise",
+            adj = c(.5, -1.5),
+            cex = 0.4*par("cex"))
+
+###############
+# Alignments
+###############
+
+circos.genomicTrack(paf_clean[[target_line]] %>%
+                      dplyr::select(CHROM, TARGET_START, TARGET_END,
+                                    LOG_BLOCK_LENGTH, PERCENT_MATCHED, COL),
+    panel.fun = function(region, value, ...){
+      circos.genomicLines(region,
+                          value[[1]],
+                          type = "segment",
+                          col = value[[3]],
+                          lwd = 1.5)
+}, track.height = 0.7,
+   bg.border = NA,
+   ylim = ylim
+   )
+
+# Add SV length y-axis label
+circos.yaxis(side = "right",
+           at = 1:6,
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+# Add  y-axis label
+circos.text(0, 3.75,
+            labels = expression(log[10](length)),
+            sector.index = "chr1",
+            facing = "clockwise",
+            adj = c(0.5, -0.5),
+            cex = 0.4*par("cex"))
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+### Histograms showing distribution of identity
+
+```{r}
+paf_clean %>% 
+  dplyr::bind_rows(.id = "REFERENCE") %>% 
+  dplyr::mutate(REFERENCE = dplyr::recode(REFERENCE, HDRR = "HdrR")) %>% 
+  ggplot() +
+    geom_density(aes(PERCENT_MATCHED, fill = REFERENCE)) + 
+    facet_wrap(~REFERENCE) +
+    theme_bw() +
+    guides(fill = F) +
+    scale_fill_manual(values = pal_abba) +
+    xlab("BLAST identity")
+```
+
+```{r, eval = F}
+ggsave(here::here(plots_dir, "20210323_131-1_identity_density.png"),
+       device = "png",
+       width = 20,
+       height = 9.375,
+       units = "cm",
+       dpi = 400)
+```
+
+# Get circos for all 131 sibling lines
+
+```{r, message = F}
+in_dir = here::here("data/introgression/abba_sliding_final_131")
+
+in_files = list.files(in_dir, full.names = T)
+names(in_files) = basename(in_files) %>% 
+  stringr::str_split("_") %>%
+  purrr::map_chr(~ purrr::pluck(.x, 1))
+
+# Read and process data
+list_131 = purrr::map(in_files, readr::read_csv) %>% 
+  map(~ .x %>% 
+        dplyr::arrange(p1, p2, scaffold, start) %>% 
+        dplyr::mutate(fd = if_else(D < 0, 0, fd),
+                      p2 = recode(p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK")) %>% 
+        tidyr::pivot_wider(id_cols = c(scaffold, start, end, mid, p2), names_from = p1, values_from = fd) %>% 
+        # get mean of melastigma/javanicus
+        dplyr::mutate(mean_fd = rowMeans(dplyr::select(., melastigma, javanicus), na.rm = T)) %>% 
+        dplyr::arrange(p2, scaffold, start) %>% 
+        dplyr::select(scaffold, mid_1 = mid, mid_2 = mid, mean_fd, p2) %>% 
+        dplyr::mutate(scaffold = paste("chr", scaffold, sep ="")) %>% 
+        split(., f = .$p2)
+      )
+```
+
+## HNI
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210324_circos_131_siblines_HNI.png")
+```
+
+```{r, eval = F}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "131 sib-lines\nintrogression\nwith\nHNI")
+
+###############
+# Introgression
+###############
+counter = 0
+
+purrr::map(list_131, function(sib_line){
+  # Set counter
+  counter <<- counter + 1
+  
+  circos.genomicTrack(sib_line[["HNI"]],
+      panel.fun = function(region, value, ...){
+        circos.genomicLines(region,
+                            value[[1]],
+                            col = pal_abba[["HNI"]])
+        # Add baseline
+        circos.xaxis(h = "bottom",
+                     labels = F,
+                     major.tick = F)
+      },
+      track.height = 0.1,
+      bg.border = NA,
+      ylim = c(0, 1))  
+  
+  # Add axis for introgression
+  circos.yaxis(side = "right",
+             at = c(.5, 1),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = expression(italic(f[d])),
+              sector.index = "chr1",
+#              facing = "clockwise",
+              adj = c(3, 0.5),
+              cex = 0.4*par("cex"))
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = names(list_131)[counter],
+              sector.index = "chr1",
+              facing = "clockwise",
+#              adj = c(.5, -1.5),
+              cex = 0.6*par("cex"))
+})
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+## HdrR and HNI
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210324_circos_131_siblines_HdrR_HNI.png")
+```
+
+```{r, eval = F}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "131 sib-lines\nintrogression\nwith\nHNI and HdrR")
+
+###############
+# Introgression
+###############
+counter = 0
+
+purrr::map(list_131, function(sib_line){
+  # Set counter
+  counter <<- counter + 1
+  
+  circos.genomicTrack(sib_line[["HdrR"]],
+      panel.fun = function(region, value, ...){
+        circos.genomicLines(region,
+                            value[[1]],
+                            col = pal_abba[["HdrR"]])
+        # Add baseline
+        circos.xaxis(h = "bottom",
+                     labels = F,
+                     major.tick = F)
+      },
+      track.height = 0.1,
+      bg.border = NA,
+      ylim = c(0, 1))
+  
+  circos.genomicTrack(sib_line[["HNI"]],
+      panel.fun = function(region, value, ...){
+        circos.genomicLines(region,
+                            value[[1]],
+                            col = pal_abba[["HNI"]])
+        # Add baseline
+        circos.xaxis(h = "bottom",
+                     labels = F,
+                     major.tick = F)
+      },
+      track.height = 0.1,
+      bg.border = NA,
+      ylim = c(0, 1))  
+  
+  
+  
+  # Add axis for introgression
+  circos.yaxis(side = "right",
+             at = c(.5, 1),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = expression(italic(f[d])),
+              sector.index = "chr1",
+#              facing = "clockwise",
+              adj = c(3, 0.5),
+              cex = 0.4*par("cex"))
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = names(list_131)[counter],
+              sector.index = "chr1",
+              facing = "clockwise",
+#              adj = c(.5, -1.5),
+              cex = 0.6*par("cex"))
+})
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+# Intersection with repeats
+
+## Read in HdrR repeats file
+
+```{r}
+# Read in data
+hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
+                       header = F, sep = "\t", skip = 3, comment.char = "", quote = "", as.is = T) %>% 
+  # Remove empty V8 column
+  dplyr::select(-V8) %>% 
+  # Get class of repeat from third column
+  dplyr::mutate(class = stringr::str_split(V3, pattern = "#", simplify = T)[, 1]) %>% 
+  # Rename columns
+  dplyr::rename(chr = V1, tool = V2, class_full = V3, start = V4, end = V5, percent = V6, strand = V7, info = V9)
+
+# Find types of class other than "(GATCCA)n" types
+class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
+
+hdrr_reps = hdrr_reps %>% 
+  # NA for blanks
+  dplyr::mutate(class = dplyr::na_if(class, "")) %>% 
+  # "misc" for others in "(GATCCA)n" type classes
+  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "Misc.", class)) %>% 
+  # rename "Simple_repeat"
+  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat"))
+
+```
+
+## Get total bases covered by each class of repeat
+
+```{r}
+# Get ranges per class
+hdrr_class_ranges = hdrr_reps %>% 
+  split(.$class) %>% 
+  purrr::map(., function(x){
+    out = list()
+    out[["RANGES"]] = GenomicRanges::makeGRangesFromDataFrame(x,
+                                                              keep.extra.columns = T,
+                                                              seqnames.field = "chr",
+                                                              start.field = "start",
+                                                              end.field = "end")
+    out[["NON_OVERLAPPING"]] = disjoin(out[["RANGES"]])
+    out[["COVERAGE_BY_CHR"]] = tibble(CHR = as.vector(seqnames(out[["NON_OVERLAPPING"]])),
+                                      WIDTH = width(out[["NON_OVERLAPPING"]])) %>%
+      dplyr::group_by(CHR) %>%
+      dplyr::summarise(COVERED = sum(WIDTH)) %>% 
+      dplyr::ungroup() %>% 
+      dplyr::mutate(CHR = factor(CHR, levels = c(1:24, "MT"))) %>% 
+      dplyr::arrange(CHR)
+    
+    out[["TOTAL_COVERED"]] = sum(width(out[["NON_OVERLAPPING"]]))
+    
+    return(out)
+  }) 
+
+total_repeat_coverage = hdrr_class_ranges %>% 
+  purrr::map_int(., purrr::pluck("TOTAL_COVERED")) %>% 
+  tibble(CLASS = names(.),
+             BASES_COVERED = .)
+
+repeat_coverage_by_chr
+
+seqnames(hdrr_class_ranges$DNA$NON_OVERLAPPING)
+width(hdrr_class_ranges$DNA$NON_OVERLAPPING)
+
+# Get counts to tell frequency of occurrence
+
+## First get total Mb in HdrR reference
+hdrr_mb = sum(chroms$end) / 1e6
+
+hdrr_rep_counts = hdrr_reps %>%
+  dplyr::rename(CLASS = class) %>% 
+  dplyr::mutate(LENGTH = end - start) %>% 
+  group_by(CLASS) %>% 
+  summarise(N = n(),
+            MEDIAN_LENGTH = median(LENGTH),
+            COUNT_PER_MB)
+```
+
+## Find intersections with SVs
+
+### Get discrete ranges for HdrR repeats
+
+```{r}
+# Convert to ranges
+hdrr_reps_ranges = GenomicRanges::makeGRangesFromDataFrame(hdrr_reps,
+                                                           keep.extra.columns = T,
+                                                           seqnames.field = "chr",
+                                                           start.field = "start",
+                                                           end.field = "end")
+
+head(hdrr_reps_ranges)
+
+# Number of bases covered by some sort of repeat
+disjoin(hdrr_reps_ranges) %>% 
+  width(.) %>% 
+  sum(.)
+
+# What proportion of total bases?
+disjoin(hdrr_reps_ranges) %>% 
+  width(.) %>% 
+  sum(.) / sum(chroms$end)
+```
+
+So about [one sixth]{color = "red"} of the HdrR genome is composed of repeats.
+
+### Convert polished SV df to GRanges and find overlaps
+
+```{r}
+sv_ranges_list = sv_df %>% 
+  dplyr::filter(DATASET == "polished") %>%
+  # For all TRA, set STOP as POS
+  dplyr::mutate(STOP = dplyr::if_else(SVTYPE == "TRA",
+                                      POS,
+                                      END)) %>% 
+  # For 9066/265857 INS and 272/23991 DUP where END is less than POS, set `STOP` as same as `POS` 
+  dplyr::mutate(STOP = dplyr::if_else(SVTYPE %in% c("INS", "DUP") & END < POS,
+                                      POS,
+                                      STOP)) %>% 
+  # Remove "chr" prefix" from CHROM
+  dplyr::mutate(CHROM = str_remove(CHROM, "chr")) %>% 
+  # Split by SVTYPE
+  split(.$SVTYPE) %>%
+  # Loop over each SVTYPE
+  purrr::map(., function(x) {
+    out = list()
+    # Keep original SV df
+    out[["SV_df"]] = x
+    # Convert to ranges
+    out[["SV_Ranges"]] = GenomicRanges::makeGRangesFromDataFrame(x,
+                                            keep.extra.columns = T,
+                                            ignore.strand = T,
+                                            seqnames.field = "CHROM",
+                                            start.field = "POS",
+                                            end.field = "STOP",
+                                            strand.field = "ST")
+    # Find overlaps with repeats
+    out[["Overlaps"]] = findOverlaps(out[["SV_Ranges"]],
+                                     hdrr_reps_ranges,
+                                     ignore.strand = T)
+    # Create DF with SV index and overlapping repeats
+    SV_INDEX = queryHits(out[["Overlaps"]]) # Pull out all SV indices
+    s_hits = hdrr_reps_ranges[subjectHits(out[["Overlaps"]])] # Pull out all repeat matches
+    out[["Matches"]] = cbind(SV_INDEX, # Bind into data frame with SV index
+                             REPEAT_LENGTH = width(s_hits), # Length of repeat
+                             as.data.frame(mcols(s_hits))) # And repeat metadata
+    return(out)
+  })
+```
+
+### Get stats on number and type of overlaps
+
+```{r}
+sv_overlap_stats = lapply(sv_ranges_list, function(x){
+  out = list()
+  out[["TOTAL_SVS"]] = nrow(x[["SV_df"]])
+  out[["TOTAL_OVERLAPPING_REPEAT"]] = length(unique(x[["Matches"]]$SV_INDEX))
+  out[["PROP_OVERLAPPING"]] = out[["TOTAL_OVERLAPPING_REPEAT"]] / out[["TOTAL_SVS"]]
+  out[["MEDIAN_MATCHES"]] = x[["Matches"]] %>% count(SV_INDEX) %>% summarise(median(n)) %>% pull
+  out[["REPEAT_CLASS_COUNTS"]] = x[["Matches"]] %>% count(class) 
+  return(out)
+})
+
+# Get proportions of SVs with overlap
+map_dbl(sv_overlap_stats, "PROP_OVERLAPPING")
 ```
 

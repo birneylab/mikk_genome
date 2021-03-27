@@ -13,6 +13,8 @@ library(magick)
 library(plotly)
 library(fishualize)
 
+library(GenomicRanges)
+
 
 #############################
 # Functions
@@ -32,10 +34,13 @@ round.choose <- function(x, roundTo, dir = 1) {
 # Plotting
 #############################
 
+## Plots directory
+plots_dir = here::here("plots", "sv_analysis")
+
 ## Sample order
 
 ont_samples = c("4-1", "4-2", "7-1", "7-2", "11-1", "69-1", "79-2", "80-1", "117-2", "131-1", "134-1", "134-2")
-ont_samples_pol = c("4-1", "7-1", "11-1", "69-1", "79-2", "80-1", "117-2", "131-1", "134-1", "134-2")
+ont_samples_pol = c("4-1", "7-1", "11-1", "69-1", "79-2", "80-1", "117-2", "134-1", "134-2")
 
 ## Recode vector for FILTER
 filter_recode = c("The fasta index has no entry for\nthe given reference name of the variant",
@@ -73,3 +78,5 @@ pal_pastels = c("#ffadad","#ffd6a5","#fdffb6","#caffbf","#9bf6ff","#a0c4ff","#bd
 svtype_hist_pal = colorRampPalette(pal_paddle)(5)[c(1:2, 4:5)]
 names(svtype_hist_pal) = c("DEL", "INS", "DUP", "INV")
 
+pal_abba <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0")
+names(pal_abba) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
