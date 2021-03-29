@@ -1,0 +1,27 @@
+Building DAG of jobs...
+MissingInputException in line 87 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
+Missing input files for rule all:
+../introgression/vcfs/final/kaga_14.vcf.gz.tbi
+../introgression/vcfs/final/kaga_6.vcf.gz.tbi
+../introgression/vcfs/final/kaga_10.vcf.gz.tbi
+../introgression/vcfs/final/kaga_9.vcf.gz.tbi
+../introgression/vcfs/final/kaga_11.vcf.gz.tbi
+../introgression/vcfs/final/kaga_4.vcf.gz.tbi
+../introgression/vcfs/final/kaga_23.vcf.gz.tbi
+../introgression/vcfs/final/kaga_5.vcf.gz.tbi
+../introgression/vcfs/final/kaga_2.vcf.gz.tbi
+../introgression/vcfs/final/kaga_18.vcf.gz.tbi
+../introgression/vcfs/final/kaga_15.vcf.gz.tbi
+../introgression/vcfs/final/kaga_19.vcf.gz.tbi
+../introgression/vcfs/final/kaga_8.vcf.gz.tbi
+../introgression/vcfs/final/kaga_21.vcf.gz.tbi
+../introgression/vcfs/final/kaga_16.vcf.gz.tbi
+../introgression/vcfs/final/kaga_20.vcf.gz.tbi
+../introgression/vcfs/final/kaga_12.vcf.gz.tbi
+../introgression/vcfs/final/kaga_22.vcf.gz.tbi
+../introgression/vcfs/final/kaga_17.vcf.gz.tbi
+../introgression/vcfs/final/kaga_3.vcf.gz.tbi
+../introgression/vcfs/final/kaga_24.vcf.gz.tbi
+../introgression/vcfs/final/kaga_13.vcf.gz.tbi
+../introgression/vcfs/final/kaga_7.vcf.gz.tbi
+../introgression/vcfs/final/kaga_1.vcf.gz.tbi

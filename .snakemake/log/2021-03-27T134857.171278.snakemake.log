@@ -1,0 +1,34 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_merge_mikk_vcf
+	2
+Select jobs to execute...
+
+[Sat Mar 27 13:49:08 2021]
+rule kaga_merge_mikk_vcf:
+    input: ../introgression/vcfs/merged/kaga.vcf.gz, ../introgression/vcfs/full-run_line-ids.vcf.gz
+    output: ../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz
+    jobid: 103
+
+
+        bcftools merge             ../introgression/vcfs/merged/kaga.vcf.gz             ../introgression/vcfs/full-run_line-ids.vcf.gz             --output ../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz             --output-type z
+        
+Submitted job 103 with external jobid 'Job <5744469> is submitted to default queue <research-rh74>.'.
+[Sat Mar 27 15:12:36 2021]
+Finished job 103.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Sat Mar 27 15:12:37 2021]
+localrule all:
+    input: ../introgression/fastas/DRR002225_1.fastq.gz, ../introgression/fastas/DRR002225_2.fastq.gz, ../introgression/fastas/DRR002226_1.fastq.gz, ../introgression/fastas/DRR002226_2.fastq.gz, ../introgression/fastas/DRR002227_1.fastq.gz, ../introgression/fastas/DRR002227_2.fastq.gz, ../introgression/fastas/DRR002228_1.fastq.gz, ../introgression/fastas/DRR002228_2.fastq.gz, ../introgression/sams/DRR002225.sam, ../introgression/sams/DRR002226.sam, ../introgression/sams/DRR002227.sam, ../introgression/sams/DRR002228.sam, ../introgression/sams/DRR002225_withRGs.sam, ../introgression/sams/DRR002226_withRGs.sam, ../introgression/sams/DRR002227_withRGs.sam, ../introgression/sams/DRR002228_withRGs.sam, ../introgression/bams/sorted/DRR002225.bam, ../introgression/bams/sorted/DRR002226.bam, ../introgression/bams/sorted/DRR002227.bam, ../introgression/bams/sorted/DRR002228.bam, ../introgression/bams/marked/DRR002225.bam, ../introgression/bams/marked/DRR002226.bam, ../introgression/bams/marked/DRR002227.bam, ../introgression/bams/marked/DRR002228.bam, ../introgression/bams/merged/kaga.bam, ../introgression/bams/merged/kaga.bai, ../introgression/vcfs/gvcfs/kaga_2.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_1.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_22.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_23.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_6.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_12.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_5.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_24.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_7.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_21.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_4.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_3.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_11.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_20.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_14.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_17.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_8.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_9.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_19.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_15.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_13.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_18.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_MT.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_16.g.vcf.gz, ../introgression/vcfs/gvcfs/kaga_10.g.vcf.gz, ../introgression/vcfs/final/kaga_2.vcf.gz, ../introgression/vcfs/final/kaga_1.vcf.gz, ../introgression/vcfs/final/kaga_22.vcf.gz, ../introgression/vcfs/final/kaga_23.vcf.gz, ../introgression/vcfs/final/kaga_6.vcf.gz, ../introgression/vcfs/final/kaga_12.vcf.gz, ../introgression/vcfs/final/kaga_5.vcf.gz, ../introgression/vcfs/final/kaga_24.vcf.gz, ../introgression/vcfs/final/kaga_7.vcf.gz, ../introgression/vcfs/final/kaga_21.vcf.gz, ../introgression/vcfs/final/kaga_4.vcf.gz, ../introgression/vcfs/final/kaga_3.vcf.gz, ../introgression/vcfs/final/kaga_11.vcf.gz, ../introgression/vcfs/final/kaga_20.vcf.gz, ../introgression/vcfs/final/kaga_14.vcf.gz, ../introgression/vcfs/final/kaga_17.vcf.gz, ../introgression/vcfs/final/kaga_8.vcf.gz, ../introgression/vcfs/final/kaga_9.vcf.gz, ../introgression/vcfs/final/kaga_19.vcf.gz, ../introgression/vcfs/final/kaga_15.vcf.gz, ../introgression/vcfs/final/kaga_13.vcf.gz, ../introgression/vcfs/final/kaga_18.vcf.gz, ../introgression/vcfs/final/kaga_MT.vcf.gz, ../introgression/vcfs/final/kaga_16.vcf.gz, ../introgression/vcfs/final/kaga_10.vcf.gz, ../introgression/vcfs/final/kaga_2.vcf.gz.tbi, ../introgression/vcfs/final/kaga_1.vcf.gz.tbi, ../introgression/vcfs/final/kaga_22.vcf.gz.tbi, ../introgression/vcfs/final/kaga_23.vcf.gz.tbi, ../introgression/vcfs/final/kaga_6.vcf.gz.tbi, ../introgression/vcfs/final/kaga_12.vcf.gz.tbi, ../introgression/vcfs/final/kaga_5.vcf.gz.tbi, ../introgression/vcfs/final/kaga_24.vcf.gz.tbi, ../introgression/vcfs/final/kaga_7.vcf.gz.tbi, ../introgression/vcfs/final/kaga_21.vcf.gz.tbi, ../introgression/vcfs/final/kaga_4.vcf.gz.tbi, ../introgression/vcfs/final/kaga_3.vcf.gz.tbi, ../introgression/vcfs/final/kaga_11.vcf.gz.tbi, ../introgression/vcfs/final/kaga_20.vcf.gz.tbi, ../introgression/vcfs/final/kaga_14.vcf.gz.tbi, ../introgression/vcfs/final/kaga_17.vcf.gz.tbi, ../introgression/vcfs/final/kaga_8.vcf.gz.tbi, ../introgression/vcfs/final/kaga_9.vcf.gz.tbi, ../introgression/vcfs/final/kaga_19.vcf.gz.tbi, ../introgression/vcfs/final/kaga_15.vcf.gz.tbi, ../introgression/vcfs/final/kaga_13.vcf.gz.tbi, ../introgression/vcfs/final/kaga_18.vcf.gz.tbi, ../introgression/vcfs/final/kaga_MT.vcf.gz.tbi, ../introgression/vcfs/final/kaga_16.vcf.gz.tbi, ../introgression/vcfs/final/kaga_10.vcf.gz.tbi, ../introgression/vcfs/merged/kaga.vcf.gz, ../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz
+    jobid: 0
+
+[Sat Mar 27 15:12:37 2021]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-27T134857.171278.snakemake.log

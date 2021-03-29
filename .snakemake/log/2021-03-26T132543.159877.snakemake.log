@@ -1,0 +1,41 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_call_haplotypes
+	1	kaga_genotype
+	1	kaga_index_bam
+	1	kaga_index_vcf
+	5
+Select jobs to execute...
+
+[Fri Mar 26 13:25:59 2021]
+rule kaga_index_bam:
+    input: ../introgression/bams/merged/kaga.bam
+    output: ../introgression/bams/merged/kaga.bai
+    jobid: 26
+
+
+        java -jar /usr/picard/picard.jar BuildBamIndex             I=../introgression/bams/merged/kaga.bam
+        
+Submitted job 26 with external jobid 'Job <5316373> is submitted to default queue <research-rh74>.'.
+[Fri Mar 26 14:18:30 2021]
+Finished job 26.
+1 of 5 steps (20%) done
+Select jobs to execute...
+
+[Fri Mar 26 14:18:31 2021]
+rule kaga_call_haplotypes:
+    input: ../introgression/bams/merged/kaga.bam, ../introgression/bams/merged/kaga.bai
+    output: ../introgression/vcfs/gvcfs/kaga.g.vcf.gz
+    jobid: 27
+
+
+        gatk --java-options "-Xmx12g" HaplotypeCaller              -R ../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa             -I ../introgression/bams/merged/kaga.bam             -O ../introgression/vcfs/gvcfs/kaga.g.vcf.gz             -ERC GVCF             --tmp-dir ../tmp
+        
+Submitted job 27 with external jobid 'Job <5337254> is submitted to default queue <research-rh74>.'.
+Terminating processes on user request, this might take some time.
+Will exit after finishing currently running jobs.
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-26T132543.159877.snakemake.log

@@ -67,9 +67,12 @@ for file in files:
 ### MIKK groups
 GROUPS = ["all", "1", "2"]
 
+### MIKK samples
+
 ### ABBA BABA population combinations
 P1S = ["melastigma", "javanicus"]
 P2S = ["hdrr", "hni", "hsok"]
+P2S_AND_KAGA = ["hdrr", "hni", "kaga", "hsok"]
 P3S = ["mikk"]
 
 ### 131 sibling lines
@@ -79,6 +82,8 @@ LINE_131_SIBS = ["131-1", "131-2", "131-4"]
 
 KAGA_SAMPLES = ["DRR002225", "DRR002226", "DRR002227", "DRR002228"]
 READS = ["1", "2"]
+CHRS_WITH_MT = [str(i) for i in range(1, 25)]
+CHRS_WITH_MT.append("MT")
 
 #####################
 # Rules
@@ -169,18 +174,20 @@ rule all:
                 kaga_sample = KAGA_SAMPLES),
         os.path.join(config["bam_dir"], "merged/kaga.bam"),
         os.path.join(config["bam_dir"], "merged/kaga.bai"),
-        os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz"),
-        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz"),
-        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz.tbi")
-#        os.path.join(config["fasta_dir"], "Kaga_DRR001980_1.fastq.gz"),
-#        os.path.join(config["fasta_dir"], "Kaga_DRR001980_2.fastq.gz"),
-#        os.path.join(config["sam_dir"], "kaga.sam"),
-#        os.path.join(config["bam_dir"], "kaga_with_read_groups.bam"),
-#        os.path.join(config["bam_dir"], "kaga_sorted.bam"),
-#        os.path.join(config["bam_dir"], "kaga_marked.bam"),
-#        os.path.join(config["bam_dir"], "kaga_marked.bai"),
-#        os.path.join(config["vcf_dir"], "kaga.g.vcf.gz"),
-#        os.path.join(config["vcf_dir"], "kaga.vcf.gz")
+        expand(os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz"),
+                chr = list(set(CHRS_WITH_MT))),
+        expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz"),
+                chr = list(set(CHRS_WITH_MT))),
+        expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi"),
+                chr = list(set(CHRS_WITH_MT))),
+        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz"),
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz"),
+#        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno"),
+#        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno"),
+#        expand(os.path.join(config["geno_dir"], "split_by_chr_with-kaga/{chr}.geno"),
+#                chr = list(set(CHRS))),
+#        config["full_run_line_ids_with_kaga"],
+#        config["full_run_line_ids_mikk_only"]
 
 # EMFs
 
@@ -481,11 +488,43 @@ rule make_geno:
                 --output {output}
         """
 
+rule make_geno_with_kaga:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+                bcftools query \
+                --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT[\t%TGT]\n' \
+                --output {output}
+        """
+
 rule replace_missing:
     input:
         os.path.join(config["geno_dir"], "full_vcf.geno")
     output:
         os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        sed 's/\./N/g' {input} > {output}
+        """
+
+rule replace_missing_with_kaga:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno")
     singularity:
         config["bcftools"]
     shell:
@@ -507,6 +546,20 @@ rule split_geno_by_chr:
         Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
         """
 
+rule split_geno_by_chr_with_kaga:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno")
+    output:
+        os.path.join(config["geno_dir"], "split_by_chr_with-kaga/{chr}.geno")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        """
+
 rule make_samples_file:
     input:
         os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
@@ -517,6 +570,30 @@ rule make_samples_file:
     shell:
         """
         bcftools query -l {input} > {output}
+        """
+
+rule make_samples_file_with_kaga:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    output:
+        config["full_run_line_ids_with_kaga"]
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query -l {input} > {output}
+        """
+
+rule make_samples_file_mikk_only:
+    input:
+        config["full_run_line_ids"]
+    output:
+        config["full_run_line_ids_mikk_only"]
+    singularity:
+        config["bash"]
+    shell:
+        """
+        cat {input} | grep -v "iCab\|KW\|Ho5" > {output}
         """
 
 rule emf_2_geno_full_run:
@@ -532,6 +609,7 @@ rule emf_2_geno_full_run:
         """
         Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
         """
+
 rule emf_2_geno_remove_sibs:
     input:
         data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
@@ -724,19 +802,6 @@ rule combine_sliding_windows_data_131:
 
 # Kaga alignment
 
-#rule download_kaga_reads:
-#    input:
-#        reads_1 = FTP.remote(os.path.join(config["kaga_ftp_dir"], "DRR001980_1.fastq.gz"), keep_local=True),
-#        reads_2 = FTP.remote(os.path.join(config["kaga_ftp_dir"], "DRR001980_2.fastq.gz"), keep_local=True)
-#    output:
-#        reads_1 = os.path.join(config["fasta_dir"], "Kaga_DRR001980_1.fastq.gz"),
-#        reads_2 = os.path.join(config["fasta_dir"], "Kaga_DRR001980_2.fastq.gz")
-#    shell:
-#        """
-#        mv {input.reads_1} {output.reads_1};
-#        mv {input.reads_2} {output.reads_2}
-#        """
-
 rule download_kaga_reads:
     input:
         FTP.remote(os.path.join(config["kaga_ftp_dir"], "{kaga_sample}/{kaga_sample}_{read}.fastq.gz"), keep_local=True),
@@ -746,20 +811,6 @@ rule download_kaga_reads:
         """
         mv {input} {output}
         """
-
-#rule align_kaga_to_hdrr:
-#    input:
-#        reads_1 = os.path.join(config["fasta_dir"], "Kaga_DRR001980_1.fastq.gz"),
-#        reads_2 = os.path.join(config["fasta_dir"], "Kaga_DRR001980_2.fastq.gz"),
-#        hdrr_reference = config["hdrr_reference"]
-#    output:
-#        os.path.join(config["sam_dir"], "{kaga_sample}.sam")
-#    singularity:
-#        config["minimap2"]
-#    shell:
-#        """
-#        /minimap2-2.17_x64-linux/minimap2 -ax sr {input.hdrr_reference} {input.reads_1} {input.reads_2} > {output}
-#        """
 
 rule align_kaga_to_hdrr:
     input:
@@ -773,25 +824,6 @@ rule align_kaga_to_hdrr:
         """
         /minimap2-2.17_x64-linux/minimap2 -ax sr {config[hdrr_reference]} {input} > {output}
         """
-
-#rule add_kaga_read_groups:
-#    input:
-#        os.path.join(config["sam_dir"], "kaga.sam")
-#    output:
-#        os.path.join(config["bam_dir"], "kaga_with_read_groups.bam")
-#    singularity:
-#        config["picard"]
-#    shell:
-#        """
-#        java -jar /usr/picard/picard.jar AddOrReplaceReadGroups \
-#            I={input} \
-#            O={output} \
-#            RGID=4 \
-#            RGLB=lib1 \
-#            RGPL=ILLUMINA \
-#            RGPU=unit1 \
-#            RGSM=Kaga
-#        """
 
 rule add_kaga_read_groups:
     input:
@@ -883,7 +915,9 @@ rule kaga_call_haplotypes:
         bam = os.path.join(config["bam_dir"], "merged/kaga.bam"),
         index = os.path.join(config["bam_dir"], "merged/kaga.bai")
     output:
-        os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz")
+        os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz")
+    params:
+        chr = lambda wildcards: wildcards.chr
     singularity:
         config["gatk"]
     shell:
@@ -892,15 +926,16 @@ rule kaga_call_haplotypes:
             -R {config[hdrr_reference]} \
             -I {input.bam} \
             -O {output} \
+            -L {params.chr} \
             -ERC GVCF \
             --tmp-dir {config[tmp_dir]}
         """
 
 rule kaga_genotype:
     input:
-        os.path.join(config["vcf_dir"], "gvcfs/kaga.g.vcf.gz")
+        os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz")
     output:
-        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz")
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz")
     singularity:
         config["gatk"]
     shell:
@@ -913,12 +948,53 @@ rule kaga_genotype:
 
 rule kaga_index_vcf:
     input:
-        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz")
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz")
     output:
-        os.path.join(config["vcf_dir"], "final/kaga.vcf.gz.tbi")
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi")
     singularity:
         config["bcftools"]
     shell:
         """
         bcftools index --tbi {input}
         """
+
+rule kaga_merge_chr_vcfs:
+    input:
+        vcfs = expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz"),
+                chr = CHRS_WITH_MT),
+        inds = expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi"),
+                chr = CHRS_WITH_MT)
+    output:
+        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz")
+    params:
+        files = lambda wildcards, input: " I=".join(input.vcfs)
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -jar /usr/picard/picard.jar MergeVcfs \
+            I={params.files} \
+            O={output} \
+            TMP_DIR={config[tmp_dir]}
+        """
+
+rule kaga_merge_mikk_vcf:
+    input:
+        kaga_vcf = os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz"),
+        mikk_vcf = os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools merge \
+            {input.kaga_vcf} \
+            {input.mikk_vcf} \
+            --output {output} \
+            --output-type z \
+            --missing-to-ref
+        """
+
+
+    

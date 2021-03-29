@@ -1,0 +1,35 @@
+Building DAG of jobs...
+Using shell: /usr/local/bin/bash
+Provided cluster nodes: 5000
+Job counts:
+	count	jobs
+	1	all
+	1	kaga_merge_mikk_vcf
+	2
+Select jobs to execute...
+
+[Sat Mar 27 13:14:00 2021]
+rule kaga_merge_mikk_vcf:
+    input: ../introgression/vcfs/merged/kaga.vcf.gz, ../introgression/vcfs/full-run_line-ids.vcf.gz
+    output: ../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz
+    jobid: 103
+
+
+        java -jar /usr/picard/picard.jar MergeVcfs             I=../introgression/vcfs/merged/kaga.vcf.gz             I=../introgression/vcfs/full-run_line-ids.vcf.gz             O=../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz             TMP_DIR=../tmp
+        
+Submitted job 103 with external jobid 'Job <5736865> is submitted to default queue <research-rh74>.'.
+[Sat Mar 27 13:14:19 2021]
+Error in rule kaga_merge_mikk_vcf:
+    jobid: 103
+    output: ../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz
+    shell:
+        
+        java -jar /usr/picard/picard.jar MergeVcfs             I=../introgression/vcfs/merged/kaga.vcf.gz             I=../introgression/vcfs/full-run_line-ids.vcf.gz             O=../introgression/vcfs/full-run_line-ids_with-kaga.vcf.gz             TMP_DIR=../tmp
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Job <5736865> is submitted to default queue <research-rh74>.
+
+Error executing rule kaga_merge_mikk_vcf on cluster (jobid: 103, external: Job <5736865> is submitted to default queue <research-rh74>., jobscript: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/tmp.0h8zo8as/snakejob.kaga_merge_mikk_vcf.103.sh). For error details see the cluster log and the log files of the involved rule(s).
+Job failed, going on with independent jobs.
+Exiting because a job execution failed. Look above for error message
+Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-27T131351.167823.snakemake.log

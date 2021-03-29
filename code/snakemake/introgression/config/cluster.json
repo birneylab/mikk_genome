@@ -75,10 +75,18 @@
     {
         "memory" : "20000"
     },
+    "make_geno_with_kaga" :
+    {
+        "memory" : "20000"
+    },
     "split_geno_by_chr" :
     {
         "memory" : "50000"
     },
+    "split_geno_by_chr_with_kaga" :
+    {
+        "memory" : "50000"
+    },       
     "emf_2_geno_full_run" :
     {
         "memory" : "50000"
