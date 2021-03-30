@@ -1,3 +1,0 @@
-KeyError in line 68 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
-'output_dir'
-  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 68, in <module>

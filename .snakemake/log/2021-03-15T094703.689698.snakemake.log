@@ -1,3 +1,0 @@
-WildcardError in line 188 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
-No values given for wildcard 'group'.
-  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 188, in <module>
