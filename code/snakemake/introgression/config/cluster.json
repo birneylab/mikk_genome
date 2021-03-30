@@ -85,9 +85,13 @@
     },
     "split_geno_by_chr_with_kaga" :
     {
-        "memory" : "50000"
+        "memory" : "70000"
     },       
     "emf_2_geno_full_run" :
+    {
+        "memory" : "50000"
+    },
+    "emf_2_geno_full_run_with_kaga" :
     {
         "memory" : "50000"
     },
@@ -103,7 +107,15 @@
     {
         "memory" : "20000"
     },
+    "emf_2_geno_extract_mikk" :
+    {
+        "memory" : "20000"
+    },
     "run_abba_baba_sliding_131" :
+    {
+        "memory" : "20000"
+    },
+    "run_abba_baba_sliding_mikk" :
     {
         "memory" : "20000"
     },

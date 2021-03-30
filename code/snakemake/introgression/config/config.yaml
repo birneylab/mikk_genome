@@ -62,10 +62,16 @@ remove_sibs_script:
     "code/scripts/introgression/20201022_remove_sibs.R"
 pop_file_full_run:
     "data/introgression/full_run.pop.txt"
+pop_file_full_run_with_kaga:
+    "data/introgression/full_run_with_kaga.pop.txt"
 pop_file_no_sibs:
-    "data/introgression/no_sibs.pop.txt"    
+    "data/introgression/no_sibs.pop.txt"
+pop_files_dir:
+    "data/introgression/pop_files" 
 make_pop_file_script:
     "code/scripts/introgression/20210315_make_pop_file.R"
+make_pop_file_mikk_script:
+    "code/scripts/introgression/20210329_make_pop_file_mikk.R"
 abba_sliding_dir:
     "data/introgression/abba_sliding"
 abba_sliding_script:
@@ -110,3 +116,5 @@ vcf_dir:
     "../introgression/vcfs"
 tmp_dir:
     "../tmp"
+exclude_mikk_script:
+    "code/scripts/introgression/20210329_exclude_mikk.R"
