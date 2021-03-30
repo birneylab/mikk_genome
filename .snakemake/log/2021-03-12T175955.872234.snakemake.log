@@ -1,4 +1,0 @@
-KeyboardInterrupt in line 54 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile.
-  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 54, in <module>
-  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/string.py", line 165, in vformat
-  File "/nfs/research1/birney/users/brettell/anaconda3/envs/snakemake/lib/python3.9/string.py", line 218, in _vformat

@@ -1,3 +1,0 @@
-WildcardError in line 34 of /hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile:
-No values given for wildcard 'chr'.
-  File "/hps/research1/birney/users/ian/mikk_paper/mikk_genome/code/snakemake/introgression/Snakefile", line 34, in <module>

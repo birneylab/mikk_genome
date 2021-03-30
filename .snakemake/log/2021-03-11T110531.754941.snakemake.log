@@ -1,9 +1,0 @@
-Building DAG of jobs...
-Using shell: /usr/local/bin/bash
-Provided cluster nodes: 5000
-Job counts:
-	count	jobs
-	1	all
-	57	split_segments
-	58
-Complete log: /hps/research1/birney/users/ian/mikk_paper/mikk_genome/.snakemake/log/2021-03-11T110531.754941.snakemake.log
