@@ -25,6 +25,13 @@
 import os.path
 import glob
 
+import shutil
+
+# Remove .snakemake folder upon successful completion
+onsuccess:
+    shutil.rmtree(".snakemake")
+
+# Set up FTP
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
 FTP = FTPRemoteProvider()
 
@@ -923,7 +930,7 @@ rule combine_sliding_windows_data_mikk:
     input:
         expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk/{{mikk_line}}", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
                 p1 = P1S,
-                p2 = P2S,
+                p2 = P2S_AND_KAGA,
                 chr = list(set(CHRS)))
     output:
         os.path.join("data/introgression/abba_sliding_final_mikk", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"], "{mikk_line}.txt")
