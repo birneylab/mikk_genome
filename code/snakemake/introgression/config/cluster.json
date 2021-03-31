@@ -99,6 +99,10 @@
     {
         "memory" : "20000"
     },
+    "emf_2_geno_remove_sibs_with_kaga_no_131_1" :
+    {
+        "memory" : "50000"
+    },
     "run_abba_baba_sliding" :
     {
         "memory" : "20000"
