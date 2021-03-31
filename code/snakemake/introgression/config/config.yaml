@@ -2,6 +2,8 @@ target_dir:
     "../introgression/release-102"
 r-base:
     "../sing_conts/r-base_4.0.4.sif"
+rscript_command:
+    "Rscript --no-save --no-restore --no-environ --no-site-file"
 segments_script:
     "code/scripts/introgression/20200907_extract-emf-segments.sh"
 add_coord_script_forward:
@@ -58,14 +60,22 @@ emf_2_geno_script:
     "code/scripts/introgression/20201021_emf_to_geno.R"
 excluded_sib_lines:
     "data/20200227_panel_lines_excluded.txt"
+make_samples_with_kaga_no_sibs_no_131_1_script:
+    "code/scripts/introgression/20210331_create_samples_list_without_sibs_and_131-1.R"
+samples_with_kaga_no_sibs_no_131_1:
+    "data/20210331_samples_with_kaga_no_sibs_no_131_1.txt"
 remove_sibs_script:
     "code/scripts/introgression/20201022_remove_sibs.R"
+remove_sibs_script_2:
+    "code/scripts/introgression/20210331_remove_sibs_2.R"
 pop_file_full_run:
     "data/introgression/full_run.pop.txt"
 pop_file_full_run_with_kaga:
     "data/introgression/full_run_with_kaga.pop.txt"
 pop_file_no_sibs:
     "data/introgression/no_sibs.pop.txt"
+pop_file_no_sibs_with_kaga_no_131_1:
+    "data/introgression/no_sibs_with_kaga_no_131_1.pop.txt"
 pop_files_dir:
     "data/introgression/pop_files" 
 make_pop_file_script:
