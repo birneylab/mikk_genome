@@ -28,8 +28,8 @@ import glob
 import shutil
 
 # Remove .snakemake folder upon successful completion
-onsuccess:
-    shutil.rmtree(".snakemake")
+#onsuccess:
+#    shutil.rmtree(".snakemake")
 
 # Set up FTP
 from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
@@ -92,6 +92,9 @@ P3S = ["mikk"]
 
 ### ABBA samples
 ABBA_LINES = ["hdrr", "hni", "kaga", "hsok", "melastigma", "javanicus", "ancestor"]
+
+### ABBA window lengths
+SLIDING_WINDOW_LENGTHS = ["500000", "1000000"]
 
 ### 131 sibling lines
 LINE_131_SIBS = ["131-1", "131-2", "131-4"]
@@ -228,11 +231,13 @@ rule all:
         expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
                 chr = list(set(CHRS))),
         config["pop_file_no_sibs_with_kaga_no_131_1"],
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
                 p1 = P1S,
                 p2 = P2S_AND_KAGA,
                 chr = list(set(CHRS))),
-        os.path.join("data/introgression/abba_sliding_final_no_131-1", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt")
+        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS)
 
 
 # EMFs
@@ -243,7 +248,7 @@ rule add_hdrr_coords:
     output:
         os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt")
     params:
-        command = lambda wildcards: "Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; Rscript --no-save --no-restore --no-environ --no-site-file " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
+        command = lambda wildcards: "{config[rscript_command]} " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; {config[rscript_command]} " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
     singularity:
         config["r-base"]
     shell:
@@ -257,7 +262,7 @@ rule consolidate_subchrs:
     singularity:
         config["r-base"]        
     shell:
-        "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_subchr_script]} {input} {output}"
+        "{config[rscript_command]} {config[consol_subchr_script]} {input} {output}"
 
 rule consolidate_chrs:
     input:
@@ -269,7 +274,7 @@ rule consolidate_chrs:
     singularity:
         config["r-base"]
     shell:
-        "Rscript --no-save --no-restore --no-environ --no-site-file {config[consol_chr_script]} {params.chr} {input} {output}"
+        "{config[rscript_command]} {config[consol_chr_script]} {params.chr} {input} {output}"
 
 # Full VCF
 
@@ -454,7 +459,7 @@ rule combine_emf_and_maf:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_emf_maf_script]} {params.chr} {input.emf} {input.maf} {output}
+        {config[rscript_command]} {config[combine_emf_maf_script]} {params.chr} {input.emf} {input.maf} {output}
         """
 
 rule combine_chr_freq_tables:
@@ -468,7 +473,7 @@ rule combine_chr_freq_tables:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_chr_freq_tables_script]} {group} {input} {output}
+        {config[rscript_command]} {config[combine_chr_freq_tables_script]} {group} {input} {output}
         """
 
 rule combine_all_mikk_freq_tables:
@@ -481,7 +486,7 @@ rule combine_all_mikk_freq_tables:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_all_mikk_freq_tables_script]} {input} {output}
+        {config[rscript_command]} {config[combine_all_mikk_freq_tables_script]} {input} {output}
         """
 
 rule run_abba_baba:
@@ -497,7 +502,7 @@ rule run_abba_baba:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[abba_baba_script]} {params.p1} {params.p2} {params.p3} {input} {output}
+        {config[rscript_command]} {config[abba_baba_script]} {params.p1} {params.p2} {params.p3} {input} {output}
         """
 
 rule combine_rlists:
@@ -509,7 +514,7 @@ rule combine_rlists:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_rlists_script]} {input} {output}
+        {config[rscript_command]} {config[combine_rlists_script]} {input} {output}
         """
 
 # Sliding windows
@@ -589,7 +594,7 @@ rule split_geno_by_chr:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        {config[rscript_command]} {config[split_geno_by_chr_script]} {params.chr} {input} {output}
         """
 
 rule split_geno_by_chr_with_kaga:
@@ -603,7 +608,7 @@ rule split_geno_by_chr_with_kaga:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        {config[rscript_command]} {config[split_geno_by_chr_script]} {params.chr} {input} {output}
         """
 
 rule make_samples_file:
@@ -653,7 +658,7 @@ rule emf_2_geno_full_run:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
         """     
 
 rule emf_2_geno_full_run_with_kaga:
@@ -667,7 +672,7 @@ rule emf_2_geno_full_run_with_kaga:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
         """
 
 rule emf_2_geno_remove_sibs:
@@ -680,7 +685,7 @@ rule emf_2_geno_remove_sibs:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
         """
 
 rule make_samples_file_with_kaga_no_sibs_no_131_1:
@@ -705,7 +710,7 @@ rule emf_2_geno_remove_sibs_with_kaga_no_131_1:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
+        {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
         """
 
 rule make_pop_file:
@@ -719,7 +724,7 @@ rule make_pop_file:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[make_pop_file_script]} {input.full_run} {input.no_sibs} {output.full_run} {output.no_sibs}
+        {config[rscript_command]} {config[make_pop_file_script]} {input.full_run} {input.no_sibs} {output.full_run} {output.no_sibs}
         """
 
 rule run_abba_baba_sliding:
@@ -775,7 +780,7 @@ rule run_abba_baba_sliding_no_131_1:
         data = os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
         pop_file = config["pop_file_no_sibs_with_kaga_no_131_1"]
     output:
-        os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
+        os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
     params:
         p1 = lambda wildcards: wildcards.p1,
         p2 = lambda wildcards: wildcards.p2,
@@ -812,17 +817,17 @@ rule combine_sliding_windows_data:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
         """
 
 rule combine_sliding_windows_data_no_131_1:
     input:
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
                 p1 = P1S,
                 p2 = P2S_AND_KAGA,
                 chr = list(set(CHRS)))
     output:
-        os.path.join("data/introgression/abba_sliding_final_no_131-1", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt")
+        os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
     singularity:
         config["r-base"]
     shell:
@@ -854,7 +859,7 @@ rule process_latipes_snp_density:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[process_snp_density_script]} --input {input} --output {output}
+        {config[rscript_command]} {config[process_snp_density_script]} --input {input} --output {output}
         """
 
 rule get_mikk_snp_density:
@@ -901,7 +906,7 @@ rule emf_2_geno_extract_131:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
         """
 
 rule make_excluded_mikk_files:
@@ -915,7 +920,7 @@ rule make_excluded_mikk_files:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[exclude_mikk_script]} {input} {params.mikk_line} {output}
+        {config[rscript_command]} {config[exclude_mikk_script]} {input} {params.mikk_line} {output}
         """
 
 rule emf_2_geno_extract_mikk:
@@ -928,7 +933,7 @@ rule emf_2_geno_extract_mikk:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
         """
 
 rule make_pop_file_mikk:
@@ -943,7 +948,7 @@ rule make_pop_file_mikk:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file \
+        {config[rscript_command]} \
             {config[make_pop_file_mikk_script]} \
                 --input {input} \
                 --abba {params.abba_lines} \
@@ -1023,7 +1028,7 @@ rule combine_sliding_windows_data_131:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
         """
 
 rule combine_sliding_windows_data_mikk:
@@ -1038,7 +1043,7 @@ rule combine_sliding_windows_data_mikk:
         config["r-base"]
     shell:
         """
-        Rscript --no-save --no-restore --no-environ --no-site-file {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
         """
 
 # Kaga alignment
