@@ -6,6 +6,7 @@
 
 library(tidyverse)
 library(scales)
+library(viridis)
 library(cowplot)
 library(circlize)
 library(karyoploteR)
@@ -29,6 +30,54 @@ round.choose <- function(x, roundTo, dir = 1) {
     }
   }
 }
+
+LOD <- function(HI = c(0.9, 0.2, 0.3, 0.5, 0.1)) {
+  lod = NA
+  HI[HI==1] = 0.999
+  HS = 1-HI
+  if(length(HI)==1) {
+    return(log( HI/ HS))
+  } else {    
+    h = (1-prod(HS))/(prod(HS))
+    return(log(h))
+  }
+  return(lod)
+}
+
+#############################
+# Variables
+#############################
+
+# HdrR chromosome lengths
+
+chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::filter(chr != "MT") %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+
+# HdrR chromosome lengths with MT
+
+chroms_with_mt = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+
+
+# HNI chromosome lengths
+
+chroms_hni = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+  dplyr::select(chr, start, end)
+
+
 
 #############################
 # Plotting
@@ -78,5 +127,5 @@ pal_pastels = c("#ffadad","#ffd6a5","#fdffb6","#caffbf","#9bf6ff","#a0c4ff","#bd
 svtype_hist_pal = colorRampPalette(pal_paddle)(5)[c(1:2, 4:5)]
 names(svtype_hist_pal) = c("DEL", "INS", "DUP", "INV")
 
-pal_abba <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0")
-names(pal_abba) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
+pal_abba <- c("#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#621B00")
+names(pal_abba) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "Kaga")

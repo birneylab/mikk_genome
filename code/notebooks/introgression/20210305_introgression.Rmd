@@ -843,3 +843,126 @@ ggsave(here::here(plots_dir, "20210318_final_figure.png"),
        dpi = 500)
 ```
 
+# New final figure with circos
+
+## Circos
+
+### Read in data
+
+```{r, message = F}
+target_file = here::here("data/introgression/abba_sliding_final_no_131-1/1000000_250.txt")
+
+mikk_abba_final = readr::read_csv(target_file) %>%
+  dplyr::mutate(fd = if_else(D < 0, 0, fd),
+                p2 = factor(p2, levels = c("hdrr", "hni", "kaga", "hsok")),
+                p2 = recode(p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK", kaga = "Kaga")) %>% 
+  tidyr::pivot_wider(id_cols = c(scaffold, start, end, mid, p2), names_from = p1, values_from = fd) %>% 
+  # get mean of melastigma/javanicus
+  dplyr::mutate(mean_fd = rowMeans(dplyr::select(., melastigma, javanicus), na.rm = T)) %>% 
+  dplyr::arrange(p2, scaffold, start) %>% 
+  dplyr::select(scaffold, mid_1 = mid, mid_2 = mid, mean_fd, p2) %>% 
+  dplyr::mutate(scaffold = paste("chr", scaffold, sep ="")) %>% 
+  split(., f = .$p2)
+```
+
+### Plot
+
+```{r}
+out_plot = here::here("plots", "sv_analysis", "20210401_circos_MIKK_ABBA.png")
+```
+
+```{r, eval = F}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "MIKK panel\nintrogression with\nHdrR, HNI,\nKaga and HSOK")
+
+###############
+# Introgression
+###############
+counter = 0
+
+purrr::map(mikk_abba_final, function(P2){
+  # Set counter
+  counter <<- counter + 1
+  
+  circos.genomicTrack(P2,
+      panel.fun = function(region, value, ...){
+        circos.genomicLines(region,
+                            value[[1]],
+                            col = pal_abba[[names(mikk_abba_final[counter])]],
+                            area = T,
+                            border = karyoploteR::darker(pal_abba[[names(mikk_abba_final[counter])]]))
+        # Add baseline
+        circos.xaxis(h = "bottom",
+                     labels = F,
+                     major.tick = F)
+      },
+      track.height = 0.1,
+      bg.border = NA,
+      ylim = c(0, 1))
+  
+  # Add axis for introgression
+  circos.yaxis(side = "right",
+             at = c(.5, 1),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+  # Add y-axis label for introgression
+  if (counter == 2) {
+  circos.text(0, 0,
+              labels = expression(italic(f[d])),
+              sector.index = "chr1",
+#              facing = "clockwise",
+              adj = c(3, 0.5),
+              cex = 0.4*par("cex"))
+  }
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = names(mikk_abba_final)[counter],
+              sector.index = "chr1",
+              facing = "clockwise",
+              adj = c(.5, 0),
+              cex = 0.6*par("cex"))  
+})
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+## Re-do Karyoplot for chr 4
+
+
+
+
