@@ -227,17 +227,21 @@ rule all:
 #                mikk_line = MIKK_LINES),
 #        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
 #                chr = list(set(CHRS))),
-        config["samples_with_kaga_no_sibs_no_131_1"],
-        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
+#        config["samples_with_kaga_no_sibs_no_131_1"],
+#        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        config["pop_file_no_sibs_with_kaga_no_131_1"],
+#        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+#                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+#                p1 = P1S,
+#                p2 = P2S_AND_KAGA,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+#                sliding_window_length = SLIDING_WINDOW_LENGTHS),
+        expand("../introgression/snp_dens/kaga/{chr}.csv",
                 chr = list(set(CHRS))),
-        config["pop_file_no_sibs_with_kaga_no_131_1"],
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS,
-                p1 = P1S,
-                p2 = P2S_AND_KAGA,
-                chr = list(set(CHRS))),
-        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
+                chr = list(set(CHRS)))
 
 
 # EMFs
@@ -1241,6 +1245,41 @@ rule kaga_merge_mikk_vcf:
             --output-type z \
             --missing-to-ref
         """
+
+rule kaga_get_snp_locs:
+    input:
+        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz")
+    output:
+        "../introgression/snp_dens/kaga/{chr}.csv"
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --genotype ^miss \
+            --regions {params.chr} \
+            --output-type u \
+            {input} |\
+            bcftools query \
+                --format '%CHROM,%POS\n' \
+                --output-file {output}
+        """
+
+rule kaga_compress_snp_locs:
+    input:
+        "../introgression/snp_dens/kaga/{chr}.csv"
+    output:
+        "data/introgression/snp_dens/kaga/{chr}.csv.gz"
+    singularity:
+        config["bash"]
+    shell:
+        """
+        mkdir -p ../log/{rule} ;
+        gzip -c {input} > {output}
+        """
+    
 
 
     
