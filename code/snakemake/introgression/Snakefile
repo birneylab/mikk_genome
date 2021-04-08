@@ -157,8 +157,8 @@ rule all:
 #                p2 = P2S,
 #                p3 = P3S),
 #        "data/introgression/20210315_f_stat_final.txt",
-#        os.path.join(config["geno_dir"], "full_vcf.geno"),
-#        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
+        os.path.join(config["geno_dir"], "full_vcf.geno"),
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
 #        expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
 #                chr = list(set(CHRS))),
 #        config["full_run_line_ids"],
@@ -829,7 +829,7 @@ rule run_abba_baba_sliding:
             -w {params.window_length} \
             -m {params.minimum_sites}
         """
-        
+
 rule run_abba_baba_sliding_no_131_1:
     input:
         data = os.path.join(config["geno_dir"], "final_without-kaga_no-sibs-or-131-1/{chr}.txt"),
