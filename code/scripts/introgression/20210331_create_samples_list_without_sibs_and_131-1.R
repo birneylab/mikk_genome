@@ -11,8 +11,10 @@ library(tidyverse)
 in_file = args[1]
 out_file = args[2]
 
-# Read in first line of file
+# Read in first line of file to get order
+samples_orig = scan(in_file, sep = "\t", what = "character", nlines = 1)
 
+# Read in first line of file and split into list
 samples = scan(in_file, sep = "\t", what = "character", nlines = 1) %>%
     tibble(SAMPLE = .) %>%
     dplyr::filter(!SAMPLE %in% c("#CHROM", "POS")) %>%
@@ -25,6 +27,7 @@ samples = scan(in_file, sep = "\t", what = "character", nlines = 1) %>%
     # Split up SAMPLE by LINE and SIB
     dplyr::mutate(LINE = SAMPLE %>% stringr::str_split("_", simplify = T) %>% subset(select = 1),
                   SIB = SAMPLE %>% stringr::str_split("_", simplify = T) %>% subset(select = 2)) %>%
+    # Factorise to retain order
     # Split into list
     split(f = .$LINE)
 
@@ -39,4 +42,6 @@ lapply(samples, function(x){
     # Bind and write to table
     dplyr::bind_rows() %>%
     dplyr::pull(SAMPLE) %>%
+    # Order by original order of samples
+    .[order(match(., samples_orig))] %>%
     readr::write_lines(out_file)

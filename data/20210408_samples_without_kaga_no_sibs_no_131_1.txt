@@ -4,7 +4,6 @@ hsok
 javanicus
 melastigma
 ancestor
-kaga
 25_1
 30_1
 13_2
