@@ -26,6 +26,7 @@ df = read.table(in_file,
 samples_keep = scan(samples_keep_file, what = character())
 
 # Remove them
+
 df_nosibs = df %>%
   dplyr::select("#CHROM", POS, all_of(samples_keep))
 

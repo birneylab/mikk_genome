@@ -1,3 +1,5 @@
+log_dir:
+    "../log"
 target_dir:
     "../introgression/release-102"
 r-base:
@@ -64,6 +66,8 @@ make_samples_with_kaga_no_sibs_no_131_1_script:
     "code/scripts/introgression/20210331_create_samples_list_without_sibs_and_131-1.R"
 samples_with_kaga_no_sibs_no_131_1:
     "data/20210331_samples_with_kaga_no_sibs_no_131_1.txt"
+samples_without_kaga_no_sibs_no_131_1:
+    "data/20210408_samples_without_kaga_no_sibs_no_131_1.txt"
 remove_sibs_script:
     "code/scripts/introgression/20201022_remove_sibs.R"
 remove_sibs_script_2:
@@ -76,6 +80,8 @@ pop_file_no_sibs:
     "data/introgression/no_sibs.pop.txt"
 pop_file_no_sibs_with_kaga_no_131_1:
     "data/introgression/no_sibs_with_kaga_no_131_1.pop.txt"
+pop_file_no_sibs_without_kaga_no_131_1:
+    "data/introgression/no_sibs_without_kaga_no_131_1.pop.txt"
 pop_files_dir:
     "data/introgression/pop_files" 
 make_pop_file_script:
