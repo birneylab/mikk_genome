@@ -13,8 +13,8 @@ library(karyoploteR)
 library(magick)
 library(plotly)
 library(fishualize)
-
 library(GenomicRanges)
+library(biomaRt)
 
 
 #############################

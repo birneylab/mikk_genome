@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.4",
+    "Version": "4.0.5",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -407,10 +407,10 @@
     },
     "broom": {
       "Package": "broom",
-      "Version": "0.7.5",
+      "Version": "0.7.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "d5ab8846336cfb2e3c17e5a806eb3045"
+      "Hash": "06015476250468fc013c30022118ce3a"
     },
     "bslib": {
       "Package": "bslib",
@@ -435,10 +435,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.5.1",
+      "Version": "3.6.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b7d7f1e926dfcd57c74ce93f5c048e80"
+      "Hash": "25da2c6fba6a13b5da94e37acdb3f532"
     },
     "cellranger": {
       "Package": "cellranger",
@@ -575,10 +575,10 @@
     },
     "dbplyr": {
       "Package": "dbplyr",
-      "Version": "2.1.0",
+      "Version": "2.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f30247ffeeebe8d9842dc68fe63e043b"
+      "Hash": "1f37fa4ab2f5f7eded42f78b9a887182"
     },
     "deSolve": {
       "Package": "deSolve",
@@ -617,10 +617,10 @@
     },
     "dplyr": {
       "Package": "dplyr",
-      "Version": "1.0.4",
+      "Version": "1.0.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "01c82e3b053eb7660a8ace8d932265b8"
+      "Hash": "d0d76c11ec807eb3f000eba4e3eb0f68"
     },
     "egg": {
       "Package": "egg",
@@ -1167,10 +1167,10 @@
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.5.0",
+      "Version": "1.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "39a778e4e487ded8b1bf5bb617c567b3"
+      "Hash": "24622aa4a0d3de3463c34513edca99b2"
     },
     "pkgconfig": {
       "Package": "pkgconfig",
@@ -1223,10 +1223,10 @@
     },
     "processx": {
       "Package": "processx",
-      "Version": "3.4.5",
+      "Version": "3.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "22aab6098cb14edd0a5973a8438b569b"
+      "Hash": "5ee87b05936a4aa9d8d026eb1a51314b"
     },
     "progress": {
       "Package": "progress",
@@ -1320,10 +1320,10 @@
     },
     "reprex": {
       "Package": "reprex",
-      "Version": "1.0.0",
+      "Version": "2.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "cb4d6f77f163b8d685833f2a59e7cb4c"
+      "Hash": "8482bbeef0c194ac236aef7c51ee375f"
     },
     "reshape2": {
       "Package": "reshape2",
@@ -1382,10 +1382,10 @@
     },
     "rvest": {
       "Package": "rvest",
-      "Version": "0.3.6",
+      "Version": "1.0.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a9795ccb2d608330e841998b67156764"
+      "Hash": "74b905b0076e1de6e27f540c95ba68d5"
     },
     "sass": {
       "Package": "sass",
