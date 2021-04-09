@@ -237,15 +237,17 @@ rule all:
         expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
                 chr = list(set(CHRS))),
         config["pop_file_no_sibs_with_kaga_no_131_1"],
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
                 p1 = P1S,
                 p2 = P2S,
                 chr = list(set(CHRS))),
-        os.path.join("data/introgression/abba_sliding_final_no_131-1", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt"),
-        expand("../introgression/snp_dens/kaga/{chr}.csv",
-                chr = list(set(CHRS))),
-        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
-                chr = list(set(CHRS)))
+        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+#        expand("../introgression/snp_dens/kaga/{chr}.csv",
+#                chr = list(set(CHRS))),
+#        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
+#                chr = list(set(CHRS)))
 
 
 # EMFs
@@ -835,13 +837,13 @@ rule run_abba_baba_sliding_no_131_1:
         data = os.path.join(config["geno_dir"], "final_without-kaga_no-sibs-or-131-1/{chr}.txt"),
         pop_file = config["pop_file_no_sibs_without_kaga_no_131_1"]
     output:
-        os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
+        os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
     params:
         p1 = lambda wildcards: wildcards.p1,
         p2 = lambda wildcards: wildcards.p2,
-        window_length = config["sliding_window_length_131"],
+        window_length = lambda wildcards: wildcards.sliding_window_length,
         minimum_sites = config["minimum_sites_131"],
-        destination_dir = lambda wildcards: "../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1/" + "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"]
+        destination_dir = lambda wildcards: "../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1/" + "wsize_" + wildcards.sliding_window_length + "_msites_" + config["minimum_sites_131"]
     singularity:
         config["numpy"]
     shell:
@@ -878,12 +880,13 @@ rule combine_sliding_windows_data:
 
 rule combine_sliding_windows_data_no_131_1:
     input:
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
                 p1 = P1S,
                 p2 = P2S,
                 chr = list(set(CHRS)))
     output:
-        os.path.join("data/introgression/abba_sliding_final_no_131-1", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt")
+        os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
     singularity:
         config["r-base"]
     shell:
