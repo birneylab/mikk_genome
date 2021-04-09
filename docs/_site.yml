@@ -8,13 +8,13 @@ navbar:
     - text: "Fecundity"
       href: 20210301_fecundity.html
     - text: "Linkage Disequilibrium"
-      href: 20210305_ld-decay.html
+      href: 20210409_ld-decay.html
     - text: "Introgression"
-      href: 20210318_introgression.html
+      href: 20210409_introgression.html
     - text: "Repeat Elements"
-      href: 20210301_repeats.html
+      href: 20210409_repeats.html
     - text: "Structural variation"
-      href: 20210319_sv_notebook.html
+      href: 20210409_sv_notebook.html
 output:
   html_document:
     theme: flatly
