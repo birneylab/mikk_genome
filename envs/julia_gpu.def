@@ -1,0 +1,20 @@
+Bootstrap: docker
+From: hpc/julia:v2.4.1
+Registry: nvcr.io
+
+%environment
+    export JULIA_DEPOT_PATH=:/opt/julia
+
+%post
+    julia -e 'using Pkg; for pkg in collect(keys(Pkg.installed()))
+            Base.compilecache(Base.identify_package(pkg))
+        end'
+    chmod -R a+rX $JULIA_DEPOT_PATH
+    julia -e 'using Pkg'
+    julia -e 'Pkg.init()'
+    julia -e 'Pkg.add("DataFrames")'
+    julia -e 'Pkg.add("Plots")'
+    julia -e 'Pkg.add("CSV")'
+    julia -e 'Pkg.add("StatsPlots")'
+    julia -e 'Pkg.add("Pluto")'
+    julia -e 'Pkg.add("Conda")'

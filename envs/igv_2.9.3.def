@@ -1,0 +1,3 @@
+Bootstrap: docker
+From: biocontainers/igv:2.9.3--0
+Registry: quay.io

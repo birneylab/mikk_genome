@@ -1,0 +1,160 @@
+{
+    "__default__" :
+    {
+        "memory" : "5000",
+        "n" : "1",
+        "name" : "{rule}.{wildcards}",
+        "output": "../log/{rule}/{wildcards}.out",
+        "error": "../log/{rule}/{wildcards}.err"
+    },
+    "add_hdrr_coords" :
+    {
+        "memory" : "10000"
+    },
+    "consolidate_subchrs" :
+    {
+        "memory" : "30000"
+    },
+    "consolidate_chrs" :
+    {
+        "memory" : "50000"
+    },
+    "rehead_full_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "compress_full_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "index_full_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "create_no_sibs_vcf" :
+    {
+        "memory" : "30000"
+    },
+    "compress_no_sibs_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "index_no_sibs_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "remove_missing_no_sibs_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "split_mikk_vcf" :
+    {
+        "memory" : "10000"
+    },
+    "combine_emf_and_maf" :
+    {
+        "memory" : "30000"
+    },
+    "combine_chr_freq_tables" :
+    {
+        "memory" : "20000"
+    },
+    "combine_all_mikk_freq_tables" :
+    {
+        "memory" : "50000"
+    },
+    "run_abba_baba" :
+    {
+        "memory" : "30000"
+    },
+    "combine_rlists" :
+    {
+        "memory" : "20000"
+    },
+    "make_geno" :
+    {
+        "memory" : "20000"
+    },
+    "make_geno_with_kaga" :
+    {
+        "memory" : "20000"
+    },
+    "split_geno_by_chr" :
+    {
+        "memory" : "50000"
+    },
+    "split_geno_by_chr_with_kaga" :
+    {
+        "memory" : "70000"
+    },       
+    "emf_2_geno_full_run" :
+    {
+        "memory" : "50000"
+    },
+    "emf_2_geno_full_run_with_kaga" :
+    {
+        "memory" : "50000"
+    },
+    "emf_2_geno_remove_sibs" :
+    {
+        "memory" : "20000"
+    },
+    "emf_2_geno_remove_sibs_with_kaga_no_131_1" :
+    {
+        "memory" : "50000"
+    },
+    "run_abba_baba_sliding" :
+    {
+        "memory" : "20000"
+    },
+    "emf_2_geno_extract_131" :
+    {
+        "memory" : "20000"
+    },
+    "emf_2_geno_extract_mikk" :
+    {
+        "memory" : "20000"
+    },
+    "run_abba_baba_sliding_131" :
+    {
+        "memory" : "20000"
+    },
+    "run_abba_baba_sliding_mikk" :
+    {
+        "memory" : "20000"
+    },
+    "align_kaga_to_hdrr" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "add_kaga_read_groups" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "sort_kaga_sam" :
+    {
+        "memory" : "20000",
+        "n" : "16"
+    },
+    "mark_kaga_duplicates" :
+    {
+        "memory" : "30000",
+        "n" : "16"
+    },
+    "kaga_index_bam" :
+    {
+        "n" : "4"
+    },
+    "kaga_call_haplotypes" :
+    {
+        "memory" : "10000",
+        "n" : "16"
+    },
+    "kaga_genotype" :
+    {
+        "memory" : "10000",
+        "n" : "16"
+    }
+}

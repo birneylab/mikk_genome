@@ -1,0 +1,119 @@
+---
+title: "Circos notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+#output:
+#  html_document:
+#    toc: true
+#    toc_float: true
+#    dev: 'svg'
+#    number_sections: true
+#    keep_md: true
+#    pandoc_args: --lua-filter=color-text.lua
+#    highlight: pygments    
+---
+
+# Setup
+
+```{r}
+library(here)
+library(tidyverse)
+```
+
+
+# Download and install `Circos` on local
+
+```{bash, eval = F}
+cd ~/Documents/Software
+wget http://circos.ca/distribution/circos-0.69-9.tgz 
+tar xvfz circos-0.69-9.tgz
+cd circos-0.69-9
+
+# Add to $PATH
+export PATH=$PATH:/Users/brettell/Documents/Software/circos-0.69-9/bin
+echo 'export PATH=$PATH:/Users/brettell/Documents/Software/circos-0.69-9/bin'  >> ~/.bash_profile
+
+# Add missing modules
+## Following guidance here: <http://circos.ca/tutorials/lessons/configuration/perl_and_modules/>
+
+cd ~/Downloads
+### Download libpng 1.6.14 from here:
+### <https://sourceforge.net/projects/libpng/files/libpng16/older-releases/1.6.14/libpng-1.6.14.tar.gz/download>
+wget http://circos.ca/distribution/lib/libpng-1.6.14.tar.gz
+tar xvfz libpng-1.6.14.tar.gz
+./configure --prefix=/usr/local
+make
+make install
+cd ..
+### Download jpegsrc.v9
+wget http://circos.ca/distribution/lib/jpegsrc.v9.tar.gz
+tar xvfz jpegsrc.v9.tar.gz
+cd jpeg-9
+./configure --prefix=/usr/local
+make
+make install
+cd ..
+### freetype 2.4
+wget http://circos.ca/distribution/lib/freetype-2.4.0.tar.gz
+tar xvfz freetype-2.4.0.tar.gz
+cd freetype-2.4.0  
+./configure --prefix=/usr/local
+make
+make install
+cd ..
+### libgd
+wget http://circos.ca/distribution/lib/libgd-2.1.0.tar.gz
+tar xvfz libgd-2.1.0.tar.gz
+cd libgd-2.1.0 
+./configure --with-png=/usr/local --with-freetype=/usr/local --with-jpeg=/usr/local -prefix=/usr/local
+make
+make install
+
+
+perl -MCPAN -e shell 
+install GD
+install Math::Bezier
+```
+
+# Create karyotype file
+
+```{r}
+out_file = here::here("data/sv_analysis/20210218_karyotype.hdrr.txt")
+# Read in chromosomes file
+chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(LABEL = V1, END = V2) %>% 
+  dplyr::mutate(chr = "chr",
+                `-` = "-",
+                ID = paste("ol", LABEL, sep = ""),
+                START = 0,
+                COLOR = paste("chr", LABEL, sep = "")) %>% 
+  dplyr::select(chr, `-`, ID, LABEL, START, END, COLOR) %>% 
+  readr::write_delim(out_file, col_names = F)
+```
+
+# Try with container
+
+```{bash, eval = F}
+# Dockerfile here
+# https://github.com/hexylena/docker-circos
+cd envs
+git clone https://github.com/hexylena/docker-circos.git
+
+cd ..
+
+# Build image
+docker build -t brettell/circos:latest envs/docker-circos 
+
+# Test sending script
+docker run -it -v $(pwd)/example:/input erasche/circos:latest -conf /input/circos.conf
+
+# True
+docker run -it -v $(pwd):/input brettell/circos:latest -conf code/scripts/20210223_circos.conf
+
+
+```
+
+
+
+

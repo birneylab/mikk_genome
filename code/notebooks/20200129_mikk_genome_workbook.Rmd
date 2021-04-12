@@ -1,7 +1,7 @@
 ---
 title: "MIKK Panel genome analysis workbook"
 output: html_notebook
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -17,7 +17,7 @@ From meeting with Tom Fitzgerald on 26 November 2019:
 • LD decay:
   - LD plots - per chromosome.
   - Heatmap per chromosome?
-• Fst plot  
+• Fst plot
 
 # Setup
 
@@ -124,7 +124,7 @@ Excluded IDs here: `mikk_genome/data/20200227_panel_lines_excluded.txt`. 16 line
 
 Replace all dashes with underscores to match cram2line key file
 ```{bash}
-sed 's/-/_/g' data/20200227_panel_lines_no-sibs.txt > data/20200227_panel_lines_no-sibs_us.txt  
+sed 's/-/_/g' data/20200227_panel_lines_no-sibs.txt > data/20200227_panel_lines_no-sibs_us.txt
 ```
 
 Extract the lines to keep from the key file.
@@ -223,8 +223,8 @@ bcftools stats vcfs/panel_no-sibs_line-ids.vcf.gz > stats/20200305_panel_no-sibs
 • number of multiallelic SNP sites:       1434908
 
 • ts: 12640470
-• tv: 11886484  
-• ts/tv: 1.06 
+• tv: 11886484
+• ts/tv: 1.06
 
 ## Split by chromosome
 
@@ -247,7 +247,7 @@ for i in $(seq 1 24); do
     --output-type z \
     --output vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz \
     vcfs/panel_no-sibs_line-ids.vcf.gz";
-done  
+done
 ```
 
 ### Get stats per chromosome
@@ -259,7 +259,7 @@ for i in $(seq 1 24); do
   bsub -o log/stats_by_chr_$i.out -e log/stats_by_chr_$i.err \
   "bcftools stats \
     vcfs/split_by_chr/panel_no-sibs_chr-$i.vcf.gz > stats/by_chr/$i.txt";
-done 
+done
 ```
 
 
@@ -280,12 +280,12 @@ for i in $(seq 1 24); do
     --ld-window-bp 50000 \
     --maf 0.03 \
     --out ld/20200305_panel_maf-0.03_window-50kb/$i";
-done  
+done
 
 # creates huge files (~10G). Take random 1M lines
 ## create set up directory
 mkdir ld/20200305_panel_maf-0.03_window-50kb_thinned
-## 
+##
 for i in $(seq 1 24); do
   bsub -o log/ld_trim_$i.out -e log/ld_trim_$i.err \
   "head -1 > ld/20200305_panel_maf-0.03_window-50kb_thinned/$i\_1m.txt && \
@@ -331,10 +331,10 @@ for i in $(seq 24 24); do
     --ld-window-kb 50000 \
     --chr-set 24 \
     --out ld/20200305_panel_maf-0.03_window-50kb_plink/$i";
-done  
+done
 ```
 
---double-id removes the issue of the line IDs having underscores in them. 
+--double-id removes the issue of the line IDs having underscores in them.
 --thin 0.025 takes only 0.025 of the variants
 --snps-only takes only SNPs
 --geno 0.3 filters out variants with missing call rates above 0.3
@@ -387,13 +387,13 @@ bcftools reheader \
   --output vcfs/full-run_line-ids.vcf \
   --samples mikk_genome/data/20200305_cram2line_full_dupes-edited.txt \
   vcfs/medaka_inbred_panel_ensembl_new_reference_release_94.vcf
-  
+
 # compress
 bcftools view \
   --output-type z \
   --output-file vcfs/full-run_line-ids.vcf.gz \
   vcfs/full-run_line-ids.vcf
-  
+
 # index
 bcftools index \
   --tbi vcfs/full-run_line-ids.vcf.gz
@@ -445,7 +445,7 @@ data_df <- dplyr::bind_rows(data_list)
 # TEST
 test_df <- dplyr::sample_n(data_df, 10000)
 
-test_df %>% 
+test_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -459,7 +459,7 @@ test_df %>%
 
 ```{r}
 # TRUE
-data_df %>% 
+data_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -480,7 +480,7 @@ ggsave(filename = paste("20200602_ld_decay_subset_allchr", ".png", sep = ""),
 ```
 
 
-## Find out what the SNPs have in common 
+## Find out what the SNPs have in common
 
 ```{r}
 # Distribution of counts in whole dataset
@@ -495,8 +495,8 @@ length(which(data_df$count == 63))
 
 ```{r}
 # TRUE
-data_df %>% 
-  dplyr::filter(count == 63) %>% 
+data_df %>%
+  dplyr::filter(count == 63) %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -519,14 +519,14 @@ ggsave(filename = paste("20200603_ld_decay_subset_allchr_allsmpls", ".png", sep 
 ## Take a look at those with r^2 of 1 greater than 20kb away
 
 ```{r}
-full_call_df <- data_df %>% 
+full_call_df <- data_df %>%
   dplyr::filter(count == 63 & r2 == 1 & distance_kb > 20)
-full_call_df_cnt <- full_call_df %>% 
+full_call_df_cnt <- full_call_df %>%
   dplyr::count(chr)
 
 # Plot
-full_call_df_cnt %>% 
-  ggplot(aes(chr, n, fill = factor(chr))) + 
+full_call_df_cnt %>%
+  ggplot(aes(chr, n, fill = factor(chr))) +
   geom_col() +
   theme_bw() +
   guides(fill = F)
@@ -548,7 +548,7 @@ for i in $(seq 1 24); do
     --ld-window-bp 50000 \
     --maf 0.05 \
     --out ld/20200305_panel_maf-0.05_window-50kb/$i";
-done  
+done
 ```
 
 ## Filter files on cluster for only those with full calls
@@ -568,7 +568,7 @@ for i in $(find ld/20200305_panel_maf-0.03_window-50kb/*); do
   name=$(basename $i | cut -f1 -d".");
   head -1 $i > ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt;
   awk '$4 == 63' $i >> ld/20200305_panel_maf-0.03_window-50kb_full-calls/$name.txt
-done  
+done
 ```
 
 ## Run R script to create plots
@@ -731,7 +731,7 @@ data_df <- dplyr::bind_rows(data_list)
 # TEST
 test_df <- dplyr::sample_n(data_df, 10000)
 
-test_df %>% 
+test_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -745,7 +745,7 @@ test_df %>%
 
 ```{r}
 # TRUE
-data_df %>% 
+data_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -765,11 +765,11 @@ ggsave(filename = paste("20200708_ld_decay_subset_allchr_max_maf_0.99", ".png", 
        dpi = 500)
 ```
 
-Looks better - with reduced density up the top for some chromosomes - but for others there are still strong lines with an r^2 of 1. 
+Looks better - with reduced density up the top for some chromosomes - but for others there are still strong lines with an r^2 of 1.
 
-Try setting the max MAF at 0.5. 
+Try setting the max MAF at 0.5.
 
-### Rerun LD stats with max MAF of 0.5 
+### Rerun LD stats with max MAF of 0.5
 
 ```{bash}
 # make directory
@@ -815,7 +815,7 @@ data_files <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0
                          full.names = T)
 data_files_trunc <- list.files("~/Documents/Data/20200707_mikk_ld/20200707_panel_maf-0.05_window-50kb_no-missing_maf-max-0.50_thinned")
 data_files_trunc <- gsub("_1m.txt", "", data_files_trunc)
- 
+
 data_list <- lapply(data_files, function(data_file){
   df <- read.delim(data_file,
                    sep = "\t",
@@ -844,11 +844,11 @@ data_list <- lapply(data_list, function(chr){
 data_df <- dplyr::bind_rows(data_list)
 ```
 
-## Plot 
+## Plot
 
 ```{r}
 # TRUE
-data_df %>% 
+data_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -867,7 +867,7 @@ ggsave(filename = paste("20200709_ld_decay_subset_allchr_max-maf-0.50", ".png", 
        dpi = 500)
 ```
 
-### Rerun LD stats with min MAF of 0.1 and max MAF of 0.9 
+### Rerun LD stats with min MAF of 0.1 and max MAF of 0.9
 
 ```{bash}
 # make directory
@@ -957,7 +957,7 @@ data_df <- dplyr::bind_rows(data_list)
 # TEST
 test_df <- dplyr::sample_n(data_df, 10000)
 
-test_df %>% 
+test_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -971,7 +971,7 @@ test_df %>%
 
 ```{r}
 # TRUE
-data_df %>% 
+data_df %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.005) +
   geom_smooth(size = 0.5) +
@@ -1003,7 +1003,7 @@ bcftools +fill-tags \
   --output vcfs/panel_no-sibs_line-ids_no-missing_with-maf.vcf.gz \
   -- \
   --tags MAF
-## Count of variants: 20,086,433  
+## Count of variants: 20,086,433
 # No missing, biallelic SNPs only
 bcftools view \
   --min-alleles 2 \
@@ -1025,7 +1025,7 @@ bcftools query \
   --format '%CHROM\t%POS\t%INFO/MAF\n' \
   --output maf/20200707_maf.txt \
   vcfs/panel_no-sibs_line-ids_no-missing_with-maf_bi-snps.vcf.gz
-  
+
 # send to local
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/maf/20200707_maf.txt ~/Documents/Data/20200707_mikk_ld
 ```
@@ -1033,7 +1033,7 @@ scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/maf/20200707_maf.txt
 ### Import to R
 
 ```{r}
-maf_dat <- read.table("~/Documents/Data/20200707_mikk_ld/20200707_maf.txt", 
+maf_dat <- read.table("~/Documents/Data/20200707_mikk_ld/20200707_maf.txt",
                   header = F, sep = "\t")
 colnames(maf_dat) <- c("chr", "pos", "maf")
 ```
@@ -1041,7 +1041,7 @@ colnames(maf_dat) <- c("chr", "pos", "maf")
 ### Plot
 
 ```{r}
-maf_dat %>% 
+maf_dat %>%
   ggplot() +
   geom_histogram(aes(x = maf,
                      y=..count../1000000),
@@ -1051,7 +1051,7 @@ maf_dat %>%
   theme_bw() +
   guides(fill = F) +
   xlab("Minor allele frequencies") +
-  ylab("Count (in millions of sites)") 
+  ylab("Count (in millions of sites)")
 ```
 
 ```{r}
@@ -1122,12 +1122,12 @@ plink \
   --thin 0.05 \
   --out ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05
 # replace * with 0
-for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05*.ped); do sed -i '.bak' 's/\*/0/g' $i; done  
+for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05*.ped); do sed -i '.bak' 's/\*/0/g' $i; done
 # run Haploview
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05.chr-24.ped \
   -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.05/thinned-0.05.chr-24.info \
-  -maxDistance 1000 
+  -maxDistance 1000
 # still crashes. Try with 0.025
 mkdir ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025
 
@@ -1143,22 +1143,22 @@ plink \
   --thin 0.025 \
   --out ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025
 # replace * with 0
-for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025*.ped); do sed -i '.bak' 's/\*/0/g' $i; done   
+for i in $(find /Users/brettell/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025*.ped); do sed -i '.bak' 's/\*/0/g' $i; done
 # run Haploview
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-24.ped \
   -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-24.info \
-  -maxDistance 1000 
+  -maxDistance 1000
 # Creates plot, but crashes when saving it.
 ```
 
 ### Try `gaston` package
 
-#### Make new BED 
+#### Make new BED
 ```{bash}
 mkdir plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05
-  
-# make BED  
+
+# make BED
 plink \
   --vcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
   --maf 0.05 \
@@ -1169,7 +1169,7 @@ plink \
   --chr 1-24 \
   --allow-extra-chr \
   --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05
-  
+
 # recode for 012
 plink \
   --bfile plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05 \
@@ -1177,15 +1177,15 @@ plink \
   --chr 1-24 \
   --allow-extra-chr \
   --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012
-  
+
 # recode for 012 transposed
 plink \
   --bfile plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05 \
   --recode A-transpose \
   --chr 1-24 \
   --allow-extra-chr \
-  --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012  
-  
+  --out plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012
+
 # send to local
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plink/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05/20200714_panel_no-sibs_line-ids_no-missing_maf-0.05_recode-012.raw ~/Documents/Data/20200707_mikk_ld/20200714_plink
 
@@ -1256,7 +1256,7 @@ ld.x <- gaston::LD(x, c(1,ncol(x)))
 ld.x[which(is.na(ld.x))] <- 0
 # plot
 LD.plot( ld.x,
-         snp.positions = x@snps$pos, 
+         snp.positions = x@snps$pos,
          max.dist = 1000000,
          write.ld = NULL,
          write.snp.id = F,
@@ -1267,7 +1267,7 @@ WORKS!
 Run on all chrs
 
 ```{r}
-# get vector of seeds 
+# get vector of seeds
 set.seed(5)
 seeds <- sample(seq(1, 100), 24)
 # run over list
@@ -1289,7 +1289,7 @@ lapply(mikk.gen_lst, function(chr){
   ld.x[which(is.na(ld.x))] <- 0
   # plot
   LD.plot(ld.x,
-          snp.positions = x@snps$pos, 
+          snp.positions = x@snps$pos,
           max.dist = 1000000,
           write.ld = NULL,
           write.snp.id = F,
@@ -1314,15 +1314,15 @@ mikk_bed_lst <- lapply(mikk.gen_lst, function(chr){
   counter <<- counter + 1
   # turn chr into list
   chr <- list()
-  
+
   # get bed matrix
   ## set up GEN and BIM files
   mikk.gen <- mikk.gen_lst[[counter]]
   mikk.gen <- t(as.matrix(mikk.gen))
   mikk.bim <- mikk.bim_lst[[counter]]
   ## form BED matrix
-  x <- gaston::as.bed.matrix(mikk.gen, bim = mikk.bim)  
-  chr[["bed_mat"]] <- x 
+  x <- gaston::as.bed.matrix(mikk.gen, bim = mikk.bim)
+  chr[["bed_mat"]] <- x
 
   # get LD matrix
   ## get seed
@@ -1363,7 +1363,7 @@ unique(all_snps$chr[which(all_snps$N2 == 63)])
 hist(all_snps$N2[all_snps$chr == 24])
 # how many have a MAF < 0.05?
 length(which(all_snps$maf < 0.05))
-# Nearly 10%! 
+# Nearly 10%!
 # Split back and get indexes so we can remove them before running the LD plots again
 all_snps_lst <- split(all_snps, f = all_snps$chr)
 snps_to_remove <- lapply(all_snps_lst, function(x){
@@ -1397,7 +1397,7 @@ unique(all_snps$chr[which(all_snps$maf_manual < 0.05)])
 ### Plot
 
 ```{r}
-all_snps %>% 
+all_snps %>%
   ggplot() +
   geom_histogram(aes(x = maf_manual,
                      y=..count../1000000),
@@ -1407,7 +1407,7 @@ all_snps %>%
   theme_bw() +
   guides(fill = F) +
   xlab("Minor allele frequencies") +
-  ylab("Count (in millions of sites)") 
+  ylab("Count (in millions of sites)")
 ```
 
 ### Pull out entries with LD of 1
@@ -1433,14 +1433,14 @@ high_ld_df$distance_kb <- abs((high_ld_df$snp_2_pos - high_ld_df$snp_1_pos)/1e6)
 ```{r}
 high_ld_lst <- lapply(mikk_bed_lst, function(x){
   # get data frame of matrix indices with R^2 of 1
-  test <- data.frame(which(x[["LD"]] > 0.9, arr.ind = T))  
+  test <- data.frame(which(x[["LD"]] > 0.9, arr.ind = T))
   # remove diagonals
   test <- test[which(test$row != test$col), ]
   # get count
   x[["high_ld_count"]] <- test
   # get indices for full snp list
   snp_1_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$row]
-  snp_2_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$col]  
+  snp_2_ind <- mikk_bed_lst[["1"]][["target_snps_indexes"]][test$col]
   # get distances between those snps
   high_ld_df <- data.frame(snp_1_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_1_ind],
                            snp_2_pos = mikk_bed_lst[["1"]]$bed_mat@snps$pos[snp_2_ind],
@@ -1486,7 +1486,7 @@ ld_df_lst <- lapply(high_ld_lst, function(x){
   test2$snp_2_pos <- as.integer(test2$snp_2_pos)
   test2$distance_kb <- abs((test2$snp_1_pos - test2$snp_2_pos)/1000)
   # remove diagonals
-  test2 <- test2[test2$distance_kb != 0, ]  
+  test2 <- test2[test2$distance_kb != 0, ]
   # get chr
   test2$chr <- factor(names(high_ld_lst)[counter], levels = seq(1, 24))
   # put in order
@@ -1510,7 +1510,7 @@ ld_df <- dplyr::bind_rows(ld_df)
 ld_df_50kb <- ld_df[ld_df$distance_kb < 50, ]
 
 # Plot
-ld_df_50kb %>% 
+ld_df_50kb %>%
   ggplot(aes(distance_kb, r2)) +
   geom_point(size = 0.1, alpha = 0.5) +
   geom_smooth(size = 0.5) +
@@ -1523,7 +1523,7 @@ ld_df_50kb %>%
 ### Do LD plots again, excluding MAF < 0.10
 
 ```{r}
-# get vector of seeds 
+# get vector of seeds
 set.seed(5)
 seeds <- sample(seq(1, 100), 24)
 # run over list
@@ -1531,24 +1531,24 @@ counter <- 0
 ld_plot_lst <- lapply(mikk.gen_lst, function(chr){
   chr <- list()
   counter <<- counter + 1
-  
+
   # create BED MAT from full files
   mikk.gen <- mikk.gen_lst[[counter]]
   mikk.gen <- t(as.matrix(mikk.gen))
   mikk.bim <- mikk.bim_lst[[counter]]
   x <- as.bed.matrix(mikk.gen, bim = mikk.bim)
   chr[["bed_mat_full"]] <- x
-  
+
   # get indexes to keep
   filt_ind <- which(x@snps$maf > 0.10)
-  
+
   # filter from original files and make BED again
   mikk.gen_filt <- mikk.gen_lst[[counter]][filt_ind, ]
-  mikk.gen_filt <- t(as.matrix(mikk.gen_filt))  
+  mikk.gen_filt <- t(as.matrix(mikk.gen_filt))
   mikk.bim_filt <- mikk.bim_lst[[counter]][filt_ind, ]
   x <- as.bed.matrix(mikk.gen_filt, bim = mikk.bim_filt)
-  chr[["bed_mat_filt"]] <- x  
-  
+  chr[["bed_mat_filt"]] <- x
+
   # get seed
   set.seed(seeds[counter])
   # made GEN file again
@@ -1569,7 +1569,7 @@ ld_plot_lst <- lapply(mikk.gen_lst, function(chr){
 
   # plot
 #  LD.plot(ld.x,
-#          snp.positions = x@snps$pos, 
+#          snp.positions = x@snps$pos,
 #          max.dist = 1000000,
 #          write.ld = NULL,
 #          write.snp.id = F,
@@ -1607,13 +1607,13 @@ data$bin_dist <- ggplot2::cut_interval(data$distance, n = 500)
 data$bin <- ggplot2::cut_interval(data$distance, n = 500)
 
 # Extract first boundaries
-data$bin_bdr <- as.numeric(stringr::str_split(data$bin, ",", simplify = T)[,1 ] %>% 
-  stringr::str_replace_all("\\(", "") %>% 
+data$bin_bdr <- as.numeric(stringr::str_split(data$bin, ",", simplify = T)[,1 ] %>%
+  stringr::str_replace_all("\\(", "") %>%
   stringr::str_replace_all("\\[", ""))
 
 # Group by bin and get means
-test <- data %>% 
-  dplyr::group_by(bin_bdr) %>% 
+test <- data %>%
+  dplyr::group_by(bin_bdr) %>%
   dplyr::summarise(mean = mean(r2, na.rm = T))
 
 
@@ -1634,9 +1634,9 @@ mkdir ld/20200715_mean_r2
 Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean.R \
   ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/18.geno.ld \
   ld/20200715_mean_r2
-# WORKS  
+# WORKS
 
-# TRUE  
+# TRUE
 for i in $(find ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/*); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 50000 -n 4 -o log/20200715_$name\_mean-r2.out -e log/20200715_$name\_mean-r2.err "Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean.R $i ld/20200715_mean_r2";
@@ -1714,7 +1714,7 @@ ggsave(filename = paste("20200715_mean-r2_facet", ".png", sep = ""),
        dpi = 500)
 ```
 
-*20200723* 
+*20200723*
 ### Do again, but shrinking the y-axis labels slighlty to avoid overlap
 
 ```{r}
@@ -1740,13 +1740,13 @@ ggsave(filename = paste("20200723_mean-r2_facet_50kb", ".png", sep = ""),
        dpi = 500)
 ```
 
-*end 20200723* 
+*end 20200723*
 
 ### Do again, but with max distance of 1000 bp and 50 bins
 
 ```{bash}
 mkdir ld/20200715_mean_r2_1kb-max
-# TRUE  
+# TRUE
 for i in $(find ld/20200707_panel_maf-0.10_window-50kb_no-missing_maf-max-0.90/*); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 30000 -n 4 -o log/20200715_$name\_mean-r2_1kb-max.out -e log/20200715_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200715_r2_decay_mean_1kb-lim.R $i ld/20200715_mean_r2_1kb-max";
@@ -1755,7 +1755,7 @@ done
 # Pull to local
 scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200715_mean_r2_1kb-max/ ~/Documents/Data/20200707_mikk_ld/
 ```
- 
+
 ## Get heterozygosity stats
 
 ```{bash}
@@ -1844,8 +1844,8 @@ chr_pal <- scales::hue_pal()(24)
 
 lapply(seq(1:24), function(x){
 # plot
-plot <- r2_df_1kb %>% 
-  dplyr::filter(chr == x) %>% 
+plot <- r2_df_1kb %>%
+  dplyr::filter(chr == x) %>%
   ggplot() +
   geom_line(aes(bin_bdr, mean, colour = chr)) +
   scale_colour_manual(values = chr_pal[x]) +
@@ -1854,14 +1854,14 @@ plot <- r2_df_1kb %>%
   ylab(bquote(.("Mean r")^2)) +
   guides(colour = F) +
   theme(panel.grid = element_blank())
-# save 
+# save
   ggsave(filename = paste(x, ".png", sep = ""),
          device = "png",
          path = "~/Documents/Docs/medaka\ pics/20200602_mikk_genome/20200723_decay-by-chr_1kb",
          width = 15,
          height = 8.25,
          units = "cm",
-         dpi = 500)  
+         dpi = 500)
 })
 
 ```
@@ -1878,15 +1878,15 @@ sum(unlist(lapply(ld_plot_lst, function(x) nrow(x[["bed_mat_filt"]]@snps))))
 
 *20200715* Birney Group meeting
 
-Get human LD plot – contrast. Major one we want to make. And it’s not quite as good as Drosophila and accept that. 
+Get human LD plot – contrast. Major one we want to make. And it’s not quite as good as Drosophila and accept that.
 
-Tracking down these LD blocks. Investigate individually. Find explanation for one. Describe the reason why. 
+Tracking down these LD blocks. Investigate individually. Find explanation for one. Describe the reason why.
 
-For these variants in the blocks, the samples will split be ancestry. As we raise the MAF, we hide the unbalanced scenarios. Take SNPs in blocks. Make a matrix. SNPs by samples, then cluster. Try Hclust. Hopefully we have some on one side of the tree, some on the other. Tree won’t look balanced, but hopefully we have a sample on each side. 
+For these variants in the blocks, the samples will split be ancestry. As we raise the MAF, we hide the unbalanced scenarios. Take SNPs in blocks. Make a matrix. SNPs by samples, then cluster. Try Hclust. Hopefully we have some on one side of the tree, some on the other. Tree won’t look balanced, but hopefully we have a sample on each side.
 
 The other thing they could be is introgression from Northern medaka line. Came in and refuses to recombine with Southern medaka.
 
-Could be regions of persistent heterozygosity? Sample regions of persistent heterozygosity and make bandage plots for them. 
+Could be regions of persistent heterozygosity? Sample regions of persistent heterozygosity and make bandage plots for them.
 
 Let Felix know that it’s working out.
 
@@ -1894,11 +1894,11 @@ Let Felix know that it’s working out.
 
 ### Get LD plots on full callset (no MAF threshold)
 
-#### Make new BED 
+#### Make new BED
 ```{bash}
 mkdir plink/20200716_panel_no-sibs_line-ids_no-missing
 
-# make BED  
+# make BED
 plink \
   --vcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
   --make-bed \
@@ -1908,13 +1908,13 @@ plink \
   --chr-set 24 no-xy \
   --chr 1-24 \
   --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200716
-  
+
 # recode for 012 transposed
 plink \
   --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
   --recode A-transpose \
   --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012
-  
+
 # compress
 gzip -k plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw
 gzip -k plink/20200716_panel_no-sibs_line-ids_no-missing/20200716.bim
@@ -1978,7 +1978,7 @@ chr_counts <- readr::read_tsv("~/Documents/Repositories/mikk_genome/data/Oryzias
 
 #### Get LD plots for MAF 0.03
 ```{r}
-# get vector of seeds 
+# get vector of seeds
 set.seed(5)
 seeds <- sample(seq(1, 100), 24)
 # run over list
@@ -2000,7 +2000,7 @@ test <- lapply(mikk_maf_filts$`0.03`, function(chr){
 
    # plot
   LD.plot(ld.x,
-          snp.positions = thin_bed@snps$pos, 
+          snp.positions = thin_bed@snps$pos,
           max.dist = 1000000,
           write.ld = NULL,
           write.snp.id = F,
@@ -2021,7 +2021,7 @@ heatmap(K)
 
 #### Get LD plots for MAF 0.05
 ```{r}
-# get vector of seeds 
+# get vector of seeds
 set.seed(10)
 seeds <- sample(seq(1, 100), 24)
 # run over list
@@ -2043,7 +2043,7 @@ test <- lapply(mikk_maf_filts$`0.05`, function(chr){
 
    # plot
   LD.plot(ld.x,
-          snp.positions = thin_bed@snps$pos, 
+          snp.positions = thin_bed@snps$pos,
           max.dist = 1000000,
           write.ld = NULL,
           write.snp.id = F,
@@ -2079,18 +2079,18 @@ done
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-5.ped \
   -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-5.info \
-  -maxDistance 1000 
-  
+  -maxDistance 1000
+
 # did for chrs 5, 6, 16, 17
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-16.ped \
   -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-16.info \
-  -maxDistance 1000 
-  
+  -maxDistance 1000
+
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-17.ped \
   -info ~/Documents/Data/20200707_mikk_ld/20200709_plink/20200709_thinned-0.025/thinned-0.025.chr-17.info \
-  -maxDistance 1000 
+  -maxDistance 1000
 
 ```
 
@@ -2111,17 +2111,17 @@ plink \
   --allele1234 \
   --out ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721
 
-  
-for i in $(find ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721*.ped); do sed -i 's/\*/0/g' $i; done 
 
-sed -i '.bak' 's/\*/0/g' ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721.chr-6.ped 
+for i in $(find ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721*.ped); do sed -i 's/\*/0/g' $i; done
+
+sed -i '.bak' 's/\*/0/g' ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721.chr-6.ped
 
 java -Xmx20G -jar ~/Documents/Software/Haploview.jar \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721.chr-6.ped  \
   -info ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.05/20200721.chr-6.info \
-  -maxDistance 1000 
+  -maxDistance 1000
 
-# Thin 0.075  
+# Thin 0.075
 mkdir ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.075/
 
 plink \
@@ -2133,8 +2133,8 @@ plink \
   --chr-set 24 no-xy \
   --chr 6,16 \
   --thin 0.075 \
-  --out ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.075/20200721  
-  
+  --out ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.075/20200721
+
 for i in $(find ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.075/20200721*.ped); do sed -i '.bak' 's/\*/0/g' $i; done
 
 java -Xms6G -Xmx6G -jar ~/Documents/Software/Haploview.jar \
@@ -2145,15 +2145,15 @@ java -Xms6G -Xmx6G -jar ~/Documents/Software/Haploview.jar \
   -maxDistance 1000 \
   -compressedpng \
   -nogui
-#Exception in thread "main" java.lang.NoSuchMethodError: java.lang.System.runFinalizersOnExit(Z)V  
+#Exception in thread "main" java.lang.NoSuchMethodError: java.lang.System.runFinalizersOnExit(Z)V
 ```
 
-• *6*: 
+• *6*:
   From 0.05: Block 112-129 (1.9 Mb). IDs 7693 to 8249 (30372030:32229289)
   From 0.075: Block 202-224. IDs 11671 to 12491 (30417868:32245570)
 • *16*:
   From 0.075: N/A. Can't identify. Try with LD colour scheme
-  
+
 ```{bash}
 java -Xms6G -Xmx6G -jar ~/Documents/Software/Haploview.jar \
   -memory 5000 \
@@ -2161,9 +2161,9 @@ java -Xms6G -Xmx6G -jar ~/Documents/Software/Haploview.jar \
   -info ~/Documents/Data/20200707_mikk_ld/20200721_plink_hv/20200721_thinned_0.075/20200721.chr-16.info \
   -maxDistance 1000 \
   -ldcolorscheme RSQ
-# No difference  
+# No difference
 ```
-  
+
 ### Create HV plink and try running (and thinning) directly from that
 
 ```{bash}
@@ -2175,7 +2175,7 @@ plink \
   --chr-set 24 no-xy \
   --allele1234 \
   --out ~/Documents/Data/20200707_mikk_ld/20200716_plink_full_set/20200721_hv
-  
+
 ## And do it on the cluster too
 mkdir plink/20200716_panel_no-sibs_line-ids_no-missing/20200722_haploview
 
@@ -2186,10 +2186,10 @@ plink \
   --chr-set 24 no-xy \
   --allele1234 \
   --out plink/20200716_panel_no-sibs_line-ids_no-missing/20200722_haploview/20200722_haploview
-  
+
 # remove asterisks on cluster
 for i in $(find plink/20200716_panel_no-sibs_line-ids_no-missing/20200722_haploview/20200722_haploview*.ped); do sed -i 's/\*/0/g' $i; done
-  
+
 # remove asterisks on local
 for i in $(find ~/Documents/Data/20200707_mikk_ld/20200716_plink_full_set/20200721_hv*.ped); do sed -i '.bak' 's/\*/0/g' $i; done
 
@@ -2205,8 +2205,8 @@ java -Xms10G -Xmx10G -jar ~/Documents/Software/Haploview.jar \
   -ldvalues RSQ \
   -minMAF 0.05 \
   -spacing 0.925
-  
-# Try with different parameters  
+
+# Try with different parameters
 java -Xms15G -Xmx15G -jar ~/Documents/Software/Haploview.jar \
   -memory 14000 \
   -pedfile ~/Documents/Data/20200707_mikk_ld/20200716_plink_full_set/20200721_hv.chr-16.ped  \
@@ -2215,8 +2215,8 @@ java -Xms15G -Xmx15G -jar ~/Documents/Software/Haploview.jar \
   -ldcolorscheme RSQ \
   -ldvalues RSQ \
   -minMAF 0.05 \
-  -spacing 0.99  
-  
+  -spacing 0.99
+
 # try running on cluster
 java -Xms20G -Xmx20G -jar /nfs/software/birney/Haploview.jar \
   -memory 18000 \
@@ -2229,7 +2229,7 @@ java -Xms20G -Xmx20G -jar /nfs/software/birney/Haploview.jar \
   -spacing 0.95 \
   -nogui \
   -compressedpng
-  
+
 # Writing output to 20200722_haploview.chr-16.ped.LD.PNG
 # Fatal Error:
 # Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
@@ -2244,7 +2244,7 @@ java -Xms45G -Xmx45G -jar /nfs/software/birney/Haploview.jar \
   -spacing 0.95 \
   -nogui \
   -compressedpng
-  
+
 # Try thinning to different degrees with plink
 mkdir plink/20200716_panel_no-sibs_line-ids_no-missing/20200723_hv_thinned
 mkdir plink/20200716_panel_no-sibs_line-ids_no-missing/20200723_hv_thinned/1000
@@ -2304,7 +2304,7 @@ java -Xms38G -Xmx38G -jar /nfs/software/birney/Haploview.jar \
   -nogui \
   -svg \
   -out plots/20200723_ld_thinned_3000/16
-  
+
 # try with 10000 and filter for MAF of 0.05 when creating plink HVs
 for i in $(seq 1 24); do
 plink \
@@ -2407,7 +2407,7 @@ java -Xms38G -Xmx38G -jar /nfs/software/birney/Haploview.jar \
   -nogui \
   -svg \
   -out plots/20200723_ld_thinned_3000/16
-# Looks good. Probably about the limit. 
+# Looks good. Probably about the limit.
 # Try adding BP position to the plots
 awk -v OFS="\t" {'print $2,$2'} plink/20200716_panel_no-sibs_line-ids_no-missing/20200723_hv_thinned/1000/20200723_chr-16.info > plink/20200716_panel_no-sibs_line-ids_no-missing/20200723_hv_thinned/1000/20200723_chr-16.info.test
 # Plot
@@ -2528,7 +2528,7 @@ for h in $(echo 0.03 0.10); do
   for i in $(find plink/20200716_panel_no-sibs_line-ids_no-missing/20200803_hv_thinned/$h/20200803_chr-*.ped); do
     sed -i 's/\*/0/g' $i;
   done;
-done  
+done
 
 # Edit .info files to make the SNP's bp position its ID
 for h in $(echo 0.03 0.10); do
@@ -2563,7 +2563,7 @@ done
 # copy to local
 scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/plots/20200803_ld_thinned/ ~/Documents/Docs/medaka\ pics/20200602_mikk_genome/20200723_haploview/
 
-# convert to pdf 
+# convert to pdf
 # https://www.zamzar.com/ for files > 30 MB (chr 1) - note limit on number of files you can convert
 # https://onlineconvertfree.com/convert-format/svg-to-pdf/ for the rest
 
@@ -2574,7 +2574,7 @@ rclone copy ~/Documents/Docs/medaka\ pics/20200602_mikk_genome/20200723_haplovie
 
 [end *20200803*]
 
-### Try using the R package `trio`. 
+### Try using the R package `trio`.
 
 ```{r}
 BiocManager::install("trio")
@@ -2615,7 +2615,7 @@ plink \
   --bfile ~/Documents/Data/20200707_mikk_ld/20200716_plink_full_set/20200716 \
   --recode \
   --out ~/Documents/Data/20200707_mikk_ld/20200716_plink_full_set/20200716
-# PED is 4.13GB. Delete.  
+# PED is 4.13GB. Delete.
 ```
 
 ```{r}
@@ -2649,13 +2649,13 @@ mikk_geno_split <- split(mikk_geno, f = mikk_geno$CHR)
 # remove redundant columns, set up col and row names, and convert to matrix
 counter <- 0
 mikk_geno_split <- lapply(mikk_geno_split, function(x){
-  counter <<- counter + 1 
+  counter <<- counter + 1
   x <- x[, -(1:6)]
   colnames(x) <- mikk_full@ped$id
   x <- as.matrix(x)
-  rownames(x) <- paste(mikk_full_split[[counter]]@snps$chr, 
-                       mikk_full_split[[counter]]@snps$pos, 
-                       sep = ":")  
+  rownames(x) <- paste(mikk_full_split[[counter]]@snps$chr,
+                       mikk_full_split[[counter]]@snps$pos,
+                       sep = ":")
   return(x)
 })
 ```
@@ -2670,7 +2670,7 @@ mikk_6 <- mikk_geno_split[["6"]][target_snps, ]
 #test <- trio::findLDblocks(mikk_6,
 #                           snp.in.col = F)
 # Error in trio::findLDblocks(mikk_geno_split[["6"]], snp.in.col = F) : If x is a matrix, x must contain at most 500 SNPs. If x contains more SNPs, please consider to use getLDlarge.
-test <- trio::getLDlarge(mikk_6, 
+test <- trio::getLDlarge(mikk_6,
                          neighbors = 25,
                          snp.in.col = F,
                          addVarN = T)
@@ -2678,63 +2678,11 @@ test2 <- trio::findLDblocks(test)
 # takes hours to run. Try with fewer neighbours
 
 
-test <- trio::getLDlarge(mikk_6, 
+test <- trio::getLDlarge(mikk_6,
                          neighbors = 10,
                          snp.in.col = F,
                          addVarN = T)
 test2 <- trio::findLDblocks(test)
-```
-
-
-### Try using `LDExplorer`
-
-```{r}
-install.packages("LDExplorer", repos="http://R-Forge.R-project.org")
-library(LDExplorer)
-```
-
-
-#### Create LD plot for select regions
-
-```{r}
-# get vector of seeds 
-set.seed(10)
-seeds <- sample(seq(1, 100), 24)
-# run over list
-counter <- 0
-test <- lapply(mikk_maf_filts$`0.05`[6], function(chr){
-  counter <<- counter + 1
-  # get seed
-  set.seed(seeds[counter])
-  # set boundaries
-  bounds <- c(25000000, max(chr@snps$pos))
-  # get sample of 1000
-  targ_ind <- sort(sample(which(dplyr::between(chr@snps$pos, bounds[1], bounds[2])), 1000))
-  # convert into logical vector
-  log_vec <- seq(1, nrow(chr@snps)) %in% targ_ind  
-  # thin BED for sample SNPs
-  thin_bed <- gaston::LD.thin(chr,
-                              threshold = 1,
-                              max.dist = 50000,
-                              which.snps = log_vec,
-                              dist.unit = "bases")
-  # compute LD
-  ld.x <- gaston::LD(thin_bed, c(1,ncol(thin_bed)))
-  # replace NaNs with 0
-  ld.x[which(is.na(ld.x))] <- 0
-
-   # plot
-  LD.plot(ld.x,
-          snp.positions = thin_bed@snps$pos, 
-          max.dist = 1000000,
-          write.ld = NULL,
-          write.snp.id = F,
-          pdf.file = paste("~/Documents/Docs/medaka pics/20200602_mikk_genome/20200717_ld_maf-0.05/zoomed/",
-                           "20200717_chr6_25Mb-end",
-                           ".pdf",
-                           sep = "")
-          )
-})
 ```
 
 Not easy to identify. Import Plink blocks
@@ -2800,10 +2748,10 @@ chr6_df$consec <- sequence(rle(chr6_df$yesno == 100)$lengths)
 max(chr6_df$consec[chr6_df$yesno == 100])
 hist(chr6_df$consec[chr6_df$yesno == 100])
 table(chr6_df$consec[chr6_df$yesno == 100])
-# 
+#
 ```
 
-The appearance of clusters changes depending on how zoomed-in you are to the plot. 
+The appearance of clusters changes depending on how zoomed-in you are to the plot.
 
 *20200721*
 
@@ -2885,7 +2833,7 @@ names(mikk_maf_filts) <- target_mafs
 ## Plot
 
 ```{r}
-data.frame("maf" = mikk_full@snps$maf) %>% 
+data.frame("maf" = mikk_full@snps$maf) %>%
   ggplot() +
   geom_histogram(aes(x = maf,
                      y=..count../1000000),
@@ -2895,7 +2843,7 @@ data.frame("maf" = mikk_full@snps$maf) %>%
   theme_bw() +
   guides(fill = F) +
   xlab("Minor allele frequencies") +
-  ylab("Count (in millions of sites)") 
+  ylab("Count (in millions of sites)")
 ```
 
 ```{r}
@@ -2927,7 +2875,7 @@ vcftools \
   --stdout > vcfs/1gk_all_no-missing.vcf
 # Made a HUGE file - 298GB and only up to chr 6!
 # VCF has 84,739,838 variants!
-# Try different tack. 
+# Try different tack.
 ## compress
 #bcftools view --output-type z --output-file vcfs/1gk_all_no-missing.vcf.gz vcfs/1gk_all_no-missing.vcf
 ## create index
@@ -2939,7 +2887,7 @@ vcftools \
 ```{bash}
 mkdir plink/20200723_1gk_no-missing_maf-0.05
 
-# make BED  
+# make BED
 plink \
   --vcf vcfs/1gk_all.vcf.gz \
   --make-bed \
@@ -2978,7 +2926,7 @@ for i in $(seq 1 21); do
   	  --chr $i \
   	  --maf 0.10 \
   	  --out ld/20200724_1gk_maf-0.10_window-50kb_no-missing/$i;
-done  	  
+done
 ```
 
 ## Get mean LD
@@ -2991,9 +2939,9 @@ mkdir ld/20200724_mean_r2_1gk
 Rscript --vanilla mikk_genome/code/scripts/20200724_r2_decay_mean_1gk.R \
   ld/20200724_1gk_maf-0.10_window-50kb_no-missing/22.ld \
   ld/20200724_mean_r2_1gk
-# WORKS  
+# WORKS
 
-# TRUE  
+# TRUE
 for i in $(find ld/20200724_1gk_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 10000 -o log/20200724_$name\_mean-r2.out -e log/20200724_$name\_mean-r2.err "Rscript --vanilla mikk_genome/code/scripts/20200724_r2_decay_mean_1gk.R $i ld/20200724_mean_r2_1gk";
@@ -3079,7 +3027,7 @@ ggsave(filename = paste("20200724_mean-r2_facet_50kb_1KG", ".png", sep = ""),
 
 ```{bash}
 mkdir ld/20200724_mean_r2_1kb-max_1gk
-# TRUE  
+# TRUE
 for i in $(find ld/20200724_1gk_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 10000 -o log/20200724_$name\_mean-r2_1kb-max.out -e log/20200724_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200724_r2_decay_mean_1gk_1kb-lim.R $i ld/20200724_mean_r2_1kb-max_1gk";
@@ -3288,7 +3236,7 @@ biclust::biclust(t(chr_17_ld_mat), method = BCXmotifs())
 
 biclust_out <- biclust::biclust(chr_17_ld_mat, method = BCPlaid(),
                                 cluster = "c",)
-# Number of Clusters found:  10 
+# Number of Clusters found:  10
 # make heatmap
 biclust::drawHeatmap(chr_17_ld_mat[1:1000, ], )
 biclust::drawHeatmap2(chr_17_ld_mat[1:1000, ], )
@@ -3296,7 +3244,7 @@ biclust::drawHeatmap(chr_17_ld_mat, biclust_out)
 
 biclust::biclust(chr_17_ld_mat, method = BCSpectral())
 # no cluster found
-  
+
 # plot
 biclust::drawHeatmap(chr_17_ld_mat,
                      bicResult = bicl_out_17)
@@ -3352,7 +3300,7 @@ high_ld_lst <- lapply(high_ld_chrs, function(x){
   x[["target_inds"]] <- which(mikk_full@snps$chr == x[["chr"]] &
                          dplyr::between(mikk_full@snps$pos, x[["start"]], x[["end"]]) &
                          mikk_full@snps$maf > 0.05)
-  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]  
+  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]
   # make matrix
   x[["geno_mat"]] <- as.matrix(x[["target_snps"]][, -(1:6)])
   return(x)
@@ -3378,7 +3326,7 @@ lapply(high_ld_lst, function(x){
       units = "cm",
       res = 300)
   heatmap(x[["geno_mat"]], Rowv = NA)
-  dev.off()  
+  dev.off()
 })
 
 ```
@@ -3402,7 +3350,7 @@ plink \
   --chr-set 24 no-xy \
   --out plink/20200727_mikk_no-missing_maf-0.05/20200727
 
-# get LD   
+# get LD
 mkdir ld/20200727_mikk_maf-0.10_window-50kb_no-missing/
 
 for i in $(seq 1 24); do
@@ -3434,7 +3382,7 @@ for i in $(seq 1 22); do
 done
 
 # do again with ld-window-kb 10 to get counts of comparisons for paper
-# get LD   
+# get LD
 mkdir ld/20200803_mikk_maf-0.10_window-10kb_no-missing/
 
 for i in $(seq 1 24); do
@@ -3467,7 +3415,7 @@ done
 
 # Get counts
 wc -l ld/20200803_mikk_maf-0.10_window-10kb_no-missing/*.ld
-# Total: 
+# Total:
 wc -l ld/20200803_1kg_maf-0.10_window-10kb_no-missing/*.ld
 ```
 
@@ -3478,7 +3426,7 @@ Rscript here: `mikk_genome/code/scripts/20200727_r2_decay_mean_1gk_10kb-lim.R`
 #### MIKK
 ```{bash}
 mkdir ld/20200727_mean_r2_10kb-lim_mikk
-# TRUE  
+# TRUE
 for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 10000 -o log/20200727_$name\_mean-r2_1kb-max.out -e log/20200727_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200727_r2_decay_mean_1gk_10kb-lim.R $i ld/20200727_mean_r2_10kb-lim_mikk";
@@ -3491,7 +3439,7 @@ scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200727_mean_
 #### 1KG
 ```{bash}
 mkdir ld/20200727_mean_r2_10kb-lim_1kg
-# TRUE  
+# TRUE
 for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 30000 -o log/20200727_$name\_mean-r2_10kb-max.out -e log/20200727_$name\_mean-r2_10kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200727_r2_decay_mean_1gk_10kb-lim.R $i ld/20200727_mean_r2_10kb-lim_1kg";
@@ -3689,7 +3637,7 @@ ggsave(filename = paste("20200803_mean-r2_10kb-lim_1KGvMIKK_single", ".png", sep
        dpi = 500)
 ```
 
-*20200803* 
+*20200803*
 
 Do with 10 kb bins so it's the same as the inset.
 
@@ -3700,7 +3648,7 @@ Rscript here: `mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_10kb-lim.R`
 #### MIKK
 ```{bash}
 mkdir ld/20200803_mean_r2_10kb-lim_mikk
-# TRUE  
+# TRUE
 for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 30000 -o log/20200727_$name\_mean-r2_1kb-max.out -e log/20200727_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_10kb-lim.R $i ld/20200803_mean_r2_10kb-lim_mikk";
@@ -3713,7 +3661,7 @@ scp -r brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/ld/20200803_mean_
 #### 1KG
 ```{bash}
 mkdir ld/20200803_mean_r2_10kb-lim_1kg
-# TRUE  
+# TRUE
 for i in $(find ld/20200727_1kg_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 30000 -o log/20200727_$name\_mean-r2_10kb-max.out -e log/20200727_$name\_mean-r2_10kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200803_r2_decay_mean_1gk_10kb-lim.R $i ld/20200803_mean_r2_10kb-lim_1kg";
@@ -3807,7 +3755,7 @@ Too noisy. Don't use.
 
 ```{bash}
 mkdir ld/20200727_mean_r2_1kb-lim_mikk
-# TRUE  
+# TRUE
 for i in $(find ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld); do
   name=$(basename $i | cut -f1 -d".");
   bsub -M 10000 -o log/20200727_$name\_mean-r2_1kb-max.out -e log/20200727_$name\_mean-r2_1kb-max.err "Rscript --vanilla mikk_genome/code/scripts/20200724_r2_decay_mean_1gk_1kb-lim.R $i ld/20200727_mean_r2_1kb-lim_mikk";
@@ -3958,15 +3906,15 @@ plink \
   --bfile plink/20200723_1gk_no-missing/20200723 \
   --freq \
   --out maf/20200727_1kg_no-missing
-# Creates a 3.9GB file.  
-  
+# Creates a 3.9GB file.
+
 # MIKK
 plink \
   --bfile plink/20200716_panel_no-sibs_line-ids_no-missing/20200716 \
   --freq \
   --chr-set 24 no-xy \
   --out maf/20200727_mikk_no-missing
-  
+
 # Send to local
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/maf/20200727_mikk_no-missing.frq.gz ~/Documents/Data/20200707_mikk_ld
 
@@ -3978,7 +3926,7 @@ gunzip ~/Documents/Data/20200707_mikk_ld/20200727_mikk_no-missing.frq.gz
 ```{r}
 maf_mikk <- readr::read_delim("~/Documents/Data/20200707_mikk_ld/20200727_mikk_no-missing.frq",
                               delim = " ",
-                              trim_ws = T) %>% 
+                              trim_ws = T) %>%
   dplyr::select(MAF)
 maf_mikk$dataset <- "MIKK"
 
@@ -3989,9 +3937,9 @@ maf_1kg <- readr::read_delim("~/Documents/Data/20200707_mikk_ld/20200727_1kg_no-
 maf_1kg$dataset <- "1KG"
 
 maf_final <- rbind(maf_mikk, maf_1kg)
-  
+
 # Plot
-maf_final %>% 
+maf_final %>%
   ggplot() +
   geom_histogram(aes(x = MAF,
                      y=0.01*..density..,
@@ -4005,7 +3953,7 @@ maf_final %>%
   theme(panel.grid = element_blank()) +
   scale_fill_manual(values = c(`1KG` = "#FC4E07",
                                MIKK = "#360568"))
-  
+
 ```
 
 ```{r}
@@ -4050,7 +3998,7 @@ wget ftp://ftp.ensembl.org/pub/release-100/fasta/gasterosteus_aculeatus/dna/Gast
 ### Aign to reference
 ```{bash}
 # create index using BWA
-bwa index refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz 
+bwa index refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz
 # Try MUMmer4: https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005944
 mkdir stickleback
 mkdir stickleback/sams
@@ -4059,7 +4007,7 @@ nucmer \
   --sam-long=stickleback/sams/20200721.sam \
   refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa \
   refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa
-  
+
 # convert SAM to BAM
 mkdir stickleback/bams
 
@@ -4071,12 +4019,12 @@ samtools view \
 #[W::sam_read1] Parse error at line 3
 #[main_samview] truncated file.
 
-# sort 
+# sort
 samtools sort \
   -o stickleback/bams/20200728_stickle2hdrr_sorted.bam \
   -O bam \
   stickleback/sams/20200721.sam
-  
+
 # Try with minimap2
 mkdir sams
 
@@ -4084,8 +4032,8 @@ minimap2 -ax asm5 \
   refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa \
   refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz \
   > sams/20200728_stickle2hdrr.sam
-  
-# try with asm20  
+
+# try with asm20
 minimap2 -ax asm20 \
   refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa \
   refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz \
@@ -4096,9 +4044,9 @@ mkdir bams
 
 samtools view \
   -b sams/20200728_stickle2hdrr.sam > bams/20200728_stickle2hdrr.bam
-  
+
 samtools view \
-  -b sams/20200728_stickle2hdrr_asm20.sam > bams/20200728_stickle2hdrr_asm20.bam  
+  -b sams/20200728_stickle2hdrr_asm20.sam > bams/20200728_stickle2hdrr_asm20.bam
 
 # Sort
 samtools sort \
@@ -4109,8 +4057,8 @@ samtools sort \
 samtools sort \
   -o bams/20200728_stickle2hdrr_asm20_sorted.bam \
   -O bam \
-  bams/20200728_stickle2hdrr_asm20.bam  
-  
+  bams/20200728_stickle2hdrr_asm20.bam
+
 # Index
 samtools index \
   bams/20200728_stickle2hdrr_sorted.bam
@@ -4121,7 +4069,7 @@ gatk --java-options "-Xmx4g" HaplotypeCaller  \
   -I bams/20200728_stickle2hdrr_sorted.bam \
   -O vcfs/20200728_stickle2hdrr.g.vcf.gz \
   -ERC GVCF
-#A USER ERROR has occurred: Argument emit-ref-confidence has a bad value: Can only be used in single sample mode currently. Use the --sample-name argument to run on a single sample out of a multi-sample BAM file.  
+#A USER ERROR has occurred: Argument emit-ref-confidence has a bad value: Can only be used in single sample mode currently. Use the --sample-name argument to run on a single sample out of a multi-sample BAM file.
 ## Try bcftools
 bcftools mpileup \
   --output vcfs/20200728_stickle2hdrr.vcf.gz \
@@ -4214,7 +4162,7 @@ minigraph -xggs -t16 \
 minigraph -xggs -t16 \
   refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa.gz \
     > gfas/20200729_hdrr.r.gfa
-    
+
 # Create graph of HNI
 mkdir gafs
 
@@ -4222,7 +4170,7 @@ minigraph -t16 \
   gfas/20200729_hdrr.r.gfa \
   refs/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa.gz \
     > gafs/20200730_hni2hdrr.gaf
-    
+
 # Send to local to look at with  bandage
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/gafs/20200730_hni2hdrr.gaf ~/Documents/Data/20200707_mikk_ld
 # Error: Please verify that this file has the correct format
@@ -4235,7 +4183,7 @@ cut -f5 gfas/20200729_hdrr.r.gfa | sort | uniq
 
 # Insert string into FASTA references to identify the chromosomes
 
-``` 
+```
 
 ## Convert samples in VCF to FASTA
 
@@ -4256,18 +4204,18 @@ bcftools +split \
   --output-type z \
   --samples-file mikk_genome/data/20200730_vcf_split_samples_file.txt \
   vcfs/full-run_line-ids.vcf.gz
-  
+
 # index
 bcftools index \
   --tbi \
   vcfs/indiv_split/134_1.vcf.gz
-  
+
 # try with GATK
 gatk FastaAlternateReferenceMaker \
   -R refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa \
   -O fastas_from_vcf/134_1_gatk.fa \
   -V vcfs/indiv_split/134_1.vcf.gz
-  
+
 # try more directly with bcftools's consensus
 mkdir fastas_from_vcf
 
@@ -4276,13 +4224,13 @@ bcftools consensus \
   --output fastas_from_vcf/134_1.fa \
   --sample 134_1 \
   vcfs/full-run_line-ids.vcf.gz
-  
+
 bcftools consensus \
   --fasta-ref refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa.gz \
   --output fastas_from_vcf/69_1.fa \
   --sample 69_1 \
   vcfs/full-run_line-ids.vcf.gz
-  
+
 # Insert sample name in chr ID
 sed 's/>/>MIKK_134_1_chr/g' fastas_from_vcf/134_1.fa > fastas_from_vcf/134_1.id.fa
 sed 's/>/>MIKK_69_1_chr/g' fastas_from_vcf/69_1.fa > fastas_from_vcf/69_1.id.fa
@@ -4305,7 +4253,7 @@ minigraph -xggs -t16 \
 
 ```{bash}
 # Print all offsets in HdrR chr 17
-# 17:15557892-19561518 
+# 17:15557892-19561518
 grep "SN:Z:17" gfas/20200730_hdrr_134_1.r.gfa | cut -f6 | sort | uniq
 # Before start: SO:i:15403701
 # After start: SO:i:16191302
@@ -4335,7 +4283,7 @@ grep "SO:i:19589961" gfas/20200730_hdrr_134_1.r.gfa | cut -f2
 rclone ls google_drive_ebi:MIKK\ panel\ genome\ paper/Results/Graph\ Assembly/individual_assemblies/
 # matching pattern
 rclone lsf --absolute --include "*clean.fa"  google_drive_ebi:MIKK\ panel\ genome\ paper/Results/Graph\ Assembly/individual_assemblies
-# copy 
+# copy
 rclone copy --include "*clean.fa" google_drive_ebi:MIKK\ panel\ genome\ paper/Results/Graph\ Assembly/individual_assemblies/ /hps/research1/birney/users/ian/mikk_paper/fastas_ont
 ```
 
@@ -4362,7 +4310,7 @@ paste \
   mikk_genome/data/20200730_hdrr-134_1_ont-69_1_ont_labels.csv \
   mikk_genome/data/20200730_hdrr-134_1_ont-69_1_ont_labels_chr.csv \
     > mikk_genome/data/20200730_hdrr-134_1_ont-69_1_ont_labels_final.csv
-    
+
 ```
 
 ## Read into R to figure out R script here: `mikk_genome/code/scripts/20200731_add_colours_and_line_labels.R`
@@ -4415,7 +4363,7 @@ reversed_nodes <- unique(l_lines$from[l_lines$from_orient == "+" & l_lines$to_or
 # assign direction to data
 data$direction <- ifelse(data$node %in% reversed_nodes, "-", "+")
 # assign colours
-data$colour <- ifelse(data$line == "HdrR", 
+data$colour <- ifelse(data$line == "HdrR",
                       "#0BC166",
                       ifelse(data$line == "MIKK_134-1" & data$direction == "+",
                              "#FC4E07",
@@ -4478,8 +4426,8 @@ Small reverse strands from s101016 (19,503,814) to s101353 (21,058,438)
 
 Start: s96970. Short forward strands.
 * s96970 (0): Forward               942K
-* s97122 (942,226): Reverse         677k  
-* s97295 (1,619,320): Forward       
+* s97122 (942,226): Reverse         677k
+* s97295 (1,619,320): Forward
 * s97386 (1,940,652): Reverse       6923k
 * s98830 (8,864,153): Forward
 * s98895 (9,277,441): Reverse
@@ -4520,7 +4468,7 @@ paste \
   ~/Documents/Data/20200707_mikk_ld/20200730_graph_genomes/tmp1.txt \
   ~/Documents/Data/20200707_mikk_ld/20200730_graph_genomes/tmp2.txt \
     > ~/Documents/Data/20200707_mikk_ld/20200730_graph_genomes/20200730_hdrr-134_1-69_1.r.gfa.labs
-    
+
 rm ~/Documents/Data/20200707_mikk_ld/20200730_graph_genomes/tmp*
 ```
 
@@ -4544,7 +4492,7 @@ data_ill$line[!(data_ill$chr %in% c(seq(1, 24), "MT"))] <- sapply(data_ill$chr[!
 })
 
 # Get colours
-data_ill$colour <- ifelse(data_ill$line == "HdrR", 
+data_ill$colour <- ifelse(data_ill$line == "HdrR",
                            "#0BC166",
                            ifelse(data_ill$line == "MIKK_134_1",
                                   "#FC4E07",
@@ -4661,7 +4609,7 @@ minimap2 -ax asm20 \
   refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa \
   refs/Gasterosteus_aculeatus.BROADS1.dna.toplevel.fa.gz \
   > sams/20200728_stickle2hdrr_asm20.sam
-  
+
 ## HNI and HSOK
 for i in $(find refs/Oryzias_latipes_h*.fa.gz); do
   name=$(echo $i | cut -f1 -d'.' | cut -f3 -d'_');
@@ -4684,10 +4632,10 @@ done
 
 # Convert to BAM
 mkdir bams
-  
+
 samtools view \
-  -b sams/20200728_stickle2hdrr_asm20.sam > bams/20200728_stickle2hdrr_asm20.bam  
-  
+  -b sams/20200728_stickle2hdrr_asm20.sam > bams/20200728_stickle2hdrr_asm20.bam
+
 ## HNI and HSOK
 for i in $(echo hni hsok); do
   samtools view \
@@ -4708,7 +4656,7 @@ for i in $(echo hni hsok); do
     -o bams/20200806_$i\2hdrr_asm20_sorted.bam \
     -O bam \
     bams/20200806_$i\2hdrr_asm20.bam;
-done    
+done
 
 # Call variants with bcftools
 bcftools mpileup \
@@ -4751,7 +4699,7 @@ bcftools index --tbi vcfs/20200728_stickle2hdrr_asm20_called.vcf.gz
 ## HNI and HSOK
 for i in $(echo hni hsok); do
   bcftools index --tbi vcfs/20200806_$i\2hdrr_asm20_called.vcf.gz;
-done  
+done
 
 # Merge
 bcftools merge \
@@ -4784,7 +4732,7 @@ bcftools view \
   --output-file vcfs/panel_no-sibs_line-ids_no-missing_stickle-hni-hsok_reheader_no-missing.vcf.gz \
   --output-type z \
   vcfs/panel_no-sibs_line-ids_no-missing_stickle-hni-hsok_reheader.vcf
-# Only has 963 SNPs  
+# Only has 963 SNPs
 # How many per chromosome?
 gunzip -c vcfs/panel_no-sibs_line-ids_no-missing_stickle-hni-hsok_reheader_no-missing.vcf.gz | \
   grep -v "#" | \
@@ -4816,7 +4764,7 @@ gunzip -c vcfs/panel_no-sibs_line-ids_no-missing_stickle-hni-hsok_reheader_no-mi
 
 ### Tutorial
 
-Here: <https://github.com/simonhmartin/tutorials/tree/master/ABBA_BABA_whole_genome> 
+Here: <https://github.com/simonhmartin/tutorials/tree/master/ABBA_BABA_whole_genome>
 
 ```{bash}
 mkcd abbababa_tutorial
@@ -4861,13 +4809,13 @@ write.table(data,
             sep = "\t")
 ```
 
-### Convert VCF into 
+### Convert VCF into
 
 ### From Ewan
 
 Find 47 fish EPO. Will be a parsing nightmare.
 
-Need to parse the tree. Load into tree viewer. Maybe use oryzias indo. Want the closest ancestor to the split between hdr, hni and hsok.. Pretty sure that'll be javanicus. Count the lines down - 10th sequence down. Then down on the sequence you count 10th column. First is latipes. For every SNP in latipes, one will be the refernce, and one will be the alternate. Either one or the other will be the ancestor. 
+Need to parse the tree. Load into tree viewer. Maybe use oryzias indo. Want the closest ancestor to the split between hdr, hni and hsok.. Pretty sure that'll be javanicus. Count the lines down - 10th sequence down. Then down on the sequence you count 10th column. First is latipes. For every SNP in latipes, one will be the refernce, and one will be the alternate. Either one or the other will be the ancestor.
 A diagnostic thing - do MAF with ancestral and derived, then make a histogram with derived allele. Should show same decay.
 
 *20200901*
@@ -4880,14 +4828,14 @@ Directory here:
 
 Contains two READMEs:
 1. README.emf
-  - 
+  -
 2. README.47_fish.epo
- - EPO = Enredo-Pecan-Ortheus multiple alignment. 
+ - EPO = Enredo-Pecan-Ortheus multiple alignment.
  - Enredo builds a set of co-linear regions between the genomes; Pecan aligns these whole sets of sequences; Ortheus uses the Pecan alginments to infer the ancestral sequences.
  - Alignments are grouped by HdrR chromosomes. The fiels names *.other*.emf contain alignments that do not inlcude any HdrR region.
  - Contains the species tree. HdrR and HNI are grouped together, then HSOK, then javanicus and melastigma (0.0375962 and 0.0447938 respectively; 0.016843 as a group).
- 
-To get the tree, copy the TREE section from the .EMF files, and paste into <phylo.io>. 
+
+To get the tree, copy the TREE section from the .EMF files, and paste into <phylo.io>.
 
 Pic of the tree saved here: `~/Documents/Docs/medaka pics/20200602_mikk_genome/20200901_phylo_tree.png`
 
@@ -4910,7 +4858,7 @@ So we want the following columns:
 
 Meeting with Ewan: Use Aseq_Ancestor_1828_105986 as the outgroup.
 
-## Download EMF 
+## Download EMF
 
 ```{bash}
 mkdir emfs
@@ -4927,7 +4875,7 @@ done
 
 
 # NOTE that file 17_1 is in a completely different format, with CIGAR strings instead of the normal SEQ, TREE, ID and DATA segments.
-# want to remove all lines starting with $VAR, a space (make it two to be safe), and all consecutive blank lines (leaving single blank lines) 
+# want to remove all lines starting with $VAR, a space (make it two to be safe), and all consecutive blank lines (leaving single blank lines)
 
 # remove all lines starting with $VAR or two spaces, and all consecutive blank lines
 sed '/\$VAR1/d; /\ \ /d' emfs/unzipped/17_1.emf | uniq -u > emfs/unzipped/tmp.txt
@@ -4939,7 +4887,7 @@ mv emfs/unzipped/tmp.txt emfs/unzipped/17_1.emf
 
 ```{bash}
 # find line numbers where DATA starts (actual data starts line after)
-grep -n "^DATA" emfs/unzipped/10_1.emf | cut -f1 -d":" 
+grep -n "^DATA" emfs/unzipped/10_1.emf | cut -f1 -d":"
 
 # find line numbers where DATA ends (actual data ends line before)
 grep -n "//" emfs/unzipped/10_1.emf | cut -f1 -d":"
@@ -4981,7 +4929,7 @@ for i in $(find emfs/unzipped/10_1.emf); do
     echo -e "$chr\t$segment_start\t$segment_end\t$strand";
     file_name_data=$(echo $chr\_$segment_start\_$segment_end\_$strand.data.txt);
     # pull out data
-    chunk_start=$(grep -m $j -n "^DATA" $i | tail -n1 | cut -f1 -d":"); 
+    chunk_start=$(grep -m $j -n "^DATA" $i | tail -n1 | cut -f1 -d":");
     chunk_end=$(grep -m $j -n "//" $i | tail -n1 | cut -f1 -d":");
     chunk_line_count=$(expr $(echo $chunk_end) - $(echo $chunk_start) - 1 );
     awk -F"" "NR==$(expr $(echo $chunk_start) + 1),NR==$(expr $(echo $chunk_end) - 1)" $i | head \
@@ -4989,11 +4937,11 @@ for i in $(find emfs/unzipped/10_1.emf); do
     # pull out metadata
     file_name_meta=$(echo $chr\_$segment_start\_$segment_end\_$strand.meta.txt);
     blank_line_start=$(grep -m $j -n ^$ $i | tail -n1 | cut -f1 -d":");
-    counter_plus_1=$(expr $(echo $j) + 1); 
+    counter_plus_1=$(expr $(echo $j) + 1);
     blank_line_end=$(grep -m $counter_plus_1 -n ^$ $i | tail -n1 | cut -f1 -d":");
     awk "NR==$blank_line_start,NR==$blank_line_end" $i | grep "^SEQ\|^TREE" \
       > emfs/segmented/$bname_short/$file_name_meta;
-  done;  
+  done;
 done
 
 # Use script to parallelise each segment
@@ -5013,7 +4961,7 @@ for i in $(find emfs/unzipped/* | awk 'NR==41,NR==59' ); do
       -o log/$bname_short\_$j.out \
       -e log/$bname_short\_$j.out \
       "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $bname_short"
-  done;  
+  done;
 done
 
 # 20200922 amending due to misalignment for the 10_2.emf file
@@ -5041,7 +4989,7 @@ for i in $(find emfs/unzipped/* ); do
       -o log/20200922_$bname_short\_$j.out \
       -e log/20200922_$bname_short\_$j.out \
       "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $new_path "
-  done;  
+  done;
 done
 
 find emfs/segmented/*/*.data.txt | wc -l
@@ -5069,7 +5017,7 @@ for i in $(find emfs/unzipped/10_2* ); do
       -o log/20200922_$bname_short\_$j.out \
       -e log/20200922_$bname_short\_$j.out \
       "./mikk_genome/code/scripts/20200907_extract-emf-segments.sh $i $j $new_path "
-  done;  
+  done;
 done
 ```
 
@@ -5077,11 +5025,11 @@ Find out whether it lines up with the HdrR FASTA
 
 ```{bash}
 # Pull out first column of data
-awk "NR==$(expr $(echo $chunk_start) + 1),NR==$(expr $(echo $chunk_end) - 1)" $i | head | awk -F "" -v OFS="\t" '{gsub("","\t"); print}' 
+awk "NR==$(expr $(echo $chunk_start) + 1),NR==$(expr $(echo $chunk_end) - 1)" $i | head | awk -F "" -v OFS="\t" '{gsub("","\t"); print}'
 
-awk "NR==$(expr $(echo $chunk_start) + 1),NR==$(expr $(echo $chunk_end) - 1)" $i | head | awk '$1=$1' FS="" OFS="\t" 
+awk "NR==$(expr $(echo $chunk_start) + 1),NR==$(expr $(echo $chunk_end) - 1)" $i | head | awk '$1=$1' FS="" OFS="\t"
 # WORKS
- 
+
 # Bring over with rmate and save on Desktop
 ```
 
@@ -5125,13 +5073,13 @@ cut -f1 emfs/segmented/10_1/10_10089051_10267882_1.data.txt | tr -d \\n | sed 's
 ed -s tmp2.txt <<< w
 
 # compare
-cmp tmp1.txt tmp2.txt 
+cmp tmp1.txt tmp2.txt
 ## SUCCESS!
 
 # try with reverse strand segments
 emfs/segmented/10_1/10_10031232_10089050_-1.data.txt
 
-# paste to file - note `-i` flag for reverse complement 
+# paste to file - note `-i` flag for reverse complement
 samtools faidx -i refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa 10:10031232-10089050 | tail -n+2 | tr -d \\n > tmp1.txt
 ed -s tmp1.txt <<< w # add new line to end
 
@@ -5140,7 +5088,7 @@ cut -f1 emfs/segmented/10_1/10_10031232_10089050_-1.data.txt | tr -d \\n | sed '
 ed -s tmp2.txt <<< w
 
 # compare
-cmp tmp1.txt tmp2.txt 
+cmp tmp1.txt tmp2.txt
 # SUCCESS!
 
 # get names of species
@@ -5183,14 +5131,14 @@ file_in <- "emfs/segmented/10_2/10_16101474_16156360_1"
 # TEST
 Rscript --vanilla mikk_genome/code/scripts/20200908_add-hdrr-coords-to-emf-data.R emfs/segmented/10_1/10_10031232_10089050_-1
 
-# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments 
+# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments
 for i in $(find emfs/segmented/*/*_1.data.txt ); do
   # make new directory
   chr_file=$(echo $i | cut -f3 -d"/" );
   new_path=$(echo emfs/cleaned/$chr_file );
   if [ ! -d "$new_path" ]; then
     mkdir $new_path;
-  fi  
+  fi
   # create name for new file
   bname=$(echo $i | sed 's/.data.txt//g' );
   bname_short=$(basename $bname );
@@ -5217,9 +5165,9 @@ Proceed with those for the time being...
 
 Pull two files
 ```{bash}
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/cleaned/1_1/1_10018060_10055052_1.txt ~/Documents/Data/20200910_abbababa_test  
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/cleaned/1_1/1_10018060_10055052_1.txt ~/Documents/Data/20200910_abbababa_test
 
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/cleaned/1_1/1_1004861_1059491_1.txt ~/Documents/Data/20200910_abbababa_test  
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/cleaned/1_1/1_1004861_1059491_1.txt ~/Documents/Data/20200910_abbababa_test
 ```
 
 Do operation on R
@@ -5236,7 +5184,7 @@ dat_list <- lapply(files, function(x){
   # change name of ancestor in header
   colnames(df)[grep("Ancestor", colnames(df))] <- "ancestor"
   # capitalise all letters
-  df <- df %>% 
+  df <- df %>%
     dplyr::mutate(across(.cols = c(-chr, -coord),.fns = toupper))
   return(df)
 })
@@ -5263,11 +5211,11 @@ dat_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
 
 Pull three files
 ```{bash}
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_1.txt ~/Documents/Data/20200910_abbababa_test  
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_1.txt ~/Documents/Data/20200910_abbababa_test
 
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_2.txt ~/Documents/Data/20200910_abbababa_test  
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_2.txt ~/Documents/Data/20200910_abbababa_test
 
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_3.txt ~/Documents/Data/20200910_abbababa_test  
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/emfs/consolidated/10_3.txt ~/Documents/Data/20200910_abbababa_test
 ```
 
 ### TEST
@@ -5293,7 +5241,7 @@ dat_df <- dplyr::bind_rows(dat_list, .id = "chr_file") %>% # bind into single DF
                 ancestor,
                 oryzias_javanicus,
                 oryzias_melastigma,
-                chr_file) %>% 
+                chr_file) %>%
   dplyr::mutate(across(everything(), ~na_if(.x, "-")))
 ```
 
@@ -5311,8 +5259,8 @@ for i in $(find emfs/cleaned/* -type d ); do
     -M 20000 \
     -o log/20200925_consol_$chr.out \
     -e log/20200925_consol_$chr.err \
-    "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated/$chr.txt "; 
-done  
+    "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated/$chr.txt ";
+done
 
 # combine for each chr
 mkdir emfs/final
@@ -5341,7 +5289,7 @@ bcftools view \
     --output vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af.vcf.gz \
     -- \
     --tags AF
-    
+
 # Try with VCFtools
 vcftools \
   --gzvcf vcfs/panel_no-sibs_line-ids_no-missing.vcf.gz \
@@ -5353,13 +5301,13 @@ vcftools \
 # Output has 16,035,052 hits with this format:
 #CHROM   POS     N_ALLELES       N_CHR   {ALLELE:FREQ}
 #1       15430   2       126     G:0.992063      A:0.00793651
-  
-# Try with BCFtools  
+
+# Try with BCFtools
 bcftools query \
   --format '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AF\n' \
   --output maf/20200910_af.txt \
   vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af.vcf.gz
-# Output has the same amount of hits - 16,035,052 - with this format:  
+# Output has the same amount of hits - 16,035,052 - with this format:
 #1	15430	G	A	0.00793651 where the freq is of the alt allele
 
 # Split by chromosome and paste together chr:pos columns
@@ -5398,13 +5346,13 @@ colnames(final_dat) <- gsub("oryzias_", "", colnames(final_dat)) # other medaka
 
 # join DFs
 joined_dat <- dplyr::inner_join(af_dat,
-                               dplyr::select(final_dat, 
+                               dplyr::select(final_dat,
                                              !c(chr, coord, chr_file)),
-                               by = "chr_pos") %>% 
+                               by = "chr_pos") %>%
   tidyr::drop_na(ancestor)
 
-# set ancestral and derived alleles and get 
-final_dat <- joined_dat %>% 
+# set ancestral and derived alleles and get
+final_dat <- joined_dat %>%
   dplyr::mutate(ancestral = ancestor,
                 derived = dplyr::if_else(ancestor == ref,
                                         alt,
@@ -5415,11 +5363,11 @@ final_dat <- joined_dat %>%
                 mutate(across(hdrr:melastigma,
                               ~dplyr::if_else(.x == derived,
                                               1,
-                                              0)))) %>% 
+                                              0)))) %>%
   dplyr::select(chr, pos, ancestral, derived,
                 mikk, hdrr, hni, hsok, javanicus, melastigma)
-                
-                
+
+
 #               !!var_names[1] := dplyr::if_else(.data[[pop_1]] == der_al,
 #                                     1,
 #                                     0),
@@ -5437,13 +5385,13 @@ target_cols <- c("chr_pos", pops)
 
 
 
-#%>% 
+#%>%
 #  tidyr::drop_na() # take only complete cases
 
 # set ancestral and derived allele
 var_names <- paste(pops, "frq", sep = "_")
 
-test <- joined_dat %>% 
+test <- joined_dat %>%
   dplyr::mutate(anc_al = ancestor,
                 der_al = dplyr::if_else(ancestor == ref,
                                         alt,
@@ -5456,11 +5404,11 @@ test <- joined_dat %>%
                                       0),
                 !!var_names[2] := dplyr::if_else(.data[[pop_2]] == der_al,
                                       1,
-                                      0)) %>% 
-  dplyr::select(chr, 
-                pos, 
-                anc_al, 
-                der_al, 
+                                      0)) %>%
+  dplyr::select(chr,
+                pos,
+                anc_al,
+                der_al,
                 mikk = mikk_frq,
                 !!pops[1] := !!var_names[1],
                 !!pops[2] := !!var_names[2])
@@ -5523,7 +5471,7 @@ Download files to local:
 ```{bash}
 mkcd abbababa_tutorial
 
-mkcd abbababa_tutorial/data 
+mkcd abbababa_tutorial/data
 
 wget https://github.com/simonhmartin/tutorials/raw/master/ABBA_BABA_whole_genome/data/hel92.DP8MP4BIMAC2HET75dist250.geno.gz
 
@@ -5562,7 +5510,7 @@ pops <- c(P1, P2, P3)
 
 # Select only those populations and remove NAs
 freq_table_filt <- freq_table %>%
-  dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
+  dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>%
   tidyr::drop_na()
 
 D <- D.stat(freq_table_filt[,P1], freq_table_filt[,P2], freq_table_filt[,P3])
@@ -5603,9 +5551,9 @@ block_starts <- lapply(chrom_names, function(chrom_name) {
   seq(min(positions[chromosomes==chrom_name]),
       max(positions[chromosomes==chrom_name]),
       block_size)
-}) 
+})
 
-block_chroms <- unlist(lapply(1:length(block_starts), function(x){ 
+block_chroms <- unlist(lapply(1:length(block_starts), function(x){
   rep(chrom_names[x],
       length(block_starts[[x]]))
   })
@@ -5615,7 +5563,7 @@ block_starts <- unlist(block_starts)
 
 block_ends <- block_starts + block_size - 1
 
-block_indices <- lapply(1:length(block_starts), function(x){ 
+block_indices <- lapply(1:length(block_starts), function(x){
   which(chromosomes == block_chroms[x] &
           positions >= block_starts[x] &
           positions <= block_ends[x])
@@ -5630,7 +5578,7 @@ n_blocks <- length(block_indices)
 print(paste("Genome divided into", n_blocks, "blocks."))
 ```
 
-Compute the standard deviation of *D*. 
+Compute the standard deviation of *D*.
 
 ```{r}
 D_sd <- get_jackknife_sd(block_indices=block_indices,
@@ -5653,9 +5601,9 @@ The massive Z score in this case means the deviation from 0 is hugely significan
 
 Now we want to *quantify* the proportion of the genome that has been shared, denoted by the *f* statistic.
 
-The idea behind this approach is to compare the observed excess of ABBA over BABA, to that which would be expected under complete admixture. 
+The idea behind this approach is to compare the observed excess of ABBA over BABA, to that which would be expected under complete admixture.
 
-Now we need a second population of the P3 species in place of P2. 
+Now we need a second population of the P3 species in place of P2.
 
 ##### Divide samples into two groups and get MAF freqs for both
 
@@ -5689,20 +5637,20 @@ for i in $(seq 1 2 ); do
       --output vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af_$i.vcf.gz \
       -- \
       --tags AF;
-done    
-    
+done
+
 # get allele freqs for each subpop
 for i in $(seq 1 2 ); do
   bcftools query \
     --format '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AF\n' \
     --output-file maf/20200915_af_$i.txt \
     vcfs/panel_no-sibs_line-ids_no-missing_bi-snps_with-af_$i.vcf.gz;
-done    
+done
 
 # Split by chromosome and paste together chr:pos columns
 for i in $(seq 1 2 ); do
   mkdir maf/20200915_split-by-chr_$i;
-done  
+done
 
 for i in $(seq 1 2 ); do
   for j in $(cut -f1 maf/20200915_af_$i.txt | sort | uniq); do
@@ -5726,7 +5674,7 @@ for i in $( seq 1 2 ); do
       -e log/20200915_frq_tbl_$i\_$j.err \
       "Rscript --vanilla mikk_genome/code/scripts/20200911_combine_final_and_af_data.R $j $dat_file $af_file abba_baba_mikk/freq_tables_mikk_$i ";
   done;
-done  
+done
 ```
 
 Combine chr files into single file *directly on cluster*
@@ -5744,7 +5692,7 @@ group_b <- list.files("abba_baba_mikk/freq_tables_mikk_2",
 dat_list_a <- lapply(group_a, function(x){
   # read in data
   df <- readr::read_tsv(x,
-                        col_types = "iiccdiiiii") %>% 
+                        col_types = "iiccdiiiii") %>%
     dplyr::rename(mikk_a = mikk)
   return(df)
 })
@@ -5752,7 +5700,7 @@ dat_list_a <- lapply(group_a, function(x){
 dat_list_b <- lapply(group_b, function(x){
   # read in data
   df <- readr::read_tsv(x,
-                        col_types = "iiccdiiiii") %>% 
+                        col_types = "iiccdiiiii") %>%
     dplyr::rename(mikk_b = mikk)
   return(df)
 })
@@ -5769,11 +5717,11 @@ final_df_prev <- readr::read_tsv("abba_baba_mikk/freq_tables/all.txt",
                                  col_types = "iiccdiiiii")
 
 # join
-final_df <- final_df_prev %>% 
+final_df <- final_df_prev %>%
   dplyr::full_join(dplyr::select(final_df_a, chr, pos, mikk_a),
-                   by = c("chr", "pos")) %>% 
+                   by = c("chr", "pos")) %>%
   dplyr::full_join(dplyr::select(final_df_b, chr, pos, mikk_b),
-                   by = c("chr", "pos")) %>% 
+                   by = c("chr", "pos")) %>%
   dplyr::select(chr, pos, ancestral, derived, mikk, mikk_a, mikk_b, everything())
 
 # write table
@@ -5820,7 +5768,7 @@ pops <- c(P1, P2, P3, P3a, P3b)
 
 # Select only those populations and remove NAs
 freq_table_filt <- freq_table %>%
-  dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
+  dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>%
   tidyr::drop_na()
 
 f <- f.stat(freq_table_filt[,P1], freq_table_filt[,P2], freq_table_filt[,P3a], freq_table_filt[,P3b])
@@ -5830,16 +5778,16 @@ print(paste("Admixture proportion = ", round(f,4)))
 # "Admixture proportion =  0.6281"
 ```
 
-This reveals that 62.81% of the genome is shared between HdrR and MIKK. This can be interpreted as the average proportion of shared ancestry with HdrR in any single MIKK genome. 
+This reveals that 62.81% of the genome is shared between HdrR and MIKK. This can be interpreted as the average proportion of shared ancestry with HdrR in any single MIKK genome.
 
-We can again use the block jackknife to estimate the standard deviation of f, and obtain a confidence interval. 
+We can again use the block jackknife to estimate the standard deviation of f, and obtain a confidence interval.
 
 ```{r}
 f_sd <- get_jackknife_sd(block_indices=block_indices,
                          FUN=f.stat,
                          freq_table_filt[,P1],
-                         freq_table_filt[,P2], 
-                         freq_table_filt[,P3a], 
+                         freq_table_filt[,P2],
+                         freq_table_filt[,P3a],
                          freq_table_filt[,P3b])
 
 f_err <- f_sd/sqrt(n_blocks)
@@ -5852,7 +5800,7 @@ print(paste("95% confidence interval of f =", round(f_CI_lower,4), round(f_CI_up
 
 #### Chromosomal ABBA BABA analysis
 
-Do all chromosomes show evidence of introgression? 
+Do all chromosomes show evidence of introgression?
 
 ```{r}
 # Get row indices for each chromosome
@@ -5937,9 +5885,9 @@ source("~/Documents/Repositories/mikk_genome/code/scripts/20200916_abbababa_func
 freq_table <- read.table("~/Documents/Data/20200910_abbababa_test/all_with-split-mikk.txt",
                          header = T,
                          as.is = T)
-  
+
 run_abbababa <- function(data, P1, P2){
-  
+
   # set popns and remove NAs
   P3 <- "mikk"
   P3a <- "mikk_a"
@@ -5948,111 +5896,111 @@ run_abbababa <- function(data, P1, P2){
 
   # Select only those populations and remove NAs
   freq_table <- data %>%
-    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
+    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>%
     tidyr::drop_na()
-  
+
   # Create output list
   out_list <- list()
-  
+
   # Add populations
   out_list[["Populations"]] <- list("P1" = P1,
                                     "P2" = P2,
                                     "P3" = "mikk")
-  
+
   # Get genome-wide D stat
   out_list[["Genome-wide D"]] <- list()
-  
+
   D <- D.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3])
   out_list[["Genome-wide D"]][["D statistic"]] <- D
-  
+
   block_indices <- get_block_indices(block_size=1e6, # Block jackknife to obtain SD and Z-score
                                      positions=freq_table$pos,
                                      chromosomes=freq_table$chr)
-  
+
   block_indices <- block_indices[lapply(block_indices, length) > 0 ]  # remove empty entries
-  
+
   n_blocks <- length(block_indices)
 
-  out_list[["Genome-wide D"]][["Number of blocks"]] <- n_blocks  
-  
+  out_list[["Genome-wide D"]][["Number of blocks"]] <- n_blocks
+
   D_sd <- get_jackknife_sd(block_indices=block_indices, # get D SD
                          FUN=D.stat,
                          freq_table[,P1], freq_table[,P2], freq_table[,P3])
-  
+
   out_list[["Genome-wide D"]][["Standard deviation"]] <- D_sd
-  
+
   D_err <- D_sd/sqrt(n_blocks)
-  
+
   D_Z <- D / D_err
-  
+
   out_list[["Genome-wide D"]][["Z score"]] <- D_Z
-  
+
   # Get admixture proportion
   out_list[["Admixture"]] <- list()
-  
+
   f <- f.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
-  
+
   out_list[["Admixture"]][["f statistic"]] <- f
-  
+
   f_sd <- get_jackknife_sd(block_indices=block_indices,
                          FUN=f.stat,
                          freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
-  
+
   out_list[["Admixture"]][["Standard deviation"]] <- f_sd
-  
+
   f_err <- f_sd/sqrt(n_blocks)
 
   f_CI_lower <- f - 1.96*f_err
   f_CI_upper <- f + 1.96*f_err
-  
-  out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower, 
+
+  out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower,
                                                            "upper" = f_CI_upper)
-  
+
   # Get per-chromosome D
   chrom_names <- unique(freq_table$chr)
   chrom_indices <- lapply(chrom_names, function(chrom) which(freq_table$chr == chrom))
   names(chrom_indices) <- chrom_names
-  
+
   out_list[["Per-chromosome D"]] <- lapply(chrom_names, function(chrom){
     per_chr_out <- list()
     # get D stat
     D_by_chrom <- D.stat(freq_table[chrom_indices[[chrom]], P1],
                                            freq_table[chrom_indices[[chrom]], P2],
                                            freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["D statistic"]] <- D_by_chrom
-    
+
     # number of SNPs
     per_chr_out[["Number of SNPs"]] <- length(chrom_indices[[chrom]])
-    
+
     # get block indices
     block_indices_by_chrom <- get_block_indices(block_size=1e6,
                                        positions=freq_table$pos[freq_table$chr == chrom])
     # remove empty blocks
     block_indices_by_chrom <- block_indices_by_chrom[lapply(block_indices_by_chrom, length) > 0 ]
-    
+
     # Get SD
     D_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
                                       FUN=D.stat,
                                       freq_table[chrom_indices[[chrom]], P1],
                                       freq_table[chrom_indices[[chrom]], P2],
                                       freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["Standard error"]] <- D_sd_by_chrom
-    
+
     # Get Z score
     D_err_by_chrom <- D_sd_by_chrom / sqrt(length(block_indices_by_chrom))
-    
+
     D_Z_by_chrom <- D_by_chrom / D_err_by_chrom
-    
+
     per_chr_out[["Z score"]] <- D_Z_by_chrom
-    
+
     # Return list
-    return(per_chr_out)    
+    return(per_chr_out)
   })
-  
+
   names(out_list[["Per-chromosome D"]]) <- chrom_names
-  
+
   # return output
   return(out_list)
 }
@@ -6066,57 +6014,57 @@ test_function <- function(data, P1, P2){
 
   # Select only those populations and remove NAs
   freq_table <- data %>%
-    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
-    tidyr::drop_na()  
-  
+    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>%
+    tidyr::drop_na()
+
   out_list <- list()
-  
+
   # Get per-chromosome D
-  
+
   #out_list[["Per-chromosome D"]] <- list()
-  
+
   chrom_names <- unique(freq_table$chr)
   chrom_indices <- lapply(chrom_names, function(chrom) which(freq_table$chr == chrom))
   names(chrom_indices) <- chrom_names
-  
+
   out_list[["Per-chromosome D"]] <- lapply(chrom_names, function(chrom){
     per_chr_out <- list()
     # get D stat
     D_by_chrom <- D.stat(freq_table[chrom_indices[[chrom]], P1],
                                            freq_table[chrom_indices[[chrom]], P2],
                                            freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["D statistic"]] <- D_by_chrom
-    
+
     # number of SNPs
     per_chr_out[["Number of SNPs"]] <- length(chrom_indices[[chrom]])
-    
+
     # get block indices
     block_indices_by_chrom <- get_block_indices(block_size=1e6,
                                        positions=freq_table$pos[freq_table$chr == chrom])
     # remove empty blocks
     block_indices_by_chrom <- block_indices_by_chrom[lapply(block_indices_by_chrom, length) > 0 ]
-    
+
     # Get SD
     D_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
                                       FUN=D.stat,
                                       freq_table[chrom_indices[[chrom]], P1],
                                       freq_table[chrom_indices[[chrom]], P2],
                                       freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["Standard error"]] <- D_sd_by_chrom
-    
+
     # Get Z score
     D_err_by_chrom <- D_sd_by_chrom / sqrt(length(block_indices_by_chrom))
-    
+
     D_Z_by_chrom <- D_by_chrom / D_err_by_chrom
-    
+
     per_chr_out[["Z score"]] <- D_Z_by_chrom
-    
+
     # Return list
-    return(per_chr_out)    
+    return(per_chr_out)
   })
-  
+
   names(out_list[["Per-chromosome D"]]) <- chrom_names
   # return output
   return(out_list)
@@ -6227,7 +6175,7 @@ final_df %>% ggplot() +
 
 ```{r}
 run_abbababa <- function(data, P1, P2){
-  
+
   # set popns and remove NAs
   P3 <- "mikk"
   P3a <- "mikk_a"
@@ -6236,138 +6184,138 @@ run_abbababa <- function(data, P1, P2){
 
   # Select only those populations and remove NAs
   freq_table <- data %>%
-    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>% 
+    dplyr::select(chr, pos, ancestral, derived, all_of(pops)) %>%
     tidyr::drop_na()
-  
+
   # Create output list
   out_list <- list()
-  
+
   # Add populations
   out_list[["Populations"]] <- list("P1" = P1,
                                     "P2" = P2,
                                     "P3" = "mikk")
-  
+
   # Get genome-wide D stat
   out_list[["Genome-wide D"]] <- list()
-  
+
   D <- D.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3])
   out_list[["Genome-wide D"]][["D statistic"]] <- D
-  
+
   block_indices <- get_block_indices(block_size=1e6, # Block jackknife to obtain SD and Z-score
                                      positions=freq_table$pos,
                                      chromosomes=freq_table$chr)
-  
+
   block_indices <- block_indices[lapply(block_indices, length) > 0 ]  # remove empty entries
-  
+
   n_blocks <- length(block_indices)
 
-  out_list[["Genome-wide D"]][["Number of blocks"]] <- n_blocks  
-  
+  out_list[["Genome-wide D"]][["Number of blocks"]] <- n_blocks
+
   D_sd <- get_jackknife_sd(block_indices=block_indices, # get D SD
                          FUN=D.stat,
                          freq_table[,P1], freq_table[,P2], freq_table[,P3])
-  
+
   out_list[["Genome-wide D"]][["Standard deviation"]] <- D_sd
-  
+
   D_err <- D_sd/sqrt(n_blocks)
-  
+
   D_Z <- D / D_err
-  
+
   out_list[["Genome-wide D"]][["Z score"]] <- D_Z
-  
+
   # Get admixture proportion
   out_list[["Admixture"]] <- list()
-  
+
   f <- f.stat(freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
-  
+
   out_list[["Admixture"]][["f statistic"]] <- f
-  
+
   f_sd <- get_jackknife_sd(block_indices=block_indices,
                          FUN=f.stat,
                          freq_table[,P1], freq_table[,P2], freq_table[,P3a], freq_table[,P3b])
-  
+
   out_list[["Admixture"]][["Standard deviation"]] <- f_sd
-  
+
   f_err <- f_sd/sqrt(n_blocks)
 
   f_CI_lower <- f - 1.96*f_err
   f_CI_upper <- f + 1.96*f_err
-  
-  out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower, 
+
+  out_list[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower,
                                                            "upper" = f_CI_upper)
-  
+
   # Get per-chromosome states
   chrom_names <- unique(freq_table$chr)
   chrom_indices <- lapply(chrom_names, function(chrom) which(freq_table$chr == chrom))
   names(chrom_indices) <- chrom_names
-  
+
   out_list[["Per-chromosome"]] <- lapply(chrom_names, function(chrom){
     per_chr_out <- list()
     # get D stat
     D_by_chrom <- D.stat(freq_table[chrom_indices[[chrom]], P1],
                          freq_table[chrom_indices[[chrom]], P2],
                          freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["D statistic"]] <- D_by_chrom
-    
+
     # number of SNPs
     per_chr_out[["Number of SNPs"]] <- length(chrom_indices[[chrom]])
-    
+
     # get block indices
     block_indices_by_chrom <- get_block_indices(block_size=1e6,
                                        positions=freq_table$pos[freq_table$chr == chrom])
     # remove empty blocks
     block_indices_by_chrom <- block_indices_by_chrom[lapply(block_indices_by_chrom, length) > 0 ]
-    
+
     # Get SD
     D_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
                                       FUN=D.stat,
                                       freq_table[chrom_indices[[chrom]], P1],
                                       freq_table[chrom_indices[[chrom]], P2],
                                       freq_table[chrom_indices[[chrom]], P3])
-    
+
     per_chr_out[["Standard error"]] <- D_sd_by_chrom
-    
+
     # Get Z score
     D_err_by_chrom <- D_sd_by_chrom / sqrt(length(block_indices_by_chrom))
-    
+
     D_Z_by_chrom <- D_by_chrom / D_err_by_chrom
-    
+
     per_chr_out[["Z score"]] <- D_Z_by_chrom
-    
+
     # Get admixture
     per_chr_out[["Admixture"]] <- list()
-    
+
     f_by_chrom <- f.stat(freq_table[chrom_indices[[chrom]],P1],
-                         freq_table[chrom_indices[[chrom]],P2], 
-                         freq_table[chrom_indices[[chrom]],P3a], 
+                         freq_table[chrom_indices[[chrom]],P2],
+                         freq_table[chrom_indices[[chrom]],P3a],
                          freq_table[chrom_indices[[chrom]],P3b])
-    
+
     per_chr_out[["Admixture"]][["f statistic"]] <- f_by_chrom
-    
+
     f_sd_by_chrom <- get_jackknife_sd(block_indices=block_indices_by_chrom,
                                       FUN=f.stat,
                                       freq_table[chrom_indices[[chrom]],P1],
-                                      freq_table[chrom_indices[[chrom]],P2], 
-                                      freq_table[chrom_indices[[chrom]],P3a], 
+                                      freq_table[chrom_indices[[chrom]],P2],
+                                      freq_table[chrom_indices[[chrom]],P3a],
                                       freq_table[chrom_indices[[chrom]],P3b])
-    
+
     per_chr_out[["Admixture"]][["Standard deviation"]] <- f_sd_by_chrom
-    
+
     f_err_by_chrom <- f_sd_by_chrom / sqrt(length(block_indices_by_chrom))
 
     f_CI_lower_by_chrom <- f - 1.96*f_err_by_chrom
     f_CI_upper_by_chrom <- f + 1.96*f_err_by_chrom
-    
-    per_chr_out[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower_by_chrom, 
-                                                                "upper" = f_CI_upper_by_chrom)    
-    
+
+    per_chr_out[["Admixture"]][["Confidence interval"]] <- list("lower" = f_CI_lower_by_chrom,
+                                                                "upper" = f_CI_upper_by_chrom)
+
     # Return list
-    return(per_chr_out)    
+    return(per_chr_out)
   })
-  
+
   names(out_list[["Per-chromosome"]]) <- chrom_names
-  
+
   # return output
   return(out_list)
 }
@@ -6376,7 +6324,7 @@ test_p1_hni_p2_hdrr <- run_abbababa(data = freq_table,
                                     P1 = "hni",
                                     P2 = "hdrr")
 
-# Pull out per-chromosome 
+# Pull out per-chromosome
 sapply(test_p1_hni_p2_hdrr$`Per-chromosome`, function(x) x$Admixture$`f statistic`)
 
 
@@ -6425,9 +6373,9 @@ for i in $(echo hdrr hni hsok javanicus melastigma ); do
         -o log/20200925_abbababa_$p1\_$p2.out \
         -e log/20200925_abbababa_$p1\_$p2.err \
         "Rscript --vanilla mikk_genome/code/scripts/20200916_run_abbababa.R $p1 $p2 $dat_file $dir_out "
-    fi  
+    fi
   done;
-done  
+done
 ```
 
 ### Combine into one list *directly on cluster*
@@ -6438,9 +6386,9 @@ files <- list.files("abba_baba_mikk/20200925",
                     full.names = T)
 
 # get population names
-pop_names <- basename(files) %>% 
+pop_names <- basename(files) %>%
   stringr::str_split(., "\\.", simplify = T) %>%
-  subset(select = 1) %>% 
+  subset(select = 1) %>%
   stringr::str_split("_", simplify = T)
 
 # load into list
@@ -6502,13 +6450,13 @@ final_df <- dplyr::bind_rows(final_df, .id = "p1")
 # tidy up factors, etc for data
 final_df$chr <- factor(final_df$chr, levels = c(seq(1, 24), "all"))
 ## capitalise species/line names
-final_df <- final_df %>% 
+final_df <- final_df %>%
   dplyr::mutate(across(c("p1", "p2"),
                        ~dplyr::if_else(.x %in% c("hni", "hsok"),
                                        str_to_upper(.x),
                                        dplyr::if_else(.x == "hdrr",
                                                       "HdrR",
-                                                      .x)))) %>% 
+                                                      .x)))) %>%
   dplyr::rename(P1 = p1,
                 P2 = p2)
 
@@ -6519,11 +6467,11 @@ final_df <- final_df %>%
 
 ### Get correlations between javanicus and melastigma
 ```{r}
-final_df %>% 
-  dplyr::filter(p1 %in% c("javanicus", "melastigma") & p2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+final_df %>%
+  dplyr::filter(p1 %in% c("javanicus", "melastigma") & p2 %in% c("HdrR", "HNI", "HSOK")) %>%
   tidyr::pivot_wider(id_cols = c("p2", "chr"),
                      names_from = p1,
-                     values_from = admix_f) %>% 
+                     values_from = admix_f) %>%
   ggplot() +
     geom_point(aes(melastigma,
                    javanicus,
@@ -6535,25 +6483,25 @@ final_df %>%
 Plot
 
 ```{r}
-final_df %>% 
-  dplyr::filter(chr == "all") %>% 
+final_df %>%
+  dplyr::filter(chr == "all") %>%
   ggplot() +
     geom_col(aes(p2, admix_f, fill = p1),
              position = "dodge")
 ```
 Looks like *javanicus* is the most unlike MIKK. Use them as the outgroup
 ```{r}
-final_df %>% 
+final_df %>%
   dplyr::filter(chr == "genome_wide",
-                p1 == "javanicus") %>% 
+                p1 == "javanicus") %>%
   ggplot() +
     geom_col(aes(p2, admix_f, fill = p2)) +
   guides(fill = F)
 ```
 Facet by chromosome
 ```{r}
-final_df %>% 
-  dplyr::filter(p1 == "javanicus") %>% 
+final_df %>%
+  dplyr::filter(p1 == "javanicus") %>%
   ggplot() +
     geom_col(aes(p2, admix_f, fill = p2)) +
   guides(fill = F) +
@@ -6572,7 +6520,7 @@ for i in $(find emfs/segmented/*/*_1.data.txt ); do # takes only forward strand 
   new_path=$(echo emfs/cleaned_jap-med-only/$chr_file );
   if [ ! -d "$new_path" ]; then
     mkdir $new_path;
-  fi  
+  fi
   # create name for new file
   bname=$(echo $i | sed 's/.data.txt//g' );
   bname_short=$(basename $bname );
@@ -6583,7 +6531,7 @@ for i in $(find emfs/segmented/*/*_1.data.txt ); do # takes only forward strand 
     "Rscript --vanilla mikk_genome/code/scripts/20200921_add-hdrr-coords-to-emf-data_jap-med.R $bname $new_path";
 done
 
-# how many successfully completed? 
+# how many successfully completed?
 grep "Execution halted" log/20200929*
 # All except for 17_1
 ```
@@ -6602,8 +6550,8 @@ for i in $(find emfs/cleaned_jap-med-only/* -type d ); do
     -M 20000 \
     -o log/20200928_consol_$chr.out \
     -e log/20200928_consol_$chr.err \
-    "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated_jap-med-only/$chr.txt "; 
-done  
+    "Rscript --vanilla mikk_genome/code/scripts/20200910_consolidate_chr_dat.R $i emfs/consolidated_jap-med-only/$chr.txt ";
+done
 
 # combine for each chr
 mkdir emfs/final_jap-med-only
@@ -6675,7 +6623,7 @@ for i in $( seq 1 2 ); do
       -e log/20200929_frq_tbl_split_$i\_$j.err \
       "Rscript --vanilla mikk_genome/code/scripts/20200929_combine_final_and_af_data_jap-med.R $j $dat_file $af_file $dir_out ";
   done;
-done  
+done
 ```
 
 Combine chr files into single file *directly on cluster*
@@ -6693,7 +6641,7 @@ group_b <- list.files("abba_baba_mikk/freq_tables_mikk_2_jap-med-only",
 dat_list_a <- lapply(group_a, function(x){
   # read in data
   df <- readr::read_tsv(x,
-                        col_types = "iiccdiii") %>% 
+                        col_types = "iiccdiii") %>%
     dplyr::rename(mikk_a = mikk)
   return(df)
 })
@@ -6701,7 +6649,7 @@ dat_list_a <- lapply(group_a, function(x){
 dat_list_b <- lapply(group_b, function(x){
   # read in data
   df <- readr::read_tsv(x,
-                        col_types = "iiccdiii") %>% 
+                        col_types = "iiccdiii") %>%
     dplyr::rename(mikk_b = mikk)
   return(df)
 })
@@ -6718,11 +6666,11 @@ final_df_prev <- readr::read_tsv("abba_baba_mikk/freq_tables_jap-med-only/all.tx
                                  col_types = "iiccdiii")
 
 # join
-final_df <- final_df_prev %>% 
+final_df <- final_df_prev %>%
   dplyr::full_join(dplyr::select(final_df_a, chr, pos, mikk_a),
-                   by = c("chr", "pos")) %>% 
+                   by = c("chr", "pos")) %>%
   dplyr::full_join(dplyr::select(final_df_b, chr, pos, mikk_b),
-                   by = c("chr", "pos")) %>% 
+                   by = c("chr", "pos")) %>%
   dplyr::select(chr, pos, ancestral, derived, mikk, mikk_a, mikk_b, everything())
 
 # write table
@@ -6747,7 +6695,7 @@ for i in $(echo hdrr hni hsok ); do
         -o log/20200929_abbababa_$p1\_$p2.out \
         -e log/20200929_abbababa_$p1\_$p2.err \
         "Rscript --vanilla mikk_genome/code/scripts/20200916_run_abbababa.R $p1 $p2 $dat_file $dir_out "
-    fi  
+    fi
   done;
 done
 
@@ -6764,9 +6712,9 @@ files <- list.files("abba_baba_mikk/20200929",
                     full.names = T)
 
 # get population names
-pop_names <- basename(files) %>% 
+pop_names <- basename(files) %>%
   stringr::str_split(., "\\.", simplify = T) %>%
-  subset(select = 1) %>% 
+  subset(select = 1) %>%
   stringr::str_split("_", simplify = T)
 
 # load into list
@@ -6889,7 +6837,7 @@ dev.off()
 ```{r}
 # Read in
 phylo_tree <- ape::read.tree(file = "~/Documents/Repositories/mikk_genome/data/20201003_47-fish-epo_tree_oryzias_only.txt")
-# Set colours 
+# Set colours
 phylo_cols <- c("#55b6b0", "#f33a56", "#f3b61f", "#f6673a", "#631e68")
 # Plot
 ape::plot.phylo(phylo_tree,
@@ -6942,9 +6890,9 @@ names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
 chr_order <- c(seq(1,24), "all")
 fish_order <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus")
 
-final_df <- final_df %>% 
+final_df <- final_df %>%
   dplyr::mutate(across(c("P1", "P2"),
-                       ~factor(.x, levels = fish_order))) %>% 
+                       ~factor(.x, levels = fish_order))) %>%
   dplyr::mutate(chr = factor(chr, levels = chr_order))
 
 ```
@@ -6952,11 +6900,11 @@ final_df <- final_df %>%
 ## Plot bars for genome-wide admixture
 
 ```{r}
-final_df %>% 
+final_df %>%
   dplyr::filter(dataset == "oryzias_all",
                 chr == "all",
                 P1 %in% c("melastigma", "javanicus"),
-                P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+                P2 %in% c("HdrR", "HNI", "HSOK")) %>%
   ggplot(aes(P2, admix_f, fill = P1)) +
     geom_col(position = "dodge") +
     geom_errorbar(aes(ymin = f_ci_lower,
@@ -6966,15 +6914,15 @@ final_df %>%
     scale_fill_manual(values = cols) +
     labs(y = "Admixture F-statistic (genome-wide)") +
     ylim(0, 1) +
-    theme_bw() + 
-    theme(panel.grid = element_blank()) + 
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
     labs(title = expression(paste("Comparing ",
                                   italic("Oryzias melastigma"),
                                   " and ",
                                   italic("Oryzias javanicus"),
                                   " as the P1 allopatric population",
                                   sep = "")))
-  
+
 ```
 ```{r}
 ggsave(filename = paste("20200930_P1_mela_vs_java", ".png", sep = ""),
@@ -6987,9 +6935,9 @@ ggsave(filename = paste("20200930_P1_mela_vs_java", ".png", sep = ""),
 ```
 
 
-Do the same but using HNI and HSOK as the 
+Do the same but using HNI and HSOK as the
 ```{r}
-final_df %>% 
+final_df %>%
   dplyr::filter(dataset == "oryzias_latipes",
                 chr == "all",
                 P1 %in% c("HNI", "HSOK"),
@@ -7006,8 +6954,8 @@ final_df %>%
     scale_fill_manual(values = cols) +
     labs(y = "Admixture F-statistic (genome-wide)") +
     ylim(0, 1) +
-    theme_bw() + 
-    theme(panel.grid = element_blank()) + 
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
     ggtitle("Comparing HNI and HSOK as the P1 allopatric population, with closer ancestor")
 ```
 ```{r}
@@ -7023,10 +6971,10 @@ ggsave(filename = paste("20200930_P1_hsok_v_hni", ".png", sep = ""),
 ## Get correlation between melastigma and javanicus
 
 ```{r}
-cor_df <- final_df %>% 
-  dplyr::filter(dataset == "oryzias_all") %>% 
-  # filter for when P1 is another Oryzias, and P2 
-  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+cor_df <- final_df %>%
+  dplyr::filter(dataset == "oryzias_all") %>%
+  # filter for when P1 is another Oryzias, and P2
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>%
   # pivot to put the admixture_f stat for melastigma and javanicus in the same row
   tidyr::pivot_wider(id_cols = c("P2", "chr"),
                      names_from = P1,
@@ -7035,8 +6983,8 @@ cor_df <- final_df %>%
 ```
 
 ```{r}
-cor_df %>% 
-  dplyr::filter(chr != "all") %>% 
+cor_df %>%
+  dplyr::filter(chr != "all") %>%
   ggplot(aes(admix_f_melastigma,
              admix_f_javanicus,
                    colour = P2,
@@ -7044,7 +6992,7 @@ cor_df %>%
     geom_point() +
     scale_colour_manual(values = cols) +
     theme_bw() +
-    labs(x = "Oryzias melastigma", 
+    labs(x = "Oryzias melastigma",
        y = "Oryzias javanicus") +
     theme(panel.grid = element_blank(),
           axis.title = element_text(face = "italic"))
@@ -7068,18 +7016,18 @@ chr_order_plot <- c(seq(1,24), "genome-wide")
 cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
 
 test <- cor_df %>%
-  dplyr::rowwise() %>% 
+  dplyr::rowwise() %>%
   dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
                 mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
-                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) 
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma)))
 
-test %>% 
+test %>%
   ggplot(aes(P2, mean_f, fill = P2)) +
     geom_col() +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +  
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -7104,10 +7052,10 @@ ggsave(filename = paste("20200930_f_stat_by_chr", ".png", sep = ""),
 
 ```{r}
 # Widen
-wide_d <- final_df %>% 
-  dplyr::filter(dataset == "oryzias_all") %>% 
-  # filter for when P1 is another Oryzias, and P2 
-  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>% 
+wide_d <- final_df %>%
+  dplyr::filter(dataset == "oryzias_all") %>%
+  # filter for when P1 is another Oryzias, and P2
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK")) %>%
   # pivot to put the admixture_f stat for melastigma and javanicus in the same row
   tidyr::pivot_wider(id_cols = c("P2", "chr"),
                      names_from = P1,
@@ -7122,16 +7070,16 @@ wide_d$chr <- factor(wide_d$chr, levels = chr_order_plot)
 
 ```{r}
 wide_d %>%
-  dplyr::rowwise() %>% 
+  dplyr::rowwise() %>%
   dplyr::mutate(mean_z = mean(c(javanicus, melastigma)),
                 mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
-                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>%
   ggplot() +
     geom_col(aes(P2, mean_z, fill = P2)) +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +    
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylab(expression(paste("Mean z-score for ", italic("D"), " statistic"))) +
@@ -7155,7 +7103,7 @@ ggsave(filename = paste("20200930_z_score_for_d_by_chr", ".png", sep = ""),
 # Get mean f statistics for 3 strains
 test[test$chr == "all", colnames(test) %in% c("P2", "mean_f")]
 # Which chromosomes are higher in HNI than HSOK?
-higher_hni <- test %>% dplyr::select(P2, chr, mean_f) %>% 
+higher_hni <- test %>% dplyr::select(P2, chr, mean_f) %>%
   tidyr::pivot_wider(names_from = P2, values_from = mean_f)
 
 higher_hni[higher_hni$HNI > higher_hni$HSOK, ]
@@ -7166,8 +7114,8 @@ higher_hni[higher_hni$HNI > higher_hni$HSOK, ]
 Meeting with Tom:
 
 * Higher repeat content? Ask Jack. Can summarise all the different types of repeats? Herpesvirus repeat?
-* Or assembly quality. Can't really get at that, unless there's a measure of mapability per chromosome. 
-* Also gene content. Is chr 2 gene-rich or gene-poor? Number of genes or total length of gene content (exons) / total length of chromosome. 
+* Or assembly quality. Can't really get at that, unless there's a measure of mapability per chromosome.
+* Also gene content. Is chr 2 gene-rich or gene-poor? Number of genes or total length of gene content (exons) / total length of chromosome.
 
 # Try other Simon Martin tutorial on fD
 
@@ -7203,7 +7151,7 @@ python genomics_general-master/ABBABABAwindows.py \
 # Send to local
 bash
 
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/abbababba_tutorial/data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel* ~/Documents/Data/20200910_abbababa_test 
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/abbababba_tutorial/data/sliding_windows/hel92.DP8HET75MP9BIminVar2.chr18.ABBABABA_mel* ~/Documents/Data/20200910_abbababa_test
 ```
 
 ## Plot
@@ -7250,7 +7198,7 @@ mkcd fastas_exons
 
 wget ftp://ftp.ensembl.org/pub/release-101/fasta/oryzias_latipes/cds/Oryzias_latipes.ASM223467v1.cds.all.fa.gz
 
-gunzip -k Oryzias_latipes.ASM223467v1.cds.all.fa.gz 
+gunzip -k Oryzias_latipes.ASM223467v1.cds.all.fa.gz
 
 cd ..
 
@@ -7259,7 +7207,7 @@ cd ..
 ### Extract relevant info
 
 ```{bash}
-# How many exons? 
+# How many exons?
 grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | wc -l
 # 37468
 # Confirm which info is the chromosome
@@ -7274,7 +7222,7 @@ printf "chr\tstart\tend\tstrand\n" > stats/202010121_exon_pos.txt
 # Send stats to file
 grep ">" fastas_exons/Oryzias_latipes.ASM223467v1.cds.all.fa | cut -f3 -d" " | awk -F ":" -v OFS="\t" '{print $3, $4, $5, $6}' >> stats/202010121_exon_pos.txt
 # Send to local
-scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/stats/202010121_exon_pos.txt ~/Documents/Data/20201012_mikk_genome 
+scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/stats/202010121_exon_pos.txt ~/Documents/Data/20201012_mikk_genome
 ```
 
 ## Analysis
@@ -7360,12 +7308,12 @@ exon_lengths <- lapply(exons_lst, function(chr){
 })
 
 # combine into single DF
-exons_len_df <- dplyr::bind_rows(exon_lengths, .id = "chr") %>% 
-  dplyr::filter(chr != "MT") %>% 
+exons_len_df <- dplyr::bind_rows(exon_lengths, .id = "chr") %>%
+  dplyr::filter(chr != "MT") %>%
   dplyr::mutate(chr = as.integer(chr))
 
 # join with chr_counts and get proportion of chr covered by exons
-chr_stats <- dplyr::left_join(chr_counts, exons_len_df, by = "chr") %>% 
+chr_stats <- dplyr::left_join(chr_counts, exons_len_df, by = "chr") %>%
   dplyr::mutate(prop_cov_exon = exon_cov / length)
 # convert chr to factor for plotting
 chr_stats$chr <- factor(chr_stats$chr)
@@ -7374,7 +7322,7 @@ chr_stats$chr <- factor(chr_stats$chr)
 ## Plot
 
 ```{r}
-chr_stats %>% 
+chr_stats %>%
   ggplot() +
     geom_col(aes(chr, prop_cov_exon, fill = chr)) +
     theme_bw() +
@@ -7451,21 +7399,21 @@ ggsave(filename = paste("20201012_ld_decay_facets", ".png", sep = ""),
 
 ```{r}
 # Get mean LD decay for distance window of 0-100 bp
-ld_100bp <- r2_df_1kb_mikk %>% 
-  dplyr::filter(bin_bdr == 0) %>% 
+ld_100bp <- r2_df_1kb_mikk %>%
+  dplyr::filter(bin_bdr == 0) %>%
   dplyr::select(chr, first_bin_mean = mean)
 
 # Get mean LD across each chromosome
-ld_mean <- r2_df_1kb_mikk %>% 
-  dplyr::group_by(chr) %>% 
+ld_mean <- r2_df_1kb_mikk %>%
+  dplyr::group_by(chr) %>%
   dplyr::summarise(total_mean = mean(mean))
 ```
 
 ### Bind with exon props DF
 
 ```{r}
-final_df <- chr_stats %>% 
-  dplyr::left_join(ld_100bp, by = "chr") %>% 
+final_df <- chr_stats %>%
+  dplyr::left_join(ld_100bp, by = "chr") %>%
   dplyr::left_join(ld_mean, by = "chr")
 ```
 
@@ -7515,10 +7463,10 @@ ggsave(filename = paste("20201012_exons_v_firstwindowld", ".png", sep = ""),
        dpi = 500)
 ```
 
-Could it be due to differences in the length of introns? 
+Could it be due to differences in the length of introns?
 
 ```{r}
-# Split exon_lst by transcript 
+# Split exon_lst by transcript
 ex_to_trans <- lapply(exons_lst, function(chr){
   # split by transcript
   ts_lst <- split(chr, f = chr$ensembl_transcript_id)
@@ -7532,7 +7480,7 @@ ex_to_trans <- lapply(exons_lst, function(chr){
                          "total_exon_length" = sum(x$exon_length),
                          "transcript_total_length" = unique(x$transcript_total_length))
     # get proportion of transcript length to transcript total length
-    out_df <- out_df %>% 
+    out_df <- out_df %>%
       dplyr::mutate(ratio_exon_to_transcript = transcript_length / transcript_total_length )
     return(out_df)
   })
@@ -7558,7 +7506,7 @@ ggplot(ex_to_trans_df) +
   guides(fill = F) +
   xlab("Chromosome") +
   ylab("Total length of exon sequences\n / total transcript length (end_pos - start_pos)")
-  
+
 ```
 ```{r}
 ggsave(filename = paste("20201012_exon_to_transcript", ".png", sep = ""),
@@ -7573,12 +7521,12 @@ ggsave(filename = paste("20201012_exon_to_transcript", ".png", sep = ""),
 ### Get median and plot against LD
 
 ```{r}
-ex_to_trans_med <- ex_to_trans_df %>% 
-  dplyr::group_by(chr) %>% 
+ex_to_trans_med <- ex_to_trans_df %>%
+  dplyr::group_by(chr) %>%
   dplyr::summarise(med_ex_to_trans = median(ratio_exon_to_transcript))
 
 # sanity check
-ggplot(ex_to_trans_med) + 
+ggplot(ex_to_trans_med) +
   geom_col(aes(chr, med_ex_to_trans, fill = chr))
 
 # bind to chr_stats
@@ -7593,7 +7541,7 @@ ggplot(final_df, aes(med_ex_to_trans, first_bin_mean, colour = chr, label = chr)
   theme_bw() +
   theme(panel.grid = element_blank()) +
   guides(colour = F) +
-  xlab("Median ratio of exon to total transcript") +  
+  xlab("Median ratio of exon to total transcript") +
   ylab("Mean r2 for SNPs 0 to 100 bp apart")
 
 ```
@@ -7603,11 +7551,11 @@ Get correlations
 cor.test(final_df$total_mean, final_df$prop_cov_exon, method = "spearman")
 # Mean r^2 between SNPs 1 to 100bp apart vs proportion of exon coverage
 cor.test(final_df$total_mean, final_df$prop_cov_exon, method = "spearman")
-# Mean r^2 across all windows vs median exon-to-transcript 
+# Mean r^2 across all windows vs median exon-to-transcript
 cor.test(final_df$total_mean, final_df$med_ex_to_trans, method = "spearman")
 ```
 
-## Total number of SNPs or comparisons? 
+## Total number of SNPs or comparisons?
 
 ```{bash}
 # How many comparisons?
@@ -7639,16 +7587,16 @@ wc -l ld/20200727_mikk_maf-0.10_window-50kb_no-missing/*.ld
    34606016 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/8.ld
    34432214 ld/20200727_mikk_maf-0.10_window-50kb_no-missing/9.ld
   824222342 total
-  
+
 ```{bash}
-# How many SNPs? 
+# How many SNPs?
 ## Total
-wc -l plink/20200727_mikk_no-missing_maf-0.05/20200727.bim 
+wc -l plink/20200727_mikk_no-missing_maf-0.05/20200727.bim
 # 4357116
 ## Per chr
 cut -f1 plink/20200727_mikk_no-missing_maf-0.05/20200727.bim | sort | uniq -c
 ```
-  
+
  252083 1
  193656 10
  172997 11
@@ -7673,19 +7621,19 @@ cut -f1 plink/20200727_mikk_no-missing_maf-0.05/20200727.bim | sort | uniq -c
  196475 7
  169951 8
  192404 9
- 
+
 # Get reverse strand segments
 
 ```{bash}
 # OLD
-# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments 
+# Note this only takes the sequences on the forward strand - still gets 4552 / 9338 segments
 for i in $(find emfs/segmented/*/*_1.data.txt ); do
   # make new directory
   chr_file=$(echo $i | cut -f3 -d"/" );
   new_path=$(echo emfs/cleaned/$chr_file );
   if [ ! -d "$new_path" ]; then
     mkdir $new_path;
-  fi  
+  fi
   # create name for new file
   bname=$(echo $i | sed 's/.data.txt//g' );
   bname_short=$(basename $bname );
@@ -7704,15 +7652,15 @@ done
 # First flip files
 for i in $( find emfs/segmented/*/*_-1.data.txt ) ; do
   dir_out=$( dirname $i );
-  bname=$( basename $i | cut -f1,2,3 -d"_" ); 
+  bname=$( basename $i | cut -f1,2,3 -d"_" );
   file_out=$dir_out/$bname\_1_rc.data.txt;
   bsub \
     -M 10000 \
     -o log/20201015_reverse_$bname.out \
     -e log/20201015_reverse_$bname.err \
     "tac $i > $file_out";
-done    
-  
+done
+
 # Then clean
 for i in $( find emfs/segmented/*/*rc.data.txt ); do
   # make new directory
@@ -7720,7 +7668,7 @@ for i in $( find emfs/segmented/*/*rc.data.txt ); do
   new_path=$( echo emfs/cleaned/$chr_file );
   if [ ! -d "$new_path" ]; then
     mkdir $new_path;
-  fi  
+  fi
   # create name for new file
   bname=$( echo $i | sed 's/_1_rc.data.txt//g' );
   bname_short=$( basename $bname );
@@ -7734,7 +7682,7 @@ done
 
 # Other than 17_1, only failed on this: 24_2/24_16480574_16481928
 
-# Consolidate 
+# Consolidate
 mkdir emfs/consolidated_with_rc
 
 # run for each sub-chr (e.g. 10_1, 10_2)
@@ -7751,8 +7699,8 @@ for i in $(find emfs/cleaned/* -type d ); do
     -M 30000 \
     -o log/20201015_consol_$chr.out \
     -e log/20201015_consol_$chr.err \
-    "Rscript --vanilla $script $i $out_dir/$chr.txt " ; 
-done  
+    "Rscript --vanilla $script $i $out_dir/$chr.txt " ;
+done
 
 # combine for each chr
 mkdir emfs/final_with_rc
@@ -7780,7 +7728,7 @@ for i in $(seq 1 24 ); do
         tmpa.txt \
         tmpb.txt \
           >> maf/20201015_split-by-chr_all/$i.txt ;
-  rm tmpa.txt tmpb.txt;        
+  rm tmpa.txt tmpb.txt;
 done
 
 # bind MAF and EMF datasets
@@ -7800,9 +7748,9 @@ done
 ```
 
 # Investigate ABBA BABA for 131-1
- 
+
 ## Split original VCF by individual and sub-populations
- 
+
 ```{bash}
 # split by individuals, take non-missing, biallelic SNPs, and add AF all at once
 mkdir vcfs/20201014_indiv-split_non-missing_biallelic-snps
@@ -7872,7 +7820,7 @@ bcftools view \
               --output $output_dir/$pop_name.vcf.gz \
               -- \
               --tags AF
-              
+
 ## HO5
 pop_name=ho5
 
@@ -7918,7 +7866,7 @@ mkdir maf/20201014_indiv_split_with_ab
 
 for i in $( find maf/20201014_indiv_split/* ); do
   sample=$( basename $i | cut -f1 -d"." );
-  script=mikk_genome/code/scripts/20201014_tidy_indiv_maf_files.R ;  
+  script=mikk_genome/code/scripts/20201014_tidy_indiv_maf_files.R ;
   file_in=$i ;
   file_out=maf/20201014_indiv_split_with_ab/$sample.txt ;
   bsub \
@@ -7954,7 +7902,7 @@ bcftools view \
               --output $output_dir/$pop_name\_a.vcf.gz \
               -- \
               --tags AF
-              
+
 ## KW_b
 bcftools view \
       --samples KW_5,KW_6,KW_7 \
@@ -7971,7 +7919,7 @@ bcftools view \
               --output $output_dir/$pop_name\_b.vcf.gz \
               -- \
               --tags AF
-              
+
 # iCab
 pop_name=icab
 ## a
@@ -7990,7 +7938,7 @@ bcftools view \
               --output $output_dir/$pop_name\_a.vcf.gz \
               -- \
               --tags AF
-              
+
 ## b
 bcftools view \
       --samples iCab_HD,iCab_F25 \
@@ -8007,7 +7955,7 @@ bcftools view \
               --output $output_dir/$pop_name\_b.vcf.gz \
               -- \
               --tags AF
-              
+
 # HO5
 pop_name=ho5
 ## Just copy over the individual ones
@@ -8034,16 +7982,16 @@ done
 mkdir maf/20201017_subpops_split-by-chr
 
 for i in $( find maf/20201015_subpops/* ) ; do
-  pop_name=$( basename $i | sed 's/.txt//g' ) ; 
+  pop_name=$( basename $i | sed 's/.txt//g' ) ;
   new_path=maf/20201017_subpops_split-by-chr/$pop_name ;
   if [ ! -d "$new_path" ] ; then
     mkdir $new_path ;
-  fi ;    
+  fi ;
   for j in $(cut -f2 $i | sort | uniq ) ; do
     awk "\$2 == $j" $i \
     > $new_path/$j.txt ;
   done ;
-done 
+done
 
 
 ```
@@ -8075,12 +8023,12 @@ for i in $( echo  7_1 131_1 134_2 ) ; do
   new_path=maf/20201014_indiv_split_with_ab_split-by-chr/$i ;
   if [ ! -d "$new_path" ] ; then
     mkdir $new_path ;
-  fi ;    
+  fi ;
   for j in $(cut -f2 $input_file | sort | uniq ) ; do
     awk "\$2 == $j" $input_file \
       > $new_path/$j.txt ;
   done ;
-done 
+done
 
 # Combine ONT samples
 mkdir maf/20201017_ont_samples_split-by-chr
@@ -8094,7 +8042,7 @@ for i in $( seq 1 24 ) ; do
     -M 30000 \
     -o log/20201019_combine-ont_$chr.out \
     -e log/20201019_combine-ont_$chr.err \
-  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";
 done
 
 # Combine subpop files
@@ -8109,9 +8057,9 @@ for i in $( seq 1 24 ) ; do
     -M 30000 \
     -o log/20201019_combine-subp_$chr.out \
     -e log/20201019_combine-subp_$chr.err \
-  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";
 done
-  
+
 
 # Combine MIKK total, ONT, and subpop MAF tables
 mkdir maf/20201019_all
@@ -8186,7 +8134,7 @@ for i in $( echo melastigma javanicus ); do
           -e log/20201020_abbababa_$p1\_$p2\_$p3.err \
           "Rscript --vanilla $script $p1 $p2 $p3 $dat_file $dir_out "
       fi ;
-    done ;  
+    done ;
   done ;
 done
 
@@ -8238,14 +8186,14 @@ final_df <- lapply(final_lst, function(file){
                        "f_ci_upper" = c(g_wide_ci_upper, per_chr_ci_upper),
                        stringsAsFactors = F)
   return(df_out)
-}) %>% 
+}) %>%
   dplyr::bind_rows()
 
 # capitalise species / line names / colnames
 rename_vec = c("HdrR", "HNI", "HO5", "HSOK", "iCab", "KW", "MIKK")
 names(rename_vec) = c("hdrr", "hni", "ho5", "hsok", "icab", "kiyosu_wild", "mikk")
 
-final_df = final_df %>% 
+final_df = final_df %>%
   dplyr::mutate(dplyr::across(c("p2", "p3"),
                               ~dplyr::recode(.x, !!!rename_vec)))
 
@@ -8278,30 +8226,30 @@ names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", 
 chr_order <- c(seq(1,24), "all")
 fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
 
-final_df <- final_df %>% 
+final_df <- final_df %>%
   dplyr::mutate(across(P2,
-                       ~factor(.x, levels = fish_order))) %>% 
+                       ~factor(.x, levels = fish_order))) %>%
   dplyr::mutate(chr = factor(chr, levels = chr_order))
 
 ```
 
-**NOTE**: There are 142 rows with an `admix_f` value over 1? 
+**NOTE**: There are 142 rows with an `admix_f` value over 1?
 
 * All chromosomes when MIKK(P3) -> KW(P2) except 9,10,12,17,20
 * 131_1(P3) is a main offender, especially when with MIKK(P2) or KW(P2), but also with all other strains. * 131_1(P3) chr 23 has huge scores (2:12)
 
 ```{r}
-final_df %>% 
-  dplyr::filter(admix_f > 1) %>% 
+final_df %>%
+  dplyr::filter(admix_f > 1) %>%
   dplyr::count(P2, P3)
 
 ```
 ## Create DF with mean `melastigma` and `javanicus`
 
 ```{r}
-cor_df <- final_df %>% 
-  # filter for when P1 is another Oryzias, and P2 
-  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>% 
+cor_df <- final_df %>%
+  # filter for when P1 is another Oryzias, and P2
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>%
   # pivot to put the admixture_f stat for melastigma and javanicus in the same row
   tidyr::pivot_wider(id_cols = c("P2", "chr"),
                      names_from = P1,
@@ -8314,11 +8262,11 @@ cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
 
 cor_df_means <- cor_df %>%
   # apply across rows
-  dplyr::rowwise() %>% 
+  dplyr::rowwise() %>%
   # get means for f and CIs
   dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
                 mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
-                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>%
   # set stats at a maximum of 1
   dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
                        ~dplyr::if_else(.x > 1,
@@ -8329,13 +8277,13 @@ cor_df_means <- cor_df %>%
 ## Plot
 
 ```{r}
-cor_df_means %>% 
+cor_df_means %>%
   ggplot(aes(P2, mean_f, fill = P2)) +
     geom_col() +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +  
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -8357,14 +8305,14 @@ ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""
 ## Redo figure for paper
 
 ```{r}
-cor_df_means %>% 
-  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>% 
+cor_df_means %>%
+  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>%
   ggplot(aes(P2, mean_f, fill = P2)) +
     geom_col() +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +  
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -8392,15 +8340,15 @@ ont_samples <- read.table(here("data", "20201019_ont_samples.txt"))[, 1]
 # plot separate panel for each of the ONT samples
 lapply(ont_samples, function(x){
   # create DF
-  cor_df <- final_df %>% 
-    # filter for when P1 is another Oryzias, and P2 
-    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>% 
+  cor_df <- final_df %>%
+    # filter for when P1 is another Oryzias, and P2
+    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>%
     # pivot to put the admixture_f stat for melastigma and javanicus in the same row
     tidyr::pivot_wider(id_cols = c("P2", "chr"),
                        names_from = P1,
-                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>% 
+                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>%
     # apply across rows
-    dplyr::rowwise() %>% 
+    dplyr::rowwise() %>%
     # get means for f and CIs
     dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
                   mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
@@ -8411,13 +8359,13 @@ lapply(ont_samples, function(x){
     #                                      1,
     #                                      .x)))
     # Create plot
-    out_plot <- cor_df %>% 
+    out_plot <- cor_df %>%
       ggplot(aes(P2, mean_f, fill = P2)) +
         geom_col() +
         geom_errorbar(aes(ymin = mean_ci_lower,
                           ymax = mean_ci_upper),
                       position = position_dodge(0.9),
-                      width = 0.25) +  
+                      width = 0.25) +
         guides(fill = F) +
         facet_wrap(~chr) +
         #ylim(0,1) +
@@ -8426,14 +8374,14 @@ lapply(ont_samples, function(x){
         theme(panel.grid = element_blank()) +
         scale_fill_manual(values = cols) +
         ggtitle(x)
-    # Save 
+    # Save
     ggsave(filename = paste("20201020_", x, ".png", sep = ""),
            device = "png",
            path = "~/Documents/Docs/medaka pics/20200921_introgression/20201020_ont_samples/",
            width = 24.75,
            height = 19.5,
            units = "cm",
-           dpi = 500)    
+           dpi = 500)
 })
 ```
 
@@ -8456,15 +8404,15 @@ bcftools view \
       --output geno/20201020_full_vcf.geno
 ## replace all . with N
 sed 's/\./N/g' geno/20201020_full_vcf.geno > geno/20201021_full_vcf_bcftools.geno
-      
+
 # use Simon Martin's parseVCF.py script
 python abbababba_tutorial/genomics_general-master/VCF_processing/parseVCF.py \
   -i vcfs/full-run_line-ids.vcf \
   --skipIndels \
   --minQual 30 \
     > geno/20201021_full_vcf.geno
-# Doesn't remove indels.  
-      
+# Doesn't remove indels.
+
 # Split by chr
 mkdir geno/20201021_full_vcf_bcftools_split-by-chr
 
@@ -8477,8 +8425,8 @@ for i in $( seq 1 24 ) ; do
     -M 50000 \
     -o log/20201021_split_geno_by_chr_$i.out \
     -e log/20201021_split_geno_by_chr_$i.err \
-    "Rscript --vanilla $script $chr $in_file $out_file " ; 
-done 
+    "Rscript --vanilla $script $chr $in_file $out_file " ;
+done
 
 ```
 
@@ -8503,7 +8451,7 @@ for i in $( seq 1 24 ) ; do
     -o log/20201021_create_final_geno_$chr.out \
     -e log/20201021_create_final_geno_$chr.err \
     "Rscript --vanilla $script $emf_in_file $vcf_gen_file $vcf_samples $out_file " ;
-done 
+done
 
 # make no-sibs version
 mkdir geno/20201022_final_no-sibs/
@@ -8519,7 +8467,7 @@ for i in $( seq 1 24 ) ; do
     -o log/20201022_tidy_geno_$chr.out \
     -e log/20201022_tidy_geno_$chr.err \
     "Rscript --vanilla $script $in_file $sibs_file $out_file " ;
-done 
+done
 ```
 
 Combine into single file
@@ -8545,21 +8493,21 @@ final_df <- dplyr::bind_rows(dat_list) %>% # bind into single DF
   dplyr::arrange("#CHROM", "POS") # sort by chromosome, then position
 
 # write table
-write.table(final_df, "geno/20201021_final/all.txt", 
-            quote = F, 
-            sep = "\t", 
+write.table(final_df, "geno/20201021_final/all.txt",
+            quote = F,
+            sep = "\t",
             row.names = F)
 
 # create a no-sibs version
 ## create vector of siblines to be excluded
 excl_sibs = scan("mikk_genome/data/20200227_panel_lines_excluded.txt", character())
 ## remove columns from final_df
-final_df_nosibs = final_df %>% 
+final_df_nosibs = final_df %>%
   dplyr::select(-all_of(excl_sibs))
 ## write table
 write.table(final_df_nosibs, "geno/20201021_final/all_nosibs.txt",
-            quote = F, 
-            sep = "\t", 
+            quote = F,
+            sep = "\t",
             row.names = F)
 ```
 
@@ -8582,7 +8530,7 @@ pop_out$population = ifelse(pop_out$samples %in% emf_samples,
                                                  "kiyosu_wild",
                                                  "mikk"))))
 
-write.table(pop_out, 
+write.table(pop_out,
             "mikk_genome/data/20201021_abba.pop.txt",
             quote = F, sep = "\t", row.names = F, col.names = F)
 ```
@@ -8603,7 +8551,7 @@ python abbababba_tutorial/genomics_general-master/ABBABABAwindows.py \
   -O ancestor \
   --popsFile mikk_genome/data/20201022_abba_nosibs.pop.txt \
   -w 25000 \
-  -m 250 
+  -m 250
 # Works!
 
 
@@ -8631,7 +8579,11 @@ for i in $( echo melastigma javanicus ) ; do
           -O ancestor \
           --popsFile $popsfile \
           -w 25000 \
-          -m 250"      
+<<<<<<< HEAD
+          -m 250"
+=======
+          -m 250"
+>>>>>>> upstream/master
     done ;
   done ;
 done
@@ -8645,16 +8597,16 @@ library(tidyverse)
 files = list.files("abba_baba_mikk/20201022_sliding_windows",
                    full.names = T)
 
-basename(files) %>% 
+basename(files) %>%
   stringr::str_split("_", simplify = T)
-  
+
 
 # read in files
 df = lapply(files, function(x){
   # read in data
   out_df = read.csv(x)
   # get populations
-  split_name = basename(x) %>% 
+  split_name = basename(x) %>%
     stringr::str_split("_", simplify = T)
   p1 = split_name[, 1]
   p2 = split_name[, 2]
@@ -8662,11 +8614,11 @@ df = lapply(files, function(x){
   out_df$p1 = p1
   out_df$p2 = p2
   return(out_df)
-}) %>% 
+}) %>%
   # bind into DF
   dplyr::bind_rows()
 
-# write file 
+# write file
 write.table(df,
             "mikk_genome/data/20201022_abba_sliding_windows.txt",
             quote = F,
@@ -8686,7 +8638,7 @@ df$fd = ifelse(df$D < 0,
                df$fd)
 
 # Change names
-df = df %>% 
+df = df %>%
   dplyr::mutate(p2 = recode(df$p2, hdrr = "HdrR", hni = "HNI", hsok = "HSOK"))
 
 # Set colours
@@ -8697,17 +8649,17 @@ names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", 
 #chr_order <- c(seq(1,24), "all")
 #fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
 #
-#final_df <- final_df %>% 
+#final_df <- final_df %>%
 #  dplyr::mutate(across(P2,
-#                       ~factor(.x, levels = fish_order))) %>% 
+#                       ~factor(.x, levels = fish_order))) %>%
 #  dplyr::mutate(chr = factor(chr, levels = chr_order))
 ```
 
 ## Plot
 
 ```{r}
-df %>% 
-  dplyr::filter(p1 == "melastigma") %>% 
+df %>%
+  dplyr::filter(p1 == "melastigma") %>%
   ggplot() +
     geom_line(aes(mid, fd, colour = p2)) +
     facet_wrap(~scaffold, nrow = 24, ncol = 1) +
@@ -8718,7 +8670,7 @@ df %>%
     xlab("Base position") +
     ylab(bquote(italic(f[d]))) +
     labs(colour = "P2")
-    
+
 ```
 
 ```{r}
@@ -8756,7 +8708,7 @@ med_chr_lens = read.table(here("data", "Oryzias_latipes.ASM223467v1.dna.toplevel
 # Add start
 med_chr_lens$start = 1
 # Reorder
-med_chr_lens = med_chr_lens %>% 
+med_chr_lens = med_chr_lens %>%
   dplyr::select(chr, start, end)
 # Create custom genome
 med_genome = regioneR::toGRanges(med_chr_lens)
@@ -8769,7 +8721,7 @@ kp = karyoploteR::plotKaryotype(genome = med_genome)
 # filter for melastigma
 df_kp = df %>%
   dplyr::filter(p1 == "melastigma")
-# make chr and fd numeric 
+# make chr and fd numeric
 df_kp$scaffold <- as.numeric(df_kp$scaffold)
 
 ```
@@ -8800,21 +8752,21 @@ files = list.files("geno/20201023_abba_sw_granges", full.names = T)
 
 df = lapply(files, function(x){
   out = read.table(x,
-                   header = T, 
-                   as.is = T, 
+                   header = T,
+                   as.is = T,
                    comment.char = "*",
                    check.names = F)
   return(out)
-}) %>% 
-  dplyr::bind_rows() %>% 
+}) %>%
+  dplyr::bind_rows() %>%
   dplyr::select(chr = "#CHROM",
                 pos = "POS",
-                everything()) %>% 
+                everything()) %>%
   dplyr::mutate(dplyr::across(hdrr:hsok,
                               ~ifelse(.x == "N/N", NA, 1)))
-  
 
-write.table(df, 
+
+write.table(df,
             file = "geno/20201023_abba_sw_granges_final/20201023_hdrr_hni_hsok.txt",
             quote = F,
             sep = "\t",
@@ -8836,18 +8788,18 @@ awk -v OFS="\t" '{print $1, $2, $4, $5}' \
 ```{r}
 # Read in file on local
 ol_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_hdrr_hni_hsok.txt",
-                       header = T, 
-                       sep = "\t", 
+                       header = T,
+                       sep = "\t",
                        as.is = T)
 
-ol_ranges_df_long = ol_ranges_df %>% 
+ol_ranges_df_long = ol_ranges_df %>%
   tidyr::pivot_longer(cols = c(hdrr, hni, hsok), names_to = "line", values_to = "present")
 
 ol_ranges_list = split(ol_ranges_df_long, f = ol_ranges_df_long$line)
 
 ol_ranges_list = lapply(ol_ranges_list, function(x){
   # remove NAs
-  df = x %>% 
+  df = x %>%
     tidyr::drop_na(present)
   # convert to GRanges object
   ol_ranges = GenomicRanges::makeGRangesFromDataFrame(df,
@@ -8878,9 +8830,9 @@ bcftools view \
     bcftools query \
       --format '%CHROM\t%POS\n' \
       --output geno/20201023_abba_sw_granges_final/20201023_mikk.txt
-      
-gzip -k geno/20201023_abba_sw_granges_final/20201023_mikk.txt      
-      
+
+gzip -k geno/20201023_abba_sw_granges_final/20201023_mikk.txt
+
 # Pull to local
 scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_sw_granges_final/20201023_mikk.txt.gz ~/Documents/Data/20201012_mikk_genome
 ```
@@ -8888,8 +8840,8 @@ scp brettell@ebi:/hps/research1/birney/users/ian/mikk_paper/geno/20201023_abba_s
 ```{r}
 # Read in file on local
 mikk_ranges_df = read.table("~/Documents/Data/20201012_mikk_genome/20201023_mikk.txt.gz",
-                            col.names = c("chr", "pos"), 
-                            sep = "\t", 
+                            col.names = c("chr", "pos"),
+                            sep = "\t",
                             as.is = T)
 
 # Convert to GRanges object
@@ -8925,9 +8877,9 @@ ex_ranges = GenomicRanges::makeGRangesFromDataFrame(exons,
 ## Add features
 
 ```{r}
-# Plot 
+# Plot
 kp <- plotKaryotype(med_genome, chromosomes = "2")
-# Add base numbers 
+# Add base numbers
 karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
 # Add data backgrounds
 karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
@@ -8954,13 +8906,13 @@ karyoploteR::kpLines(kp,
                      r0=0.6, r1 = 1)
 # Add SNP density data
 kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
-              r0=0, r1=0.15, 
+              r0=0, r1=0.15,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
-              r0=0.15, r1=0.3, 
+              r0=0.15, r1=0.3,
               window.size = 25000)
-kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
-              r0=0.3, r1=0.45, 
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68",
+              r0=0.3, r1=0.45,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
               r0=0.45, r1=0.6,
@@ -8976,22 +8928,26 @@ kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
               r0 = 0.5, r1 = 0)
 # Add labels
 kpAddLabels(kp, labels="MIKK",
-            r0=0, r1=0.15, 
+            r0=0, r1=0.15,
             cex = 0.4)
 kpAddLabels(kp, labels="HNI",
-            r0=0.15, r1=0.3, 
+            r0=0.15, r1=0.3,
             cex = 0.4)
 kpAddLabels(kp, labels="HSOK",
-            r0=0.3, r1=0.45, 
+            r0=0.3, r1=0.45,
             cex = 0.4)
 kpAddLabels(kp, labels="HdrR",
-            r0=0.45, r1=0.6, 
+            r0=0.45, r1=0.6,
             cex = 0.4)
 kpAddLabels(kp, labels=bquote(italic(f[d])),
-            r0=0.6, r1=1, 
+            r0=0.6, r1=1,
             label.margin = 0.035,
             cex = 0.6)
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 ## Save chr 2 only
 
 ```{r}
@@ -9001,9 +8957,9 @@ png(file="~/Documents/Docs/medaka pics/20200921_introgression/20201023_fd_with_d
     height=357,
     units = "px",
     res = 400)
-# Plot 
+# Plot
 kp = plotKaryotype(med_genome, chromosomes = "2")
-# Add base numbers 
+# Add base numbers
 karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
 # Add data backgrounds
 karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
@@ -9030,13 +8986,13 @@ karyoploteR::kpLines(kp,
                      r0=0.6, r1 = 1)
 # Add SNP density data
 kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
-              r0=0, r1=0.15, 
+              r0=0, r1=0.15,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
-              r0=0.15, r1=0.3, 
+              r0=0.15, r1=0.3,
               window.size = 25000)
-kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
-              r0=0.3, r1=0.45, 
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68",
+              r0=0.3, r1=0.45,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
               r0=0.45, r1=0.6,
@@ -9052,19 +9008,19 @@ kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
               r0 = 0.5, r1 = 0)
 # Add labels
 kpAddLabels(kp, labels="MIKK",
-            r0=0, r1=0.15, 
+            r0=0, r1=0.15,
             cex = 0.4)
 kpAddLabels(kp, labels="HNI",
-            r0=0.15, r1=0.3, 
+            r0=0.15, r1=0.3,
             cex = 0.4)
 kpAddLabels(kp, labels="HSOK",
-            r0=0.3, r1=0.45, 
+            r0=0.3, r1=0.45,
             cex = 0.4)
 kpAddLabels(kp, labels="HdrR",
-            r0=0.45, r1=0.6, 
+            r0=0.45, r1=0.6,
             cex = 0.4)
 kpAddLabels(kp, labels=bquote(italic(f[d])),
-            r0=0.6, r1=1, 
+            r0=0.6, r1=1,
             label.margin = 0.035,
             cex = 0.6)
 dev.off()
@@ -9078,9 +9034,9 @@ png(file="~/Documents/Docs/medaka\ pics/20200921_introgression/20201023_fd_with_
     height=13500,
     units = "px",
     res = 400)
-# Plot 
+# Plot
 kp = plotKaryotype(med_genome)
-# Add base numbers 
+# Add base numbers
 karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
 # Add data backgrounds
 karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
@@ -9107,13 +9063,13 @@ karyoploteR::kpLines(kp,
                      r0=0.6, r1 = 1)
 # Add SNP density data
 kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
-              r0=0, r1=0.15, 
+              r0=0, r1=0.15,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
-              r0=0.15, r1=0.3, 
+              r0=0.15, r1=0.3,
               window.size = 25000)
-kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
-              r0=0.3, r1=0.45, 
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68",
+              r0=0.3, r1=0.45,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
               r0=0.45, r1=0.6,
@@ -9129,19 +9085,19 @@ kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
               r0 = 0.5, r1 = 0)
 # Add labels
 kpAddLabels(kp, labels="MIKK",
-            r0=0, r1=0.15, 
+            r0=0, r1=0.15,
             cex = 0.4)
 kpAddLabels(kp, labels="HNI",
-            r0=0.15, r1=0.3, 
+            r0=0.15, r1=0.3,
             cex = 0.4)
 kpAddLabels(kp, labels="HSOK",
-            r0=0.3, r1=0.45, 
+            r0=0.3, r1=0.45,
             cex = 0.4)
 kpAddLabels(kp, labels="HdrR",
-            r0=0.45, r1=0.6, 
+            r0=0.45, r1=0.6,
             cex = 0.4)
 kpAddLabels(kp, labels=bquote(italic(f[d])),
-            r0=0.6, r1=1, 
+            r0=0.6, r1=1,
             label.margin = 0.035,
             cex = 0.6)
 dev.off()
@@ -9154,9 +9110,9 @@ png(file="~/Documents/Docs/medaka\ pics/20200921_introgression/20201023_fd_with_
     height=2372,
     units = "px",
     res = 400)
-# Plot 
+# Plot
 kp = plotKaryotype(med_genome, chromosomes = "2")
-# Add base numbers 
+# Add base numbers
 karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.3)
 # Add data backgrounds
 karyoploteR::kpDataBackground(kp, r0=0, r1 = 1, color = "white")
@@ -9183,13 +9139,13 @@ karyoploteR::kpLines(kp,
                      r0=0.6, r1 = 1)
 # Add SNP density data
 kpPlotDensity(kp, data=mikk_ranges, col = "#49A379",
-              r0=0, r1=0.15, 
+              r0=0, r1=0.15,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hni, col = "#F6673A",
-              r0=0.15, r1=0.3, 
+              r0=0.15, r1=0.3,
               window.size = 25000)
-kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68", 
-              r0=0.3, r1=0.45, 
+kpPlotDensity(kp, data=ol_ranges_list$hsok, col = "#631E68",
+              r0=0.3, r1=0.45,
               window.size = 25000)
 kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = "#F3B61F",
               r0=0.45, r1=0.6,
@@ -9205,19 +9161,19 @@ kpPlotDensity(kp, data=ex_ranges, col = "#f77cb5",
               r0 = 0.5, r1 = 0)
 # Add labels
 kpAddLabels(kp, labels="MIKK",
-            r0=0, r1=0.15, 
+            r0=0, r1=0.15,
             cex = 0.4)
 kpAddLabels(kp, labels="HNI",
-            r0=0.15, r1=0.3, 
+            r0=0.15, r1=0.3,
             cex = 0.4)
 kpAddLabels(kp, labels="HSOK",
-            r0=0.3, r1=0.45, 
+            r0=0.3, r1=0.45,
             cex = 0.4)
 kpAddLabels(kp, labels="HdrR",
-            r0=0.45, r1=0.6, 
+            r0=0.45, r1=0.6,
             cex = 0.4)
 kpAddLabels(kp, labels=bquote(italic(f[d])),
-            r0=0.6, r1=1, 
+            r0=0.6, r1=1,
             label.margin = 0.035,
             cex = 0.6)
 dev.off()
@@ -9236,12 +9192,12 @@ for i in $( echo 131_2 139_4 ) ; do
   new_path=maf/20201014_indiv_split_with_ab_split-by-chr/$i ;
   if [ ! -d "$new_path" ] ; then
     mkdir $new_path ;
-  fi ;    
+  fi ;
   for j in $(cut -f2 $input_file | sort | uniq ) ; do
     awk "\$2 == $j" $input_file \
       > $new_path/$j.txt ;
   done ;
-done 
+done
 
 # Combine samples
 for i in $( seq 1 24 ) ; do
@@ -9253,7 +9209,7 @@ for i in $( seq 1 24 ) ; do
     -M 30000 \
     -o log/20201027_combine-ont_$chr.out \
     -e log/20201027_combine-ont_$chr.err \
-  "Rscript --vanilla $script $chr $in_dir $out_dir ";  
+  "Rscript --vanilla $script $chr $in_dir $out_dir ";
 done
 
 # Combine MIKK total, ONT, and subpop MAF tables
@@ -9321,7 +9277,7 @@ for i in $( echo melastigma javanicus ); do
           -e log/20201027_abbababa_$p1\_$p2\_$p3.err \
           "Rscript --vanilla $script $p1 $p2 $p3 $dat_file $dir_out "
       fi ;
-    done ;  
+    done ;
   done ;
 done
 
@@ -9373,14 +9329,14 @@ final_df <- lapply(final_lst, function(file){
                        "f_ci_upper" = c(g_wide_ci_upper, per_chr_ci_upper),
                        stringsAsFactors = F)
   return(df_out)
-}) %>% 
+}) %>%
   dplyr::bind_rows()
 
 # capitalise species / line names / colnames
 rename_vec = c("HdrR", "HNI", "HO5", "HSOK", "iCab", "KW", "MIKK")
 names(rename_vec) = c("hdrr", "hni", "ho5", "hsok", "icab", "kiyosu_wild", "mikk")
 
-final_df = final_df %>% 
+final_df = final_df %>%
   dplyr::mutate(dplyr::across(c("p2", "p3"),
                               ~dplyr::recode(.x, !!!rename_vec)))
 
@@ -9413,30 +9369,30 @@ names(cols) <- c("HdrR", "HSOK", "HNI", "melastigma", "javanicus", "KW", "HO5", 
 chr_order <- c(seq(1,24), "all")
 fish_order <- c("MIKK", "KW", "HO5", "iCab", "HdrR", "HSOK", "HNI")
 
-final_df <- final_df %>% 
+final_df <- final_df %>%
   dplyr::mutate(across(P2,
-                       ~factor(.x, levels = fish_order))) %>% 
+                       ~factor(.x, levels = fish_order))) %>%
   dplyr::mutate(chr = factor(chr, levels = chr_order))
 
 ```
 
-**NOTE**: There are 142 rows with an `admix_f` value over 1? 
+**NOTE**: There are 142 rows with an `admix_f` value over 1?
 
 * All chromosomes when MIKK(P3) -> KW(P2) except 9,10,12,17,20
 * 131_1(P3) is a main offender, especially when with MIKK(P2) or KW(P2), but also with all other strains. * 131_1(P3) chr 23 has huge scores (2:12)
 
 ```{r}
-final_df %>% 
-  dplyr::filter(admix_f > 1) %>% 
+final_df %>%
+  dplyr::filter(admix_f > 1) %>%
   dplyr::count(P2, P3)
 
 ```
 ## Create DF with mean `melastigma` and `javanicus`
 
 ```{r}
-cor_df <- final_df %>% 
-  # filter for when P1 is another Oryzias, and P2 
-  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>% 
+cor_df <- final_df %>%
+  # filter for when P1 is another Oryzias, and P2
+  dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 != "MIKK" & P3 == "MIKK") %>%
   # pivot to put the admixture_f stat for melastigma and javanicus in the same row
   tidyr::pivot_wider(id_cols = c("P2", "chr"),
                      names_from = P1,
@@ -9449,11 +9405,11 @@ cor_df$chr <- factor(cor_df$chr, levels = chr_order_plot)
 
 cor_df_means <- cor_df %>%
   # apply across rows
-  dplyr::rowwise() %>% 
+  dplyr::rowwise() %>%
   # get means for f and CIs
   dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
                 mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
-                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>% 
+                mean_ci_lower = mean(c(f_ci_lower_javanicus, f_ci_lower_melastigma))) %>%
   # set stats at a maximum of 1
   dplyr::mutate(across(c("mean_f", "mean_ci_upper", "mean_ci_lower"),
                        ~dplyr::if_else(.x > 1,
@@ -9464,13 +9420,13 @@ cor_df_means <- cor_df %>%
 ## Plot
 
 ```{r}
-cor_df_means %>% 
+cor_df_means %>%
   ggplot(aes(P2, mean_f, fill = P2)) +
     geom_col() +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +  
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -9479,6 +9435,10 @@ cor_df_means %>%
     theme(panel.grid = element_blank()) +
     scale_fill_manual(values = cols)
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
 ```{r}
 ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""),
        device = "png",
@@ -9492,14 +9452,14 @@ ggsave(filename = paste("20201020_f_stat_by_chr_w-KW-icab-ho5", ".png", sep = ""
 ## Redo figure for paper
 
 ```{r}
-cor_df_means %>% 
-  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>% 
+cor_df_means %>%
+  dplyr::filter(P2 %in% c("HSOK", "HNI", "HdrR")) %>%
   ggplot(aes(P2, mean_f, fill = P2)) +
     geom_col() +
     geom_errorbar(aes(ymin = mean_ci_lower,
                       ymax = mean_ci_upper),
                   position = position_dodge(0.9),
-                  width = 0.25) +  
+                  width = 0.25) +
     guides(fill = F) +
     facet_wrap(~chr) +
     ylim(0,1) +
@@ -9524,15 +9484,15 @@ ggsave(filename = paste("20201020_f_stat_by_chr", ".png", sep = ""),
 ```{r}
 lapply(c("131_2", "139_4"), function(x){
   # create DF
-  cor_df <- final_df %>% 
-    # filter for when P1 is another Oryzias, and P2 
-    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>% 
+  cor_df <- final_df %>%
+    # filter for when P1 is another Oryzias, and P2
+    dplyr::filter(P1 %in% c("javanicus", "melastigma") & P2 %in% c("HdrR", "HNI", "HSOK") & P3 == x) %>%
     # pivot to put the admixture_f stat for melastigma and javanicus in the same row
     tidyr::pivot_wider(id_cols = c("P2", "chr"),
                        names_from = P1,
-                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>% 
+                       values_from = c(admix_f, f_ci_lower, f_ci_upper)) %>%
     # apply across rows
-    dplyr::rowwise() %>% 
+    dplyr::rowwise() %>%
     # get means for f and CIs
     dplyr::mutate(mean_f = mean(c(admix_f_javanicus, admix_f_melastigma)),
                   mean_ci_upper = mean(c(f_ci_upper_javanicus, f_ci_upper_melastigma)),
@@ -9543,13 +9503,13 @@ lapply(c("131_2", "139_4"), function(x){
     #                                      1,
     #                                      .x)))
     # Create plot
-    out_plot <- cor_df %>% 
+    out_plot <- cor_df %>%
       ggplot(aes(P2, mean_f, fill = P2)) +
         geom_col() +
         geom_errorbar(aes(ymin = mean_ci_lower,
                           ymax = mean_ci_upper),
                       position = position_dodge(0.9),
-                      width = 0.25) +  
+                      width = 0.25) +
         guides(fill = F) +
         facet_wrap(~chr) +
         #ylim(0,1) +
@@ -9558,14 +9518,14 @@ lapply(c("131_2", "139_4"), function(x){
         theme(panel.grid = element_blank()) +
         scale_fill_manual(values = cols) +
         ggtitle(x)
-    # Save 
+    # Save
     ggsave(filename = paste("20201027_", x, ".png", sep = ""),
            device = "png",
            path = "~/Documents/Docs/medaka pics/20200921_introgression/20201020_ont_samples/",
            width = 24.75,
            height = 19.5,
            units = "cm",
-           dpi = 500)    
+           dpi = 500)
 })
 ```
 
@@ -9573,7 +9533,7 @@ lapply(c("131_2", "139_4"), function(x){
 
 # Run analysis on new EMF files from Ensembl 101
 
-<ftp://ftp.ensembl.org/pub/release-101/emf/ensembl-compara/multiple_alignments/50_fish.epo/> 
+<ftp://ftp.ensembl.org/pub/release-101/emf/ensembl-compara/multiple_alignments/50_fish.epo/>
 
 ```{bash}
 # Set up directory
@@ -9619,7 +9579,7 @@ for i in $( find emfs/ensembl_101/unzipped/* ); do
       -e log/20201026_segment_$bname_short\_$j.err \
       -o log/20201026_segment_$bname_short\_$j.out \
       "$script $i $j $new_path "
-  done;  
+  done;
 done
 
 # How many segments?
@@ -9632,13 +9592,13 @@ find emfs/ensembl_101/segmented/*/*data.txt
 # Last segment: 6_32112995_32194088_1
 rm emfs/ensembl_101/segmented/6_2/* # remove from the new folder
 # copy from the old one
-for i in $( find emfs/segmented/6*/* ) ; do 
+for i in $( find emfs/segmented/6*/* ) ; do
   bname=$( basename $i ) ;
   start=$( echo $bname | cut -d"_" -f2 ) ;
   end=$( echo $bname | cut -d"_" -f3 ) ;
   if (( $start >= 18083133 && $end <= 32194088 )) ; then
     cp $i emfs/ensembl_101/segmented/6_2/ ;
-  fi ;  
+  fi ;
 done
 
 # How many segments?
@@ -9654,7 +9614,7 @@ for i in $( find emfs/ensembl_101/segmented/*/*.data.txt ); do
   new_path=$( echo emfs/ensembl_101/cleaned/$chr_file );
   if [ ! -d "$new_path" ]; then
     mkdir $new_path;
-  fi  
+  fi
   # create name for new file
   bname=$( echo $i | sed 's/.data.txt//g' );
   bname_short=$( basename $bname );
@@ -9683,7 +9643,7 @@ for i in $(find emfs/ensembl_101/cleaned/* -type d ); do
     -o log/20201030_consol_$chr.out \
     -e log/20201030_consol_$chr.err \
     "Rscript --vanilla $script $dir_in $out_file ";
-done  
+done
 
 # combine for each chr
 mkdir emfs/ensembl_101/final
@@ -9778,8 +9738,8 @@ vcftools \
   --gzvcf vcfs/panel_no-sibs_line-ids_no-missing_with-maf_bi-snps.vcf.gz \
   --out stats/20201106_panel_no-sibs_line-ids_no-missing_with-maf_bi-snps \
   --singletons
-# Creates giant files  
-  
+# Creates giant files
+
 # Try again with bcftools stats
 ## Create file with all samples in it
 bcftools query -l vcfs/full-run_line-ids.vcf.gz \
@@ -9792,7 +9752,7 @@ bcftools stats \
 ## Extract relevant lines
 grep "PSC" stats/full-run_line-ids_per-sample.stats \
   > mikk_genome/data/20201106_full-run_line-ids_singleton_counts.txt
-  
+
 # Do the same thing per-chromosome
 mkdir stats/full-run_line-ids_per-sample_per-chr
 
@@ -9818,7 +9778,7 @@ mkdir stats/full-run_line-ids_per-sample_per-chr_psc
 for chr in $( seq 1 24 ) ; do
   grep "PSC" stats/full-run_line-ids_per-sample_per-chr/$chr.stats \
     > stats/full-run_line-ids_per-sample_per-chr_psc/$chr.stats ;
-done     
+done
 ```
 
 Consolidate per-chr data on cluster
@@ -9836,14 +9796,14 @@ df_list = lapply(files, function(x){
                   header = T,
                   check.names = F)
   # fix column names
-  colnames(df) = gsub("\\[.+\\]|#|\ ", "", colnames(df))  
+  colnames(df) = gsub("\\[.+\\]|#|\ ", "", colnames(df))
   # return df
   return(df)
 })
 # Set names (chromsome)
 names(df_list) = gsub(".stats", "", basename(files))
 # Bind into single DF
-df = df_list %>% 
+df = df_list %>%
   dplyr::bind_rows(.id = "chr")
 # Write table
 write.table(df, "mikk_genome/data/20201107_singletons_per_chr.txt",
@@ -9860,7 +9820,7 @@ sing_df = read.table(here::here("data", "20201107_singletons_per_chr.txt"),
                      check.names = F)
 
 # Plot
-sing_df %>% 
+sing_df %>%
   ggplot() +
   geom_col(aes(sample, nSingletons, fill = sample)) +
   xlab("Sample") +
@@ -9882,7 +9842,7 @@ ggsave(filename = paste("20201107_singleton_counts_per_chr", ".png", sep = ""),
 
 ## Genome-wide
 ```{r}
-# Read in data 
+# Read in data
 sing_df = read.table(here::here("data", "20201106_full-run_line-ids_singleton_counts.txt"),
                      skip = 1,
                      sep = "\t",
@@ -9894,14 +9854,14 @@ sing_df = read.table(here::here("data", "20201106_full-run_line-ids_singleton_co
 colnames(sing_df) = gsub("\\[.+\\]|#|\ ", "", colnames(sing_df))
 
 # Plot
-sing_df %>% 
+sing_df %>%
   ggplot() +
   geom_col(aes(sample, nSingletons, fill = sample)) +
   xlab("Sample") +
   ylab("Number of singleton SNPs") +
   coord_flip() +
   guides(fill = F) +
-  theme_bw(base_size = 6) 
+  theme_bw(base_size = 6)
 ```
 ```{r}
 ggsave(filename = paste("20201106_singleton_counts", ".png", sep = ""),
@@ -9927,20 +9887,20 @@ bcftools index \
 ```{r}
 snp_counts = read.table(here::here("data", "20201106_non-missing_bi-snp_count.txt"),
                         sep = "\t",
-                        col.names = c("chr", "length", "snp_count")) %>% 
+                        col.names = c("chr", "length", "snp_count")) %>%
   # create megabase column
   dplyr::mutate(megabases = length / 1e6,
-                snps_per_megabase = snp_count / megabases) %>% 
+                snps_per_megabase = snp_count / megabases) %>%
   # remove MT
-  dplyr::filter(chr != "MT") %>% 
+  dplyr::filter(chr != "MT") %>%
   # turn chr column into integer
   dplyr::mutate(chr = as.factor(as.integer(chr)))
 
 # Plot
-snp_counts %>% 
+snp_counts %>%
   ggplot() +
     geom_col(aes(chr, snps_per_megabase, fill = chr)) +
-    guides(fill = F) + 
+    guides(fill = F) +
     xlab("Chromosome") +
     ylab("Non-missing, biallelic SNPs per megabase") +
     theme_bw()
@@ -9958,7 +9918,7 @@ ggsave(filename = paste("20201106_snps_per_mb", ".png", sep = ""),
 ## Combine with exon proportion counts and plot again
 
 ```{r}
-chr_df = snp_counts %>% 
+chr_df = snp_counts %>%
   dplyr::full_join(chr_stats, by = c("chr", "length"))
 
 # Create recode vector
@@ -9967,14 +9927,14 @@ recode_vec = c("Non-missing, biallelic SNPs per megabase",
 names(recode_vec) = c("snps_per_megabase",
                       "prop_cov_exon")
 # Plot
-chr_df %>% 
-  tidyr::pivot_longer(cols = c(snps_per_megabase, prop_cov_exon), 
+chr_df %>%
+  tidyr::pivot_longer(cols = c(snps_per_megabase, prop_cov_exon),
                       names_to = "variable",
-                      values_to = "values") %>% 
-  dplyr::mutate(variable = dplyr::recode(variable, !!!recode_vec)) %>% 
+                      values_to = "values") %>%
+  dplyr::mutate(variable = dplyr::recode(variable, !!!recode_vec)) %>%
   ggplot() +
     geom_col(aes(chr, values, fill = chr)) +
-    guides(fill = F) + 
+    guides(fill = F) +
     xlab("Chromosome") +
     ylab(NULL) +
     theme_bw() +
@@ -10001,7 +9961,7 @@ cor.test(chr_df$snps_per_megabase, chr_df$prop_cov_exon, method = "spearman")
 
 
 ```{r}
-chr_df %>% 
+chr_df %>%
   ggplot(aes(snps_per_megabase, prop_cov_exon, colour = chr, label = chr)) +
   geom_point() +
   geom_text(hjust = -0.5) +
@@ -10034,8 +9994,8 @@ lines = scan(here::here("data", "20201021_full-run_line-ids_samples.txt"),
 # Remove non-MIKK lines and duplicates
 lines = lines[!grepl(c("iCab|KW|Ho5|-"), lines)]
 # Find siblings
-sibs = lines %>% 
-  stringr::str_split("_", simplify = T) %>% 
+sibs = lines %>%
+  stringr::str_split("_", simplify = T) %>%
   subset(select = 1)
 # Create vector of sibling lines to keep
 to_keep = duplicated(sibs) | duplicated(sibs, fromLast = T)
@@ -10058,11 +10018,11 @@ bcftools view \
   vcfs/full-run_line-ids.vcf.gz
 ```
 
-#### Make new BED 
+#### Make new BED
 ```{bash}
 mkdir plink/20201107_mikk_sib-lines-only
 
-# make BED  
+# make BED
 plink \
   --vcf vcfs/mikk_sib-lines-only.vcf.gz \
   --make-bed \
@@ -10072,13 +10032,13 @@ plink \
   --chr-set 24 no-xy \
   --chr 1-24 \
   --out plink/20201107_mikk_sib-lines-only/20201107
-  
+
 # recode for 012 transposed
 plink \
   --bfile plink/20201107_mikk_sib-lines-only/20201107 \
   --recode A-transpose \
   --out plink/20201107_mikk_sib-lines-only/20201107_recode012
-  
+
 # compress
 gzip -k plink/20201107_mikk_sib-lines-only/20201107_recode012.traw
 gzip -k plink/20201107_mikk_sib-lines-only/20201107.bim
@@ -10135,7 +10095,7 @@ high_ld_lst <- lapply(high_ld_chrs, function(x){
   x[["target_inds"]] <- which(mikk_full@snps$chr == x[["chr"]] &
                          dplyr::between(mikk_full@snps$pos, x[["start"]], x[["end"]]) &
                          mikk_full@snps$maf > 0.05)
-  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]  
+  x[["target_snps"]] <- mikk_geno[x[["target_inds"]], ]
   # make matrix
   x[["geno_mat"]] <- as.matrix(x[["target_snps"]][, -(1:6)])
   return(x)
@@ -10161,7 +10121,7 @@ lapply(high_ld_lst, function(x){
       units = "cm",
       res = 300)
   heatmap(x[["geno_mat"]], Rowv = NA, Colv = NA)
-  dev.off()  
+  dev.off()
 })
 
 ```
@@ -10173,6 +10133,3 @@ lapply(high_ld_lst, function(x){
 ```{bash}
 cp /hps/research1/birney/users/adrien/analyses/medaka_DNA_promethion/brain_run2/DNA_analysis/results/SV/sniffles_all/merged.vcf vcfs/sv_adrien.vcf
 ```
-
-
-

@@ -1,0 +1,9 @@
+samples	population
+hdrr	hdrr
+hni	hni
+hsok	hsok
+javanicus	javanicus
+melastigma	melastigma
+ancestor	ancestor
+kaga	kaga
+132_4_1	mikk

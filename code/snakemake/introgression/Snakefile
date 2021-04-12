@@ -1,0 +1,1340 @@
+#####################
+# Bash script
+#####################
+
+# cd /hps/research1/birney/users/ian/mikk_paper/mikk_genome
+# conda activate snakemake
+# module load singularity
+# snmk_proj="introgression"
+# snakemake \
+#   --jobs 5000 \
+#   --latency-wait 100 \
+#   --cluster-config code/snakemake/$snmk_proj/config/cluster.json \
+#   --cluster 'bsub -g /snakemake_bgenie -J {cluster.name} -n {cluster.n} -M {cluster.memory} -o {cluster.output} -e {cluster.error}' \
+#   --keep-going \
+#   --rerun-incomplete \
+#   --use-conda \
+#   --use-singularity \
+#   -s code/snakemake/$snmk_proj/Snakefile \
+#   -p
+
+#####################
+# Libraries
+#####################
+
+import os.path
+import glob
+
+import shutil
+
+# Remove .snakemake folder upon successful completion
+#onsuccess:
+#    shutil.rmtree(".snakemake")
+
+onstart:
+    shell("mkdir -p {config[log_dir]}")
+
+onsuccess:
+    shell("rm -rf {config[log_dir]}")
+
+# Set up FTP
+from snakemake.remote.FTP import RemoteProvider as FTPRemoteProvider
+FTP = FTPRemoteProvider()
+
+#####################
+# Variables
+#####################
+
+# Load config file and provide content as config object
+
+configfile: "code/snakemake/introgression/config/config.yaml"
+
+## Get samples
+
+### Get list of files
+files = glob.glob(os.path.join(config["target_dir"], "segmented/*/*.data.txt"))
+
+### Remove files generating errors at the `add_hdrr_coords` stage
+errors = ['../introgression/release-102/segmented/1_2/1_16795958_16835713_1.data.txt',
+          '../introgression/release-102/segmented/20_1/20_6365114_6370294_-1.data.txt',
+          '../introgression/release-102/segmented/17_1/17_2139440_2153945_-1.data.txt',
+          '../introgression/release-102/segmented/24_2/24_16480574_16483416_-1.data.txt',
+          '../introgression/release-102/segmented/11_2/11_21065274_21099126_-1.data.txt']
+
+for error in errors:
+    while error in files:
+        files.remove(error)
+
+### Chr, sub_chr, segment, and strand combinations
+CHRS = []
+SUBCHRS = []
+SEGMENTS = []
+STRANDS = []
+for file in files:
+    CHRS.append(file.split('/')[4].split('_')[0])
+    SUBCHRS.append(file.split('/')[4].split('_')[1])
+    target_segment = file.split('/')[5].split('_')[0:3]
+    SEGMENTS.append("_".join(target_segment))
+    STRANDS.append(file.split('/')[5].split('_')[3].split('.')[0])
+
+### MIKK groups
+GROUPS = ["all", "1", "2"]
+
+### MIKK samples
+
+mikk_lines_file = config["full_run_line_ids_mikk_only"]
+with open(mikk_lines_file) as f:
+    MIKK_LINES = f.readlines()
+MIKK_LINES = [x.strip() for x in MIKK_LINES]
+
+#MIKK_LINES_AND_KAGA = MIKK_LINES.copy()
+#MIKK_LINES_AND_KAGA.append("kaga")
+
+### ABBA BABA population combinations
+P1S = ["melastigma", "javanicus"]
+P2S = ["hdrr", "hni", "hsok"]
+P2S_AND_KAGA = ["hdrr", "hni", "kaga", "hsok"]
+P3S = ["mikk"]
+
+### ABBA samples
+ABBA_LINES = ["hdrr", "hni", "kaga", "hsok", "melastigma", "javanicus", "ancestor"]
+
+### ABBA window lengths
+SLIDING_WINDOW_LENGTHS = ["500000", "1000000"]
+
+### 131 sibling lines
+LINE_131_SIBS = ["131-1", "131-2", "131-4"]
+
+### Kaga samples
+
+KAGA_SAMPLES = ["DRR002225", "DRR002226", "DRR002227", "DRR002228"]
+READS = ["1", "2"]
+CHRS_WITH_MT = [str(i) for i in range(1, 25)]
+CHRS_WITH_MT.append("MT")
+
+#####################
+# Rules
+#####################
+
+rule all:
+    input:
+#        expand(os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt"),
+#                zip,
+#                chr = CHRS,
+#                subchr = SUBCHRS,
+#                segment = SEGMENTS,
+#                strand = STRANDS),
+#        expand(os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt"),
+#                zip,
+#                chr = CHRS,
+#                subchr = SUBCHRS),
+#        expand(os.path.join(config["target_dir"], "final/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf"),
+#        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz"),
+#        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz.tbi"),
+#        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf"),
+#        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz"),
+#        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz.tbi"),
+#        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz"),
+#        expand("data/introgression/20200914_abbababa_mikk_{group}.txt",
+#                group = GROUPS),
+#        expand(os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing_bi-snps_with-af_{group}.vcf.gz"),
+#                group = GROUPS),
+#        expand(os.path.join(config["maf_dir"], "mikk_{group}.txt"),
+#                group = GROUPS),
+#        expand(os.path.join(config["maf_dir"], "split_by_chr_{group}/{chr}.txt"),
+#                group = GROUPS,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join(config["freq_tables_dir"], "mikk_{group}", "{chr}.txt"),
+#                group = GROUPS,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join(config["freq_tables_dir"], "mikk_{group}.txt"),
+#                group = GROUPS),
+#        os.path.join(config["freq_tables_dir"], "all.txt"),
+#        expand(os.path.join(config["abba_baba_dir"], "rlists/P1_{p1}_P2_{p2}_P3_{p3}.RData"),
+#                p1 = P1S,
+#                p2 = P2S,
+#                p3 = P3S),
+#        "data/introgression/20210315_f_stat_final.txt",
+        os.path.join(config["geno_dir"], "full_vcf.geno"),
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
+#        expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+#                chr = list(set(CHRS))),
+#        config["full_run_line_ids"],
+#        expand(os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        expand(os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        config["pop_file_full_run"],
+#        config["pop_file_no_sibs"],
+#        expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
+#                p1 = P1S,
+#                p2 = P2S,
+#                chr = list(set(CHRS))),
+#        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt"),
+#        expand(os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        "data/introgression/hni_hsok.txt.gz",
+#        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt"),
+#        "data/introgression/mikk.txt.gz",
+#        expand(os.path.join(config["geno_dir"], "final_{line_131_sib}/{chr}.txt"),
+#                line_131_sib = LINE_131_SIBS,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join("data/introgression/abba_sliding_{line_131_sib}" + "_wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+#                line_131_sib = LINE_131_SIBS,
+#                p1 = P1S,
+#                p2 = P2S,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join("data/introgression/abba_sliding_final_131", "{line_131_sib}_" + config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt"),
+#                line_131_sib = LINE_131_SIBS),
+#        expand(os.path.join(config["fasta_dir"], "{kaga_sample}_{read}.fastq.gz"),
+#                kaga_sample = KAGA_SAMPLES,
+#                read = READS),
+#        expand(os.path.join(config["sam_dir"], "{kaga_sample}.sam"),
+#                kaga_sample = KAGA_SAMPLES),
+#        expand(os.path.join(config["sam_dir"], "{kaga_sample}_withRGs.sam"),
+#                kaga_sample = KAGA_SAMPLES),
+#        expand(os.path.join(config["bam_dir"], "sorted/{kaga_sample}.bam"),
+#                kaga_sample = KAGA_SAMPLES),
+#        expand(os.path.join(config["bam_dir"], "marked/{kaga_sample}.bam"),
+#                kaga_sample = KAGA_SAMPLES),
+#        os.path.join(config["bam_dir"], "merged/kaga.bam"),
+#        os.path.join(config["bam_dir"], "merged/kaga.bai"),
+#        expand(os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz"),
+#                chr = list(set(CHRS_WITH_MT))),
+#        expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz"),
+#                chr = list(set(CHRS_WITH_MT))),
+#        expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi"),
+#                chr = list(set(CHRS_WITH_MT))),
+#        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz"),
+#        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz"),
+#        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno"),
+#        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno"),
+#        expand(os.path.join(config["geno_dir"], "split_by_chr_with-kaga/{chr}.geno"),
+#                chr = list(set(CHRS))),
+#        config["full_run_line_ids_with_kaga"],
+#        config["full_run_line_ids_mikk_only"],
+#        expand(os.path.join(config["geno_dir"], "final_full-run_with-kaga/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        expand("data/sv_analysis/20210329_full-run_except/{mikk_line}.txt",
+#                mikk_line = MIKK_LINES),
+#        expand(os.path.join(config["geno_dir"], "final_mikk/{mikk_line}/{chr}.txt"),
+#                mikk_line = MIKK_LINES,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join(config["pop_files_dir"], "{mikk_line}.pop.txt"),
+#                mikk_line = MIKK_LINES),
+#        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk/{mikk_line}", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+#                mikk_line = MIKK_LINES,
+#                p1 = P1S,
+#                p2 = P2S_AND_KAGA,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join("data/introgression/abba_sliding_final_mikk", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"], "{mikk_line}.txt"),
+#                mikk_line = MIKK_LINES),
+#        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
+#                chr = list(set(CHRS))),
+        config["samples_with_kaga_no_sibs_no_131_1"],
+        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
+                chr = list(set(CHRS))),
+        config["pop_file_no_sibs_with_kaga_no_131_1"],
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS))),
+        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+#        expand("../introgression/snp_dens/kaga/{chr}.csv",
+#                chr = list(set(CHRS))),
+#        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
+#                chr = list(set(CHRS)))
+
+
+# EMFs
+
+rule add_hdrr_coords:
+    input:
+        os.path.join(config["target_dir"], "segmented/{chr}_{subchr}/{segment}_{strand}.data.txt")
+    output:
+        os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt")
+    params:
+        command = lambda wildcards: "{config[rscript_command]} " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; {config[rscript_command]} " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
+    singularity:
+        config["r-base"]
+    shell:
+        "input={input}; output={output}; {params.command}"
+
+rule consolidate_subchrs:
+    input:
+        os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}")
+    output:
+        os.path.join(config["target_dir"], "consolidated/{chr}_{subchr}.txt")
+    singularity:
+        config["r-base"]        
+    shell:
+        "{config[rscript_command]} {config[consol_subchr_script]} {input} {output}"
+
+rule consolidate_chrs:
+    input:
+        os.path.join(config["target_dir"], "consolidated")
+    output:
+        os.path.join(config["target_dir"], "final/{chr}.txt")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        "{config[rscript_command]} {config[consol_chr_script]} {params.chr} {input} {output}"
+
+# Full VCF
+
+rule rehead_full_vcf:
+    input:
+        vcf = config["mikk_ill_vcf"],
+        samples_key = config["cramid_2_lineid_key_dupes_edited"]
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools reheader \
+            --output  {output} \
+            --samples {input.samples_key} \
+            {input.vcf}
+        """
+
+rule compress_full_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+rule index_full_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
+        """
+
+# No-sibs VCF
+
+rule create_no_sibs_vcf:
+    input:
+        config["mikk_ill_vcf"]
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view --samples-file {config[no_sibs_cramid]} --output-type u {input} |\
+            bcftools reheader \
+                --samples {config[cramid_2_lineid_key]} \
+                --output {output}
+        """
+
+rule compress_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+rule index_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
+        """    
+
+rule remove_missing_no_sibs_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --genotype ^miss \
+            --output-type z \
+            --output-file {output} \
+            {input}
+        """
+
+# ABBA-BABA  
+
+rule split_mikk_file:
+    input:
+        config["no_sibs_lineid"]
+    output:
+        expand("data/introgression/20200914_abbababa_mikk_{group}.txt",
+            group = GROUPS)
+    singularity:
+        config["r-base"]
+    script:
+        config["split_mikk_file_script"]
+
+rule split_mikk_vcf:
+    input:
+        file = os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz"),
+        samples = "data/introgression/20200914_abbababa_mikk_{group}.txt"
+    output:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing_bi-snps_with-af_{group}.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --samples-file {input.samples} \
+            --output-type u \
+            {input.file} | \
+            bcftools +fill-tags \
+                --output-type z \
+                --output {output} \
+                -- \
+                --tags AF
+      """
+
+rule extract_allele_freqs:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing_bi-snps_with-af_{group}.vcf.gz")
+    output:
+        os.path.join(config["maf_dir"], "mikk_{group}.txt")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query \
+            --format '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AF\n' \
+            --output-file {output} \
+            {input}
+        """
+
+rule split_by_chr:
+    input:
+        os.path.join(config["maf_dir"], "mikk_{group}.txt")
+    output:
+        os.path.join(config["maf_dir"], "split_by_chr_{group}/{chr}.txt")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    shell:
+        """
+        awk "\$1 == {params.chr}" {input} | \
+            awk -v OFS="\t" '{{print $1":"$2, $0}}' \
+            > {output}
+        """
+
+rule combine_emf_and_maf:
+    input:
+        emf = os.path.join(config["target_dir"], "final/{chr}.txt"),
+        maf = os.path.join(config["maf_dir"], "split_by_chr_{group}/{chr}.txt")
+    output:
+        os.path.join(config["freq_tables_dir"], "mikk_{group}", "{chr}.txt")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_emf_maf_script]} {params.chr} {input.emf} {input.maf} {output}
+        """
+
+rule combine_chr_freq_tables:
+    input:
+        os.path.join(config["freq_tables_dir"], "mikk_{group}")
+    output:
+        os.path.join(config["freq_tables_dir"], "mikk_{group}.txt")
+    params:
+        group = lambda wildcards: wildcards.group
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_chr_freq_tables_script]} {group} {input} {output}
+        """
+
+rule combine_all_mikk_freq_tables:
+    input:
+        expand(os.path.join(config["freq_tables_dir"], "mikk_{group}.txt"),
+                group = GROUPS)
+    output:
+        os.path.join(config["freq_tables_dir"], "all.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_all_mikk_freq_tables_script]} {input} {output}
+        """
+
+rule run_abba_baba:
+    input:
+        os.path.join(config["freq_tables_dir"], "all.txt")
+    output:
+        os.path.join(config["abba_baba_dir"], "rlists/P1_{p1}_P2_{p2}_P3_{p3}.RData")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        p3 = lambda wildcards: wildcards.p3
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[abba_baba_script]} {params.p1} {params.p2} {params.p3} {input} {output}
+        """
+
+rule combine_rlists:
+    input:
+        os.path.join(config["abba_baba_dir"], "rlists")
+    output:
+        "data/introgression/20210315_f_stat_final.txt"
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_rlists_script]} {input} {output}
+        """
+
+# Sliding windows
+
+rule make_geno:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+                bcftools query \
+                --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT[\t%TGT]\n' \
+                --output {output}
+        """
+
+rule make_geno_with_kaga:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+                bcftools query \
+                --format '%CHROM:%POS\t%CHROM\t%POS\t%REF\t%ALT[\t%TGT]\n' \
+                --output {output}
+        """
+
+rule replace_missing:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf.geno")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        sed 's/\./N/g' {input} > {output}
+        """
+
+rule replace_missing_with_kaga:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga.geno")
+    output:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        sed 's/\./N/g' {input} > {output}
+        """
+
+rule split_geno_by_chr:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno")
+    output:
+        os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        """
+
+rule split_geno_by_chr_with_kaga:
+    input:
+        os.path.join(config["geno_dir"], "full_vcf_with-kaga_bcftools.geno")
+    output:
+        os.path.join(config["geno_dir"], "split_by_chr_with-kaga/{chr}.geno")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[split_geno_by_chr_script]} {params.chr} {input} {output}
+        """
+
+rule make_samples_file:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        config["full_run_line_ids"]
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query -l {input} > {output}
+        """
+
+rule make_samples_file_with_kaga:
+    input:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    output:
+        config["full_run_line_ids_with_kaga"]
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query -l {input} > {output}
+        """
+
+rule make_samples_file_mikk_only:
+    input:
+        config["full_run_line_ids"]
+    output:
+        config["full_run_line_ids_mikk_only"]
+    singularity:
+        config["bash"]
+    shell:
+        """
+        cat {input} | grep -v "iCab\|KW\|Ho5" > {output}
+        """
+
+rule make_samples_file_with_kaga_no_sibs_no_131_1:
+    input:
+        os.path.join(config["geno_dir"], "final_full-run_with-kaga/1.txt")
+    output:
+        config["samples_with_kaga_no_sibs_no_131_1"]
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[make_samples_with_kaga_no_sibs_no_131_1_script]} {input} {output}
+        """
+
+rule make_samples_file_without_kaga_no_sibs_no_131_1:
+    input:
+        config["samples_with_kaga_no_sibs_no_131_1"]
+    output:
+        config["samples_without_kaga_no_sibs_no_131_1"]
+    run:
+        # read in samples
+        with open(input[0]) as f:
+            target_samples = f.readlines()
+            target_samples = [x.strip() for x in target_samples]
+        # remove kaga
+        target_samples.remove('kaga')
+        # write to file
+        out_file=open(output[0],'w')
+        for element in target_samples:
+            out_file.write(element)
+            out_file.write('\n')
+        out_file.close()
+
+rule emf_2_geno_full_run:
+    input:
+        emf = os.path.join(config["target_dir"], "final/{chr}.txt"),
+        vcf_geno = os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+        vcf_samples = config["full_run_line_ids"]
+    output:
+        os.path.join(config["geno_dir"], "final_full-run/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        """     
+
+rule emf_2_geno_full_run_with_kaga:
+    input:
+        emf = os.path.join(config["target_dir"], "final/{chr}.txt"),
+        vcf_geno = os.path.join(config["geno_dir"], "split_by_chr_with-kaga/{chr}.geno"),
+        vcf_samples = config["full_run_line_ids_with_kaga"]
+    output:
+        os.path.join(config["geno_dir"], "final_full-run_with-kaga/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        """
+
+rule emf_2_geno_remove_sibs:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        excluded_sibs = config["excluded_sib_lines"]
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule emf_2_geno_remove_sibs_with_kaga_no_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run_with-kaga/{chr}.txt"),
+        samples_to_keep = config["samples_with_kaga_no_sibs_no_131_1"]
+    output:
+        os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
+        """
+
+rule emf_2_geno_remove_sibs_without_kaga_no_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        samples_to_keep = config["samples_without_kaga_no_sibs_no_131_1"]
+    output:
+        os.path.join(config["geno_dir"], "final_without-kaga_no-sibs-or-131-1/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
+        """
+
+rule make_pop_file:
+    input:
+        full_run = config["full_run_line_ids"],
+        no_sibs = config["no_sibs_lineid"]
+    output:
+        full_run = config["pop_file_full_run"],
+        no_sibs = config["pop_file_no_sibs"]
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[make_pop_file_script]} {input.full_run} {input.no_sibs} {output.full_run} {output.no_sibs}
+        """
+
+rule make_pop_file_no_131_1:
+    input:
+        pop_file_full = config["pop_file_full_run_with_kaga"],
+        target_samples = config["samples_with_kaga_no_sibs_no_131_1"]
+    output:
+        config["pop_file_no_sibs_with_kaga_no_131_1"]
+    run:
+        import pandas as pd
+        # Read in files
+        pop_file = pd.read_csv(input.pop_file_full, sep = '\t')
+        with open(input.target_samples) as f:
+            target_samples = f.readlines()
+            target_samples = [x.strip() for x in target_samples]
+        # Filter pop_file for target_samples
+        new_pop_file = pop_file[pop_file['samples'].isin(target_samples)]
+        # Write to file
+        new_pop_file.to_csv(output[0], sep = '\t', index = False)
+        
+rule make_pop_file_no_131_1_no_kaga:
+    input:
+        config["pop_file_no_sibs_with_kaga_no_131_1"]
+    output:
+        config["pop_file_no_sibs_without_kaga_no_131_1"]
+    run:
+        import pandas as pd
+        # Read in file
+        pop_file = pd.read_csv(input[0], sep = '\t')
+        # Remove kaga from file
+        new_pop_file = pop_file[pop_file['samples'] != 'kaga']
+        # Write to file
+        new_pop_file.to_csv(output[0], sep = '\t', index = False)  
+
+rule run_abba_baba_sliding:
+    input:
+        data = os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt"),
+        pop_file = config["pop_file_no_sibs"]
+    output:
+        os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length"],
+        minimum_sites = config["minimum_sites"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {config[abba_sliding_dir]} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
+        """
+
+rule run_abba_baba_sliding_no_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_without-kaga_no-sibs-or-131-1/{chr}.txt"),
+        pop_file = config["pop_file_no_sibs_without_kaga_no_131_1"]
+    output:
+        os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = lambda wildcards: wildcards.sliding_window_length,
+        minimum_sites = config["minimum_sites_131"],
+        destination_dir = lambda wildcards: "../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1/" + "wsize_" + wildcards.sliding_window_length + "_msites_" + config["minimum_sites_131"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        mkdir -p {params.destination_dir} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
+        """
+
+rule combine_sliding_windows_data:
+    input:
+        expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        """
+
+rule combine_sliding_windows_data_no_131_1:
+    input:
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        """
+
+# Karyoplot extras
+
+rule get_latipes_snp_density:
+    input:
+        os.path.join(config["geno_dir"], "final_no-sibs/{chr}.txt")
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt")
+    singularity:
+        config["bash"]
+    shell:
+        """
+        awk '{{print $1,$2,$4,$5}}' {input} > {output}
+        """
+    
+rule process_latipes_snp_density:
+    input:
+        expand(os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt"),
+                chr = list(set(CHRS)))
+    output:
+        "data/introgression/hni_hsok.txt.gz"
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[process_snp_density_script]} --input {input} --output {output}
+        """
+
+rule get_mikk_snp_density:
+    input:
+        os.path.join(config["vcf_dir"], "ill_no-sibs_no-missing.vcf.gz")
+    output:
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --min-alleles 2 \
+            --max-alleles 2 \
+            --types snps \
+            --output-type u \
+            {input} |\
+              bcftools query \
+                --format '%CHROM\t%POS\n' \
+                --output-file {output}
+        """
+
+rule compress_mikk_snp_density:
+    input:
+        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt")
+    output:
+        "data/introgression/mikk.txt.gz"
+    singularity:
+        config["bash"]
+    shell:
+        """
+        gzip -k {input} && mv {input}.gz {output}
+        """
+
+# 131-1 investigation
+
+rule emf_2_geno_extract_131:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        excluded_sibs = "data/sv_analysis/20210323_full-run_except_{line_131_sib}.txt"
+    output:
+        os.path.join(config["geno_dir"], "final_{line_131_sib}/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule make_excluded_mikk_files:
+    input:
+        config["full_run_line_ids_with_kaga"]
+    output:
+        "data/sv_analysis/20210329_full-run_except/{mikk_line}.txt"
+    params:
+        mikk_line = lambda wildcards: wildcards.mikk_line
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[exclude_mikk_script]} {input} {params.mikk_line} {output}
+        """
+
+rule emf_2_geno_extract_mikk:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run_with-kaga/{chr}.txt"),
+        excluded_sibs = "data/sv_analysis/20210329_full-run_except/{mikk_line}.txt"
+    output:
+        os.path.join(config["geno_dir"], "final_mikk/{mikk_line}/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[remove_sibs_script]} {input.data} {input.excluded_sibs} {output}
+        """
+
+rule make_pop_file_mikk:
+    input:
+        config["pop_file_full_run_with_kaga"]
+    output:
+        os.path.join(config["pop_files_dir"], "{mikk_line}.pop.txt")
+    params:
+        abba_lines = expand(ABBA_LINES),
+        mikk_line = lambda wildcards: wildcards.mikk_line
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} \
+            {config[make_pop_file_mikk_script]} \
+                --input {input} \
+                --abba {params.abba_lines} \
+                --mikk {params.mikk_line} \
+                --output {output}
+        """
+
+rule run_abba_baba_sliding_131:
+    input:
+        os.path.join(config["geno_dir"], "final_{line_131_sib}/{chr}.txt")
+    output:
+        os.path.join("data/introgression/abba_sliding_{line_131_sib}" + "_wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length_131"],
+        minimum_sites = config["minimum_sites_131"],
+        pop_file = lambda wildcards: os.path.join("data/introgression", wildcards.line_131_sib + ".pop.txt"),
+        destination_dir = lambda wildcards: "data/introgression/abba_sliding_" + wildcards.line_131_sib + "_wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {params.destination_dir} ;
+        python {config[abba_sliding_script]} \
+            -g {input} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {params.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
+        """
+
+rule run_abba_baba_sliding_mikk:
+    input:
+        data = os.path.join(config["geno_dir"], "final_mikk/{mikk_line}/{chr}.txt"),
+        pop_file = os.path.join(config["pop_files_dir"], "{mikk_line}.pop.txt")
+    output:
+        os.path.join("../introgression/abba_baba/abba_sliding_mikk/{mikk_line}", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p2 = lambda wildcards: wildcards.p2,
+        window_length = config["sliding_window_length_131"],
+        minimum_sites = config["minimum_sites_131"],
+        destination_dir = lambda wildcards: "../introgression/abba_baba/abba_sliding_mikk/" + wildcards.mikk_line + "/wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {params.destination_dir} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 {params.p2} \
+            -P3 mikk \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
+        """
+
+rule combine_sliding_windows_data_131:
+    input:
+        expand(os.path.join("data/introgression/abba_sliding_{{line_131_sib}}" + "_wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join("data/introgression/abba_sliding_final_131", "{line_131_sib}_" + config["sliding_window_length_131"] + "_" + config["minimum_sites_131"] + ".txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        """
+
+rule combine_sliding_windows_data_mikk:
+    input:
+        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk/{{mikk_line}}", "wsize_" + config["sliding_window_length_131"] + "_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+                p1 = P1S,
+                p2 = P2S_AND_KAGA,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join("data/introgression/abba_sliding_final_mikk", config["sliding_window_length_131"] + "_" + config["minimum_sites_131"], "{mikk_line}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        """
+
+# Kaga alignment
+
+rule download_kaga_reads:
+    input:
+        FTP.remote(os.path.join(config["kaga_ftp_dir"], "{kaga_sample}/{kaga_sample}_{read}.fastq.gz"), keep_local=True),
+    output:
+        os.path.join(config["fasta_dir"], "{kaga_sample}_{read}.fastq.gz")
+    shell:
+        """
+        mv {input} {output}
+        """
+
+rule align_kaga_to_hdrr:
+    input:
+        expand(os.path.join(config["fasta_dir"], "{{kaga_sample}}_{read}.fastq.gz"),
+                read = READS)
+    output:
+        os.path.join(config["sam_dir"], "{kaga_sample}.sam")
+    singularity:
+        config["minimap2"]
+    shell:
+        """
+        /minimap2-2.17_x64-linux/minimap2 -ax sr {config[hdrr_reference]} {input} > {output}
+        """
+
+rule add_kaga_read_groups:
+    input:
+        os.path.join(config["sam_dir"], "{kaga_sample}.sam")
+    output:
+        os.path.join(config["sam_dir"], "{kaga_sample}_withRGs.sam")
+    params:
+        id = lambda wildcards: wildcards.kaga_sample
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -Xmx12g -jar /usr/picard/picard.jar AddOrReplaceReadGroups \
+            I={input} \
+            O={output} \
+            RGID={params.id} \
+            RGLB=lib1 \
+            RGPL=ILLUMINA \
+            RGPU=unit1 \
+            RGSM=kaga
+        """
+
+rule sort_kaga_sam:
+    input:
+        os.path.join(config["sam_dir"], "{kaga_sample}_withRGs.sam")
+    output:
+        os.path.join(config["bam_dir"], "sorted/{kaga_sample}.bam")
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -Xmx12g -jar /usr/picard/picard.jar SortSam \
+            I={input} \
+            O={output} \
+            SORT_ORDER=coordinate \
+            TMP_DIR={config[tmp_dir]}
+        """
+
+rule mark_kaga_duplicates:
+    input:
+        os.path.join(config["bam_dir"], "sorted/{kaga_sample}.bam")
+    output:
+        bam = os.path.join(config["bam_dir"], "marked/{kaga_sample}.bam"),
+        metrics = os.path.join(config["bam_dir"], "marked/{kaga_sample}_metrics.txt")
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -jar /usr/picard/picard.jar MarkDuplicates \
+            I={input} \
+            O={output.bam} \
+            M={output.metrics} \
+            TMP_DIR={config[tmp_dir]}
+        """
+
+rule kaga_merge_bams:
+    input:
+        expand(os.path.join(config["bam_dir"], "marked/{kaga_sample}.bam"),
+                kaga_sample = KAGA_SAMPLES)
+    output:
+        os.path.join(config["bam_dir"], "merged/kaga.bam")
+    params:
+        files = lambda wildcards, input: " I=".join(input)
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -jar /usr/picard/picard.jar MergeSamFiles \
+            I={params.files} \
+            O={output} \
+            TMP_DIR={config[tmp_dir]}
+        """
+
+rule kaga_index_bam:
+    input:
+        os.path.join(config["bam_dir"], "merged/kaga.bam")
+    output:
+        os.path.join(config["bam_dir"], "merged/kaga.bai")
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -jar /usr/picard/picard.jar BuildBamIndex \
+            I={input}
+        """
+
+rule kaga_call_haplotypes:
+    input:
+        bam = os.path.join(config["bam_dir"], "merged/kaga.bam"),
+        index = os.path.join(config["bam_dir"], "merged/kaga.bai")
+    output:
+        os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["gatk"]
+    shell:
+        """
+        gatk --java-options "-Xmx12g" HaplotypeCaller  \
+            -R {config[hdrr_reference]} \
+            -I {input.bam} \
+            -O {output} \
+            -L {params.chr} \
+            -ERC GVCF \
+            --tmp-dir {config[tmp_dir]}
+        """
+
+rule kaga_genotype:
+    input:
+        os.path.join(config["vcf_dir"], "gvcfs/kaga_{chr}.g.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz")
+    singularity:
+        config["gatk"]
+    shell:
+        """
+        gatk --java-options "-Xmx12g" GenotypeGVCFs \
+            -R {config[hdrr_reference]} \
+            -V {input} \
+            -O {output}
+        """
+
+rule kaga_index_vcf:
+    input:
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools index --tbi {input}
+        """
+
+rule kaga_merge_chr_vcfs:
+    input:
+        vcfs = expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz"),
+                chr = CHRS_WITH_MT),
+        inds = expand(os.path.join(config["vcf_dir"], "final/kaga_{chr}.vcf.gz.tbi"),
+                chr = CHRS_WITH_MT)
+    output:
+        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz")
+    params:
+        files = lambda wildcards, input: " I=".join(input.vcfs)
+    singularity:
+        config["picard"]
+    shell:
+        """
+        java -jar /usr/picard/picard.jar MergeVcfs \
+            I={params.files} \
+            O={output} \
+            TMP_DIR={config[tmp_dir]}
+        """
+
+rule kaga_merge_mikk_vcf:
+    input:
+        kaga_vcf = os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz"),
+        mikk_vcf = os.path.join(config["vcf_dir"], "full-run_line-ids.vcf.gz")
+    output:
+        os.path.join(config["vcf_dir"], "full-run_line-ids_with-kaga.vcf.gz")
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools merge \
+            {input.kaga_vcf} \
+            {input.mikk_vcf} \
+            --output {output} \
+            --output-type z \
+            --missing-to-ref
+        """
+
+rule kaga_get_snp_locs:
+    input:
+        os.path.join(config["vcf_dir"], "merged/kaga.vcf.gz")
+    output:
+        "../introgression/snp_dens/kaga/{chr}.csv"
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --genotype ^miss \
+            --regions {params.chr} \
+            --output-type u \
+            {input} |\
+            bcftools query \
+                --format '%CHROM,%POS\n' \
+                --output-file {output}
+        """
+
+rule kaga_compress_snp_locs:
+    input:
+        "../introgression/snp_dens/kaga/{chr}.csv"
+    output:
+        "data/introgression/snp_dens/kaga/{chr}.csv.gz"
+    singularity:
+        config["bash"]
+    shell:
+        """
+        mkdir -p ../log/{rule} ;
+        gzip -c {input} > {output}
+        """
+    
+
+
+    

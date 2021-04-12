@@ -5,14 +5,16 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Linkage Disequilibrium"
-      href: 20201120_markdown_ld-decay.html
-    - text: "Introgression"
-      href: 20201125_markdown_introgression.html
-    - text: "Repeat Elements"
-      href: 20201126_repeats.html
     - text: "Fecundity"
-      href: 20210208_fecundity.html
+      href: 20210301_fecundity.html
+    - text: "Linkage Disequilibrium"
+      href: 20210409_ld-decay.html
+    - text: "Introgression"
+      href: 20210409_introgression.html
+    - text: "Repeat Elements"
+      href: 20210409_repeats.html
+    - text: "Structural variation"
+      href: 20210409_sv_notebook.html
 output:
   html_document:
     theme: flatly

@@ -1,0 +1,2 @@
+BootStrap: docker
+From: bash:3.0.22

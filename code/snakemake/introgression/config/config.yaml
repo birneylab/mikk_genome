@@ -1,0 +1,136 @@
+log_dir:
+    "../log"
+target_dir:
+    "../introgression/release-102"
+r-base:
+    "../sing_conts/r-base_4.0.4.sif"
+rscript_command:
+    "Rscript --no-save --no-restore --no-environ --no-site-file"
+segments_script:
+    "code/scripts/introgression/20200907_extract-emf-segments.sh"
+add_coord_script_forward:
+    "code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R"
+add_coord_script_reverse:
+    "code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R"
+consol_subchr_script:
+    "code/scripts/introgression/20201015_consolidate_chr_dat.R"
+consol_chr_script:
+    "code/scripts/introgression/20201015_consolidate_chr_files.R"
+vcf_dir:
+    "../introgression/vcfs"
+mikk_ill_vcf:
+    "/nfs/research1/birney/projects/medaka/inbred_panel/medaka-alignments-release-94/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf"
+bcftools:
+    "../sing_conts/bcftools_1.9.sif"
+cramid_2_lineid_key_dupes_edited:
+    "data/20200305_cram2line_full_dupes-edited.txt"    
+no_sibs_cramid:
+    "data/20200227_cram2line_no-sibs_cram-only.txt"    
+cramid_2_lineid_key:
+    "data/20200206_cram_id_to_line_id.txt"
+no_sibs_lineid:
+    "data/20200914_samples_no-sibs.txt"
+split_mikk_file_script:
+    "scripts/20210315_split_mikk_file.R"
+maf_dir:
+    "../introgression/mafs"
+freq_tables_dir:
+    "../introgression/freq_tables"
+combine_emf_maf_script:
+    "code/scripts/introgression/20210315_combine_final_and_af_data.R"
+combine_chr_freq_tables_script:
+    "code/scripts/introgression/20210315_combine_chr_freq_tables.R"
+combine_all_mikk_freq_tables_script:
+    "code/scripts/introgression/20210315_combine_all_mikk_freq_tables.R"
+abba_baba_dir:
+    "../introgression/abba_baba"    
+abba_baba_script:
+    "code/scripts/introgression/run_abbababa.R"
+combine_rlists_script:
+    "code/scripts/introgression/combine_rlists.R"
+geno_dir:
+    "../introgression/genos"
+split_geno_by_chr_script:
+    "code/scripts/introgression/20201021_split_geno_by_chr.R"
+full_run_line_ids:
+    "data/20201021_full-run_line-ids_samples.txt"
+full_run_line_ids_with_kaga:
+    "data/20201021_full-run_line-ids_with-kaga_samples.txt"
+full_run_line_ids_mikk_only:
+    "data/20201021_full-run_line-ids_mikk-only_samples.txt"
+emf_2_geno_script:
+    "code/scripts/introgression/20201021_emf_to_geno.R"
+excluded_sib_lines:
+    "data/20200227_panel_lines_excluded.txt"
+make_samples_with_kaga_no_sibs_no_131_1_script:
+    "code/scripts/introgression/20210331_create_samples_list_without_sibs_and_131-1.R"
+samples_with_kaga_no_sibs_no_131_1:
+    "data/20210331_samples_with_kaga_no_sibs_no_131_1.txt"
+samples_without_kaga_no_sibs_no_131_1:
+    "data/20210408_samples_without_kaga_no_sibs_no_131_1.txt"
+remove_sibs_script:
+    "code/scripts/introgression/20201022_remove_sibs.R"
+remove_sibs_script_2:
+    "code/scripts/introgression/20210331_remove_sibs_2.R"
+pop_file_full_run:
+    "data/introgression/full_run.pop.txt"
+pop_file_full_run_with_kaga:
+    "data/introgression/full_run_with_kaga.pop.txt"
+pop_file_no_sibs:
+    "data/introgression/no_sibs.pop.txt"
+pop_file_no_sibs_with_kaga_no_131_1:
+    "data/introgression/no_sibs_with_kaga_no_131_1.pop.txt"
+pop_file_no_sibs_without_kaga_no_131_1:
+    "data/introgression/no_sibs_without_kaga_no_131_1.pop.txt"
+pop_files_dir:
+    "data/introgression/pop_files" 
+make_pop_file_script:
+    "code/scripts/introgression/20210315_make_pop_file.R"
+make_pop_file_mikk_script:
+    "code/scripts/introgression/20210329_make_pop_file_mikk.R"
+abba_sliding_dir:
+    "data/introgression/abba_sliding"
+abba_sliding_script:
+    "code/scripts/introgression/ABBABABAwindows.py"
+numpy:
+    "../sing_conts/numpy_1.15.4.sif"
+sliding_window_length:
+    "50000"
+minimum_sites:
+    "100"
+abba_sliding_dir_final:
+    "data/introgression/abba_sliding_final"
+combine_sliding_window_data_script:
+    "code/scripts/introgression/combine_sliding_window_data.R"
+bash:
+    "../sing_conts/bash_3.0.22.sif"
+process_snp_density_script:
+    "code/scripts/introgression/process_snp_density.R"
+sliding_window_length_131:
+    "1000000"
+minimum_sites_131:
+    "250"
+abba_sliding_dir_final_131-1:
+    "data/introgression/abba_sliding_final_131-1"
+kaga_ftp_dir:
+    "ftp.sra.ebi.ac.uk/vol1/fastq/DRR002"
+fasta_dir:
+    "../introgression/fastas"
+sam_dir:
+    "../introgression/sams"
+minimap2:
+    "../sing_conts/minimap2_2.17.sif"
+hdrr_reference:
+    "../refs/Oryzias_latipes.ASM223467v1.dna.toplevel.fa"
+bam_dir:
+    "../introgression/bams"
+picard:
+    "../sing_conts/picard_2.25.0.sif"
+gatk:
+    "../sing_conts/gatk_4.2.0.0.sif"
+vcf_dir:
+    "../introgression/vcfs"
+tmp_dir:
+    "../tmp"
+exclude_mikk_script:
+    "code/scripts/introgression/20210329_exclude_mikk.R"
