@@ -92,9 +92,20 @@ MIKK_LINES = [x.strip() for x in MIKK_LINES]
 
 ### ABBA BABA population combinations
 P1S = ["melastigma", "javanicus"]
+P1S_WITH_ICAB = ["icab", "hdrr"]
 P2S = ["hdrr", "hni", "hsok"]
 P2S_AND_KAGA = ["hdrr", "hni", "kaga", "hsok"]
 P3S = ["mikk"]
+P3S_WITH_ICAB = ["icab", "hdrr", "hni", "hsok"]
+
+P1S_WITH_ICAB_COMB = []
+P3S_WITH_ICAB_COMB = []
+
+for p1 in P1S_WITH_ICAB:
+    for p3 in P3S_WITH_ICAB:
+        if p1 != p3:
+            P1S_WITH_ICAB_COMB.append(p1)
+            P3S_WITH_ICAB_COMB.append(p3)
 
 ### ABBA samples
 ABBA_LINES = ["hdrr", "hni", "kaga", "hsok", "melastigma", "javanicus", "ancestor"]
@@ -157,8 +168,8 @@ rule all:
 #                p2 = P2S,
 #                p3 = P3S),
 #        "data/introgression/20210315_f_stat_final.txt",
-        os.path.join(config["geno_dir"], "full_vcf.geno"),
-        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
+#        os.path.join(config["geno_dir"], "full_vcf.geno"),
+#        os.path.join(config["geno_dir"], "full_vcf_bcftools.geno"),
 #        expand(os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
 #                chr = list(set(CHRS))),
 #        config["full_run_line_ids"],
@@ -233,21 +244,39 @@ rule all:
 #                mikk_line = MIKK_LINES),
 #        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
 #                chr = list(set(CHRS))),
-        config["samples_with_kaga_no_sibs_no_131_1"],
-        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
-                chr = list(set(CHRS))),
-        config["pop_file_no_sibs_with_kaga_no_131_1"],
-        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS,
-                p1 = P1S,
-                p2 = P2S,
-                chr = list(set(CHRS))),
-        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+#        config["samples_with_kaga_no_sibs_no_131_1"],
+#        expand(os.path.join(config["geno_dir"], "final_with-kaga_no-sibs-or-131-1/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        config["pop_file_no_sibs_with_kaga_no_131_1"],
+#        expand(os.path.join("../introgression/abba_baba/abba_sliding_mikk_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p2}_{chr}.txt"),
+#                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+#                p1 = P1S,
+#                p2 = P2S,
+#                chr = list(set(CHRS))),
+#        expand(os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+#                sliding_window_length = SLIDING_WINDOW_LENGTHS)
 #        expand("../introgression/snp_dens/kaga/{chr}.csv",
 #                chr = list(set(CHRS))),
 #        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
-#                chr = list(set(CHRS)))
+#                chr = list(set(CHRS))),
+        config["samples_all_except_no_kaga_no_sibs_no_131_1"],
+        expand(os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt"),
+                chr = list(set(CHRS))),
+        config["pop_file_all_except_no_kaga_no_sibs_no_131_1"],
+#        expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{chr}.txt"),
+#                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+#                p1 = P1S_WITH_ICAB,
+#                p3 = P3S_WITH_ICAB,
+#                chr = list(set(CHRS))),
+        expand(expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{{chr}}.txt"),
+                zip,
+                p1 = P1S_WITH_ICAB_COMB,
+                p3 = P3S_WITH_ICAB_COMB),
+                    sliding_window_length = SLIDING_WINDOW_LENGTHS,
+                    chr = list(set(CHRS))),
+        expand(os.path.join("data/introgression/abba_sliding_final_with_icab", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+
 
 
 # EMFs
@@ -701,7 +730,19 @@ rule emf_2_geno_full_run:
         """
         mkdir -p {config[log_dir]}/{rule} ;
         {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
-        """     
+        """
+
+rule make_samples_file_all_except_no_kaga_no_sibs_no_131_1:
+    input:
+        os.path.join(config["geno_dir"], "final_full-run/1.txt")
+    output:
+        config["samples_all_except_no_kaga_no_sibs_no_131_1"]
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[make_samples_all_except_no_kaga_no_sibs_no_131_1_script]} {input} {output}
+        """
 
 rule emf_2_geno_full_run_with_kaga:
     input:
@@ -757,6 +798,20 @@ rule emf_2_geno_remove_sibs_without_kaga_no_131_1:
         {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
         """
 
+rule emf_2_geno_remove_sibs_all_except_no_kaga_no_131_1:
+    input:
+        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        samples_to_keep = config["samples_all_except_no_kaga_no_sibs_no_131_1"]
+    output:
+        os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
+        """
+
 rule make_pop_file:
     input:
         full_run = config["full_run_line_ids"],
@@ -801,7 +856,19 @@ rule make_pop_file_no_131_1_no_kaga:
         # Remove kaga from file
         new_pop_file = pop_file[pop_file['samples'] != 'kaga']
         # Write to file
-        new_pop_file.to_csv(output[0], sep = '\t', index = False)  
+        new_pop_file.to_csv(output[0], sep = '\t', index = False)
+
+rule make_pop_file_all_except_no_kaga_no_sibs_no_131_1:
+    input:
+        config["samples_all_except_no_kaga_no_sibs_no_131_1"]
+    output:
+        config["pop_file_all_except_no_kaga_no_sibs_no_131_1"]
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[make_pop_file_all_except_script]} {input} {output}
+        """
 
 rule run_abba_baba_sliding:
     input:
@@ -863,6 +930,37 @@ rule run_abba_baba_sliding_no_131_1:
             -m {params.minimum_sites}
         """
 
+rule run_abba_baba_sliding_all_except:
+    input:
+        data = os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt"),
+        pop_file = config["pop_file_all_except_no_kaga_no_sibs_no_131_1"]
+    output:
+        os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{chr}.txt")
+    params:
+        p1 = lambda wildcards: wildcards.p1,
+        p3 = lambda wildcards: wildcards.p3,
+        window_length = lambda wildcards: wildcards.sliding_window_length,
+        minimum_sites = config["minimum_sites_131"],
+        destination_dir = lambda wildcards: "../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1/" + "wsize_" + wildcards.sliding_window_length + "_msites_" + config["minimum_sites_131"]
+    singularity:
+        config["numpy"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        mkdir -p {params.destination_dir} ;
+        python {config[abba_sliding_script]} \
+            -g {input.data} \
+            -f phased \
+            -o {output} \
+            -P1 {params.p1} \
+            -P2 mikk \
+            -P3 {params.p3} \
+            -O ancestor \
+            --popsFile {input.pop_file} \
+            -w {params.window_length} \
+            -m {params.minimum_sites}
+        """
+
 rule combine_sliding_windows_data:
     input:
         expand(os.path.join(config["abba_sliding_dir"] + "_wsize_" + config["sliding_window_length"] + "_msites_" + config["minimum_sites"], "{p1}_{p2}_{chr}.txt"),
@@ -887,6 +985,23 @@ rule combine_sliding_windows_data_no_131_1:
                 chr = list(set(CHRS)))
     output:
         os.path.join("data/introgression/abba_sliding_final_no_131-1", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        {config[rscript_command]} {config[combine_sliding_window_data_script]} --input {input} --output {output}
+        """
+
+rule combine_sliding_windows_data_all_except:
+    input:
+        expand(expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{{chr}}.txt"),
+                zip,
+                p1 = P1S_WITH_ICAB_COMB,
+                p3 = P3S_WITH_ICAB_COMB),
+                sliding_window_length = SLIDING_WINDOW_LENGTHS,
+                chr = list(set(CHRS)))
+    output:
+        os.path.join("data/introgression/abba_sliding_final_with_icab", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
     singularity:
         config["r-base"]
     shell:

@@ -4,8 +4,8 @@
         "memory" : "5000",
         "n" : "1",
         "name" : "{rule}.{wildcards}",
-        "output": "../log/{rule}/{wildcards}.out",
-        "error": "../log/{rule}/{wildcards}.err"
+        "output": "../log/{rule}_{wildcards}.out",
+        "error": "../log/{rule}_{wildcards}.err"
     },
     "add_hdrr_coords" :
     {
@@ -122,6 +122,12 @@
     "run_abba_baba_sliding_mikk" :
     {
         "memory" : "20000"
+    },
+    "run_abba_baba_sliding_all_except" :
+    {
+        "memory" : "20000",
+        "output": "../log/{rule}/{wildcards}.out",
+        "error": "../log/{rule}/{wildcards}.err"
     },
     "align_kaga_to_hdrr" :
     {
