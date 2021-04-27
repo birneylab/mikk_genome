@@ -274,8 +274,7 @@ rule all:
                 p3 = P3S_WITH_ICAB_COMB),
                     sliding_window_length = SLIDING_WINDOW_LENGTHS,
                     chr = list(set(CHRS))),
-        expand(os.path.join("data/introgression/abba_sliding_final_with_icab", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt"),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS)
+        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
 
 
 
@@ -998,10 +997,11 @@ rule combine_sliding_windows_data_all_except:
                 zip,
                 p1 = P1S_WITH_ICAB_COMB,
                 p3 = P3S_WITH_ICAB_COMB),
-                sliding_window_length = SLIDING_WINDOW_LENGTHS,
-                chr = list(set(CHRS)))
+                    chr = list(set(CHRS)),
+                    sliding_window_length = SLIDING_WINDOW_LENGTHS)
+                        
     output:
-        os.path.join("data/introgression/abba_sliding_final_with_icab", "{sliding_window_length}_" + config["minimum_sites_131"] + ".txt")
+        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
     singularity:
         config["r-base"]
     shell:
