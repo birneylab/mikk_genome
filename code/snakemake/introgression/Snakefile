@@ -277,13 +277,13 @@ rule all:
 #        expand(os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt"),
 #                chr = list(set(CHRS))),
 #        config["pop_file_all_except_no_kaga_no_sibs_no_131_1"],
-        expand(expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{{chr}}.txt"),
-                zip,
-                p1 = P1S_WITH_ICAB_COMB,
-                p3 = P3S_WITH_ICAB_COMB),
-                    sliding_window_length = SLIDING_WINDOW_LENGTHS,
-                    chr = list(set(CHRS))),
-#        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
+#        expand(expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{{chr}}.txt"),
+#                zip,
+#                p1 = P1S_WITH_ICAB_COMB,
+#                p3 = P3S_WITH_ICAB_COMB),
+#                    sliding_window_length = SLIDING_WINDOW_LENGTHS,
+#                    chr = list(set(CHRS))),
+        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
 
 
 
