@@ -259,22 +259,31 @@ rule all:
 #                chr = list(set(CHRS))),
 #        expand("data/introgression/snp_dens/kaga/{chr}.csv.gz",
 #                chr = list(set(CHRS))),
-        config["samples_all_except_no_kaga_no_sibs_no_131_1"],
-        expand(os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt"),
-                chr = list(set(CHRS))),
-        config["pop_file_all_except_no_kaga_no_sibs_no_131_1"],
-#        expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{sliding_window_length}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{chr}.txt"),
-#                sliding_window_length = SLIDING_WINDOW_LENGTHS,
-#                p1 = P1S_WITH_ICAB,
-#                p3 = P3S_WITH_ICAB,
+#        expand(os.path.join(config["target_dir"], "cleaned_olat/{chr}_{subchr}/{segment}_{strand}.txt"),
+#                zip,
+#                chr = CHRS,
+#                subchr = SUBCHRS,
+#                segment = SEGMENTS,
+#                strand = STRANDS),
+#        expand(os.path.join(config["target_dir"], "consolidated_olat/{chr}_{subchr}.txt"),
+#                zip,
+#                chr = CHRS,
+#                subchr = SUBCHRS),
+#        expand(os.path.join(config["target_dir"], "final_olat/{chr}.txt"),
 #                chr = list(set(CHRS))),
+#        expand(os.path.join(config["geno_dir"], "final_full-run_olat/{chr}.txt"),
+#                chr = list(set(CHRS)))
+#        config["samples_all_except_no_kaga_no_sibs_no_131_1"],
+#        expand(os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt"),
+#                chr = list(set(CHRS))),
+#        config["pop_file_all_except_no_kaga_no_sibs_no_131_1"],
         expand(expand(os.path.join("../introgression/abba_baba/abba_sliding_all_except_no-kaga_no-sibs_no-131-1", "wsize_{{sliding_window_length}}_msites_" + config["minimum_sites_131"], "{p1}_{p3}_{{chr}}.txt"),
                 zip,
                 p1 = P1S_WITH_ICAB_COMB,
                 p3 = P3S_WITH_ICAB_COMB),
                     sliding_window_length = SLIDING_WINDOW_LENGTHS,
                     chr = list(set(CHRS))),
-        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
+#        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
 
 
 
@@ -286,7 +295,7 @@ rule add_hdrr_coords:
     output:
         os.path.join(config["target_dir"], "cleaned/{chr}_{subchr}/{segment}_{strand}.txt")
     params:
-        command = lambda wildcards: "{config[rscript_command]} " + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; {config[rscript_command]} " + config['add_coord_script_reverse'] + " $tmp_file $input $output"
+        command = lambda wildcards: config['rscript_command'] + config['add_coord_script_forward'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; " + config['rscript_command'] + config['add_coord_script_reverse'] + " $tmp_file $input $output"
     singularity:
         config["r-base"]
     shell:
@@ -313,6 +322,47 @@ rule consolidate_chrs:
         config["r-base"]
     shell:
         "{config[rscript_command]} {config[consol_chr_script]} {params.chr} {input} {output}"
+
+# EMFs Oryzias latipes only
+
+## note: the rules in this section need to be executed one-at-a-time.
+
+rule add_hdrr_coords_olat:
+    input:
+        os.path.join(config["target_dir"], "segmented/{chr}_{subchr}/{segment}_{strand}.data.txt")
+    output:
+        os.path.join(config["target_dir"], "cleaned_olat/{chr}_{subchr}/{segment}_{strand}.txt")
+    params:
+        command = lambda wildcards: config['rscript_command'] + config['add_coord_script_forward_olat'] + " $input $output" if wildcards.strand == "1" else "tmp_file=../tmp/" + wildcards.segment + "_" + wildcards.strand + ".data.txt ; tac $input > $tmp_file ; " + config['rscript_command'] + config['add_coord_script_reverse_olat'] + " $tmp_file $input $output ; rm $tmp_file "
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule}/{wildcards.chr}/{wildcards.subchr} ;
+        input={input}; output={output}; {params.command}
+        """
+
+rule consolidate_subchrs_olat:
+    input:
+        os.path.join(config["target_dir"], "cleaned_olat/{chr}_{subchr}")
+    output:
+        os.path.join(config["target_dir"], "consolidated_olat/{chr}_{subchr}.txt")
+    singularity:
+        config["r-base"]        
+    shell:
+        "{config[rscript_command]} {config[consol_subchr_script_olat]} {input} {output}"
+
+rule consolidate_chrs_olat:
+    input:
+        os.path.join(config["target_dir"], "consolidated_olat")
+    output:
+        os.path.join(config["target_dir"], "final_olat/{chr}.txt")
+    params:
+        chr = lambda wildcards: wildcards.chr
+    singularity:
+        config["r-base"]
+    shell:
+        "{config[rscript_command]} {config[consol_chr_script_olat]} {params.chr} {input} {output}"
 
 # Full VCF
 
@@ -731,9 +781,24 @@ rule emf_2_geno_full_run:
         {config[rscript_command]} {config[emf_2_geno_script]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
         """
 
+rule emf_2_geno_full_run_olat:
+    input:
+        emf = os.path.join(config["target_dir"], "final_olat/{chr}.txt"),
+        vcf_geno = os.path.join(config["geno_dir"], "split_by_chr/{chr}.geno"),
+        vcf_samples = config["full_run_line_ids"]
+    output:
+        os.path.join(config["geno_dir"], "final_full-run_olat/{chr}.txt")
+    singularity:
+        config["r-base"]
+    shell:
+        """
+        mkdir -p {config[log_dir]}/{rule} ;
+        {config[rscript_command]} {config[emf_2_geno_script_olat]} {input.emf} {input.vcf_geno} {input.vcf_samples} {output} 
+        """
+
 rule make_samples_file_all_except_no_kaga_no_sibs_no_131_1:
     input:
-        os.path.join(config["geno_dir"], "final_full-run/1.txt")
+        os.path.join(config["geno_dir"], "final_full-run_olat/1.txt")
     output:
         config["samples_all_except_no_kaga_no_sibs_no_131_1"]
     singularity:
@@ -797,9 +862,9 @@ rule emf_2_geno_remove_sibs_without_kaga_no_131_1:
         {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
         """
 
-rule emf_2_geno_remove_sibs_all_except_no_kaga_no_131_1:
+rule geno_remove_sibs_all_except_no_kaga_no_131_1:
     input:
-        data = os.path.join(config["geno_dir"], "final_full-run/{chr}.txt"),
+        data = os.path.join(config["geno_dir"], "final_full-run_olat/{chr}.txt"),
         samples_to_keep = config["samples_all_except_no_kaga_no_sibs_no_131_1"]
     output:
         os.path.join(config["geno_dir"], "final_all_except_no-kaga_no-sibs-or-131-1/{chr}.txt")
@@ -807,7 +872,6 @@ rule emf_2_geno_remove_sibs_all_except_no_kaga_no_131_1:
         config["r-base"]
     shell:
         """
-        mkdir -p {config[log_dir]}/{rule} ;
         {config[rscript_command]} {config[remove_sibs_script_2]} {input.data} {input.samples_to_keep} {output}
         """
 

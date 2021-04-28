@@ -13,7 +13,7 @@ out_file = args[2]
 
 # Full run
 
-emf_samples = c("hdrr", "hni", "hsok", "javanicus", "melastigma", "ancestor")
+emf_samples = c("hdrr", "hni", "hsok", "ancestor")
 vcf_samples = readr::read_tsv(in_file, col_names = "samples")
 
 vcf_samples$population = ifelse(vcf_samples$samples %in% emf_samples,

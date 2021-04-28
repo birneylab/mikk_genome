@@ -1,8 +1,6 @@
 hdrr
 hni
 hsok
-javanicus
-melastigma
 ancestor
 25_1
 30_1
