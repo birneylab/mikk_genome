@@ -2,8 +2,6 @@ samples	population
 hdrr	hdrr
 hni	hni
 hsok	hsok
-javanicus	javanicus
-melastigma	melastigma
 ancestor	ancestor
 25_1	mikk
 30_1	mikk
