@@ -4,21 +4,35 @@
         "memory" : "5000",
         "n" : "1",
         "name" : "{rule}.{wildcards}",
-        "output": "../log/{rule}/{wildcards}.out",
-        "error": "../log/{rule}/{wildcards}.err"
+        "output": "../log/{rule}_{wildcards}.out",
+        "error": "../log/{rule}_{wildcards}.err"
     },
     "add_hdrr_coords" :
     {
         "memory" : "10000"
     },
+    "add_hdrr_coords_olat": 
+    {
+        "memory": "10000",
+        "output": "../log/{rule}/{wildcards.chr}/{wildcards.subchr}/{wildcards.segment}_{wildcards.strand}.out",
+        "error": "../log/{rule}/{wildcards.chr}/{wildcards.subchr}/{wildcards.segment}_{wildcards.strand}.err"
+    },    
     "consolidate_subchrs" :
     {
         "memory" : "30000"
     },
+    "consolidate_subchrs_olat":
+    {
+        "memory": "30000"
+    },    
     "consolidate_chrs" :
     {
         "memory" : "50000"
     },
+    "consolidate_chrs_olat": 
+    {
+        "memory": "50000"
+    },    
     "rehead_full_vcf" :
     {
         "memory" : "10000"
@@ -91,6 +105,10 @@
     {
         "memory" : "50000"
     },
+    "emf_2_geno_full_run_olat": 
+    {
+        "memory": "50000"
+    },
     "emf_2_geno_full_run_with_kaga" :
     {
         "memory" : "50000"
@@ -100,6 +118,10 @@
         "memory" : "20000"
     },
     "emf_2_geno_remove_sibs_with_kaga_no_131_1" :
+    {
+        "memory" : "50000"
+    },
+    "geno_remove_sibs_all_except_no_kaga_no_131_1":
     {
         "memory" : "50000"
     },
@@ -122,6 +144,12 @@
     "run_abba_baba_sliding_mikk" :
     {
         "memory" : "20000"
+    },
+    "run_abba_baba_sliding_all_except" :
+    {
+        "memory" : "20000",
+        "output": "../log/{rule}/{wildcards}.out",
+        "error": "../log/{rule}/{wildcards}.err"
     },
     "align_kaga_to_hdrr" :
     {
