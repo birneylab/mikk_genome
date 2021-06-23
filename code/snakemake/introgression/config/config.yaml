@@ -5,17 +5,25 @@ target_dir:
 r-base:
     "../sing_conts/r-base_4.0.4.sif"
 rscript_command:
-    "Rscript --no-save --no-restore --no-environ --no-site-file"
+    "Rscript --no-save --no-restore --no-environ --no-site-file "
 segments_script:
     "code/scripts/introgression/20200907_extract-emf-segments.sh"
 add_coord_script_forward:
     "code/scripts/introgression/20200908_add-hdrr-coords-to-emf-data.R"
 add_coord_script_reverse:
     "code/scripts/introgression/20201015_add-hdrr-coords-to-emf-data_rc.R"
+add_coord_script_forward_olat:
+    "code/scripts/introgression/20210428_add-hdrr-coords-to-emf-data_olat.R"
+add_coord_script_reverse_olat:
+    "code/scripts/introgression/20210428_add-hdrr-coords-to-emf-data_rc_olat.R"
 consol_subchr_script:
     "code/scripts/introgression/20201015_consolidate_chr_dat.R"
+consol_subchr_script_olat:
+    "code/scripts/introgression/20210428_consolidate_chr_dat_olat.R"
 consol_chr_script:
     "code/scripts/introgression/20201015_consolidate_chr_files.R"
+consol_chr_script_olat:
+    "code/scripts/introgression/20210428_consolidate_chr_files_olat.R"    
 vcf_dir:
     "../introgression/vcfs"
 mikk_ill_vcf:
@@ -60,10 +68,16 @@ full_run_line_ids_mikk_only:
     "data/20201021_full-run_line-ids_mikk-only_samples.txt"
 emf_2_geno_script:
     "code/scripts/introgression/20201021_emf_to_geno.R"
+emf_2_geno_script_olat:
+    "code/scripts/introgression/20210428_emf_to_geno_olat.R"
 excluded_sib_lines:
     "data/20200227_panel_lines_excluded.txt"
 make_samples_with_kaga_no_sibs_no_131_1_script:
     "code/scripts/introgression/20210331_create_samples_list_without_sibs_and_131-1.R"
+make_samples_all_except_no_kaga_no_sibs_no_131_1_script:
+    "code/scripts/introgression/20210426_create_samples_list_all_except_no_kaga_no_sibs_no_131-1.R"
+samples_all_except_no_kaga_no_sibs_no_131_1:
+    "data/20210426_samples_all_except_no_kaga_no_sibs_no_131_1.txt"
 samples_with_kaga_no_sibs_no_131_1:
     "data/20210331_samples_with_kaga_no_sibs_no_131_1.txt"
 samples_without_kaga_no_sibs_no_131_1:
@@ -82,12 +96,16 @@ pop_file_no_sibs_with_kaga_no_131_1:
     "data/introgression/no_sibs_with_kaga_no_131_1.pop.txt"
 pop_file_no_sibs_without_kaga_no_131_1:
     "data/introgression/no_sibs_without_kaga_no_131_1.pop.txt"
+pop_file_all_except_no_kaga_no_sibs_no_131_1:
+    "data/introgression/all_except_no-sibs_no-kaga_no-131-1.pop.txt"
 pop_files_dir:
     "data/introgression/pop_files" 
 make_pop_file_script:
     "code/scripts/introgression/20210315_make_pop_file.R"
 make_pop_file_mikk_script:
     "code/scripts/introgression/20210329_make_pop_file_mikk.R"
+make_pop_file_all_except_script:
+    "code/scripts/introgression/20210427_make_pop_file_all_except_no-kaga_no-sibs_no-131-1.R"
 abba_sliding_dir:
     "data/introgression/abba_sliding"
 abba_sliding_script:

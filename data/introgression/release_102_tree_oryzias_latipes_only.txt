@@ -1,0 +1,7 @@
+(
+    (
+      Oryzias_latipes_HdrR:0.0148368,
+      Oryzias_latipes_HNI:0.0165232
+    ):0.00101757,
+    Oryzias_latipes_HSOK:0.0171124
+);
