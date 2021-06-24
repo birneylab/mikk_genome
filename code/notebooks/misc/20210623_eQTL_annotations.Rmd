@@ -1,0 +1,71 @@
+---
+title: "Annotations"
+date: '`r format(Sys.Date())`'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'svg'
+    number_sections: true
+    keep_md: true
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments
+---
+
+# Load packages
+
+```{r}
+library(here)
+library(tidyverse)
+library(biomaRt)
+```
+
+# Read in data
+
+```{r}
+in_file = "https://raw.github.com/birneylab/MIKK_genome_main_paper/master/eQTL/RNA_expression_data/salmon_filtered_norm_tpm.tsv.gz"
+df = readr::read_tsv(in_file,
+                     col_types = paste(c("ciic", paste(rep("d", 50), collapse = "")),
+                                       collapse = ""))
+```
+
+# Get medaka biomart 
+
+```{r}
+# Select dataset
+olat_mart = biomaRt::useEnsembl(biomart = "ensembl", dataset = "olatipes_gene_ensembl")
+
+# List available attributes 
+biomaRt::listAttributes(olat_mart)
+
+# Specify target attributes
+target_atts = c("ensembl_transcript_id_version",
+                "chromosome_name",
+                "transcript_start",
+                "transcript_end",
+                "ensembl_gene_id",
+                "entrezgene_id",
+                "external_gene_name",
+                "external_gene_source",
+                "hgnc_symbol",
+                "start_position",
+                "end_position",
+                "strand"
+                )
+
+# Get relevant info filtering for transcript names
+out = biomaRt::getBM(target_atts,
+                     filters = "ensembl_transcript_id_version",
+                     values = df$transcripts,
+                     mart = olat_mart)
+
+```
+
+# Write to file
+
+```{r}
+out_file = "eQTL/RNA_expression_data/salmon_filtered_norm_tpm_annotations.tsv.gz"
+readr::write_tsv(out,
+                 here::here(out_file))
+```
+
