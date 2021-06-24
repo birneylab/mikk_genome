@@ -10,11 +10,11 @@
 
 
 
-<meta name="date" content="2021-04-09" />
+<meta name="date" content="2021-06-24" />
 
 <title>Fecundity</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -379,12 +379,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -411,7 +411,7 @@ div.tocify {
   <a href="20210409_ld-decay.html">Linkage Disequilibrium</a>
 </li>
 <li>
-  <a href="20210409_introgression.html">Introgression</a>
+  <a href="20210427_introgression.html">Introgression</a>
 </li>
 <li>
   <a href="20210409_repeats.html">Repeat Elements</a>
@@ -432,7 +432,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Fecundity</h1>
-<h4 class="date">2021-04-09</h4>
+<h4 class="date">2021-06-24</h4>
 
 </div>
 
@@ -450,7 +450,7 @@ div.tocify {
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_dat <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;fecundity&quot;</span>, <span class="st">&quot;20210212_inbreeding.csv&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>inbreed_df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(raw_dat)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   MIKK = col_character(),
 ##   `Inbreeding (Generation)` = col_character(),
@@ -610,7 +610,7 @@ div.tocify {
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#          legend.box.background = element_blank())</span></span>
 <span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>out2</span></code></pre></div>
-<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-3-1.svg" /><!-- --></p>
+<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-3-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="fecundity" class="section level1" number="3">
@@ -735,7 +735,7 @@ div.tocify {
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>))</span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>fec_count</span></code></pre></div>
-<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-5-1.svg" /><!-- --></p>
+<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-5-1.svg" width="672" /></p>
 </div>
 </div>
 <div id="final-figure" class="section level1" number="4">
@@ -747,7 +747,7 @@ div.tocify {
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.55</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>final</span></code></pre></div>
-<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-6-1.svg" /><!-- --></p>
+<p><img src="20210301_fecundity_files/figure-html/unnamed-chunk-6-1.svg" width="1800" /></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SVG</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">here</span>(<span class="st">&quot;plots&quot;</span>, <span class="st">&quot;fecundity&quot;</span>, <span class="st">&quot;20210301_final_figure.svg&quot;</span>),</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> <span class="st">&quot;svg&quot;</span>,</span>
@@ -802,6 +802,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
