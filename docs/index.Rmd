@@ -1,0 +1,5 @@
+---
+title: "MIKK panel genome"
+---
+
+Analyses for the forthcoming paper describing the MIKK panel genome by Fitzgerald, Leger et al.
