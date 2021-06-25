@@ -10,7 +10,7 @@ output:
     toc_float: true
     dev: 'svg'
     number_sections: true
-    keep_md: true
+    keep_md: false
     pandoc_args: --lua-filter=color-text.lua
     highlight: pygments 
 ---

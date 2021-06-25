@@ -1,17 +1,17 @@
 ---
 title: "Introgression"
 date: '`r format(Sys.Date())`'
-#output:
-#  html_document:
-#    toc: true
-#    toc_float: true
-#    dev: 'svg'
-#    number_sections: true
-#    pandoc_args: --lua-filter=color-text.lua
-#    highlight: pygments  
-output: html_notebook
-editor_options: 
-  chunk_output_type: inline
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'svg'
+    number_sections: true
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments  
+#output: html_notebook
+#editor_options: 
+#  chunk_output_type: inline
 ---
 
 We want to determine the extent to which the MIKK panel shows evidence of introgression with other medaka populations, specifically the allopatric Northern and Korean medaka strains, relative to sympatric Southern medaka strains.
@@ -265,7 +265,7 @@ in_file = here::here("data/introgression/release_102_tree_oryzias_latipes_only.t
 # Read in
 phylo_tree <- ape::read.tree(file = in_file)
 # Set colours 
-phylo_cols <- c("#f3b61f", "#f6673a", "#631e68")
+phylo_cols <- c("#9E2B25", "#f6673a", "#631e68")
 # Plot
 ape::plot.phylo(phylo_tree,
                 font = 4,
@@ -321,9 +321,7 @@ current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
 new_path = file.path(current_dir, basename(out_file))
 
-if (file.exists(new_path) != T){
-  file.copy(out_file, new_path)
-}
+file.copy(out_file, new_path, overwrite = T)
 ```
 
 ```{r}
@@ -1044,9 +1042,9 @@ mikk_abba_final %>%
   dplyr::group_by(p1, p2) %>% 
   dplyr::summarise(length(which(fd == 0)))
 
-# So there are fewer 0s when HdrR is P1, which suggests that iCab is more closely related to the MIKK panel. But you want a P1 that is further away so that you'll get more data points, which is why we'll likely go with HdrR. 
-```
 
+```
+There are fewer 0s when HdrR is P1, which suggests that iCab is more closely related to the MIKK panel. But you want a P1 that is further away so that you'll get more data points, which is why we'll likely go with HdrR. 
 
 ```{r, message = F}
 mikk_abba_final = mikk_abba_final %>% 
@@ -1255,6 +1253,137 @@ file.copy(out_plot, new_path, overwrite = T)
 
 ```{r}
 knitr::include_graphics(basename(out_plot))
+```
+### Final for paper (with iCab as yellow)
+
+```{r}
+out_plot = here::here("plots", "introgression", "20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png")
+```
+
+```{r, eval = F}
+target_list = mikk_abba_final[["hdrr"]]
+
+# Reset palette
+pal_abba <- c("#F3B61F", "#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", "#621B00")
+names(pal_abba) <- c("iCab", "HdrR", "HSOK", "HNI", "melastigma", "javanicus", "Kaga")
+
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(chroms,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Print label in center
+text(0, 0, "MIKK panel\nintrogression with\niCab, HNI,\nand\nHSOK")
+
+###############
+# Introgression
+###############
+counter = 0
+
+purrr::map(target_list, function(P2){
+  # Set counter
+  counter <<- counter + 1
+  
+  circos.genomicTrack(P2,
+      panel.fun = function(region, value, ...){
+        circos.genomicLines(region,
+                            value[[1]],
+                            col = pal_abba[[names(target_list[counter])]],
+                            area = T,
+                            border = karyoploteR::darker(pal_abba[[names(target_list[counter])]],
+                                                         amount = 80))
+        # Add baseline
+        circos.xaxis(h = "bottom",
+                     labels = F,
+                     major.tick = F)
+      },
+      track.height = 0.1,
+      bg.border = NA,
+      ylim = c(0, 1))
+  
+  # Add axis for introgression
+  circos.yaxis(side = "right",
+             at = c(.5, 1),
+             labels.cex = 0.25*par("cex"),
+             tick.length = 2
+             )
+  
+  # Add y-axis label for introgression
+  if (counter == 2) {
+  circos.text(0, 0.5,
+              labels = expression(italic(f[d])),
+              sector.index = "chr1",
+#              facing = "clockwise",
+              adj = c(3, 0.5),
+              cex = 0.4*par("cex"))
+  }
+  
+  # Add y-axis label for introgression
+  circos.text(0, 0.5,
+              labels = names(target_list)[counter],
+              sector.index = "chr1",
+              facing = "clockwise",
+              adj = c(.5, 0),
+              cex = 0.6*par("cex"))  
+})
+
+circos.clear()
+
+dev.off()
+```
+
+```{r, include = F}
+# copy to same directory as current notebook
+current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
+
+new_path = file.path(current_dir, basename(out_plot))
+
+file.copy(out_plot, new_path, overwrite = T)
+```
+
+```{r}
+knitr::include_graphics(basename(out_plot))
+```
+
+## Re-do final figure (just tree, schema, and circos)
+
+```{r}
+abba_diagram = here::here(plots_dir, "20210505_abba_diagram.png")
+tree = here::here(plots_dir, "tree_oryzias_latipes_with_ancestor.png")
+circos_abba = here::here(plots_dir, "20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png")
+
+final_abba = ggdraw() +
+  draw_image(tree,
+            x = 0, y = .5, width = .4, height = .55, vjust = 0, hjust = -.1, scale = 1.2) +    
+  draw_image(circos_abba,
+             x = .4, y = 0, width = .6, height = 1, scale = 1.1, vjust = 0) +
+  draw_image(abba_diagram,
+          x = 0, y = 0, width = .4, height = .55, vjust = 0, hjust = -.125, scale = 1.2) +
+  draw_plot_label(label = c("A", "B", "C"), size = 25,
+                  x = c(0, 0, .4), y = c(1, .6, 1), color = "#4f0943")  
+
+
+final_abba
+```
+
+```{r, eval = F}
+ggsave(here::here(plots_dir, "20210505_introgression_final_figure.png"),
+       width = 35,
+       height = 21.875,
+       units = "cm",
+       dpi = 500)
 ```
 
 ## Re-do final figure
@@ -1489,7 +1618,7 @@ file.copy(out_file, new_path, overwrite = T)
 ```{r}
 knitr::include_graphics(basename(out_file))
 ```
-Use chr4
+Use chr4.
 
 ### Compose final figure
 

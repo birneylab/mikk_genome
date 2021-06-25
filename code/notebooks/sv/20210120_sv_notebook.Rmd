@@ -269,11 +269,7 @@ bsub -Is bash \
     --output-type z \
     --output $out_vcf \
     $in_vcf
-<<<<<<< HEAD
   """
-=======
-  """
->>>>>>> upstream/master
 ```
 
 #### Rename and filter for ONT samples
@@ -776,7 +772,7 @@ polish_comp_list %>%
                                    ~sum(.x, na.rm = T)/TOTAL))
   ) %>%
   dplyr::bind_rows(.id = "SAMPLE")
-
+  
 ```
 Average difference in breakpoints
 
@@ -1535,9 +1531,9 @@ ggsave(here::here("plots", "sv_analysis", "20210325_sv_main.png"),
 length(unique(sv_df_pol$ID))
 
 # By SV Type
-sv_df_pol %>%
-  dplyr::filter(!duplicated(ID)) %>%
-  dplyr::group_by(SVTYPE) %>%
+sv_df_pol %>% 
+  dplyr::filter(!duplicated(ID)) %>% 
+  dplyr::group_by(SVTYPE) %>% 
   dplyr::count()
 ```
 
@@ -2716,13 +2712,13 @@ total_del_rep_ints / total_del_bases
 ### Why so few overlaps for INS? Check INS length based on whether they overlap or not
 
 ```{r}
-sv_ranges_list$INS$SV_df %>%
+sv_ranges_list$INS$SV_df %>% 
   # Create index
   dplyr::mutate(SV_INDEX = rownames(.),
                 # Get yes/no vector for whether they overlap repeats
                 OVERLAPPING_REPEAT = dplyr::if_else(SV_INDEX %in% sv_ranges_list$INS$Matches$SV_INDEX,
                                                     "yes",
-                                                    "no")) %>%
+                                                    "no")) %>% 
   ggplot(aes(OVERLAPPING_REPEAT, LN, colour = OVERLAPPING_REPEAT)) +
     geom_boxplot() +
     scale_y_log10() +
@@ -2753,7 +2749,7 @@ pli_df = readr::read_tsv(pli_file,
   # order
   dplyr::arrange(chr, start) %>%
   # remove strand column to avoid the following error when converting to GRanges:`names of metadata columns cannot be one of "seqnames", "ranges", "strand"`
-  dplyr::select(-strand) %>%
+  dplyr::select(-strand) %>% 
   # create PLI_INDEX
   dplyr::mutate(PLI_INDEX = rownames(.))
 
@@ -2801,7 +2797,7 @@ lod_list = purrr::map(pli_overlaps, function(SVTYPE){
         # Create list of matching PLI_INDEXes
         pli_inds = list(SV$PLI_INDEX)
         # Summarise other columns
-        SV %>%
+        SV %>% 
           dplyr::summarise(N_OVERLAPPING_GENES = n(),
                            LOD = LOD(pLI),
                            PLI_INDEX_MATCHES = I(pli_inds))
@@ -2843,8 +2839,8 @@ sv_lod_df = sv_lod %>%
   dplyr::bind_rows()
 
 # Take only distinct SVs
-sv_lod_df = sv_lod_df %>%
-  dplyr::filter(!duplicated(ID)) %>%
+sv_lod_df = sv_lod_df %>% 
+  dplyr::filter(!duplicated(ID)) %>% 
   dplyr::select(-SAMPLE)
 ```
 
@@ -2853,8 +2849,8 @@ sv_lod_df = sv_lod_df %>%
 How many SVs overlap genes?
 
 ```{r}
-sv_lod_df %>%
-  dplyr::filter(SVTYPE != "TRA") %>%
+sv_lod_df %>% 
+  dplyr::filter(SVTYPE != "TRA") %>% 
   summarise(TOTAL = n(),
             # count number of SVs with at least one overlapping gene
             N_OVERLAPPING = sum(!is.na(N_OVERLAPPING_GENES)),
@@ -2864,10 +2860,10 @@ sv_lod_df %>%
 ## Histogram of number of overlapping genes
 
 ```{r}
-sv_lod_df %>%
+sv_lod_df %>% 
   dplyr::filter(SVTYPE != "TRA",
-                !is.na(N_OVERLAPPING_GENES)) %>%
-  dplyr::mutate(SVTYPE = factor(SVTYPE, levels = names(svtype_hist_pal))) %>%
+                !is.na(N_OVERLAPPING_GENES)) %>% 
+  dplyr::mutate(SVTYPE = factor(SVTYPE, levels = names(svtype_hist_pal))) %>% 
   ggplot() +
     geom_histogram(aes(N_OVERLAPPING_GENES, fill = SVTYPE)) +
     scale_fill_manual(values = svtype_hist_pal) +
@@ -2924,9 +2920,9 @@ ggsave(here::here("plots", "sv_analysis", "20210407_pli_lod.png"),
 ## Histogram of LOD
 
 ```{r}
-sv_lod_hist = sv_lod_plot_df %>%
+sv_lod_hist = sv_lod_plot_df %>% 
   ggplot() +
-#    geom_density(aes(LOD, fill = SVTYPE), position = "stack") +
+#    geom_density(aes(LOD, fill = SVTYPE), position = "stack") + 
     geom_histogram(aes(LOD, fill = SVTYPE), bins = 70) +
     scale_fill_manual(values = svtype_hist_pal) +
     theme_cowplot() +
@@ -2965,13 +2961,13 @@ ggsave(here::here("plots", "sv_analysis", "20210408_pli_lod_final.png"),
 ### How many SVs overlapped at least one gene
 
 ```{r}
-unique_svs = length(unique(sv_df_pol %>%
-                             dplyr::filter(SVTYPE != "TRA") %>%
+unique_svs = length(unique(sv_df_pol %>% 
+                             dplyr::filter(SVTYPE != "TRA") %>% 
                              dplyr::pull(ID)))
 
-overlapping_svs = sv_lod_plot_df %>%
+overlapping_svs = sv_lod_plot_df %>% 
   dplyr::pull(ID) %>%
-  unique(.) %>%
+  unique(.) %>% 
   length(.)
 
 unique_svs
@@ -2984,7 +2980,7 @@ overlapping_svs / unique_svs
 ### How many SVs with LOD > 0?
 
 ```{r}
-sv_lod_plot_df %>%
+sv_lod_plot_df %>% 
   summarise(TOTAL = n(),
             N_OVER_0 = sum(LOD > 0),
             N_OVER_10 = sum(LOD > 10),
@@ -2997,22 +2993,22 @@ sv_lod_plot_df %>%
 ## Pull out high-LOD regions
 
 ```{r}
-sv_lod_df %>%
+sv_lod_df %>% 
   dplyr::filter(LOD > 50)
 ```
 ```{r, results = 'asis'}
-# Get indexes of overlapping genes
-sv_lod_df %>%
-  dplyr::filter(LOD > 50) %>%
-  dplyr::group_by(SV_INDEX) %>%
+# Get indexes of overlapping genes 
+sv_lod_df %>% 
+  dplyr::filter(LOD > 50) %>% 
+  dplyr::group_by(SV_INDEX) %>% 
   dplyr::pull(PLI_INDEX_MATCHES)
 
 # All the same. Take all
-high_lod = sv_lod_df %>%
-  dplyr::filter(LOD > 50) %>%
-  dplyr::group_by(SV_INDEX) %>%
-  dplyr::pull(PLI_INDEX_MATCHES) %>%
-  unlist(.) %>%
+high_lod = sv_lod_df %>% 
+  dplyr::filter(LOD > 50) %>% 
+  dplyr::group_by(SV_INDEX) %>% 
+  dplyr::pull(PLI_INDEX_MATCHES) %>% 
+  unlist(.) %>% 
   unique(.)
 
 # Get pLI matches
@@ -3099,14 +3095,14 @@ length(exon_ranges)
 
 # Total bases covered by
 ## Genes
-gene_bases = gene_ranges %>%
-  disjoin(.) %>%
-  width(.) %>%
+gene_bases = gene_ranges %>% 
+  disjoin(.) %>% 
+  width(.) %>% 
   sum(.)
 ## Exons
-exon_bases = exon_ranges %>%
-  disjoin(.) %>%
-  width(.) %>%
+exon_bases = exon_ranges %>% 
+  disjoin(.) %>% 
+  width(.) %>% 
   sum(.)
 
 # Percentage bases covered
@@ -3119,8 +3115,8 @@ exon_bases / sum(chroms$end) * 100
 ### SVs
 
 ```{r}
-sv_ranges_novel = sv_df_pol %>%
-  dplyr::filter(!duplicated(ID)) %>%
+sv_ranges_novel = sv_df_pol %>% 
+  dplyr::filter(!duplicated(ID)) %>% 
   # For all TRA, set STOP as POS
   dplyr::mutate(STOP = dplyr::if_else(SVTYPE == "TRA",
                                       POS,
@@ -3161,3 +3157,4 @@ length(unique(queryHits(gene_olaps)))
 # How many SVs overlap exons
 length(unique(queryHits(exon_olaps)))
 ```
+

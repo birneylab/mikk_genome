@@ -37,7 +37,11 @@ LOD <- function(HI = c(0.9, 0.2, 0.3, 0.5, 0.1)) {
   HS = 1-HI
   if(length(HI)==1) {
     return(log( HI/ HS))
+<<<<<<< HEAD
   } else {
+=======
+  } else {    
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
     h = (1-prod(HS))/(prod(HS))
     return(log(h))
   }
@@ -50,31 +54,56 @@ LOD <- function(HI = c(0.9, 0.2, 0.3, 0.5, 0.1)) {
 
 # HdrR chromosome lengths
 
+<<<<<<< HEAD
 chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>%
   dplyr::select(chr = V1, end = V2) %>%
   dplyr::filter(chr != "MT") %>%
   dplyr::mutate(chr = paste("chr", chr, sep = ""),
                 start = 0,
                 end = as.numeric(end)) %>%
+=======
+chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::filter(chr != "MT") %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
   dplyr::select(chr, start, end)
 
 # HdrR chromosome lengths with MT
 
+<<<<<<< HEAD
 chroms_with_mt = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>%
   dplyr::select(chr = V1, end = V2) %>%
   dplyr::mutate(chr = paste("chr", chr, sep = ""),
                 start = 0,
                 end = as.numeric(end)) %>%
+=======
+chroms_with_mt = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
   dplyr::select(chr, start, end)
 
 
 # HNI chromosome lengths
 
+<<<<<<< HEAD
 chroms_hni = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt")) %>%
   dplyr::select(chr = V1, end = V2) %>%
   dplyr::mutate(chr = paste("chr", chr, sep = ""),
                 start = 0,
                 end = as.numeric(end)) %>%
+=======
+chroms_hni = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt")) %>% 
+  dplyr::select(chr = V1, end = V2) %>% 
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>% 
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
   dplyr::select(chr, start, end)
 
 

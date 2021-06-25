@@ -1,6 +1,10 @@
 ---
 title: "Fecundity"
+<<<<<<< HEAD
 date: '2021-04-13'
+=======
+date: '2021-04-09'
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
 #output: html_notebook
 #editor_options: 
 #  chunk_output_type: inline
@@ -38,7 +42,11 @@ inbreed_df = readr::read_csv(raw_dat)
 
 ```
 ## 
+<<<<<<< HEAD
 ## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────
+=======
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204
 ## cols(
 ##   MIKK = col_character(),
 ##   `Inbreeding (Generation)` = col_character(),

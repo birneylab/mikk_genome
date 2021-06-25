@@ -10,11 +10,15 @@
 
 
 
+<<<<<<< HEAD:docs/20210409_introgression.html
 <meta name="date" content="2021-04-13" />
+=======
+<meta name="date" content="2021-06-24" />
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 
 <title>Introgression</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -379,12 +383,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -411,10 +415,20 @@ div.tocify {
   <a href="20210409_ld-decay.html">Linkage Disequilibrium</a>
 </li>
 <li>
+<<<<<<< HEAD:docs/20210409_introgression.html
   <a href="20210409_introgression.html">Introgression</a>
 </li>
 <li>
   <a href="20210409_repeats.html">Repeat Elements</a>
+=======
+  <a href="20210427_introgression.html">Introgression</a>
+</li>
+<li>
+  <a href="20210409_repeats.html">Repeat Elements</a>
+</li>
+<li>
+  <a href="20210409_sv_notebook.html">Structural variation</a>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -429,7 +443,11 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introgression</h1>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <h4 class="date">2021-04-13</h4>
+=======
+<h4 class="date">2021-06-24</h4>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 
 </div>
 
@@ -931,6 +949,7 @@ div.tocify {
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Mean &quot;</span>, <span class="fu">italic</span>(<span class="st">&quot;f&quot;</span>), <span class="st">&quot; statistic&quot;</span>))) <span class="sc">+</span></span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_cowplot</span>(<span class="at">font_size =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> pal_abba)</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>fstat_plot</span></code></pre></div>
@@ -951,12 +970,35 @@ div.tocify {
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="fl">24.75</span>,</span>
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">19.5</span>,</span>
 <span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>)</span></code></pre></div>
+=======
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> pal_abba)</span></code></pre></div>
+<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; = &quot;none&quot;)` instead.</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fstat_plot</span></code></pre></div>
+<p><img src="20210409_introgression_files/figure-html/unnamed-chunk-22-1.svg" width="672" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210315_f_stat&quot;</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># PNG</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="fu">paste</span>(out_file, <span class="st">&quot;.png&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> <span class="st">&quot;png&quot;</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="fl">24.75</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">19.5</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co"># SVG</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="fu">paste</span>(out_file, <span class="st">&quot;.svg&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> <span class="st">&quot;svg&quot;</span>,</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="fl">24.75</span>,</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">19.5</span>,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>)</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 </div>
 <div id="sliding-windows-abba-baba" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> Sliding windows ABBA BABA</h1>
 <div id="read-in-data-1" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> Read in data</h2>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;introgression&quot;</span>, <span class="st">&quot;abba_sliding_final&quot;</span>, <span class="st">&quot;50000_100.txt&quot;</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(in_file) <span class="sc">%&gt;%</span> </span>
@@ -970,11 +1012,27 @@ div.tocify {
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Change names</span></span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">p2 =</span> <span class="fu">recode</span>(df<span class="sc">$</span>p2, <span class="at">hdrr =</span> <span class="st">&quot;HdrR&quot;</span>, <span class="at">hni =</span> <span class="st">&quot;HNI&quot;</span>, <span class="at">hsok =</span> <span class="st">&quot;HSOK&quot;</span>))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;introgression&quot;</span>, <span class="st">&quot;abba_sliding_final&quot;</span>, <span class="st">&quot;50000_100.txt&quot;</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(in_file) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p1, p2, scaffold, start)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert fd to 0 if D &lt; 0</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fd <span class="ot">=</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>D <span class="sc">&lt;</span> <span class="dv">0</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>               <span class="dv">0</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>               df<span class="sc">$</span>fd)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Change names</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">p2 =</span> <span class="fu">recode</span>(df<span class="sc">$</span>p2, <span class="at">hdrr =</span> <span class="st">&quot;HdrR&quot;</span>, <span class="at">hni =</span> <span class="st">&quot;HNI&quot;</span>, <span class="at">hsok =</span> <span class="st">&quot;HSOK&quot;</span>))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 <div id="plot-1" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> Plot</h2>
 <div id="standard" class="section level3" number="4.2.1">
 <h3 number="4.2.1"><span class="header-section-number">4.2.1</span> Standard</h3>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(p1 <span class="sc">==</span> <span class="st">&quot;melastigma&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
@@ -996,11 +1054,35 @@ div.tocify {
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="dv">50</span>,</span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(p1 <span class="sc">==</span> <span class="st">&quot;melastigma&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(mid, fd, <span class="at">colour =</span> p2)) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>scaffold, <span class="at">nrow =</span> <span class="dv">24</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> pal_abba) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5000000</span>, <span class="dv">10000000</span>, <span class="dv">15000000</span>, <span class="dv">20000000</span>, <span class="dv">25000000</span>, <span class="dv">30000000</span>, <span class="dv">35000000</span>),</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;Base position&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">bquote</span>(<span class="fu">italic</span>(f[d]))) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">colour =</span> <span class="st">&quot;P2&quot;</span>)</span></code></pre></div>
+<p><img src="20210409_introgression_files/figure-html/unnamed-chunk-25-1.svg" width="960" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210317_abba_sliding.png&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> out_file,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> <span class="st">&quot;png&quot;</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="fl">24.75</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="dv">50</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 <div id="karyoplot" class="section level3" number="4.2.2">
 <h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Karyoplot</h3>
 <div id="make-custom-chromosome-scaffold" class="section level4" number="4.2.2.1">
 <h4 number="4.2.2.1"><span class="header-section-number">4.2.2.1</span> Make custom chromosome scaffold</h4>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get chromosome lengths</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>med_chr_lens <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt&quot;</span>),</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;end&quot;</span>))</span>
@@ -1036,6 +1118,43 @@ div.tocify {
 <span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p2, scaffold, start)</span>
 <span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(df_kp))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get chromosome lengths</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>med_chr_lens <span class="ot">=</span> <span class="fu">read.table</span>(<span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt&quot;</span>),</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;end&quot;</span>))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add start</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>med_chr_lens<span class="sc">$</span>start <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Reorder</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>med_chr_lens <span class="ot">=</span> med_chr_lens <span class="sc">%&gt;%</span> </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(chr, start, end)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create custom genome</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>med_genome <span class="ot">=</span> regioneR<span class="sc">::</span><span class="fu">toGRanges</span>(med_chr_lens)</span></code></pre></div>
+</div>
+<div id="process-abba-sliding-windows-data" class="section level4" number="4.2.2.2">
+<h4 number="4.2.2.2"><span class="header-section-number">4.2.2.2</span> Process ABBA sliding windows data</h4>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;introgression&quot;</span>, <span class="st">&quot;abba_sliding_final&quot;</span>, <span class="st">&quot;50000_100.txt&quot;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(in_file) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p1, p2, scaffold, start)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert fd to 0 if D &lt; 0</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fd <span class="ot">=</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>D <span class="sc">&lt;</span> <span class="dv">0</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>               <span class="dv">0</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>               df<span class="sc">$</span>fd)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Change names</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">p2 =</span> <span class="fu">recode</span>(df<span class="sc">$</span>p2, <span class="at">hdrr =</span> <span class="st">&quot;HdrR&quot;</span>, <span class="at">hni =</span> <span class="st">&quot;HNI&quot;</span>, <span class="at">hsok =</span> <span class="st">&quot;HSOK&quot;</span>))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Get df with mean of melastigma/javanicus</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>df_kp <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(scaffold, start, end, mid, p2), <span class="at">names_from =</span> p1, <span class="at">values_from =</span> fd) <span class="sc">%&gt;%</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get mean of melastigma/javanicus</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">mean_fd =</span> <span class="fu">rowMeans</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(., melastigma, javanicus), <span class="at">na.rm =</span> T)) <span class="sc">%&gt;%</span> </span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p2, scaffold, start)</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(df_kp))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <table>
 <thead>
 <tr class="header">
@@ -1117,6 +1236,7 @@ div.tocify {
 <h4 number="4.2.2.3"><span class="header-section-number">4.2.2.3</span> Read in SNP density data</h4>
 <div id="hni-and-hsok" class="section level5" number="4.2.2.3.1">
 <h5 number="4.2.2.3.1"><span class="header-section-number">4.2.2.3.1</span> HNI and HSOK</h5>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/hni_hsok.txt.gz&quot;</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in file on local</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>ol_ranges_df <span class="ot">=</span> <span class="fu">read.table</span>(in_file,</span>
@@ -1158,10 +1278,54 @@ div.tocify {
 <span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">seqnames.field =</span> <span class="st">&quot;chr&quot;</span>,</span>
 <span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">start.field =</span> <span class="st">&quot;pos&quot;</span>,</span>
 <span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">end.field =</span> <span class="st">&quot;pos&quot;</span>)</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/hni_hsok.txt.gz&quot;</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in file on local</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>ol_ranges_df <span class="ot">=</span> <span class="fu">read.table</span>(in_file,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">header =</span> T, </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">as.is =</span> T)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>ol_ranges_df_long <span class="ot">=</span> ol_ranges_df <span class="sc">%&gt;%</span> </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(hni, hsok), <span class="at">names_to =</span> <span class="st">&quot;line&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;present&quot;</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>ol_ranges_list <span class="ot">=</span> <span class="fu">split</span>(ol_ranges_df_long, <span class="at">f =</span> ol_ranges_df_long<span class="sc">$</span>line)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>ol_ranges_list <span class="ot">=</span> <span class="fu">lapply</span>(ol_ranges_list, <span class="cf">function</span>(x){</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove NAs</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">=</span> x <span class="sc">%&gt;%</span> </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    tidyr<span class="sc">::</span><span class="fu">drop_na</span>(present)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to GRanges object</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  ol_ranges <span class="ot">=</span> GenomicRanges<span class="sc">::</span><span class="fu">makeGRangesFromDataFrame</span>(df,</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">ignore.strand =</span> T,</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">seqnames.field =</span> <span class="st">&quot;chr&quot;</span>,</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">start.field =</span> <span class="st">&quot;pos&quot;</span>,</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">end.field =</span> <span class="st">&quot;pos&quot;</span>)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ol_ranges)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+</div>
+<div id="mikk" class="section level5" number="4.2.2.3.2">
+<h5 number="4.2.2.3.2"><span class="header-section-number">4.2.2.3.2</span> MIKK</h5>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/mikk.txt.gz&quot;</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in file on local</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>mikk_ranges_df <span class="ot">=</span> <span class="fu">read.table</span>(in_file,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;chr&quot;</span>, <span class="st">&quot;pos&quot;</span>), </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">as.is =</span> T)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to GRanges object</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>mikk_ranges <span class="ot">=</span> GenomicRanges<span class="sc">::</span><span class="fu">makeGRangesFromDataFrame</span>(mikk_ranges_df,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">ignore.strand =</span> T,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">seqnames.field =</span> <span class="st">&quot;chr&quot;</span>,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">start.field =</span> <span class="st">&quot;pos&quot;</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">end.field =</span> <span class="st">&quot;pos&quot;</span>)</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 </div>
 <div id="get-exon-density" class="section level4" number="4.2.2.4">
 <h4 number="4.2.2.4"><span class="header-section-number">4.2.2.4</span> Get exon density</h4>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get list of exons from biomaRt</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Select dataset</span></span>
@@ -1256,10 +1420,107 @@ div.tocify {
 <span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.6</span>)</span>
 <span id="cb32-76"><a href="#cb32-76" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(file_out))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get list of exons from biomaRt</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Select dataset</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>olat_mart <span class="ot">=</span> biomaRt<span class="sc">::</span><span class="fu">useEnsembl</span>(<span class="at">biomart =</span> <span class="st">&quot;ensembl&quot;</span>, <span class="at">dataset =</span> <span class="st">&quot;olatipes_gene_ensembl&quot;</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Get attributes of interest (exon ID, chr, start, end)</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>exons <span class="ot">&lt;-</span> biomaRt<span class="sc">::</span><span class="fu">getBM</span>(<span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;chromosome_name&quot;</span>, <span class="st">&quot;ensembl_gene_id&quot;</span>, <span class="st">&quot;ensembl_transcript_id&quot;</span>, <span class="st">&quot;transcript_start&quot;</span>, <span class="st">&quot;transcript_end&quot;</span>, <span class="st">&quot;transcript_length&quot;</span>, <span class="st">&quot;ensembl_exon_id&quot;</span>, <span class="st">&quot;rank&quot;</span>, <span class="st">&quot;strand&quot;</span>, <span class="st">&quot;exon_chrom_start&quot;</span>, <span class="st">&quot;exon_chrom_end&quot;</span>, <span class="st">&quot;cds_start&quot;</span>, <span class="st">&quot;cds_end&quot;</span>),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">mart =</span> olat_mart)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Convert exons to GRanges</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>ex_ranges <span class="ot">=</span> GenomicRanges<span class="sc">::</span><span class="fu">makeGRangesFromDataFrame</span>(exons,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">ignore.strand =</span> T,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">seqnames.field =</span> <span class="st">&quot;chromosome_name&quot;</span>,</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">start.field =</span> <span class="st">&quot;exon_chrom_start&quot;</span>,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">end.field =</span> <span class="st">&quot;exon_chrom_end&quot;</span>)</span></code></pre></div>
+</div>
+<div id="all-chromosomes" class="section level4" number="4.2.2.5">
+<h4 number="4.2.2.5"><span class="header-section-number">4.2.2.5</span> All chromosomes</h4>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>file_out <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210318_fd_with_density_all.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>file_out,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">8500</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">height=</span><span class="dv">13500</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;px&quot;</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">400</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot </span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>kp <span class="ot">=</span> <span class="fu">plotKaryotype</span>(med_genome)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add base numbers </span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpAddBaseNumbers</span>(kp, <span class="at">tick.dist =</span> <span class="dv">5000000</span>, <span class="at">cex =</span> <span class="fl">0.3</span>)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add data backgrounds</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpDataBackground</span>(kp, <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add axis label</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAxis</span>(kp, <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.4</span>)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add fd data</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F3B61F&quot;</span>,</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>,</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Add SNP density data</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>mikk_ranges, <span class="at">col =</span> <span class="st">&quot;#49A379&quot;</span>,</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.1</span>, </span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hni, <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.2</span>, </span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hsok, <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>, </span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.3</span>, </span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a><span class="co">#kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = &quot;#F3B61F&quot;,</span></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="co">#              r0=0.45, r1=0.6,</span></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a><span class="co">#              window.size = 25000)</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Add exon density to ideogram</span></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">0</span>)</span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels</span></span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;MIKK&quot;</span>,</span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.05</span>,</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.4</span>)</span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HNI&quot;</span>,</span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.15</span>, </span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.4</span>)</span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HSOK&quot;</span>,</span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.25</span>,</span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.4</span>)</span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a><span class="co">#kpAddLabels(kp, labels=&quot;HdrR&quot;,</span></span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a><span class="co">#            r0=0.45, r1=0.6, </span></span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a><span class="co">#            cex = 0.4)</span></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="fu">bquote</span>(<span class="fu">italic</span>(f[d])),</span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1=</span><span class="dv">1</span>, </span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.035</span>,</span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.6</span>)</span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(file_out))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <p><img src="20210318_fd_with_density_all.png" width="4250" /></p>
 </div>
 <div id="chromosome-4" class="section level4" number="4.2.2.6">
 <h4 number="4.2.2.6"><span class="header-section-number">4.2.2.6</span> Chromosome 4</h4>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210318_fd_with_density_chr_4.png&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>out_file,</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">5500</span>,</span>
@@ -1342,6 +1603,90 @@ div.tocify {
 <span id="cb35-79"><a href="#cb35-79" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="dv">1</span>)</span>
 <span id="cb35-80"><a href="#cb35-80" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_file))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210318_fd_with_density_chr_4.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>out_file,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">5500</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">height=</span><span class="dv">1186</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;px&quot;</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">400</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot </span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>kp <span class="ot">=</span> <span class="fu">plotKaryotype</span>(med_genome, <span class="at">chromosomes =</span> <span class="st">&quot;4&quot;</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add base numbers </span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpAddBaseNumbers</span>(kp, <span class="at">tick.dist =</span> <span class="dv">5000000</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add data backgrounds</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpDataBackground</span>(kp, <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add axis label</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAxis</span>(kp, <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add fd data</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>lwd <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F3B61F&quot;</span>,</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>,</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Add SNP density data</span></span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>mikk_ranges, <span class="at">col =</span> <span class="st">&quot;#49A379&quot;</span>,</span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.1</span>, </span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hni, <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.2</span>, </span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hsok, <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>, </span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.3</span>, </span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a><span class="co">#kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = &quot;#F3B61F&quot;,</span></span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a><span class="co">#              r0=0.45, r1=0.6,</span></span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a><span class="co">#              window.size = 25000)</span></span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Add exon density to ideogram</span></span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">0</span>)</span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels</span></span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;MIKK&quot;</span>,</span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.05</span>,</span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HNI&quot;</span>,</span>
+<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.15</span>, </span>
+<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HSOK&quot;</span>,</span>
+<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.25</span>,</span>
+<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a><span class="co">#kpAddLabels(kp, labels=&quot;HdrR&quot;,</span></span>
+<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a><span class="co">#            r0=0.45, r1=0.6, </span></span>
+<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a><span class="co">#            cex = 0.4)</span></span>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="fu">bquote</span>(<span class="fu">italic</span>(f[d])),</span>
+<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1=</span><span class="dv">1</span>, </span>
+<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.035</span>,</span>
+<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="dv">1</span>)</span>
+<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_file))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <p><img src="20210318_fd_with_density_chr_4.png" width="2750" /></p>
 </div>
 </div>
@@ -1355,6 +1700,7 @@ div.tocify {
 </div>
 <div id="compile-all" class="section level2" number="5.2">
 <h2 number="5.2"><span class="header-section-number">5.2</span> Compile all</h2>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>abba_diagram <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;abba_diagram.png&quot;</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;tree_oryzias_with_ancestor.png&quot;</span>)</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>karyo_chr4 <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210318_fd_with_density_chr_4.png&quot;</span>)</span>
@@ -1379,6 +1725,32 @@ div.tocify {
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">21.875</span>,</span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
 <span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>abba_diagram <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;abba_diagram.png&quot;</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;tree_oryzias_with_ancestor.png&quot;</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>karyo_chr4 <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210318_fd_with_density_chr_4.png&quot;</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>final_abba <span class="ot">=</span> <span class="fu">ggdraw</span>() <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(tree,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> .<span class="dv">7</span>, <span class="at">width =</span> .<span class="dv">4</span>, <span class="at">height =</span> .<span class="dv">35</span>, <span class="at">vjust =</span> .<span class="dv">1</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(karyo_chr4,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="fl">0.3</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span>   </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot</span>(fstat_plot,</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> .<span class="dv">4</span>, <span class="at">y =</span> .<span class="dv">3</span>, <span class="at">width =</span> .<span class="dv">6</span>, <span class="at">height =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(abba_diagram,</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> .<span class="dv">3</span>, <span class="at">width =</span> .<span class="dv">4</span>, <span class="at">height =</span> .<span class="dv">35</span>, <span class="at">vjust =</span> <span class="sc">-</span>.<span class="dv">05</span>, <span class="at">scale =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot_label</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>), <span class="at">size =</span> <span class="dv">16</span>,</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">38</span>, <span class="dv">0</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">7</span>, <span class="dv">1</span>, .<span class="dv">3</span>))  </span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>final_abba</span></code></pre></div>
+<p><img src="20210409_introgression_files/figure-html/unnamed-chunk-46-1.svg" width="1344" /></p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210318_final_figure.png&quot;</span>),</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">35</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">21.875</span>,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 </div>
 <div id="new-final-figure-with-circos" class="section level1" number="6">
@@ -1387,6 +1759,7 @@ div.tocify {
 <h2 number="6.1"><span class="header-section-number">6.1</span> Circos</h2>
 <div id="read-in-data-2" class="section level3" number="6.1.1">
 <h3 number="6.1.1"><span class="header-section-number">6.1.1</span> Read in data</h3>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>target_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/abba_sliding_final_no_131-1/1000000_250.txt&quot;</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>mikk_abba_final <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(target_file) <span class="sc">%&gt;%</span></span>
@@ -1479,6 +1852,100 @@ div.tocify {
 <span id="cb41-73"><a href="#cb41-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-74"><a href="#cb41-74" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_plot))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>target_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/abba_sliding_final_no_131-1/1000000_250.txt&quot;</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>mikk_abba_final <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(target_file) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">fd =</span> <span class="fu">if_else</span>(D <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, fd),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">p2 =</span> <span class="fu">factor</span>(p2, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;hdrr&quot;</span>, <span class="st">&quot;hni&quot;</span>, <span class="st">&quot;hsok&quot;</span>)),</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">p2 =</span> <span class="fu">recode</span>(p2, <span class="at">hdrr =</span> <span class="st">&quot;HdrR&quot;</span>, <span class="at">hni =</span> <span class="st">&quot;HNI&quot;</span>, <span class="at">hsok =</span> <span class="st">&quot;HSOK&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(scaffold, start, end, mid, p2), <span class="at">names_from =</span> p1, <span class="at">values_from =</span> fd) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get mean of melastigma/javanicus</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">mean_fd =</span> <span class="fu">rowMeans</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(., melastigma, javanicus), <span class="at">na.rm =</span> T)) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p2, scaffold, start) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(scaffold, <span class="at">mid_1 =</span> mid, <span class="at">mid_2 =</span> mid, mean_fd, p2) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">scaffold =</span> <span class="fu">paste</span>(<span class="st">&quot;chr&quot;</span>, scaffold, <span class="at">sep =</span><span class="st">&quot;&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(., <span class="at">f =</span> .<span class="sc">$</span>p2)</span></code></pre></div>
+</div>
+<div id="plot-2" class="section level3" number="6.1.2">
+<h3 number="6.1.2"><span class="header-section-number">6.1.2</span> Plot</h3>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>out_plot <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;plots&quot;</span>, <span class="st">&quot;introgression&quot;</span>, <span class="st">&quot;20210409_introgression_circos_MIKK_ABBA.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(out_plot,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">20</span>,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">20</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">500</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Set parameters</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.par</span>(<span class="at">cell.padding =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">track.margin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">gap.degree =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(chroms) <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">6</span>))</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize plot</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.initializeWithIdeogram</span>(chroms,</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>                              <span class="at">plotType =</span> <span class="fu">c</span>(<span class="st">&quot;axis&quot;</span>, <span class="st">&quot;labels&quot;</span>),</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>                              <span class="at">major.by =</span> <span class="fl">1e7</span>,</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>                              <span class="at">axis.labels.cex =</span> <span class="fl">0.25</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Print label in center</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="st">&quot;MIKK panel</span><span class="sc">\n</span><span class="st">introgression with</span><span class="sc">\n</span><span class="st">HdrR, HNI,</span><span class="sc">\n</span><span class="st">and</span><span class="sc">\n</span><span class="st">HSOK&quot;</span>)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a><span class="do">###############</span></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Introgression</span></span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a><span class="do">###############</span></span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>counter <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(mikk_abba_final, <span class="cf">function</span>(P2){</span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set counter</span></span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;&lt;-</span> counter <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">circos.genomicTrack</span>(P2,</span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.fun =</span> <span class="cf">function</span>(region, value, ...){</span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">circos.genomicLines</span>(region,</span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a>                            value[[<span class="dv">1</span>]],</span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a>                            <span class="at">col =</span> pal_abba[[<span class="fu">names</span>(mikk_abba_final[counter])]],</span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>                            <span class="at">area =</span> T,</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a>                            <span class="at">border =</span> karyoploteR<span class="sc">::</span><span class="fu">darker</span>(pal_abba[[<span class="fu">names</span>(mikk_abba_final[counter])]]))</span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Add baseline</span></span>
+<span id="cb43-38"><a href="#cb43-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">circos.xaxis</span>(<span class="at">h =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb43-39"><a href="#cb43-39" aria-hidden="true" tabindex="-1"></a>                     <span class="at">labels =</span> F,</span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a>                     <span class="at">major.tick =</span> F)</span>
+<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a>      },</span>
+<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">track.height =</span> <span class="fl">0.1</span>,</span>
+<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">bg.border =</span> <span class="cn">NA</span>,</span>
+<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add axis for introgression</span></span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">circos.yaxis</span>(<span class="at">side =</span> <span class="st">&quot;right&quot;</span>,</span>
+<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a>             <span class="at">at =</span> <span class="fu">c</span>(.<span class="dv">5</span>, <span class="dv">1</span>),</span>
+<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels.cex =</span> <span class="fl">0.25</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>),</span>
+<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>             <span class="at">tick.length =</span> <span class="dv">2</span></span>
+<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a>             )</span>
+<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add y-axis label for introgression</span></span>
+<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (counter <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">circos.text</span>(<span class="dv">0</span>, <span class="fl">0.5</span>,</span>
+<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>              <span class="at">labels =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(f[d])),</span>
+<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">sector.index =</span> <span class="st">&quot;chr1&quot;</span>,</span>
+<span id="cb43-58"><a href="#cb43-58" aria-hidden="true" tabindex="-1"></a><span class="co">#              facing = &quot;clockwise&quot;,</span></span>
+<span id="cb43-59"><a href="#cb43-59" aria-hidden="true" tabindex="-1"></a>              <span class="at">adj =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">0.5</span>),</span>
+<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.4</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
+<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-63"><a href="#cb43-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add y-axis label for introgression</span></span>
+<span id="cb43-64"><a href="#cb43-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">circos.text</span>(<span class="dv">0</span>, <span class="fl">0.5</span>,</span>
+<span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a>              <span class="at">labels =</span> <span class="fu">names</span>(mikk_abba_final)[counter],</span>
+<span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a>              <span class="at">sector.index =</span> <span class="st">&quot;chr1&quot;</span>,</span>
+<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a>              <span class="at">facing =</span> <span class="st">&quot;clockwise&quot;</span>,</span>
+<span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a>              <span class="at">adj =</span> <span class="fu">c</span>(.<span class="dv">5</span>, <span class="dv">0</span>),</span>
+<span id="cb43-69"><a href="#cb43-69" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.6</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))  </span>
+<span id="cb43-70"><a href="#cb43-70" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb43-71"><a href="#cb43-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-72"><a href="#cb43-72" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.clear</span>()</span>
+<span id="cb43-73"><a href="#cb43-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-74"><a href="#cb43-74" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_plot))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <p><img src="20210409_introgression_circos_MIKK_ABBA.png" width="1968" /></p>
 </div>
 </div>
@@ -1488,6 +1955,7 @@ div.tocify {
 <h3 number="6.2.1"><span class="header-section-number">6.2.1</span> Chr2</h3>
 <div id="read-in-new-data" class="section level4" number="6.2.1.1">
 <h4 number="6.2.1.1"><span class="header-section-number">6.2.1.1</span> Read in new data</h4>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/abba_sliding_final_no_131-1&quot;</span>, <span class="st">&quot;500000_250.txt&quot;</span>)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(in_file) <span class="sc">%&gt;%</span> </span>
@@ -1510,6 +1978,30 @@ div.tocify {
 <span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p2, scaffold, start)</span>
 <span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(df_kp))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/abba_sliding_final_no_131-1&quot;</span>, <span class="st">&quot;500000_250.txt&quot;</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in data</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(in_file) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p1, p2, scaffold, start)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert fd to 0 if D &lt; 0</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>fd <span class="ot">=</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>D <span class="sc">&lt;</span> <span class="dv">0</span>,</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>               <span class="dv">0</span>,</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>               df<span class="sc">$</span>fd)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Change names</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">p2 =</span> <span class="fu">recode</span>(df<span class="sc">$</span>p2, <span class="at">hdrr =</span> <span class="st">&quot;HdrR&quot;</span>, <span class="at">hni =</span> <span class="st">&quot;HNI&quot;</span>, <span class="at">hsok =</span> <span class="st">&quot;HSOK&quot;</span>))</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Get df with mean of melastigma/javanicus</span></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>df_kp <span class="ot">=</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> <span class="fu">c</span>(scaffold, start, end, mid, p2), <span class="at">names_from =</span> p1, <span class="at">values_from =</span> fd) <span class="sc">%&gt;%</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get mean of melastigma/javanicus</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">mean_fd =</span> <span class="fu">rowMeans</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(., melastigma, javanicus), <span class="at">na.rm =</span> T)) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">arrange</span>(p2, scaffold, start)</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(df_kp))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <table>
 <thead>
 <tr class="header">
@@ -1591,6 +2083,7 @@ div.tocify {
 <h4 number="6.2.1.2"><span class="header-section-number">6.2.1.2</span> Plot</h4>
 <div id="chr4" class="section level5" number="6.2.1.2.1">
 <h5 number="6.2.1.2.1"><span class="header-section-number">6.2.1.2.1</span> chr4</h5>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210409_fd_with_density_chr_4_500kb-window.png&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>out_file,</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">5500</span>,</span>
@@ -1752,12 +2245,176 @@ div.tocify {
 <span id="cb48-77"><a href="#cb48-77" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="dv">1</span>)</span>
 <span id="cb48-78"><a href="#cb48-78" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_file))</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210409_fd_with_density_chr_4_500kb-window.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>out_file,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">5500</span>,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">height=</span><span class="dv">1186</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;px&quot;</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">400</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot </span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>kp <span class="ot">=</span> <span class="fu">plotKaryotype</span>(med_genome, <span class="at">chromosomes =</span> <span class="st">&quot;4&quot;</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add base numbers </span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpAddBaseNumbers</span>(kp, <span class="at">tick.dist =</span> <span class="dv">5000000</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add data backgrounds</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpDataBackground</span>(kp, <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>)</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add axis label</span></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAxis</span>(kp, <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add fd data</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>lwd <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F3B61F&quot;</span>,</span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>,</span>
+<span id="cb47-36"><a href="#cb47-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb47-37"><a href="#cb47-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb47-38"><a href="#cb47-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Add SNP density data</span></span>
+<span id="cb47-39"><a href="#cb47-39" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>mikk_ranges, <span class="at">col =</span> <span class="st">&quot;#49A379&quot;</span>,</span>
+<span id="cb47-40"><a href="#cb47-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.1</span>, </span>
+<span id="cb47-41"><a href="#cb47-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb47-42"><a href="#cb47-42" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hni, <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb47-43"><a href="#cb47-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.2</span>, </span>
+<span id="cb47-44"><a href="#cb47-44" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb47-45"><a href="#cb47-45" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hsok, <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>, </span>
+<span id="cb47-46"><a href="#cb47-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.3</span>, </span>
+<span id="cb47-47"><a href="#cb47-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb47-48"><a href="#cb47-48" aria-hidden="true" tabindex="-1"></a><span class="co">#kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = &quot;#F3B61F&quot;,</span></span>
+<span id="cb47-49"><a href="#cb47-49" aria-hidden="true" tabindex="-1"></a><span class="co">#              r0=0.45, r1=0.6,</span></span>
+<span id="cb47-50"><a href="#cb47-50" aria-hidden="true" tabindex="-1"></a><span class="co">#              window.size = 25000)</span></span>
+<span id="cb47-51"><a href="#cb47-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Add exon density to ideogram</span></span>
+<span id="cb47-52"><a href="#cb47-52" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb47-53"><a href="#cb47-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb47-54"><a href="#cb47-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb47-55"><a href="#cb47-55" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb47-56"><a href="#cb47-56" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb47-57"><a href="#cb47-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb47-58"><a href="#cb47-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb47-59"><a href="#cb47-59" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">0</span>)</span>
+<span id="cb47-60"><a href="#cb47-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels</span></span>
+<span id="cb47-61"><a href="#cb47-61" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;MIKK&quot;</span>,</span>
+<span id="cb47-62"><a href="#cb47-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.05</span>,</span>
+<span id="cb47-63"><a href="#cb47-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb47-64"><a href="#cb47-64" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb47-65"><a href="#cb47-65" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HNI&quot;</span>,</span>
+<span id="cb47-66"><a href="#cb47-66" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.15</span>, </span>
+<span id="cb47-67"><a href="#cb47-67" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb47-68"><a href="#cb47-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb47-69"><a href="#cb47-69" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HSOK&quot;</span>,</span>
+<span id="cb47-70"><a href="#cb47-70" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.25</span>,</span>
+<span id="cb47-71"><a href="#cb47-71" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb47-72"><a href="#cb47-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb47-73"><a href="#cb47-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-74"><a href="#cb47-74" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="fu">bquote</span>(<span class="fu">italic</span>(f[d])),</span>
+<span id="cb47-75"><a href="#cb47-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1=</span><span class="dv">1</span>, </span>
+<span id="cb47-76"><a href="#cb47-76" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.035</span>,</span>
+<span id="cb47-77"><a href="#cb47-77" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="dv">1</span>)</span>
+<span id="cb47-78"><a href="#cb47-78" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_file))</span></code></pre></div>
+<p><img src="20210409_fd_with_density_chr_4_500kb-window.png" width="2750" /> ##### chr2</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> <span class="fu">file.path</span>(plots_dir, <span class="st">&quot;20210409_fd_with_density_chr_2_500kb-window.png&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="at">file=</span>out_file,</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">width=</span><span class="dv">5500</span>,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">height=</span><span class="dv">1186</span>,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;px&quot;</span>,</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">400</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot </span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>kp <span class="ot">=</span> <span class="fu">plotKaryotype</span>(med_genome, <span class="at">chromosomes =</span> <span class="st">&quot;2&quot;</span>, <span class="at">cex =</span> <span class="fl">1.5</span>)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add base numbers </span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpAddBaseNumbers</span>(kp, <span class="at">tick.dist =</span> <span class="dv">5000000</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add data backgrounds</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpDataBackground</span>(kp, <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add axis label</span></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAxis</span>(kp, <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add fd data</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>lwd <span class="ot">=</span> <span class="dv">2</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HNI&quot;</span>],</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HdrR&quot;</span>],</span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#F3B61F&quot;</span>,</span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a>karyoploteR<span class="sc">::</span><span class="fu">kpLines</span>(kp,</span>
+<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>                     <span class="at">chr =</span> df_kp<span class="sc">$</span>scaffold[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>                     <span class="at">x =</span> df_kp<span class="sc">$</span>mid[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> df_kp<span class="sc">$</span>mean_fd[df_kp<span class="sc">$</span>p2 <span class="sc">==</span> <span class="st">&quot;HSOK&quot;</span>],</span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>                     <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>,</span>
+<span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a>                     <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1 =</span> <span class="dv">1</span>,</span>
+<span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">lwd =</span> lwd)</span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Add SNP density data</span></span>
+<span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>mikk_ranges, <span class="at">col =</span> <span class="st">&quot;#49A379&quot;</span>,</span>
+<span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.1</span>, </span>
+<span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb50-42"><a href="#cb50-42" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hni, <span class="at">col =</span> <span class="st">&quot;#F6673A&quot;</span>,</span>
+<span id="cb50-43"><a href="#cb50-43" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.2</span>, </span>
+<span id="cb50-44"><a href="#cb50-44" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb50-45"><a href="#cb50-45" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ol_ranges_list<span class="sc">$</span>hsok, <span class="at">col =</span> <span class="st">&quot;#631E68&quot;</span>, </span>
+<span id="cb50-46"><a href="#cb50-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.3</span>, </span>
+<span id="cb50-47"><a href="#cb50-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>)</span>
+<span id="cb50-48"><a href="#cb50-48" aria-hidden="true" tabindex="-1"></a><span class="co">#kpPlotDensity(kp, data=ol_ranges_list$hdrr, col = &quot;#F3B61F&quot;,</span></span>
+<span id="cb50-49"><a href="#cb50-49" aria-hidden="true" tabindex="-1"></a><span class="co">#              r0=0.45, r1=0.6,</span></span>
+<span id="cb50-50"><a href="#cb50-50" aria-hidden="true" tabindex="-1"></a><span class="co">#              window.size = 25000)</span></span>
+<span id="cb50-51"><a href="#cb50-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Add exon density to ideogram</span></span>
+<span id="cb50-52"><a href="#cb50-52" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb50-53"><a href="#cb50-53" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb50-54"><a href="#cb50-54" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb50-55"><a href="#cb50-55" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">1</span>)</span>
+<span id="cb50-56"><a href="#cb50-56" aria-hidden="true" tabindex="-1"></a><span class="fu">kpPlotDensity</span>(kp, <span class="at">data=</span>ex_ranges, <span class="at">col =</span> <span class="st">&quot;#f77cb5&quot;</span>,</span>
+<span id="cb50-57"><a href="#cb50-57" aria-hidden="true" tabindex="-1"></a>              <span class="at">data.panel =</span> <span class="st">&quot;ideogram&quot;</span>,</span>
+<span id="cb50-58"><a href="#cb50-58" aria-hidden="true" tabindex="-1"></a>              <span class="at">window.size =</span> <span class="dv">25000</span>,</span>
+<span id="cb50-59"><a href="#cb50-59" aria-hidden="true" tabindex="-1"></a>              <span class="at">r0 =</span> <span class="fl">0.5</span>, <span class="at">r1 =</span> <span class="dv">0</span>)</span>
+<span id="cb50-60"><a href="#cb50-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Add labels</span></span>
+<span id="cb50-61"><a href="#cb50-61" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;MIKK&quot;</span>,</span>
+<span id="cb50-62"><a href="#cb50-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="dv">0</span>, <span class="at">r1=</span><span class="fl">0.05</span>,</span>
+<span id="cb50-63"><a href="#cb50-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb50-64"><a href="#cb50-64" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb50-65"><a href="#cb50-65" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HNI&quot;</span>,</span>
+<span id="cb50-66"><a href="#cb50-66" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.1</span>, <span class="at">r1=</span><span class="fl">0.15</span>, </span>
+<span id="cb50-67"><a href="#cb50-67" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb50-68"><a href="#cb50-68" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb50-69"><a href="#cb50-69" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="st">&quot;HSOK&quot;</span>,</span>
+<span id="cb50-70"><a href="#cb50-70" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.2</span>, <span class="at">r1=</span><span class="fl">0.25</span>,</span>
+<span id="cb50-71"><a href="#cb50-71" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.001</span>,</span>
+<span id="cb50-72"><a href="#cb50-72" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb50-73"><a href="#cb50-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-74"><a href="#cb50-74" aria-hidden="true" tabindex="-1"></a><span class="fu">kpAddLabels</span>(kp, <span class="at">labels=</span><span class="fu">bquote</span>(<span class="fu">italic</span>(f[d])),</span>
+<span id="cb50-75"><a href="#cb50-75" aria-hidden="true" tabindex="-1"></a>            <span class="at">r0=</span><span class="fl">0.3</span>, <span class="at">r1=</span><span class="dv">1</span>, </span>
+<span id="cb50-76"><a href="#cb50-76" aria-hidden="true" tabindex="-1"></a>            <span class="at">label.margin =</span> <span class="fl">0.035</span>,</span>
+<span id="cb50-77"><a href="#cb50-77" aria-hidden="true" tabindex="-1"></a>            <span class="at">cex =</span> <span class="dv">1</span>)</span>
+<span id="cb50-78"><a href="#cb50-78" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">basename</span>(out_file))</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 <p><img src="20210409_fd_with_density_chr_2_500kb-window.png" width="2750" /> Use chr4</p>
 </div>
 </div>
 </div>
 <div id="compose-final-figure" class="section level3" number="6.2.2">
 <h3 number="6.2.2"><span class="header-section-number">6.2.2</span> Compose final figure</h3>
+<<<<<<< HEAD:docs/20210409_introgression.html
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>abba_diagram <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;abba_diagram.png&quot;</span>)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;tree_oryzias_with_ancestor.png&quot;</span>)</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>karyo_chr4 <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210409_fd_with_density_chr_4_500kb-window.png&quot;</span>)</span>
@@ -1783,6 +2440,33 @@ div.tocify {
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">21.875</span>,</span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
 <span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span></code></pre></div>
+=======
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>abba_diagram <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;abba_diagram.png&quot;</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;tree_oryzias_with_ancestor.png&quot;</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>karyo_chr4 <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210409_fd_with_density_chr_4_500kb-window.png&quot;</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>circos_abba <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210409_introgression_circos_MIKK_ABBA.png&quot;</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>final_abba <span class="ot">=</span> <span class="fu">ggdraw</span>() <span class="sc">+</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(tree,</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> .<span class="dv">7</span>, <span class="at">width =</span> .<span class="dv">4</span>, <span class="at">height =</span> .<span class="dv">35</span>, <span class="at">vjust =</span> .<span class="dv">1</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">1</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(karyo_chr4,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="fl">0.3</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span>  </span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(circos_abba,</span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> .<span class="dv">4</span>, <span class="at">y =</span> .<span class="dv">3</span>, <span class="at">width =</span> .<span class="dv">6</span>, <span class="at">height =</span> .<span class="dv">7</span>, <span class="at">scale =</span> <span class="fl">1.15</span>, <span class="at">vjust =</span> .<span class="dv">025</span>) <span class="sc">+</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(abba_diagram,</span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> .<span class="dv">3</span>, <span class="at">width =</span> .<span class="dv">4</span>, <span class="at">height =</span> .<span class="dv">35</span>, <span class="at">vjust =</span> <span class="sc">-</span>.<span class="dv">05</span>, <span class="at">scale =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot_label</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>), <span class="at">size =</span> <span class="dv">25</span>,</span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">45</span>, <span class="dv">0</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">7</span>, <span class="dv">1</span>, .<span class="dv">3</span>), <span class="at">color =</span> <span class="st">&quot;#4f0943&quot;</span>)  </span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-19"><a href="#cb52-19" aria-hidden="true" tabindex="-1"></a>final_abba</span></code></pre></div>
+<p><img src="20210409_introgression_files/figure-html/unnamed-chunk-62-1.svg" width="672" /></p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210409_introgression_final_figure.png&quot;</span>),</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">35</span>,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">21.875</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span></code></pre></div>
+>>>>>>> d578d3e192ac0e62ef0cbb2ecd89f3d4e8720204:docs/20210318_introgression.html
 </div>
 </div>
 </div>
@@ -1825,6 +2509,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
