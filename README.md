@@ -10,3 +10,8 @@ Preprints available on bioRxiv:
 Code and figures from my contributions to the analysis are available on the GitHub Pages site for this repo: 
 
 https://brettellebi.github.io/mikk_genome/
+
+Full methods are on the GitHub Pages sites for the birneylab:
+
+* https://birneylab.github.io/MIKK_genome_main_paper/
+* https://birneylab.github.io/MIKK_genome_companion_paper/
