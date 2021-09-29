@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: rocker/tidyverse:4.1.0
+
+%post
+    # Install packages required for R packages
+    apt update
+    apt install -y libbz2-dev liblzma-dev
+
+    # Install CRAN packages
+    install2.r --error \
+        BiocManager \
+        devtools
+    
+    # Install correct version of `matrixStats`
+    R -e 'devtools::install_version("matrixStats", version = "0.60.1", repos = "https://cloud.r-project.org/")'
+    
+    # Install non-CRAN packages
+    R -e 'BiocManager::install("karyoploteR")'
