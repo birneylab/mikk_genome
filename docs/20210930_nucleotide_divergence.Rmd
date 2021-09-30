@@ -1,0 +1,202 @@
+---
+title: "Nucleotide divergence"
+date: '`r format(Sys.Date())`'
+#output: html_notebook
+#editor_options: 
+#  chunk_output_type: inline
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'svg'
+    number_sections: true
+    keep_md: false
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments 
+---
+
+# Load libraries
+
+```{r, message = F, warning = F}
+library(here)
+library(tidyverse)
+library(karyoploteR)
+```
+
+
+# Snakemake pipeline to process VCF and extract data
+
+<https://github.com/brettellebi/mikk_genome/tree/master/code/snakemake/nucleotide_diversity>
+
+**Steps**
+
+1. Filter MIKK panel VCF for non-sibling lines (N = 63).
+1. Use `VCFtools`'s `--window-pi` to calculate nucleotide divergence in different-sized windows.
+
+# Process data
+
+Data location: `/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence`
+
+## Read in data
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence"
+
+in_files = list.files(in_dir, full.names = T)
+dat_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(dat_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+```
+
+# Karyoplot
+
+## Set up scaffold
+
+```{r}
+med_chr_lens = read.table(here::here("data",
+                                     "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+                          col.names = c("chr", "end"))
+# Add start
+med_chr_lens$start = 1
+# Reorder
+med_chr_lens = med_chr_lens %>% 
+  dplyr::select(chr, start, end) %>% 
+  # remove MT
+  dplyr::filter(chr != "MT")
+
+# Create custom genome 
+med_genome = regioneR::toGRanges(med_chr_lens)
+```
+
+## Plot
+
+```{r}
+# Test with ggplot
+dat_list$`1000000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+
+dat_list$`500000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+
+dat_list$`100000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+```
+
+
+```{r, eval = F}
+# set file name
+file_name = paste("20210930_", "1Mb", ".png", sep = "")
+file_out = here::here("docs/plots/nucleotide_diversity", file_name)
+
+png(file=file_out,
+    width=13000,
+    height=1000,
+    units = "px",
+    res = 300)
+
+# Plot ideogram
+kp = karyoploteR::plotKaryotype(med_genome, plot.type = 5)
+
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.7)
+
+# Set y-axis limits
+## Get max
+round.choose <- function(x, roundTo, dir = 1) {
+  if(dir == 1) {  ##ROUND UP
+    x + (roundTo - x %% roundTo)
+  } else {
+    if(dir == 0) {  ##ROUND DOWN
+      x - (x %% roundTo)
+    }
+  }
+}
+y_max = round.choose(max(dat_list$`1000000`$PI), 0.01, 1)
+karyoploteR::kpAxis(kp, ymin=0, ymax=y_max )
+
+# Add lines
+lwd = 1
+karyoploteR::kpLines(kp,
+                     chr = dat_list$`1000000`$CHROM,
+                     x = dat_list$`1000000`$BIN_MID,
+                     y = dat_list$`1000000`$PI,
+                     ymax = y_max,
+                     r0=0, r1 = 1,
+                     lwd = lwd)
+
+
+
+dev.off()  
+```
+
+```{r}
+file_out = here::here("docs/plots/nucleotide_diversity/20210930_1Mb.png")
+knitr::include_graphics(file_out)
+```
+
+# Circos
+
+## Get repeats data
+
+```{r}
+repeats_file = "/nfs/research/birney/users/ian/mikk_genome/repeats/medaka_hdrr_repeats.fixed.gff"
+
+hdrr_reps = readr::read_delim(repeats_file,
+                              delim = "\t",
+                              col_names = F,
+                              skip = 3,
+                              comment = "",
+                              quote = "") %>% 
+  # Remove empty V8 column
+  dplyr::select(-X8) %>% 
+  # Get class of repeat from third column
+  dplyr::mutate(class = stringr::str_split(X3, pattern = "#", simplify = T)[, 1]) %>% 
+  # Rename columns
+  dplyr::rename(chr = X1, tool = X2, class_full = X3, start = X4, end = X5, percent = X6, strand = X7, info = X9)
+
+# Find types of class other than "(GATCCA)n" types
+class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
+
+hdrr_reps = hdrr_reps %>%
+  # NA for blanks
+  dplyr::mutate(class = dplyr::na_if(class, "")) %>%
+  # "misc" for others in "(GATCCA)n" type classes
+  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "Miscellaneous", class)) %>%
+  # rename "Simple_repeat"
+  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat"))
+
+
+```
+
+## Calculate proportion of bin covered by repeats
+
+```{r}
+# Convert `hdrr_reps` to GRanges
+hdrr_ranges = GenomicRanges::makeGRangesFromDataFrame(hdrr_reps,
+                                                      keep.extra.columns = T,
+                                                      seqnames.field = "chr",
+                                                      start.field = "start",
+                                                      end.field = "end")
+
+# Get non-overlapping regions
+hdrr_covered = 
+```
+

@@ -42,4 +42,4 @@ singularity shell --bind /hps/software/users/birney/ian/rstudio_db:/var/lib/rstu
 # Then run rserver, setting path of config file containing library path
 rserver --rsession-config-file /hps/software/users/birney/ian/repos/mikk_genome/code/snakemake/nucleotide_diversity/workflow/envs/rsession.conf
 
-
+ssh -L 8787:hl-codon-12-01:8787 proxy-codon

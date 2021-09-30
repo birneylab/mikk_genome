@@ -1,6 +1,33 @@
-__default__:
-  memory: 5000
-  n: 1
-  name: "{rule}.{wildcards}"
-  queue: "standard"
-  outfile: "{log}"
+####################
+# Config files
+####################
+
+####################
+# Locations
+####################
+samples_cram:
+    data/20200227_cram2line_no-sibs_cram-only.txt
+samples:
+    data/20200227_cram2line_no-sibs.txt
+mikk_vcf:
+    /nfs/research/birney/projects/indigene/datafreeze/14-03-2019/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf.gz
+working_dir:
+    /hps/nobackup/birney/users/ian/mikk_genome
+lts_dir:
+    /nfs/research/birney/users/ian/mikk_genome
+
+####################
+# Containers
+####################
+bcftools:
+    docker://quay.io/biocontainers/bcftools:1.13--h3a49de5_0
+vcftools:
+    docker://quay.io/biocontainers/vcftools:0.1.16--h9a82719_5
+
+####################
+# Parameters
+####################
+window_size:
+    - 100000
+    - 500000
+    - 1000000
