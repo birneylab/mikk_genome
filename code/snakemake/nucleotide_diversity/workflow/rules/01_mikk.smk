@@ -1,21 +1,3 @@
-######################
-# Libraries
-######################
-
-import pandas as pd
-import numpy as np
-import os
-
-######################
-# Config file
-######################
-
-configfile: "code/snakemake/nucleotide_diversity/config/config.yaml"
-
-######################
-# Rules
-######################
-
 ## Filter VCF for non-sibling MIKK lines (N = 63)
 rule keep_no_sibs:
     input:
@@ -99,7 +81,7 @@ rule nucleotide_divergence:
         vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
         index = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi")
     output:
-        os.path.join(config["lts_dir"], "nucleotide_divergence/{window_size}.windowed.pi")
+        os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/{window_size}.windowed.pi")
     log:
         os.path.join(config["working_dir"], "logs/nucleotide_divergence/{window_size}.log")
     params:
@@ -113,5 +95,25 @@ rule nucleotide_divergence:
             --gzvcf {input.vcf} \
             --window-pi {params.window_size} \
             --out {params.prefix} \
+                2> {log}
+        """
+
+# Calculate mapping quality
+rule mapping_quality:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
+        index = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi")
+    output:
+        os.path.join(config["lts_dir"], "mapping_quality/mapping_quality.csv")
+    log:
+        os.path.join(config["working_dir"], "logs/mapping_quality.log")
+    container:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query \
+            --format '%CHROM,%POS,%INFO/MQ\\n' \
+            --output {output[0]} \
+            {input.vcf} \
                 2> {log}
         """

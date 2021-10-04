@@ -21,6 +21,8 @@ output:
 library(here)
 library(tidyverse)
 library(karyoploteR)
+library(plotly)
+library(circlize)
 ```
 
 
@@ -39,9 +41,11 @@ Data location: `/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence
 
 ## Read in data
 
+### MIKK
+
 ```{r}
 # Set location of data
-in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence"
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk"
 
 in_files = list.files(in_dir, full.names = T)
 dat_list = lapply(in_files, function(IN_FILE) {
@@ -60,6 +64,29 @@ names(dat_list) = basename(in_files) %>%
   str_remove(".windowed.pi")
 ```
 
+### Wild Kiyosu
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild_kiyosu"
+
+in_files = list.files(in_dir, full.names = T)
+wk_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(wk_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+```
+
 # Karyoplot
 
 ## Set up scaffold
@@ -74,7 +101,11 @@ med_chr_lens$start = 1
 med_chr_lens = med_chr_lens %>% 
   dplyr::select(chr, start, end) %>% 
   # remove MT
-  dplyr::filter(chr != "MT")
+  dplyr::filter(chr != "MT") %>% 
+  # convert to numeric
+  dplyr::mutate(chr = as.integer(chr)) %>% 
+  # order
+  dplyr::arrange(chr)
 
 # Create custom genome 
 med_genome = regioneR::toGRanges(med_chr_lens)
@@ -100,6 +131,20 @@ dat_list$`100000` %>%
     facet_grid(cols = vars(CHROM))
 ```
 
+```{r}
+## Get max Y
+round.choose <- function(x, roundTo, dir = 1) {
+  if(dir == 1) {  ##ROUND UP
+    x + (roundTo - x %% roundTo)
+  } else {
+    if(dir == 0) {  ##ROUND DOWN
+      x - (x %% roundTo)
+    }
+  }
+}
+y_max = round.choose(max(dat_list$`1000000`$PI), 0.01, 1)
+```
+
 
 ```{r, eval = F}
 # set file name
@@ -119,17 +164,6 @@ kp = karyoploteR::plotKaryotype(med_genome, plot.type = 5)
 karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.7)
 
 # Set y-axis limits
-## Get max
-round.choose <- function(x, roundTo, dir = 1) {
-  if(dir == 1) {  ##ROUND UP
-    x + (roundTo - x %% roundTo)
-  } else {
-    if(dir == 0) {  ##ROUND DOWN
-      x - (x %% roundTo)
-    }
-  }
-}
-y_max = round.choose(max(dat_list$`1000000`$PI), 0.01, 1)
 karyoploteR::kpAxis(kp, ymin=0, ymax=y_max )
 
 # Add lines
@@ -164,7 +198,7 @@ hdrr_reps = readr::read_delim(repeats_file,
                               col_names = F,
                               skip = 3,
                               comment = "",
-                              quote = "") %>% 
+                              quote = "") %>%
   # Remove empty V8 column
   dplyr::select(-X8) %>% 
   # Get class of repeat from third column
@@ -181,12 +215,48 @@ hdrr_reps = hdrr_reps %>%
   # "misc" for others in "(GATCCA)n" type classes
   dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "Miscellaneous", class)) %>%
   # rename "Simple_repeat"
-  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat"))
+  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat")) %>% 
+  # filter out NA in `chr` (formerly MT)
+  dplyr::filter(!is.na(chr))
 
 
 ```
 
 ## Calculate proportion of bin covered by repeats
+
+### Bin intevals
+
+```{r}
+# Create GRanges object with bins
+bin_length = "1000000"
+
+bin_intervals = dat_list[[bin_length]] %>% 
+  dplyr::select(CHROM, BIN_START, BIN_END) %>% 
+  # split into list by chromosome
+  split(., f = .$CHROM)
+
+# Replace END pos of final bin for each chromsome with actual end pos
+bin_intervals = lapply(1:length(bin_intervals), function(CHR){
+  # Get end position for target chromosome
+  end_pos = med_chr_lens %>% 
+    dplyr::filter(chr == CHR) %>% 
+    dplyr::pull(end)
+  # Replace final bin end position
+  out = bin_intervals[[CHR]]
+  out$BIN_END[nrow(out)] = end_pos
+  
+  return(out)
+}) %>% 
+  dplyr::bind_rows()
+
+# Convert to data frame
+bin_intervals = as.data.frame(bin_intervals)
+
+# Convert to GRanges
+bin_ranges = regioneR::toGRanges(bin_intervals)
+```
+
+### Repeats
 
 ```{r}
 # Convert `hdrr_reps` to GRanges
@@ -197,6 +267,232 @@ hdrr_ranges = GenomicRanges::makeGRangesFromDataFrame(hdrr_reps,
                                                       end.field = "end")
 
 # Get non-overlapping regions
-hdrr_covered = 
+hdrr_covered = GenomicRanges::disjoin(hdrr_ranges)
+```
+
+### Find quantity of repeats overlapping bins
+
+```{r}
+overlaps = GenomicRanges::findOverlaps(bin_ranges, hdrr_covered)
+
+# Split into list by bin
+overlaps_list = lapply(unique(overlaps@from), function(BIN){
+  out = list()
+  # Get indexes of all repeat ranges overlapping the target BIN
+  out[["hits"]] = overlaps[overlaps@from == BIN]@to
+  # Extract those ranges from `hdrr_ranges`
+  out[["range_hits"]] = hdrr_covered[out[["hits"]]]
+    # Get number bases covered by each range
+  out[["widths"]] = out[["range_hits"]] %>% 
+    GenomicRanges::width(.) 
+  # Get summed widths
+  out[["summed"]] = out[["widths"]] %>% 
+    # Get total bases covered in bin
+    sum(.)
+  
+  return(out)
+})
+  
+overlaps_vec = purrr::map(overlaps_list, function(BIN){
+  BIN[["summed"]]
+}) %>% 
+  unlist(.)
+
+# Add as column to `bin_intervals`
+bin_intervals$REPEAT_COV = overlaps_vec
+
+# Caclulate proportion
+bin_intervals = bin_intervals %>%
+  dplyr::mutate(REPEAT_PROP = REPEAT_COV / (BIN_END - BIN_START + 1))
+```
+
+## Read in mapping quality scores
+
+```{r}
+in_file = "/nfs/research/birney/users/ian/mikk_genome/mapping_quality/mapping_quality.csv"
+
+mq_df = readr::read_csv(in_file,
+                        col_names = c("CHROM", "POS", "MQ"),
+                        col_types = c("cid")) %>% 
+  # remove 'MT'
+  dplyr::filter(!CHROM == "MT") %>% 
+  # make CHROM integer
+  dplyr::mutate(CHROM = as.integer(CHROM))
+
+# Bin and get means
+mq_list = mq_df %>% 
+  split(., f = .$CHROM)
+
+# Bin into 1 Mb intervals
+binned_mq_list = purrr::map(mq_list, function(CHR){
+  # Set intervals
+  intervals = seq(1, max(CHR$POS), by = 1000000)
+  # add final length
+  if (max(intervals) != max(CHR$POS)) {
+    intervals = c(intervals, max(CHR$POS))
+  }
+  # bin
+  CHR = CHR %>% 
+    dplyr::mutate(BIN = cut(POS,
+                            breaks = intervals,
+                            labels = F,
+                            include.lowest = T))
+})
+
+# calculate mean MQ within each bin
+mean_mq = purrr::map(binnned_mq_list, function(CHR){
+  CHR %>% 
+    dplyr::group_by(BIN) %>% 
+    dplyr::summarise(MEAN_MQ = mean(mean))
+})
+
+cut(test$`1`$POS, breaks = intervals, include.lowest = T, )
+```
+
+## Correlation between repeat content and mapping quality
+
+```{r}
+
+```
+
+
+## Correlation between Pi of MIKK and wild Kiyosu
+
+```{r}
+# Bind data frames
+pi_repeat_df = cbind(dat_list$`1000000`,
+                     PI_WK = wk_list[["1000000"]]$PI,
+                     REPEAT_PROP = bin_intervals$REPEAT_PROP)
+
+cor.test(pi_repeat_df$PI_WK, pi_repeat_df$PI)
+
+cor_plot = pi_repeat_df %>% 
+  dplyr::mutate(CHROM = factor(CHROM, levels = 1:24)) %>% 
+  ggplot() +
+      geom_point(aes(PI_WK, PI, colour = CHROM, group = BIN_START), alpha = 0.5, size = 0.5)
+
+plotly::ggplotly(cor_plot)
+```
+
+## Correlation between MIKK Pi and repeat coverage
+
+```{r}
+cor.test(pi_repeat_df$PI, pi_repeat_df$REPEAT_PROP)
+
+cor_plot = pi_repeat_df %>% 
+  dplyr::mutate(CHROM = factor(CHROM, levels = 1:24)) %>% 
+  ggplot() +
+      geom_point(aes(REPEAT_PROP, PI, colour = CHROM, group = BIN_START), alpha = 0.8, size = 0.5)
+
+plotly::ggplotly(cor_plot)
+```
+
+
+
+## Circos
+
+### Read in chromosome data
+
+<!--
+```{r}
+# Read in chromosome data
+chroms = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.toplevel.fa_chr_counts.txt")) %>%
+  dplyr::select(chr = V1, end = V2) %>%
+  dplyr::mutate(chr = paste("chr", chr, sep = ""),
+                start = 0,
+                end = as.numeric(end)) %>%
+  dplyr::select(chr, start, end)
+```
+-->
+
+```{r}
+out_plot = here::here("docs/plots/nucleotide_diversity", "20211001_circos_mikk_repeats.png")
+```
+
+```{r}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(med_chr_lens) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(med_chr_lens,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Add MIKK Pi line
+circos.genomicTrack(dat_list$`1000000`,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[2]],
+                      col = "#49A379",
+                      area = T,
+                      border = karyoploteR::darker("#49A379"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.021))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+
+# Add wild Kiyosu line
+circos.genomicTrack(wk_list$`1000000`,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[2]],
+                      col = "#8A4F7D",
+                      area = T,
+                      border = karyoploteR::darker("#8A4F7D"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.021))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+# Add repeat content
+circos.genomicTrack(pi_repeat_df,
+  panel.fun = function(region, value, ...) {
+    circos.genomicLines(region,
+                        value[[5]],
+                        type = "h",
+                        col = "#54C6EB",
+                        cex = 0.05,
+                        baseline = 0)
+  },
+  track.height = 0.1,
+  ylim = c(0,0.5),
+  bg.border = NA)
+
+circos.yaxis(side = "right",
+           at = c(0, .5, 1),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 5
+           )
+
+# Add baseline
+#circos.xaxis(h = "bottom",
+#             labels = F,
+#             major.tick = F)
+
+circos.clear()
+
+dev.off()
 ```
 

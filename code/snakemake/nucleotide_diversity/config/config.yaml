@@ -9,6 +9,10 @@ samples_cram:
     data/20200227_cram2line_no-sibs_cram-only.txt
 samples:
     data/20200227_cram2line_no-sibs.txt
+kiyosu_samples_cram:
+    data/20211001_cram2line_kiyosu-wild_cram-only.txt
+kiyosu_samples:
+    data/20211001_cram2line_kiyosu-wild.txt
 mikk_vcf:
     /nfs/research/birney/projects/indigene/datafreeze/14-03-2019/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf.gz
 working_dir:

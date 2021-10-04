@@ -1,13 +1,26 @@
-include: "rules/00_all.smk"
+include: "rules/00_common.smk"
+include: "rules/01_mikk.smk"
+include: "rules/02_wild_kiyosu.smk"
 
 ##### Target rules #####
 
 rule all:
     input:
+###################
+# 01_mikk.smk
+###################
 # index
         os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi"),
 # nucleotide_divergence
-        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/{window_size}.windowed.pi"),
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/{window_size}.windowed.pi"),
+                window_size = config["window_size"]
+        ),
+# mapping_quality
+        os.path.join(config["lts_dir"], "mapping_quality/mapping_quality.csv"),
+###################
+# 02_wild_kiyosu.smk
+###################
+# nucleotide_divergence_kw
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild_kiyosu/{window_size}.windowed.pi"),
                 window_size = config["window_size"]
         )
-

@@ -9,7 +9,10 @@ From: rocker/tidyverse:4.1.0
     # Install CRAN packages
     install2.r --error \
         BiocManager \
-        devtools
+        devtools \
+        plotly \
+        circlize \
+        GGally
     
     # Install correct version of `matrixStats`
     R -e 'devtools::install_version("matrixStats", version = "0.60.1", repos = "https://cloud.r-project.org/")'
