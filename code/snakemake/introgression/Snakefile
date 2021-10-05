@@ -186,7 +186,7 @@ rule all:
 #        os.path.join(config["abba_sliding_dir_final"], config["sliding_window_length"] + "_" + config["minimum_sites"] + ".txt"),
 #        expand(os.path.join(config["geno_dir"], "final_no-sibs_snp-dens/{chr}.txt"),
 #                chr = list(set(CHRS))),
-#        "data/introgression/hni_hsok.txt.gz",
+        "data/introgression/hni_hsok.txt.gz",
 #        os.path.join(config["geno_dir"], "final_no-sibs_snp-dens_final/mikk.txt"),
 #        "data/introgression/mikk.txt.gz",
 #        expand(os.path.join(config["geno_dir"], "final_{line_131_sib}/{chr}.txt"),
@@ -283,7 +283,7 @@ rule all:
 #                p3 = P3S_WITH_ICAB_COMB),
 #                    sliding_window_length = SLIDING_WINDOW_LENGTHS,
 #                    chr = list(set(CHRS))),
-        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
+#        os.path.join("data/introgression/abba_sliding_final_with_icab", "min-sites-" + config["minimum_sites_131"] + ".txt")
 
 
 

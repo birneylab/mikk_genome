@@ -17,6 +17,10 @@ rule all:
         ),
 # mapping_quality
         os.path.join(config["lts_dir"], "mapping_quality/mapping_quality.csv"),
+# split_and_filter
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz"),
+                mikk_sample = MIKK_SAMPLES
+        ),
 ###################
 # 02_wild_kiyosu.smk
 ###################

@@ -98,7 +98,7 @@ rule nucleotide_divergence:
                 2> {log}
         """
 
-# Calculate mapping quality
+# Pull mapping quality
 rule mapping_quality:
     input:
         vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
@@ -115,5 +115,30 @@ rule mapping_quality:
             --format '%CHROM,%POS,%INFO/MQ\\n' \
             --output {output[0]} \
             {input.vcf} \
+                2> {log}
+        """
+
+# Split VCF per-sample and exclude sites with MQ < 50
+rule split_and_filter:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
+        index = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi")
+    output:
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz"),
+                mikk_sample = MIKK_SAMPLES
+        )
+    log:
+        os.path.join(config["working_dir"], "logs/split_and_filter.log")
+    params:
+        out_dir = lambda wildcards: os.path.join(config["working_dir"], "vcfs/per_sample/mikk")
+    container:
+        config["bcftools"]
+    shell:
+        """
+        bcftools +split \
+            {input.vcf} \
+            --exclude 'INFO/MQ < 50' \
+            --output {params.out_dir} \
+            --output-type z \
                 2> {log}
         """

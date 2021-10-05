@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2021-06-24" />
+<meta name="date" content="2021-10-05" />
 
 <title>Introgression</title>
 
@@ -411,6 +411,9 @@ div.tocify {
   <a href="20210409_ld-decay.html">Linkage Disequilibrium</a>
 </li>
 <li>
+  <a href="20210930_nucleotide_divergence.html">Nucleotide diversity</a>
+</li>
+<li>
   <a href="20210427_introgression.html">Introgression</a>
 </li>
 <li>
@@ -432,7 +435,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introgression</h1>
-<h4 class="date">2021-06-24</h4>
+<h4 class="date">2021-10-05</h4>
 
 </div>
 
@@ -1166,7 +1169,7 @@ div.tocify {
 <h4 number="4.2.2.3"><span class="header-section-number">4.2.2.3</span> Read in SNP density data</h4>
 <div id="hni-and-hsok" class="section level5" number="4.2.2.3.1">
 <h5 number="4.2.2.3.1"><span class="header-section-number">4.2.2.3.1</span> HNI and HSOK</h5>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;data/introgression/hni_hsok.txt.gz&quot;</span>)</span>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>in_file <span class="ot">=</span> <span class="st">&quot;/nfs/research/birney/users/ian/mikk_genome/introgression/hni_hsok.txt.gz&quot;</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in file on local</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>ol_ranges_df <span class="ot">=</span> <span class="fu">read.table</span>(in_file,</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">header =</span> T, </span>
@@ -1445,7 +1448,7 @@ div.tocify {
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(window_length_kb <span class="sc">==</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(p1, p2)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   scaffold = col_double(),
 ##   start = col_double(),

@@ -4,7 +4,7 @@ From: rocker/tidyverse:4.1.0
 %post
     # Install packages required for R packages
     apt update
-    apt install -y libbz2-dev liblzma-dev
+    apt install -y libbz2-dev liblzma-dev libglpk40 libmagick++-dev
 
     # Install CRAN packages
     install2.r --error \
@@ -12,10 +12,11 @@ From: rocker/tidyverse:4.1.0
         devtools \
         plotly \
         circlize \
-        GGally
+        GGally \
+        geiger
     
     # Install correct version of `matrixStats`
-    R -e 'devtools::install_version("matrixStats", version = "0.60.1", repos = "https://cloud.r-project.org/")'
+    R -e 'devtools::install_version("matrixStats", ">= 0.60.1", repos = "https://cloud.r-project.org/")'
     
     # Install non-CRAN packages
     R -e 'BiocManager::install("karyoploteR")'

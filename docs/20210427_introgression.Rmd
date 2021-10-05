@@ -583,7 +583,7 @@ knitr::kable(head(df_kp))
 ##### HNI and HSOK
 
 ```{r, eval = F}
-in_file = here::here("data/introgression/hni_hsok.txt.gz")
+in_file = "/nfs/research/birney/users/ian/mikk_genome/introgression/hni_hsok.txt.gz"
 # Read in file on local
 ol_ranges_df = read.table(in_file,
                           header = T, 
@@ -612,11 +612,11 @@ ol_ranges_list = lapply(ol_ranges_list, function(x){
 
 ```{r, eval = F, include = F}
 # Save to speed up when rendering HTML
-saveRDS(ol_ranges_list, here::here("data/introgression/hni_hsok_range.rds"))
+saveRDS(ol_ranges_list, "/nfs/research/birney/users/ian/mikk_genome/introgression/hni_hsok_range.rds")
 ```
 
 ```{r, include = F}
-ol_ranges_list = readRDS(here::here("data/introgression/hni_hsok_range.rds"))
+ol_ranges_list = readRDS("/nfs/research/birney/users/ian/mikk_genome/introgression/hni_hsok_range.rds")
 ```
 
 ##### MIKK
@@ -640,11 +640,11 @@ mikk_ranges = GenomicRanges::makeGRangesFromDataFrame(mikk_ranges_df,
 
 ```{r, eval = F, include = F}
 # Save to speed up when rendering HTML
-saveRDS(mikk_ranges, here::here("data/introgression/mikk_range.rds"))
+saveRDS(mikk_ranges, "/nfs/research/birney/users/ian/mikk_genome/introgression/mikk.txt.gz")
 ```
 
 ```{r, include = F}
-mikk_ranges = readRDS(here::here("data/introgression/mikk_range.rds"))
+mikk_ranges = readRDS("/nfs/research/birney/users/ian/mikk_genome/introgression/mikk.txt.gz")
 ```
 
 #### Get exon density
@@ -667,11 +667,11 @@ ex_ranges = GenomicRanges::makeGRangesFromDataFrame(exons,
 
 ```{r, eval = F, include = F}
 # Save to speed up when rendering HTML
-saveRDS(ex_ranges, here::here("data/introgression/ex_range.rds"))
+saveRDS(ex_ranges, "/nfs/research/birney/users/ian/mikk_genome/introgression/ex_range.rds")
 ```
 
 ```{r, include = F}
-ex_ranges = readRDS(here::here("data/introgression/ex_range.rds"))
+ex_ranges = readRDS("/nfs/research/birney/users/ian/mikk_genome/introgression/ex_range.rds")
 ```
 
 #### All chromosomes

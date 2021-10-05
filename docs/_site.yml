@@ -9,6 +9,8 @@ navbar:
       href: 20210301_fecundity.html
     - text: "Linkage Disequilibrium"
       href: 20210409_ld-decay.html
+    - text: "Nucleotide diversity"
+      href: 20210930_nucleotide_divergence.html
     - text: "Introgression"
       href: 20210427_introgression.html
     - text: "Repeat Elements"

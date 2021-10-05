@@ -90,7 +90,7 @@ renv::restore()
 
 ```{r, message = F}
 library(here)
-source(here::here("code", "scripts", "sv_analysis", "source.R"))
+source(here::here("code/scripts/sv_analysis/source.R"))
 ```
 
 ### Nanopore VCF
@@ -933,7 +933,7 @@ uq_svs = sv_df_pol_dupes[!(duplicated(sv_df_pol_dupes) | duplicated(sv_df_pol_du
 # Join back with other variables
 sv_sings = dplyr::right_join(sv_df_pol_samps, uq_svs)
 
-knitr::kable(head(sv_sings))
+DT::datatable(head(sv_sings, 100))
 ```
 
 ```{r}
@@ -1105,7 +1105,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -1206,7 +1206,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -1306,7 +1306,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -1403,7 +1403,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -1484,7 +1484,7 @@ lapply(in_samples, function(TARGET_SAMPLE){
 })
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -1867,7 +1867,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -2007,7 +2007,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -2149,7 +2149,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -2258,7 +2258,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -2379,7 +2379,7 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
+```{r, eval = F, include = F}
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
 
@@ -2493,7 +2493,7 @@ lapply(intro_mikk, function(MIKK_LINE){
 ```
 
 Example plot (all lines other than 131-1 look nearly identical).
-```{r, include = F}
+```{r, eval = F, include = F}
 out_plot = here::here("plots/sv_analysis/20210330_circos_mikk/106_2.png")
 # copy to same directory as current notebook
 current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
@@ -2513,7 +2513,7 @@ knitr::include_graphics(basename(out_plot))
 
 ```{r}
 # Read in data
-hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
+hdrr_reps = read.table(file.path(lts_dir, "repeats/medaka_hdrr_repeats.fixed.gff"),
                        header = F, sep = "\t", skip = 3, comment.char = "", quote = "", as.is = T) %>%
   # Remove empty V8 column
   dplyr::select(-V8) %>%
@@ -2807,12 +2807,12 @@ lod_list = purrr::map(pli_overlaps, function(SVTYPE){
 
 ```{r, eval = F, include=F}
 # Save to list to read back in
-saveRDS(lod_list, here::here("data/sv_analysis/lod_list.rds"))
+saveRDS(lod_list, file.path(lts_dir, "sv_analysis/lod_list.rds"))
 ```
 
 ```{r, include=F}
 # Save to list to read back in
-lod_list = readRDS(here::here("data/sv_analysis/lod_list.rds"))
+lod_list = readRDS(file.path(lts_dir, "sv_analysis/lod_list.rds"))
 ```
 
 ## Bind with original SV df
@@ -3010,7 +3010,7 @@ high_lod = sv_lod_df %>%
   unique(.)
 
 # Get pLI matches
-knitr::kable(pli_df[high_lod, ])
+DT::datatable(pli_df[high_lod, ])
 ```
 
 # New final figure

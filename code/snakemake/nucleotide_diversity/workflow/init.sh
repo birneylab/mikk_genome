@@ -23,10 +23,12 @@ snakemake \
 # RStudio Server
 ####################
 
+# Build container
+module load singularity-3.7.0-gcc-9.3.0-dp5ffrp
+cd /hps/software/users/birney/ian/repos/mikk_genome
 # Set container path
 CONT=/hps/software/users/birney/ian/containers/mikk_genome/nucleotide_diversity/R_4.1.0.sif
 
-# Build container
 singularity build --remote \
     $CONT \
     code/snakemake/nucleotide_diversity/workflow/envs/R_4.1.0.def

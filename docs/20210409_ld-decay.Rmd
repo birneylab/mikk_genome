@@ -42,7 +42,7 @@ conda activate mikk_env
 ```{r, message = F, warning = F}
 # Load required libraries
 require(here)
-source(here::here("code", "scripts", "ld_decay", "source.R"))
+source(here::here("code/scripts/ld_decay/source.R"))
 ```
 
 
@@ -374,11 +374,11 @@ See which lines are causing the high-LD regions at the `MAF > 0.05` threshold (i
 
 ```{r, eval = F}
 # Read in BED matrix
-mikk_full <- gaston::read.bed.matrix(here("plink", "20200716_panel_no-sibs_line-ids_no-missing/20200716"),
+mikk_full <- gaston::read.bed.matrix(file.path(lts_dir, "plink/20200716_panel_no-sibs_line-ids_no-missing/20200716"),
                                      rds = NULL)
 
 # Read in genotypes file
-mikk_geno <- readr::read_tsv(file = here("plink", "20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw"),
+mikk_geno <- readr::read_tsv(file = file.path(lts_dir, "plink/20200716_panel_no-sibs_line-ids_no-missing/20200716_recode012.traw"),
                              progress = T,
                              col_names = T)
 
@@ -413,7 +413,7 @@ high_ld_lst <- lapply(high_ld_chrs, function(x){
 names(high_ld_lst) <- high_ld_chrs
 
 # save to repo
-saveRDS(high_ld_lst, here::here("mikk_genome", "data", "20200727_high_ld_list.rds"))
+saveRDS(high_ld_lst, file.path(lts_dir, "20200727_high_ld_list.rds"))
 ```
 
 ## Plot
@@ -425,7 +425,7 @@ Orange = 1
 Yellow = 0
 
 ```{r load_high_ld_list, include = F}
-high_ld_lst = readRDS(here::here("data", "20200727_high_ld_list.rds"))
+high_ld_lst = readRDS(file.path(lts_dir, "20200727_high_ld_list.rds"))
 ```
 
 ```{r}

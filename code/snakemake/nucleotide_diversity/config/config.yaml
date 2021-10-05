@@ -9,6 +9,8 @@ samples_cram:
     data/20200227_cram2line_no-sibs_cram-only.txt
 samples:
     data/20200227_cram2line_no-sibs.txt
+samples_line_only:
+    data/20200227_cram2line_no-sibs_line-only.txt
 kiyosu_samples_cram:
     data/20211001_cram2line_kiyosu-wild_cram-only.txt
 kiyosu_samples:

@@ -20,7 +20,7 @@ output:
 
 ```{r, message = F, warning = F}
 library(here)
-source(here::here("code", "scripts", "repeats", "source.R"))
+source(here::here("code/scripts/repeats/source.R"))
 ```
 
 
@@ -42,7 +42,7 @@ scp ~/Desktop/medaka_hdrr_repeats.fixed.gff brettell@ebi:/hps/research1/birney/u
 
 ```{r, results = 'asis'}
 # Read in data
-hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
+hdrr_reps = read.table(file.path(lts_dir, "medaka_hdrr_repeats.fixed.gff"),
                        header = F, sep = "\t", skip = 3, comment.char = "", quote = "", as.is = T) %>% 
   # Remove empty V8 column
   dplyr::select(-V8) %>% 
@@ -51,7 +51,7 @@ hdrr_reps = read.table(here("data", "20201126_medaka_hdrr_repeats.fixed.gff"),
   # Rename columns
   dplyr::rename(chr = V1, tool = V2, class_full = V3, start = V4, end = V5, percent = V6, strand = V7, info = V9)
 
-knitr::kable(head(hdrr_reps))
+DT::datatable(head(hdrr_reps, 100))
 
 # Find types of class other than "(GATCCA)n" types
 class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
@@ -69,7 +69,7 @@ hdrr_reps = hdrr_reps %>%
   # rename "Simple_repeat"
   dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat"))
 
-knitr::kable(head(hdrr_reps))
+DT::datatable(head(hdrr_reps, 1000))
 
 ```
 
@@ -79,7 +79,7 @@ knitr::kable(head(hdrr_reps))
 # How many repeats in each category?
 hdrr_reps %>% 
   count(class) %>% 
-  knitr::kable(.)
+  DT::datatable(., options = list(pageLength = nrow(.)))
 ```
 
 ## Circos
@@ -254,7 +254,7 @@ circos.clear()
 ### Save plot
 
 ```{r, eval = F}
-out_plot = here::here("plots", "repeats", "20210302_hdrr_repeats_true.png")
+out_plot = here::here("docs/plots/repeats/20210302_hdrr_repeats_true.png")
 png(out_plot,
     width = 20,
     height = 20,
@@ -347,7 +347,7 @@ dev.off()
 ```
 
 ```{r, fig.width=20, fig.height=20}
-knitr::include_graphics(here::here("plots", "repeats", "20210302_hdrr_repeats_true.png"))
+knitr::include_graphics(here::here("docs/plots/repeats/20210302_hdrr_repeats_true.png"))
 ```
 
 
