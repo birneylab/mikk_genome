@@ -97,3 +97,48 @@ rule nucleotide_divergence_kw:
             --out {params.prefix} \
                 2> {log}
         """
+
+rule split_and_filter_kw:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/wild-kiyosu_line-id.vcf.gz"),
+        index = os.path.join(config["working_dir"], "vcfs/wild-kiyosu_line-id.vcf.gz.tbi")
+    output:
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/wild/{wild_sample}.vcf.gz"),
+                wild_sample = WILD_SAMPLES
+        )
+    log:
+        os.path.join(config["working_dir"], "logs/split_and_filter_kw.log")
+    params:
+        out_dir = lambda wildcards, output: os.path.dirname(output[0])
+    container:
+        config["bcftools"]
+    shell:
+        """
+        bcftools +split \
+            {input.vcf} \
+            --exclude 'INFO/MQ < 50' \
+            --output {params.out_dir} \
+            --output-type z \
+                2> {log}
+        """
+
+rule nd_per_sample_wild:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/per_sample/wild/{wild_sample}.vcf.gz"),
+    output:
+        os.path.join(config["lts_dir"], "nucleotide_divergence/wild/per_sample/{wild_sample}.windowed.pi")
+    log:
+        os.path.join(config["working_dir"], "logs/nd_per_sample_wild{wild_sample}.log")
+    params:
+        window_size = 500000,
+        prefix = lambda wildcards, output: os.path.join(os.path.dirname(output[0]), wildcards.wild_sample)
+    container:
+        config["vcftools"]
+    shell:
+        """
+        vcftools \
+            --gzvcf {input.vcf} \
+            --window-pi {params.window_size} \
+            --out {params.prefix} \
+                2> {log}
+        """

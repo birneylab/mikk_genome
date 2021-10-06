@@ -17,4 +17,7 @@ configfile: "code/snakemake/nucleotide_diversity/config/config.yaml"
 ######################
 
 MIKK_SAMPLES = pd.read_csv(config["samples_line_only"],
-                           header = None)
+                           header = None)[0].tolist()
+
+WILD_SAMPLES = pd.read_csv(config["kiyosu_samples_only"],
+                           header = None)[0].tolist()

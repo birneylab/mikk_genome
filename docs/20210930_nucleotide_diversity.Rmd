@@ -1,5 +1,5 @@
 ---
-title: "Nucleotide divergence"
+title: "Nucleotide diversity"
 date: '`r format(Sys.Date())`'
 #output: html_notebook
 #editor_options: 
@@ -24,6 +24,7 @@ library(karyoploteR)
 library(plotly)
 library(circlize)
 library(GGally)
+library(viridis)
 ```
 
 
@@ -47,7 +48,7 @@ Data location: `/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence
 
 ```{r}
 # Set location of data
-in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk"
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/all"
 
 in_files = list.files(in_dir, full.names = T)
 dat_list = lapply(in_files, function(IN_FILE) {
@@ -791,3 +792,175 @@ dev.off()
 ```{r}
 knitr::include_graphics(out_plot)
 ```
+
+# Per-individual
+
+## Read in data
+
+### MIKK
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/per_sample"
+
+in_files = list.files(in_dir, full.names = T)
+mikk_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(mikk_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+
+# reorder
+ordered_lines = tibble::tibble("LINE" = names(mikk_list)) %>% 
+  tidyr::separate(col = LINE, into = c("LINE", "SIB", "EXTRA"), sep = "_") %>% 
+  dplyr::mutate(LINE = as.integer(LINE)) %>% 
+  dplyr::arrange(LINE) %>% 
+  tidyr::unite(col = "ORIGINAL", sep = "_", na.rm = T) %>% 
+  dplyr::pull()
+
+mikk_list = mikk_list[order(match(names(mikk_list), ordered_lines))]
+
+# Bind rows
+mikk_df = mikk_list %>% 
+  dplyr::bind_rows(.id = "LINE") %>% 
+  # factor LINE to order
+  dplyr::mutate(LINE = factor(LINE, levels = names(mikk_list)))
+```
+
+### Wild
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild/per_sample"
+
+in_files = list.files(in_dir, full.names = T)
+wild_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(wild_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+
+# Bind rows
+wild_df = wild_list %>% 
+  dplyr::bind_rows(.id = "LINE")
+```
+
+### Combine
+
+```{r}
+pi_df = list("MIKK" = mikk_df,
+             "WILD" = wild_df) %>% 
+  dplyr::bind_rows(.id = "BREEDING")
+```
+
+
+## Plot
+
+```{r}
+mikk_list$`4_1` %>% 
+  ggplot() +
+    geom_histogram(aes(PI)) +
+    facet_wrap(~CHROM)
+```
+### Chr1
+
+```{r, fig.dim = c(8, 20)}
+mikk_chr1 = mikk_df %>% 
+  # Take only chromosome 1
+  dplyr::filter(CHROM == 1) %>% 
+  # Create Mb column
+  dplyr::mutate(Mb = BIN_START / 1e6) %>% 
+  ggplot() +
+    geom_col(aes(Mb, PI, fill = PI)) +
+    facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+    theme_bw() +
+    theme(text = element_text(size = 5)) +
+    xlab("500 kb window start position (Mb)") +
+    ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+    ggtitle("MIKK nucleotide diversity (chr1)") +
+    scale_fill_viridis(name = expression(pi))
+
+mikk_chr1
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211006_mikk_chr1_column.png"),
+       plot = mikk_chr1,
+       device = "png",
+       width = 8,
+       height = 20,
+       units = "in",
+       dpi = 400)
+```
+
+### All chromosomes
+
+```{r}
+purrr::map(1:24, function(CHR){
+    # Create plot
+    plot_df = mikk_df %>% 
+      # Filter for target CHROM
+      dplyr::filter(CHROM == CHR) %>% 
+      # Create Mb column
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6)
+    out_plot = plot_df %>% 
+      ggplot() +
+        geom_col(aes(Mb, PI, fill = PI)) +
+        facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+        theme_bw() +
+        theme(text = element_text(size = 5)) +
+        ylim(c(0, max(mikk_df$PI))) +
+        xlab("500 kb window start position (Mb)") +
+        ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+        ggtitle(paste("Chromosome ", CHR, sep = "")) +
+        scale_fill_viridis(name = expression(pi), limits = c(0,max(mikk_df$PI)))
+        
+    
+    # Adjust width dimensions of plot based on length of chromosome
+    w_dim = mikk_df %>% 
+      dplyr::filter(CHROM == CHR) %>% 
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6) %>% 
+      dplyr::pull(Mb) %>% 
+      max(.)
+    w_dim = w_dim * 0.26
+    # Save
+    ggsave(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr", paste(CHR, ".png", sep = "")),
+           plot = out_plot,
+           device = "png",
+           width = w_dim,
+           height = 20,
+           units = "in",
+           dpi = 400)
+})
+```
+
+
+```{r}
+View(mikk_df %>% 
+  dplyr::group_by(LINE) %>% 
+  dplyr::summarise(mean(PI)))
+
+View(wild_df %>% 
+  dplyr::group_by(LINE) %>% 
+  dplyr::summarise(mean(PI)))
+```
+
+

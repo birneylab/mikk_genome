@@ -12,7 +12,7 @@ rule all:
 # index
         os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi"),
 # nucleotide_divergence
-        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/{window_size}.windowed.pi"),
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/all/{window_size}.windowed.pi"),
                 window_size = config["window_size"]
         ),
 # mapping_quality
@@ -21,10 +21,22 @@ rule all:
         expand(os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz"),
                 mikk_sample = MIKK_SAMPLES
         ),
+# nd_per_sample_mikk
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/per_sample/{mikk_sample}.windowed.pi"),
+                mikk_sample = MIKK_SAMPLES
+        ),
 ###################
 # 02_wild_kiyosu.smk
 ###################
 # nucleotide_divergence_kw
         expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild_kiyosu/{window_size}.windowed.pi"),
                 window_size = config["window_size"]
-        )
+        ),
+# split_and_filter_kw
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/wild/{wild_sample}.vcf.gz"),
+                wild_sample = WILD_SAMPLES
+        ),
+# nd_per_sample_wild
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild/per_sample/{wild_sample}.windowed.pi"),
+                wild_sample = WILD_SAMPLES
+        ),

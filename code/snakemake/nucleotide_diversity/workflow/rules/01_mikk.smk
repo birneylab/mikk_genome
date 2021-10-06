@@ -81,7 +81,7 @@ rule nucleotide_divergence:
         vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
         index = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi")
     output:
-        os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/{window_size}.windowed.pi")
+        os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/all/{window_size}.windowed.pi")
     log:
         os.path.join(config["working_dir"], "logs/nucleotide_divergence/{window_size}.log")
     params:
@@ -142,3 +142,26 @@ rule split_and_filter:
             --output-type z \
                 2> {log}
         """
+
+rule nd_per_sample_mikk:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz"),
+    output:
+        os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/per_sample/{mikk_sample}.windowed.pi")
+    log:
+        os.path.join(config["working_dir"], "logs/nd_per_sample_mikk/{mikk_sample}.log")
+    params:
+        window_size = 500000,
+        prefix = lambda wildcards, output: os.path.join(os.path.dirname(output[0]), wildcards.mikk_sample)
+    container:
+        config["vcftools"]
+    shell:
+        """
+        vcftools \
+            --gzvcf {input.vcf} \
+            --window-pi {params.window_size} \
+            --out {params.prefix} \
+                2> {log}
+        """
+
+## ##INFO=<ID=QD,Number=1,Type=Float,Description="Variant Confidence/Quality by Depth">
