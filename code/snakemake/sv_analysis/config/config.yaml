@@ -12,15 +12,13 @@ new_header:
 working_dir:
     /hps/nobackup/birney/users/ian/mikk_genome/sv_analysis
 lts_dir:
-    /nfs/research/birney/users/ian/mikk_genome
+    /nfs/research/birney/users/ian/mikk_genome/sv_analysis
 
 ####################
 # Containers
 ####################
 bcftools:
     docker://quay.io/biocontainers/bcftools:1.13--h3a49de5_0
-tabix:
-    docker://biocontainers/tabix:v1.9-11-deb_cv1
 ####################
 # Parameters
 ####################

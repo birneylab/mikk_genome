@@ -1036,7 +1036,7 @@ sv_dels = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210325_sv_dels_lines.png")
+out_plot = here::here("docs/plots/sv_analysis/20210325_sv_dels_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1105,17 +1105,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### INS
@@ -1137,7 +1128,7 @@ sv_ins = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210325_sv_ins_lines.png")
+out_plot = here::here("docs/plots/sv_analysis/20210325_sv_ins_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1206,18 +1197,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### DUP
@@ -1237,7 +1218,7 @@ sv_dups = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210325_sv_dups_lines.png")
+out_plot = here::here("docs/plots/sv_analysis/20210325_sv_dups_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1306,17 +1287,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### INV
@@ -1334,7 +1306,7 @@ sv_invs = sv_df %>%
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210325_sv_invs_lines.png")
+out_plot = here::here("docs/plots/sv_analysis/20210325_sv_invs_lines.png")
 ```
 
 ```{r, eval = F}
@@ -1403,23 +1375,14 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### TRA
 
 ```{r}
-out_dir = here::here("plots", "sv_analysis", "20210326_tras")
+out_dir = here::here("docs/plots/sv_analysis/20210326_tras")
 in_samples = ont_samples_pol
 pal = fishualize::fish(n = length(in_samples), option = "Scarus_quoyi")
 ```
@@ -1484,18 +1447,8 @@ lapply(in_samples, function(TARGET_SAMPLE){
 })
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-out_plots = here::here(out_dir, paste(ont_samples_pol, ".png", sep = ""))
-new_paths = file.path(current_dir, basename(out_plots))
-
-file.copy(out_plots, new_paths, overwrite = T)
-```
-
 ```{r, fig.show='hold', out.width='33%', out.height='33%'}
-knitr::include_graphics(basename(new_paths))
+knitr::include_graphics(list.files(out_dir, full.names = T))
 ```
 
 
@@ -1503,7 +1456,7 @@ knitr::include_graphics(basename(new_paths))
 
 ```{r, fig.width=12, fig.height=16.8}
 final_svtype = ggdraw() +
-  draw_image(here::here("plots", "sv_analysis", "20210325_sv_dels_lines.png"),
+  draw_image(here::here("docs/plots/sv_analysis/20210325_sv_dels_lines.png"),
            x = 0, y = 0, width = 1, height = .75, scale = 1.12) +
   draw_plot(svtype_counts_plot,
             x = 0, y = .75, width = .5, height = .25) +
@@ -1767,7 +1720,7 @@ paf_clean = pafs %>%
 ### HdrR
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210323_circos_hdrr_alignments.png")
+out_plot = here::here("docs/plots/sv_analysis/20210323_circos_hdrr_alignments.png")
 ```
 
 ```{r, eval = F}
@@ -1867,17 +1820,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### HNI
@@ -1906,7 +1850,7 @@ chroms_hni = read.table(here::here("data/Oryzias_latipes_hni.ASM223471v1.dna.top
 ```
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210323_circos_hni_alignments.png")
+out_plot = here::here("docs/plots/sv_analysis/20210323_circos_hni_alignments.png")
 ```
 
 ```{r, eval = F}
@@ -2007,17 +1951,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ### Histograms showing distribution of identity
@@ -2073,7 +2008,7 @@ list_131 = purrr::map(in_files, readr::read_csv) %>%
 ## HNI
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210324_circos_131_siblines_HNI.png")
+out_plot = here::here("docs/plots/sv_analysis/20210324_circos_131_siblines_HNI.png")
 ```
 
 ```{r, eval = F}
@@ -2149,24 +2084,14 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ## HdrR and HNI
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210324_circos_131_siblines_HdrR_HNI.png")
+out_plot = here::here("docs/plots/sv_analysis/20210324_circos_131_siblines_HdrR_HNI.png")
 ```
 
 ```{r, eval = F}
@@ -2258,18 +2183,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ## 131-1 with HdrR, HNI and Kaga
@@ -2299,7 +2214,7 @@ intro_mikk = purrr::map(files, function(x) x %>%
 
 
 ```{r}
-out_plot = here::here("plots", "sv_analysis", "20210330_circos_131-1_HdrR_HNI_Kaga_HSOK.png")
+out_plot = here::here("docs/plots/sv_analysis/20210330_circos_131-1_HdrR_HNI_Kaga_HSOK.png")
 ```
 
 ```{r, eval = F}
@@ -2379,17 +2294,8 @@ circos.clear()
 dev.off()
 ```
 
-```{r, eval = F, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 More introgression with HNI or Kaga?
@@ -2410,7 +2316,7 @@ lapply(intro_mikk, function(MIKK_LINE){
   # Set counter_mikk
   counter_mikk <<- counter_mikk + 1
   # Set plot path
-  out_plot = here::here("plots", "sv_analysis", "20210330_circos_mikk",
+  out_plot = here::here("docs/plots/sv_analysis/20210330_circos_mikk",
                         paste(names(intro_mikk)[counter_mikk], ".png", sep = ""))
   # Generate plot
   png(out_plot,
@@ -2493,18 +2399,9 @@ lapply(intro_mikk, function(MIKK_LINE){
 ```
 
 Example plot (all lines other than 131-1 look nearly identical).
-```{r, eval = F, include = F}
-out_plot = here::here("plots/sv_analysis/20210330_circos_mikk/106_2.png")
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
 
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(here::here("docs/plots/sv_analysis/20210330_circos_mikk/106_2.png"))
 ```
 
 # Intersection with repeats
@@ -3017,7 +2914,7 @@ DT::datatable(pli_df[high_lod, ])
 
 ```{r, fig.width=12, fig.height=16.8}
 final_svtype = ggdraw() +
-  draw_image(here::here("plots", "sv_analysis", "20210325_sv_dels_lines.png"),
+  draw_image(here::here("docs/plots/sv_analysis/20210325_sv_dels_lines.png"),
            x = 0, y = 0, width = 1, height = .6, scale = 1.12) +
   draw_plot(svlen_counts_plot,
             x = 0, y = .8, width =.4, height = .2) +
@@ -3036,7 +2933,7 @@ final_svtype
 ```
 
 ```{r, eval = F}
-ggsave(here::here("plots", "sv_analysis", "20210408_sv_main.png"),
+ggsave(here::here("docs/plots/sv_analysis/20210325_sv_dels_lines.png"),
        device = "png",
        dpi = 400,
        units = "cm",

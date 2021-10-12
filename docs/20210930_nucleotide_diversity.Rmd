@@ -8,7 +8,7 @@ output:
   html_document:
     toc: true
     toc_float: true
-    dev: 'svg'
+    dev: 'png'
     number_sections: true
     keep_md: false
     pandoc_args: --lua-filter=color-text.lua

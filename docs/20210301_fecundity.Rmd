@@ -131,6 +131,28 @@ out2 = ggplot(test) +
 out2
 ```
 
+### New palette
+
+```{r}
+reviewer_pal = c("#FC4E07", "#FFBF00", "#0BC166", "#00AFBB", "#360568", "#D84797")
+
+out3 = ggplot(test) +
+    geom_area(aes(x=GENERATION,
+                  y=N,
+                  fill = STATUS)) +
+    scale_fill_manual(values = reviewer_pal) +
+    scale_x_continuous(breaks = unique(test$GENERATION),
+                       labels = paste("F", unique(test$GENERATION), sep = "")) +
+    theme_cowplot(font_size = 10) +
+    xlab("Generation") +
+    ylab("Number of MIKK panel lines") +
+    labs(fill = "Status") +
+    theme(panel.grid = element_blank())
+
+out3
+```
+
+
 # Fecundity
 
 ## Read in data
@@ -205,7 +227,7 @@ fec_count = final_hor_df %>%
     xlab("Fecundity") +
     ylab("Number of MIKK panel lines") +
     guides(fill = F) +
-    theme(axis.text = element_text(size = 5))
+    theme(axis.text = element_text(size = 5.5))
 
 fec_count
 ```
@@ -232,6 +254,37 @@ ggsave(here("plots", "fecundity", "20210301_final_figure.svg"),
 
 # PNG
 ggsave(here("plots", "fecundity", "20210301_final_figure.png"),
+       device = "png",
+       dpi = 400,
+       units = "cm",
+       height = 11.2,
+       width = 30)
+```
+
+## New
+
+```{r, fig.width=18.75, fig.height=7}
+final = ggdraw() +
+  draw_plot(out3, x = 0, y = 0, width = .55, height = 1) +
+  draw_plot(fec_count, x = .55, y = 0, width = .45, height = 1) +
+  draw_plot_label(label = c("A", "B"), size = 15,
+                  x = c(0, 0.55), y = c(1, 1))
+
+final
+```
+
+```{r, eval = F}
+# SVG
+ggsave(here("plots", "fecundity", "20211012_final_figure.svg"),
+       final,
+       device = "svg",
+       units = "cm",
+       height = 11.2,
+       width = 30)
+
+# PNG
+ggsave(here("plots", "fecundity", "20211012_final_figure.png"),
+       final,
        device = "png",
        dpi = 400,
        units = "cm",

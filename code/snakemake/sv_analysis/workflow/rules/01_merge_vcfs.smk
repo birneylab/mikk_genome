@@ -46,27 +46,27 @@ rule rehead_vcfs:
                 2> {log}
         """
 
-rule compress_vcfs:
-    input:
-        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf")
-    output:
-        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf.gz")
-    log:
-        os.path.join(config["working_dir"], "logs/compress_vcfs/{sample}.log")
-    container:
-        config["bcftools"]
-    shell:
-        """
-        bcftools view \
-            --output {output[0]} \
-            --output-type z \
-            {input} \
-                2> {log}
-        """
+#rule compress_vcfs:
+#    input:
+#        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf")
+#    output:
+#        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf.gz")
+#    log:
+#        os.path.join(config["working_dir"], "logs/compress_vcfs/{sample}.log")
+#    container:
+#        config["bcftools"]
+#    shell:
+#        """
+#        bcftools view \
+#            --output {output[0]} \
+#            --output-type z \
+#            {input} \
+#                2> {log}
+#        """
 
 rule sort_vcfs:
     input:
-        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf.gz")
+        os.path.join(config["working_dir"], "vcfs/indiv_rehead/{sample}.vcf")
     output:
         os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz")
     log:
@@ -82,11 +82,28 @@ rule sort_vcfs:
                 2> {log}
         """
 
+#rule index_vcfs:
+#    input:
+#        os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz")
+#    output:
+#        os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz.csi")
+#    log:
+#        os.path.join(config["working_dir"], "logs/index_vcfs/{sample}.log")
+#    container:
+#        config["bcftools"]
+#    shell:
+#        """
+#        bcftools index \
+#            --csi \
+#            {input[0]} \
+#                2> {log}
+#        """
+
 rule index_vcfs:
     input:
         os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz")
     output:
-        os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz.csi")
+        os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz.tbi")
     log:
         os.path.join(config["working_dir"], "logs/index_vcfs/{sample}.log")
     container:
@@ -94,19 +111,19 @@ rule index_vcfs:
     shell:
         """
         bcftools index \
-            --csi \
+            --tbi \
             {input[0]} \
                 2> {log}
         """
-
+  
 rule merge_vcfs:
     input:
         vcfs = expand(os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz"),
                         sample = config["samples"]),
-        indexes = expand(os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz.csi"),
+        indexes = expand(os.path.join(config["working_dir"], "vcfs/indiv_sorted/{sample}.vcf.gz.tbi"),
                         sample = config["samples"])
     output:
-        os.path.join(config["working_dir"], "vcfs/merged/all.vcf")
+        os.path.join(config["lts_dir"], "vcfs/merged/all.vcf.gz")
     log:
         os.path.join(config["working_dir"], "logs/merge_vcfs.log")
     container:
@@ -116,7 +133,6 @@ rule merge_vcfs:
         bcftools merge \
             --output {output[0]} \
             --output-type z \
-            {input} \
+            {input.vcfs} \
                 2> {log}
         """
-
