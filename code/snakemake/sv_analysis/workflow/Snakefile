@@ -1,0 +1,16 @@
+include: "rules/00_common.smk"
+include: "rules/01_merge_vcfs.smk"
+
+##### Target rules #####
+
+rule all:
+    input:
+###################
+# 01_merge_vcfs.smk
+###################
+## copy_polished_vcfs
+#        expand(os.path.join(config["working_dir"], "vcfs/{sample}.vcf"),
+#                sample = SAMPLES
+#        ),
+# merge_vcfs
+        os.path.join(config["working_dir"], "vcfs/merged/all.vcf")

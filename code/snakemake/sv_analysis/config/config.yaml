@@ -1,0 +1,38 @@
+####################
+# Config files
+####################
+
+####################
+# Locations
+####################
+polished_on_ebi:
+    /hps/research1/birney/users/ian/mikk_paper/sv_analysis/vcfs/sviper
+new_header:
+    code/snakemake/sv_analysis/config/new_header.txt
+working_dir:
+    /hps/nobackup/birney/users/ian/mikk_genome/sv_analysis
+lts_dir:
+    /nfs/research/birney/users/ian/mikk_genome
+
+####################
+# Containers
+####################
+bcftools:
+    docker://quay.io/biocontainers/bcftools:1.13--h3a49de5_0
+tabix:
+    docker://biocontainers/tabix:v1.9-11-deb_cv1
+####################
+# Parameters
+####################
+samples:
+    - 4-1
+    - 7-1
+    - 11-1
+    - 69-1
+    - 79-2
+    - 80-1
+    - 117-2
+    - 131-1
+    - 134-1
+    - 134-2
+
