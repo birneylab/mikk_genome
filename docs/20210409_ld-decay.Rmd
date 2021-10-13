@@ -343,27 +343,27 @@ By inspecting these LD plots at the `MAF > 0.05` level, we discovered the follow
 See zoomed plots here:
 
 ```{r, echo = F, fig.cap = "5:28181970-28970558"}
-knitr::include_graphics("hv_5_28181970-28970558.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_5_28181970-28970558.png"))
 ```
 
 ```{r, echo = F, fig.cap = "6:29398579-32246747"}
-knitr::include_graphics("hv_6_29398579-32246747.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_6_29398579-32246747.png"))
 ```
 
 ```{r, echo = F, fig.cap = "12:25336174-25384053"}
-knitr::include_graphics("hv_12_25336174-25384053.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_12_25336174-25384053.png"))
 ```
 
 ```{r, echo = F, fig.cap = "14:12490842-12947083"}
-knitr::include_graphics("hv_14_12490842-12947083.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_14_12490842-12947083.png"))
 ```
 
 ```{r, echo = F, fig.cap = "17:15557892-19561518"}
-knitr::include_graphics("hv_17_15557892-19561518.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_17_15557892-19561518.png"))
 ```
 
 ```{r, echo = F, fig.cap = "21:6710074-7880374"}
-knitr::include_graphics("hv_21_6710074-7880374.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_21_6710074-7880374.png"))
 ```
 
 # Genotype heatmaps for high-LD regions
@@ -449,7 +449,7 @@ get_heatmap = function(in_list){
 ### Chr 5
 
 ```{r, cache = T, fig.show="hold", out.width='50%',  fig.cap = "5:28181970-28970558"}
-knitr::include_graphics("hv_5_28181970-28970558.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_5_28181970-28970558.png"))
 x = high_ld_lst[["5"]]
 get_heatmap(x)
 ```
@@ -457,7 +457,7 @@ get_heatmap(x)
 ### Chr 6
 
 ```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "6:29398579-32246747"}
-knitr::include_graphics("hv_6_29398579-32246747.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_6_29398579-32246747.png"))
 x = high_ld_lst[["6"]]
 get_heatmap(x)
 ```
@@ -465,7 +465,7 @@ get_heatmap(x)
 ### Chr 12
 
 ```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "12:25336174-25384053"}
-knitr::include_graphics("hv_12_25336174-25384053.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_12_25336174-25384053.png"))
 x = high_ld_lst[["12"]]
 get_heatmap(x)
 ```
@@ -473,7 +473,7 @@ get_heatmap(x)
 ### Chr 14
 
 ```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "14:12490842-12947083"}
-knitr::include_graphics("hv_14_12490842-12947083.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_14_12490842-12947083.png"))
 x = high_ld_lst[["14"]]
 get_heatmap(x)
 ```
@@ -481,7 +481,7 @@ get_heatmap(x)
 ### Chr 17
 
 ```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "17:15557892-19561518"}
-knitr::include_graphics("hv_17_15557892-19561518.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_17_15557892-19561518.png"))
 x = high_ld_lst[["17"]]
 get_heatmap(x)
 ```
@@ -489,7 +489,7 @@ get_heatmap(x)
 ### Chr 21
 
 ```{r, cache = T, fig.show="hold", out.width='50%', fig.cap = "21:6710074-7880374"}
-knitr::include_graphics("hv_21_6710074-7880374.png")
+knitr::include_graphics(here::here("docs/plots/ld_decay/hv_21_6710074-7880374.png"))
 x = high_ld_lst[["21"]]
 get_heatmap(x)
 ```

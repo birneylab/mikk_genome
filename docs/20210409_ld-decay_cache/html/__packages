@@ -34,3 +34,5 @@ RcppParallel
 gaston
 heatmaply
 lubridate
+DT
+GGally

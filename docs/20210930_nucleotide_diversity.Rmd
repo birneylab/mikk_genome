@@ -654,7 +654,7 @@ df_circos_500kb$BIN_END = bin_intervals_500$BIN_END
 ```
 
 ```{r}
-out_plot = here::here("docs/plots/nucleotide_diversity", "20211001_circos_500kb.png")
+out_plot = here::here("docs/plots/nucleotide_diversity/20211001_circos_500kb.png")
 ```
 
 ```{r}
@@ -983,6 +983,46 @@ knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_
 knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/22.png"))
 ```
 
+### chr1 and 22 for supplementary figures
+
+```{r, eval = F}
+target_chrs = c(1, 22)
+# Create plot
+final_plot_df = mikk_df %>% 
+  # Filter for target CHROM
+  dplyr::filter(CHROM %in% target_chrs) %>% 
+  # Create Mb column
+  dplyr::mutate(Mb = (BIN_START - 1) / 1e6)
+out_plot = final_plot_df %>% 
+  ggplot() +
+    geom_col(aes(Mb, PI, fill = PI)) +
+    facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+    theme_bw() +
+    theme(text = element_text(size = 5)) +
+    ylim(c(0, max(mikk_df$PI))) +
+    xlab("500 kb window start position (Mb)") +
+    ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+    scale_fill_viridis(name = expression(pi), limits = c(0,max(mikk_df$PI)))
+
+out_plot 
+
+# Save
+ggsave(here::here("docs/plots/nucleotide_diversity/20211013_chrs_1_22.png"),
+       plot = out_plot,
+       device = "png",
+       width = 15,
+       height = 20,
+       units = "in",
+       dpi = 400)
+
+```
+
+```{r}
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/1.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/2.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/22.png"))
+```
+
 ## Investigate QC stats for sample MIKK10_1 to determine appropriate cutoffs
 
 ```{r}
@@ -1051,8 +1091,8 @@ Try GQ >= 40 & DP >= 40 & MQ >= 50.
 # Set location of data
 in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/filtered"
 
-in_files_filt = list.files(in_dir, full.names = T)
-mikk_list_filt = lapply(in_files_filt, function(IN_FILE) {
+in_files_mikk_filt = list.files(in_dir, full.names = T)
+mikk_list_filt = lapply(in_files_mikk_filt, function(IN_FILE) {
   # Read in 
   readr::read_delim(IN_FILE,
                     delim = "\t",
@@ -1064,7 +1104,7 @@ mikk_list_filt = lapply(in_files_filt, function(IN_FILE) {
     # Create middle of bin
     dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
 })
-names(mikk_list_filt) = basename(in_files_filt) %>%
+names(mikk_list_filt) = basename(in_files_mikk_filt) %>%
   str_remove(".windowed.pi")
 
 # reorder
@@ -1091,7 +1131,7 @@ mikk_df_filt = mikk_list_filt %>%
 in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild/filtered"
 
 in_files_wild_filt = list.files(in_dir, full.names = T)
-wild_list_filt = lapply(in_files, function(IN_FILE) {
+wild_list_filt = lapply(in_files_wild_filt, function(IN_FILE) {
   # Read in 
   readr::read_delim(IN_FILE,
                     delim = "\t",
@@ -1244,8 +1284,8 @@ ggsave(here::here("docs/plots/nucleotide_diversity/20211011_mikk_wild_boxplot_sa
 ```{r}
 mikk_wild_boxplot_facet = pi_df_filt %>% 
   ggplot() +
-    geom_violin(aes(POPULATION, -log10(PI), colour = POPULATION, fill = POPULATION)) +
-    geom_boxplot(aes(POPULATION, -log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
+    geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.05) +
     theme_bw() +
     scale_fill_manual(name = "Population", values = pal) +
     scale_colour_manual(name = "Population", values = darker(pal, 80)) +
@@ -1266,4 +1306,3 @@ ggsave(here::here("docs/plots/nucleotide_diversity/20211006_mikk_wild_boxplot_fa
        units = "in",
        dpi = 400)
 ```
-
