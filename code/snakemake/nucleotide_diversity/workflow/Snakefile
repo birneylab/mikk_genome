@@ -41,6 +41,8 @@ rule all:
         expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/filtered/{mikk_sample}.windowed.pi"),
                 mikk_sample = MIKK_SAMPLES
         ),
+# nd_filtered_mikk_all
+        os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/mikk.windowed.pi"),
 ###################
 # 02_wild_kiyosu.smk
 ###################
@@ -68,3 +70,5 @@ rule all:
         expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild/filtered/{wild_sample}.windowed.pi"),
                 wild_sample = WILD_SAMPLES
         ),
+# nd_filtered_wild_all
+        os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/wild.windowed.pi")

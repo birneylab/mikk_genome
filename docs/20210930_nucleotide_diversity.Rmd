@@ -1183,7 +1183,7 @@ pi_df_filt %>%
 mikk_wild_boxplot = pi_df_filt %>% 
   ggplot() +
     geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
-    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.5) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
     theme_bw() +
     scale_fill_manual(name = "Population", values = pal) +
     scale_colour_manual(name = "Population", values = darker(pal, 80)) +
@@ -1219,7 +1219,7 @@ mikk_wild_boxplot_samp = pi_df_filt %>%
   dplyr::filter(POPULATION == "WILD" | LINE %in% mikk_random_samples) %>% 
   ggplot() +
     geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
-    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.5) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
     theme_bw() +
     scale_fill_manual(name = "Population", values = pal) +
     scale_colour_manual(name = "Population", values = darker(pal, 80)) +
@@ -1245,11 +1245,11 @@ ggsave(here::here("docs/plots/nucleotide_diversity/20211011_mikk_wild_boxplot_sa
 mikk_wild_boxplot_facet = pi_df_filt %>% 
   ggplot() +
     geom_violin(aes(POPULATION, -log10(PI), colour = POPULATION, fill = POPULATION)) +
-    geom_boxplot(aes(POPULATION, -log10(PI), colour = POPULATION, fill = POPULATION), width = 0.5) +
+    geom_boxplot(aes(POPULATION, -log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
     theme_bw() +
     scale_fill_manual(name = "Population", values = pal) +
     scale_colour_manual(name = "Population", values = darker(pal, 80)) +
-    ylab(expression(paste(-log[10], "(", pi, ")", sep = ""))) +
+    ylab(expression(paste(log[10], "(", pi, ")", sep = ""))) +
     facet_wrap(vars(CHROM), nrow = 4, ncol = 6) +
     guides(colour = "none", fill = "none") +
     ggtitle("Nucleotide diversity in 500 kb bins (MAPQ >= 50 & GQ >= 40 & DP >= 40 )")

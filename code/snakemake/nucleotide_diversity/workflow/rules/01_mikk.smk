@@ -311,3 +311,51 @@ rule nd_filtered_mikk:
             --out {params.prefix} \
                 2> {log}
         """
+
+# Filter whole-panel VCF
+rule filter_mikk_all:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz"),
+        index = os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi"),
+    output:
+        os.path.join(config["working_dir"], "vcfs/filtered/mikk_no-sibs_line-id.vcf.gz"),
+    log:
+        os.path.join(config["working_dir"], "logs/filter_mikk_all.log")
+    params:
+        min_MQ = config["min_MQ"],
+        min_DP = config["min_DP"],
+        min_GQ = config["min_GQ"]
+    container:
+        config["bcftools"]
+    shell:
+        """
+        bcftools view \
+            --genotype ^miss \
+            --include 'FORMAT/DP >= {params.min_DP} & MQ >= {params.min_MQ} & FORMAT/GQ >= {params.min_GQ}' \
+            --output {output[0]} \
+            --output-type z \
+            {input.vcf} \
+                2> {log}
+        """
+
+# Get Pi stats for whole (filtered) panel
+rule nd_filtered_mikk_all:
+    input:
+        vcf = os.path.join(config["working_dir"], "vcfs/filtered/mikk_no-sibs_line-id.vcf.gz"),
+    output:
+        os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/mikk.windowed.pi")
+    log:
+        os.path.join(config["working_dir"], "logs/nd_filtered_mikk_all.log")
+    params:
+        window_size = 500000,
+        prefix = lambda wildcards: os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/mikk")
+    container:
+        config["vcftools"]
+    shell:
+        """
+        vcftools \
+            --gzvcf {input.vcf} \
+            --window-pi {params.window_size} \
+            --out {params.prefix} \
+                2> {log}
+        """
