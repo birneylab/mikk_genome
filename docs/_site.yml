@@ -6,17 +6,17 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Fecundity"
-      href: 20210301_fecundity.html
+      href: 01_Fecundity.html
     - text: "Linkage Disequilibrium"
-      href: 20210409_ld-decay.html
+      href: 02_LD_decay.html
     - text: "Nucleotide diversity"
-      href: 20210930_nucleotide_diversity.html
+      href: 03_Nucleotide_diversity.html
     - text: "Introgression"
-      href: 20210427_introgression.html
+      href: 04_Introgression.html
     - text: "Repeat Elements"
-      href: 20210409_repeats.html
+      href: 05_Repeats.html
     - text: "Structural variation"
-      href: 20210409_sv_notebook.html
+      href: 06_Structural_variation.html
 output:
   html_document:
     theme: flatly

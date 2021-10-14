@@ -16,7 +16,7 @@ library(circlize)
 # Variables
 ################################
 
-plots_dir = here::here("plots", "introgression")
+plots_dir = here::here("docs/plots/introgression")
 
 # HdrR chromosome lengths
 

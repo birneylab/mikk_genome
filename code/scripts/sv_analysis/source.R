@@ -16,6 +16,8 @@ library(fishualize)
 library(GenomicRanges)
 library(biomaRt)
 library(DT)
+library(googledrive)
+library(googlesheets4)
 
 
 #############################
