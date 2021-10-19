@@ -136,3 +136,21 @@ rule merge_vcfs:
             {input.vcfs} \
                 2> {log}
         """
+
+rule extract_loci:
+    input:
+        os.path.join(config["lts_dir"], "vcfs/merged/all.vcf.gz")
+    output:
+        os.path.join(config["lts_dir"], "loci/all.csv")
+    log:
+        os.path.join(config["working_dir"], "logs/extract_loci.log")
+    container:
+        config["bcftools"]
+    shell:
+        """
+        bcftools query \
+            --format '%CHROM,%POS,%INFO/END,%INFO/SVTYPE,%INFO/SVLEN[,%GT]\\n' \
+            --output {output[0]} \
+            {input[0]} \
+                2> {log}
+        """    

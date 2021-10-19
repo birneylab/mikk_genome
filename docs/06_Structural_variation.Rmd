@@ -3058,9 +3058,101 @@ length(unique(queryHits(exon_olaps)))
 
 ## Read in data
 
+### High-confidence graph calls
+
+Manually copied Google Sheets from Indigene Google Drive to personal EBI Google Drive:
+
+```{r}
+googledrive::drive_ls("mikk_genome_drive/data")
+```
+
+#### DEL
+
+```{r}
+del_tbl_1 = googlesheets4::read_sheet("1Tav2-DEGfqxW5wRnJB00-kSS6RgfQb31xh_4N52BmQk",
+                                      range = "A1:A17")
+
+del_tbl_2 = googlesheets4::read_sheet("1Tav2-DEGfqxW5wRnJB00-kSS6RgfQb31xh_4N52BmQk",
+                                      range = "A21:A23")
+
+del_tbl = rbind(del_tbl_1, del_tbl_2) %>% 
+  tidyr::separate("HdrR locus", into = c("CHROM", "POS"), sep = ":", remove = F) %>% 
+  tidyr::separate("POS", into = c("START", "END"), sep = "-") %>% 
+  # convert to integer
+  dplyr::mutate(dplyr::across(c("CHROM", "START", "END"),
+                              ~as.integer(.x))) %>% 
+  dplyr::arrange(CHROM, START)
+```
+
+#### INS
+
+```{r}
+ins_tbl_1 = googlesheets4::read_sheet("13ldar7niAoZ6AUahdMxdRJz8BsY8bOPws97fBxMfLrk",
+                                      range = "A1:A20")
+
+ins_tbl_2 = googlesheets4::read_sheet("13ldar7niAoZ6AUahdMxdRJz8BsY8bOPws97fBxMfLrk",
+                                      range = "A22:A24")
+
+ins_tbl = rbind(ins_tbl_1, ins_tbl_2) %>% 
+  # Remove the "HDRR_" prefix in the first row of `ins_tbl_1`
+  dplyr::mutate(`HdrR locus` = stringr::str_remove(`HdrR locus`, "HDRR_")) %>% 
+  tidyr::separate("HdrR locus", into = c("CHROM", "POS"), sep = ":", remove = F) %>% 
+  tidyr::separate("POS", into = c("START", "END"), sep = "-") %>% 
+  # convert to integer
+  dplyr::mutate(dplyr::across(c("CHROM", "START", "END"),
+                              ~as.integer(.x))) %>% 
+  dplyr::arrange(CHROM, START)
+```
+
+### Polished calls
+
+```{r}
+pol_loci_file = file.path(lts_dir, "sv_analysis/loci/all.csv")
+col_names = c("CHROM", "START", "END", "SVTYPE", "SVLEN", "4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2")
+
+# Read in loci
+polished_loci = readr::read_csv(pol_loci_file,
+                                col_names = col_names,
+                                col_types = c("cddcdcccccccccc")) %>% 
+  # remove MT
+  dplyr::filter(CHROM != "MT") %>% 
+  # covert `CHROM` to integer
+  dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+  # arrange by CHROM, POS
+  dplyr::arrange(CHROM, START)
+
+polished_loci_nomiss = polished_loci %>% 
+  # remove variants where all samples are missing
+  dplyr::filter(dplyr::if_any(.cols = c("4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2"),
+                              .fns =  ~.x != "./.")) 
+
+test  = polished_loci %>% 
+  # remove variants where all samples are missing
+  dplyr::filter(dplyr::if_all(.cols = c("4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2"),
+                              .fns =  ~.x == "./.")) 
+
+pol_loci_list = polished_loci_nomiss %>% 
+  # split into list by SVTYPE
+  split(., f = .$SVTYPE)
+```
+
+## Find overlaps
+
 ### DEL
 
 ```{r}
-graph_del_sheet_id = https://docs.google.com/spreadsheets/d/1-TGNnM1zHyclstVlFEtDSrmoeLCd53ZxAwNK5rO3SQw/edit?usp=sharing
+# Convert graph loci to GRanges
+del_tbl_r = del_tbl %>% 
+  GenomicRanges::makeGRangesFromDataFrame(., ignore.strand = T)
+
+# Convert polished loci to GRanges
+del_pol_r = pol_loci_list$DEL %>% 
+  GenomicRanges::makeGRangesFromDataFrame(., ignore.strand = T, keep.extra.columns = T)
+
+# Find overlaps
+del_overlaps = IRanges::findOverlaps(del_tbl_r, del_pol_r)
+
+# Show polished loci that overlap
+del_pol_r[del_overlaps@to]
 ```
 

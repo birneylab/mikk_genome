@@ -14,5 +14,5 @@ rule all:
 #        ),
 # merge_vcfs
         os.path.join(config["lts_dir"], "vcfs/merged/all.vcf.gz"),
-## get_stats
-#        os.path.join(config["working_dir"], "vcfs/merged/all.vcf.stats")
+# extract_loci
+        os.path.join(config["lts_dir"], "loci/all.csv")
