@@ -51,41 +51,6 @@ Once done we need to summarise and describe the SV’s a little with some annota
 Working directory on EBI cluster: `/hps/research1/birney/users/ian/mikk_paper/mikk_genome/sv_analysis`
 GitHub repo: <https://github.com/brettellebi/mikk_genome>
 
-### `conda` envs
-
-#### `sv_env`
-
-```{bash, eval = F}
-# Make conda env
-mamba create -n sv_env
-conda activate sv_env
-# Install packages
-mamba install -c bioconda bcftools sniffles
-mamba install -c conda-forge r-base r-tidyverse
-# Export to file
-conda env export > envs/sv_env/sv_env.yaml
-```
-
-#### `baseR`
-
-```{bash, eval = F}
-# Activate
-conda activate baseR
-# Export
-conda env export > envs/baseR/baseR.yaml
-```
-
-### `renv`
-
-```{r, eval = F}
-# Initiate
-renv::init()
-# Snapshot
-renv::snapshot()
-# Restore
-renv::restore()
-```
-
 #### Source
 
 ```{r, message = F}
@@ -644,7 +609,7 @@ sv_filter_desc = sv_df_pol %>%
     facet_wrap(~SVTYPE) +
     scale_fill_manual(values = svtype_hist_pal) +
     xlab("Filter description") +
-    guides(fill = F)
+    guides(fill = "none")
 
 ```
 
@@ -820,8 +785,8 @@ svlen_counts_plot = svtype_distinct_df %>%
               bins = 100) +
     scale_fill_manual(values = svtype_hist_pal) +
     scale_colour_manual(values = karyoploteR::darker(svtype_hist_pal)) +
-    guides(fill = F) +
-    guides(colour = F) +
+    guides(fill = "none") +
+    guides(colour = "none") +
     scale_x_continuous(breaks = seq(1, 6, 1),
                        limits = c(1, 6)) +
     facet_wrap(~SVTYPE, nrow = 2, ncol = 2) +
@@ -858,8 +823,8 @@ polish_comp_plot = sv_df %>%
               bins = 100) +
     scale_fill_manual(values = svtype_hist_pal) +
     scale_colour_manual(values = karyoploteR::darker(svtype_hist_pal)) +
-    guides(fill = F) +
-    guides(colour = F) +
+    guides(fill = "none") +
+    guides(colour = "none") +
     scale_x_continuous(breaks = seq(1, 6, 1),
                        limits = c(1, 6)) +
     facet_grid(rows = vars(DATASET),
@@ -970,7 +935,7 @@ svtype_counts_plot = sv_counts %>%
     theme(strip.background = element_blank(),
           axis.text.x = element_text(size = 5,angle = 45,hjust = 1),
           strip.text.x = element_text(face = "bold")) +
-    guides(fill = F) +
+    guides(fill = "none") +
     xlab("Sample") +
     ylab("Count")
 
@@ -1506,7 +1471,7 @@ sv_sings %>%
     facet_wrap(~SAMPLE) +
     theme_bw() +
     theme(axis.text.x = element_text(size = 5)) +
-    guides(fill = F) +
+    guides(fill = "none") +
     ggtitle("Singletons")
 ```
 ```{r}
@@ -1534,7 +1499,7 @@ sv_df %>%
   ggplot() +
     geom_col(aes(CHROM, N, fill = CHROM)) +
     theme_bw() +
-    guides(fill = F) +
+    guides(fill = "none") +
     ggtitle("Non-singletons (i.e. shared by at least two lines)")
 ```
 
@@ -1966,7 +1931,7 @@ paf_clean %>%
     geom_density(aes(PERCENT_MATCHED, fill = REFERENCE)) +
     facet_wrap(~REFERENCE) +
     theme_bw() +
-    guides(fill = F) +
+    guides(fill = "none") +
     scale_fill_manual(values = pal_abba) +
     xlab("BLAST identity")
 ```
@@ -2619,7 +2584,7 @@ sv_ranges_list$INS$SV_df %>%
     geom_boxplot() +
     scale_y_log10() +
     theme_cowplot() +
-    guides(colour = F) +
+    guides(colour = "none") +
     xlab("Overlapping repeat") +
     ylab("INS length")
 ```
@@ -2783,7 +2748,7 @@ sv_lod_plot = sv_lod_plot_df %>%
     facet_wrap(~SVTYPE, nrow = 2, ncol = 2) +
     scale_colour_manual(values = svtype_hist_pal) +
     theme_cowplot() +
-    guides(colour = F) +
+    guides(colour = "none") +
     xlab(expression(log[10](length))) +
     ylab("LOD for pLI") +
     theme(axis.text.x = element_text(size = 6),
@@ -2822,7 +2787,7 @@ sv_lod_hist = sv_lod_plot_df %>%
     geom_histogram(aes(LOD, fill = SVTYPE), bins = 70) +
     scale_fill_manual(values = svtype_hist_pal) +
     theme_cowplot() +
-    guides(fill = F) +
+    guides(fill = "none") +
     scale_y_log10() +
     ylab(expression(log[10](count))) +
     xlab("LOD for pLI")
@@ -3060,22 +3025,24 @@ length(unique(queryHits(exon_olaps)))
 
 ### High-confidence graph calls
 
-Manually copied Google Sheets from Indigene Google Drive to personal EBI Google Drive:
 
 ```{r}
-googledrive::drive_ls("mikk_genome_drive/data")
+googledrive::drive_get("MIKK SV assemblies paper",
+                       shared_drive = googledrive::shared_drive_get("Indigene")) %>% 
+  googledrive::drive_ls(.)
+
+tables_id = googledrive::drive_ls(googledrive::as_id("1jxseUwEzJso34T4gqanJFqI2XoM6yqGP"))
+tables_id
+
+del_id = tables_id$id[tables_id$name == "graph_deletions_loci"]
+ins_id = tables_id$id[tables_id$name == "graph_alternative_divergent loci"]
 ```
 
 #### DEL
 
 ```{r}
-del_tbl_1 = googlesheets4::read_sheet("1Tav2-DEGfqxW5wRnJB00-kSS6RgfQb31xh_4N52BmQk",
-                                      range = "A1:A17")
-
-del_tbl_2 = googlesheets4::read_sheet("1Tav2-DEGfqxW5wRnJB00-kSS6RgfQb31xh_4N52BmQk",
-                                      range = "A21:A23")
-
-del_tbl = rbind(del_tbl_1, del_tbl_2) %>% 
+del_tbl = googlesheets4::read_sheet(del_id,
+                                    range = "A1:A17") %>% 
   tidyr::separate("HdrR locus", into = c("CHROM", "POS"), sep = ":", remove = F) %>% 
   tidyr::separate("POS", into = c("START", "END"), sep = "-") %>% 
   # convert to integer
@@ -3087,14 +3054,9 @@ del_tbl = rbind(del_tbl_1, del_tbl_2) %>%
 #### INS
 
 ```{r}
-ins_tbl_1 = googlesheets4::read_sheet("13ldar7niAoZ6AUahdMxdRJz8BsY8bOPws97fBxMfLrk",
-                                      range = "A1:A20")
-
-ins_tbl_2 = googlesheets4::read_sheet("13ldar7niAoZ6AUahdMxdRJz8BsY8bOPws97fBxMfLrk",
-                                      range = "A22:A24")
-
-ins_tbl = rbind(ins_tbl_1, ins_tbl_2) %>% 
-  # Remove the "HDRR_" prefix in the first row of `ins_tbl_1`
+ins_tbl = googlesheets4::read_sheet(ins_id,
+                                    range = "A1:A20") %>% 
+  # Remove the "HDRR_" prefix in the first row
   dplyr::mutate(`HdrR locus` = stringr::str_remove(`HdrR locus`, "HDRR_")) %>% 
   tidyr::separate("HdrR locus", into = c("CHROM", "POS"), sep = ":", remove = F) %>% 
   tidyr::separate("POS", into = c("START", "END"), sep = "-") %>% 
@@ -3108,7 +3070,8 @@ ins_tbl = rbind(ins_tbl_1, ins_tbl_2) %>%
 
 ```{r}
 pol_loci_file = file.path(lts_dir, "sv_analysis/loci/all.csv")
-col_names = c("CHROM", "START", "END", "SVTYPE", "SVLEN", "4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2")
+lines = c("4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2")
+col_names = c("CHROM", "START", "END", "SVTYPE", "SVLEN", lines)
 
 # Read in loci
 polished_loci = readr::read_csv(pol_loci_file,
@@ -3123,13 +3086,13 @@ polished_loci = readr::read_csv(pol_loci_file,
 
 polished_loci_nomiss = polished_loci %>% 
   # remove variants where all samples are missing
-  dplyr::filter(dplyr::if_any(.cols = c("4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2"),
-                              .fns =  ~.x != "./.")) 
-
-test  = polished_loci %>% 
-  # remove variants where all samples are missing
-  dplyr::filter(dplyr::if_all(.cols = c("4-1","7-1","11-1","69-1","79-2","80-1","117-2","131-1","134-1","134-2"),
-                              .fns =  ~.x == "./.")) 
+  dplyr::filter(dplyr::if_any(.cols = dplyr::all_of(lines),
+                              .fns =  ~.x != "./.")) %>% 
+  # keep only variants where at least one sample has the alt allele
+  dplyr::filter(dplyr::if_any(.cols = dplyr::all_of(lines),
+                              .fns =  ~.x %in% c("0/1", "1/1"))) %>% 
+  # remove duplicated rows
+  dplyr::distinct()
 
 pol_loci_list = polished_loci_nomiss %>% 
   # split into list by SVTYPE
@@ -3151,8 +3114,180 @@ del_pol_r = pol_loci_list$DEL %>%
 
 # Find overlaps
 del_overlaps = IRanges::findOverlaps(del_tbl_r, del_pol_r)
+del_overlaps
 
-# Show polished loci that overlap
-del_pol_r[del_overlaps@to]
+# Get paired intersections
+del_intersects = IRanges::pintersect(del_tbl_r[del_overlaps@from], del_pol_r[del_overlaps@to])
+del_intersects
+
+# Create final data frame
+del_final = tibble::tibble(# Graph deletion ranges and widths
+                           del_tbl[del_overlaps@from, ] %>% 
+                             dplyr::rename(CHROM_G = CHROM,
+                                           START_G = START,
+                                           END_G = END),
+                           WIDTH_G= BiocGenerics::width(del_tbl_r[del_overlaps@from, ]),
+                           # Polished hits ranges and widths  
+                           del_pol_r[del_overlaps@to] %>% 
+                             GenomicRanges::granges(.) %>% 
+                             data.frame(.) %>% 
+                             dplyr::select(CHROM_P = seqnames,
+                                           START_P = start,
+                                           END_P = end,
+                                           WIDTH_P = width),
+                           # Add paired intersections
+                           del_intersects %>% 
+                             GenomicRanges::granges(.) %>% 
+                             data.frame(.) %>% 
+                             dplyr::select(CHROM_I = seqnames,
+                                           START_I = start,
+                                           END_I = end,
+                                           WIDTH_I = width),
+                           # Add genotypes
+                           pol_loci_list$DEL[del_overlaps@to, ] %>% 
+                             dplyr::select(all_of(lines))
+                           ) %>% 
+  # Get proportion of graph variants covered by intersecting polished variants
+  dplyr::mutate(PROP_COV = WIDTH_I / WIDTH_G)
+
+DT::datatable(del_final)
+
+# Find the maximum covered
+del_max = del_final %>% 
+  dplyr::group_by(`HdrR locus`) %>% 
+  dplyr::slice_max(WIDTH_I) %>% 
+  # add SVs that had no overlaps and remove duplicates
+  rbind(., del_tbl %>% 
+          dplyr::select(`HdrR locus`,
+                        CHROM_G = CHROM,
+                        START_G = START,
+                        END_G = END) %>% 
+          dplyr::mutate(WIDTH_G = END_G - START_G + 1)) %>% 
+  dplyr::distinct(`HdrR locus`, .keep_all = T) %>%
+  # Sort by chromosome and start position
+  dplyr::arrange(CHROM_G, START_G) %>% 
+  # remove ties for WIDTH_I
+  dplyr::distinct(`HdrR locus`, .keep_all = T) %>% 
+  # Unite polished locus
+  tidyr::unite(col = POL_LOC, START_P, END_P, sep = "-") %>% 
+  tidyr::unite(col = `HdrR locus (reference-anchored)`, CHROM_P, POL_LOC, sep = ":") %>% 
+  # Unite intersection locus
+  tidyr::unite(col = INT_LOC, START_I, END_I, sep = "-") %>% 
+  tidyr::unite(col = `HdrR locus (intersection)`, CHROM_I, INT_LOC, sep = ":") %>% 
+  # Select key columns
+  dplyr::select(`HdrR locus (graph-based)` = `HdrR locus`,
+                -c(CHROM_G, START_G, END_G),
+                `SV length (graph-based)` = WIDTH_G,
+                `HdrR locus (reference-anchored)`,
+                `SV length (reference-anchored)` = WIDTH_P,
+                `Length of intersection` = WIDTH_I,
+                `Proportion overlap (intersection / graph SV length)` = PROP_COV,
+                dplyr::all_of(lines)) %>% 
+  # Replace NA in `HdrR locus (polished)`
+  dplyr::mutate(`HdrR locus (reference-anchored)` = dplyr::na_if(`HdrR locus (reference-anchored)`, "NA:NA-NA"))
+
+DT::datatable(del_max)
+
 ```
 
+```{r, eval = F}
+# Write to google sheet
+googlesheets4::range_write(ss = del_id,
+                           data = del_max,
+                           range = "A27",
+                           reformat = F)
+```
+
+### INS
+
+```{r}
+# Convert graph loci to GRanges
+ins_tbl_r = ins_tbl %>% 
+  GenomicRanges::makeGRangesFromDataFrame(., ignore.strand = T)
+
+# Convert polished loci to GRanges
+ins_pol_r = pol_loci_list$INS %>% 
+  GenomicRanges::makeGRangesFromDataFrame(., ignore.strand = T, keep.extra.columns = T)
+
+# Find overlaps
+ins_overlaps = IRanges::findOverlaps(ins_tbl_r, ins_pol_r)
+ins_overlaps
+
+# Create final data frame
+ins_final = tibble::tibble(# Graph insertion ranges and widths
+                           ins_tbl[ins_overlaps@from, ] %>% 
+                             dplyr::rename(CHROM_G = CHROM,
+                                           START_G = START,
+                                           END_G = END),
+                           WIDTH_G= BiocGenerics::width(ins_tbl_r[ins_overlaps@from, ]),
+                           # Polished hits ranges and widths  
+                           ins_pol_r[ins_overlaps@to] %>% 
+                             data.frame(.) %>% 
+                             dplyr::select(CHROM_P = seqnames,
+                                           START_P = start,
+                                           END_P = end,
+                                           WIDTH_P = SVLEN),
+                           # Add genotypes
+                           pol_loci_list$INS[ins_overlaps@to, ] %>% 
+                             dplyr::select(all_of(lines))
+                           ) %>% 
+  # Unite polished locus
+  tidyr::unite(col = POL_LOC, START_P, END_P, sep = "-") %>% 
+  tidyr::unite(col = `HdrR locus (reference-anchored)`, CHROM_P, POL_LOC, sep = ":") %>% 
+  # Select key columns
+  dplyr::select(`HdrR locus (graph-based)` = `HdrR locus`,
+                -c(CHROM_G, START_G, END_G),
+                `SV length (graph-based)` = WIDTH_G,
+                `HdrR locus (reference-anchored)`,
+                `SV length (reference-anchored)` = WIDTH_P,
+                dplyr::all_of(lines)) 
+  
+DT::datatable(ins_final)
+
+# Create summary table
+
+ins_summary = ins_final %>% 
+  dplyr::group_by(`HdrR locus (graph-based)`, `SV length (graph-based)`) %>% 
+  dplyr::summarise(`Total bases covered by INS (reference-based)` = sum(`SV length (reference-anchored)`)) %>% 
+  # calculate proportion covered
+  dplyr::mutate(`Proportion of graph-based INS covered by reference-based INS` = `Total bases covered by INS (reference-based)` / `SV length (graph-based)`) %>% 
+  # bind all INS to pick up those without overlaps
+  rbind(., ins_tbl %>% 
+          dplyr::select(`HdrR locus (graph-based)` = `HdrR locus`)) %>% 
+  # take unique
+  dplyr::distinct(`HdrR locus (graph-based)`, .keep_all = T) %>% 
+  # split to order
+  tidyr::separate(col = `HdrR locus (graph-based)`, into = c("CHROM", "POS"), sep = ":", remove = F) %>% 
+  tidyr::separate(col = POS, into = c("START", "END"), sep = "-", remove = T) %>% 
+  # convert CHROM to integer
+  dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+  # order
+  dplyr::arrange(CHROM, START) %>% 
+  # select key columns
+  dplyr::select(-c(CHROM, START, END))
+
+DT::datatable(ins_summary)
+
+# Find the total covered
+ins_total = ins_final %>% 
+  dplyr::group_by(`HdrR locus`) %>% 
+  dplyr::summarise(TOTAL_COVERED = sum(WIDTH_P))
+
+
+```
+
+## Save to sheets
+
+```{r, eval = F}
+# Write full hits list
+googlesheets4::range_write(ss = ins_id,
+                           data = ins_final,
+                           range = "A27",
+                           reformat = F)
+
+# Write summary
+googlesheets4::range_write(ss = ins_id,
+                           data = ins_summary,
+                           range = "A112",
+                           reformat = F)
+```
