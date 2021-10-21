@@ -3267,13 +3267,6 @@ ins_summary = ins_final %>%
   dplyr::select(-c(CHROM, START, END))
 
 DT::datatable(ins_summary)
-
-# Find the total covered
-ins_total = ins_final %>% 
-  dplyr::group_by(`HdrR locus`) %>% 
-  dplyr::summarise(TOTAL_COVERED = sum(WIDTH_P))
-
-
 ```
 
 ## Save to sheets

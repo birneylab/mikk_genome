@@ -241,19 +241,9 @@ ggsave(out_file,
 ```
 
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_file))
-
-if (file.exists(new_path) != T){
-  file.copy(out_file, new_path)
-}
-```
 
 ```{r}
-knitr::include_graphics(basename(out_file))
+knitr::include_graphics(out_file)
 ```
 ### Oryzias latipes only
 
@@ -315,17 +305,9 @@ ggsave(out_file,
     dpi = 400)
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_file))
-
-file.copy(out_file, new_path, overwrite = T)
-```
 
 ```{r}
-knitr::include_graphics(basename(out_file))
+knitr::include_graphics(out_file)
 ```
 
 ## Divide by segment
@@ -760,19 +742,9 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(file_out))
-
-if (file.exists(new_path) != T){
-  file.copy(file_out, new_path)
-}
-```
 
 ```{r}
-knitr::include_graphics(basename(file_out))
+knitr::include_graphics(file_out)
 ```
 
 #### Chromosome 4
@@ -865,19 +837,8 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_file))
-
-if (file.exists(new_path) != T){
-  file.copy(out_file, new_path)
-}
-```
-
 ```{r}
-knitr::include_graphics(basename(out_file))
+knitr::include_graphics(out_file)
 ```
 
 # Final figure
@@ -1147,17 +1108,9 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
 
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 ```{r}
 out_plot = here::here("docs/plots/introgression/20210427_introgression_circos_MIKK_ABBA_p1-icab.png")
@@ -1242,17 +1195,9 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
 
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 ### Final for paper (with iCab as yellow)
 
@@ -1344,17 +1289,9 @@ circos.clear()
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_plot))
-
-file.copy(out_plot, new_path, overwrite = T)
-```
 
 ```{r}
-knitr::include_graphics(basename(out_plot))
+knitr::include_graphics(out_plot)
 ```
 
 ## Re-do final figure (just tree, schema, and circos)
@@ -1506,18 +1443,8 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_file))
-
-file.copy(out_file, new_path, overwrite = T)
-
-```
-
 ```{r}
-knitr::include_graphics(basename(out_file))
+knitr::include_graphics(out_file)
 ```
 ##### chr2
 
@@ -1606,17 +1533,8 @@ kpAddLabels(kp, labels=bquote(italic(f[d])),
 dev.off()
 ```
 
-```{r, include = F}
-# copy to same directory as current notebook
-current_dir = dirname(rstudioapi::getSourceEditorContext()$path)
-
-new_path = file.path(current_dir, basename(out_file))
-
-file.copy(out_file, new_path, overwrite = T)
-```
-
 ```{r}
-knitr::include_graphics(basename(out_file))
+knitr::include_graphics(out_file)
 ```
 Use chr4.
 

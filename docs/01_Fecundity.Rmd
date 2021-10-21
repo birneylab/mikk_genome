@@ -291,3 +291,107 @@ ggsave(here("plots", "fecundity", "20211012_final_figure.png"),
        height = 11.2,
        width = 30)
 ```
+
+# Add eye measurement data
+
+## Read in data
+
+```{r}
+eye_dat_file = here::here("data/fecundity/eye_rel_measurements_line_ids.txt")
+
+eye_df = readr::read_delim(eye_dat_file,
+                           delim = "\t",
+                           col_types = c("cdc"))
+
+eye_df %>% 
+  DT::datatable()
+```
+
+## Explore data
+
+```{r}
+# How many of each line and sex?
+eye_df %>% 
+  dplyr::count(line, gender)
+
+# Exclude males and get means
+eye_df_filt = eye_df %>% 
+  #dplyr::filter(gender == "Female") %>% 
+  dplyr::group_by(line, gender) %>% 
+  dplyr::summarise(MEAN_EYE = mean(eye_rel)) %>% 
+  dplyr::arrange(MEAN_EYE)
+
+eye_df_filt %>% 
+  ggplot() +
+    geom_histogram(aes(MEAN_EYE), bins = 40) +
+    facet_wrap(vars(gender)) +
+    theme_cowplot() +
+    guides(fill = "none", colour = "none")
+
+gender_pal_1 = c("#0D1B2A", "#1B263B")
+gender_pal_2 = c("#FA9702", "#922294")
+
+eye_dens = eye_df_filt %>% 
+  ggplot() +
+    geom_density(aes(MEAN_EYE, fill = gender, colour = gender)) +
+    scale_fill_manual(values = gender_pal_2) +
+    scale_colour_manual(values = darker(gender_pal_2, 70)) +
+    facet_wrap(vars(gender)) +
+    theme_cowplot(font_size = 10) +
+    guides(fill = "none", colour = "none") +
+    xlab("Mean relative eye size") +
+    ylab("Density")
+
+eye_dens
+```
+
+## Plot
+
+```{r}
+# order 
+eye_df_filt_f = eye_df_filt %>% 
+  dplyr::filter(gender == "Female") %>% 
+  dplyr::arrange(MEAN_EYE) 
+
+line_order = eye_df_filt_f$line
+
+eye_df_filt_f %>% 
+  dplyr::mutate(line = factor(line, levels = line_order)) %>% 
+  ggplot() +
+    geom_col(aes(line, MEAN_EYE, fill = line)) +
+    scale_fill_viridis_d(option = "magma") +
+    theme_cowplot() +
+    guides(fill = "none")
+```
+
+## Compile
+
+```{r, fig.width=16, fig.height=12}
+final = ggdraw() +
+  draw_plot(out3, x = 0, y = 0.45, width = .55, height = 0.55) +
+  draw_plot(fec_count, x = .55, y = 0.45, width = .45, height = 0.55) +
+  draw_plot(eye_dens, x = 0, y = 0, width = 1, height = 0.45) +
+  draw_plot_label(label = c("A", "B", "C"), size = 15,
+                  x = c(0, 0.55, 0), y = c(1, 1, 0.45))
+
+final
+```
+
+```{r, eval = F}
+# SVG
+ggsave(here::here("docs/plots/fecundity/20211020_final_figure.svg"),
+       final,
+       device = "svg",
+       units = "in",
+       height = 12,
+       width = 16)
+
+# PNG
+ggsave(here::here("docs/plots/fecundity/20211020_final_figure.png"),
+       final,
+       device = "png",
+       dpi = 400,
+       units = "in",
+       height = 12,
+       width = 16)
+```
