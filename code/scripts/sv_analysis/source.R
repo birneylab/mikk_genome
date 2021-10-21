@@ -15,6 +15,9 @@ library(plotly)
 library(fishualize)
 library(GenomicRanges)
 library(biomaRt)
+library(DT)
+library(googledrive)
+library(googlesheets4)
 
 
 #############################
@@ -51,6 +54,9 @@ LOD <- function(HI = c(0.9, 0.2, 0.3, 0.5, 0.1)) {
 #############################
 # Variables
 #############################
+
+# Big data storage on Codon
+lts_dir = "/nfs/research/birney/users/ian/mikk_genome"
 
 # HdrR chromosome lengths
 

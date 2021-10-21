@@ -1,0 +1,1308 @@
+---
+title: "Nucleotide diversity"
+date: '`r format(Sys.Date())`'
+#output: html_notebook
+#editor_options: 
+#  chunk_output_type: inline
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    dev: 'png'
+    number_sections: true
+    keep_md: false
+    pandoc_args: --lua-filter=color-text.lua
+    highlight: pygments 
+---
+
+# Load libraries
+
+```{r, message = F, warning = F}
+library(here)
+library(tidyverse)
+library(karyoploteR)
+library(plotly)
+library(circlize)
+library(GGally)
+library(viridis)
+```
+
+
+# Snakemake pipeline to process VCF and extract data
+
+<https://github.com/brettellebi/mikk_genome/tree/master/code/snakemake/nucleotide_diversity>
+
+**Steps**
+
+1. Filter MIKK panel VCF for non-sibling lines (N = 63).
+1. Use `VCFtools`'s `--window-pi` to calculate nucleotide divergence in different-sized windows.
+1. Use `bcftools` to extract `MQ` from `INFO` field.
+
+# Process data
+
+Data location: `/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence`
+
+## Read in data
+
+### MIKK
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/all"
+
+in_files = list.files(in_dir, full.names = T)
+dat_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(dat_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+```
+
+### Wild Kiyosu
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild_kiyosu"
+
+in_files = list.files(in_dir, full.names = T)
+wk_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(wk_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+```
+
+# Karyoplot
+
+## Set up scaffold
+
+```{r}
+med_chr_lens = read.table(here::here("data",
+                                     "Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt"),
+                          col.names = c("chr", "end"))
+# Add start
+med_chr_lens$start = 1
+# Reorder
+med_chr_lens = med_chr_lens %>% 
+  dplyr::select(chr, start, end) %>% 
+  # remove MT
+  dplyr::filter(chr != "MT") %>% 
+  # convert to numeric
+  dplyr::mutate(chr = as.integer(chr)) %>% 
+  # order
+  dplyr::arrange(chr)
+
+# Create custom genome 
+med_genome = regioneR::toGRanges(med_chr_lens)
+```
+
+## Plot
+
+### Compare effect of bin width on noise
+
+```{r, fig.dim=c(10, 3)}
+# Test with ggplot
+dat_list$`1000000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+
+dat_list$`500000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+
+dat_list$`100000` %>% 
+  ggplot() +
+    geom_line(aes(BIN_MID, PI)) +
+    facet_grid(cols = vars(CHROM))
+```
+
+```{r}
+## Get max Y
+round.choose <- function(x, roundTo, dir = 1) {
+  if(dir == 1) {  ##ROUND UP
+    x + (roundTo - x %% roundTo)
+  } else {
+    if(dir == 0) {  ##ROUND DOWN
+      x - (x %% roundTo)
+    }
+  }
+}
+y_max = round.choose(max(dat_list$`1000000`$PI), 0.01, 1)
+```
+
+
+```{r, eval = F}
+# set file name
+file_name = paste("20210930_", "1Mb", ".png", sep = "")
+file_out = here::here("docs/plots/nucleotide_diversity", file_name)
+
+png(file=file_out,
+    width=13000,
+    height=1000,
+    units = "px",
+    res = 300)
+
+# Plot ideogram
+kp = karyoploteR::plotKaryotype(med_genome, plot.type = 5)
+
+# Add base numbers 
+karyoploteR::kpAddBaseNumbers(kp, tick.dist = 5000000, cex = 0.7)
+
+# Set y-axis limits
+karyoploteR::kpAxis(kp, ymin=0, ymax=y_max )
+
+# Add lines
+lwd = 1
+karyoploteR::kpLines(kp,
+                     chr = dat_list$`1000000`$CHROM,
+                     x = dat_list$`1000000`$BIN_MID,
+                     y = dat_list$`1000000`$PI,
+                     ymax = y_max,
+                     r0=0, r1 = 1,
+                     lwd = lwd)
+
+
+
+dev.off()  
+```
+
+```{r}
+file_out = here::here("docs/plots/nucleotide_diversity/20210930_1Mb.png")
+knitr::include_graphics(file_out)
+```
+
+# Circos
+
+## Get repeats data
+
+```{r, message = F}
+repeats_file = "/nfs/research/birney/users/ian/mikk_genome/repeats/medaka_hdrr_repeats.fixed.gff"
+
+hdrr_reps = readr::read_delim(repeats_file,
+                              delim = "\t",
+                              col_names = F,
+                              skip = 3,
+                              comment = "",
+                              quote = "") %>%
+  # Remove empty V8 column
+  dplyr::select(-X8) %>% 
+  # Get class of repeat from third column
+  dplyr::mutate(class = stringr::str_split(X3, pattern = "#", simplify = T)[, 1]) %>% 
+  # Rename columns
+  dplyr::rename(chr = X1, tool = X2, class_full = X3, start = X4, end = X5, percent = X6, strand = X7, info = X9)
+
+# Find types of class other than "(GATCCA)n" types
+class_types = unique(hdrr_reps$class[grep(")n", hdrr_reps$class, invert = T)])
+
+hdrr_reps = hdrr_reps %>%
+  # NA for blanks
+  dplyr::mutate(class = dplyr::na_if(class, "")) %>%
+  # "misc" for others in "(GATCCA)n" type classes
+  dplyr::mutate(class = dplyr::if_else(!class %in% class_types, "Miscellaneous", class)) %>%
+  # rename "Simple_repeat"
+  dplyr::mutate(class = dplyr::recode(class, "Simple_repeat" = "Simple repeat")) %>% 
+  # filter out NA in `chr` (formerly MT)
+  dplyr::filter(!is.na(chr))
+
+
+```
+
+## Calculate proportion of bin covered by repeats
+
+### Bin intevals
+
+```{r}
+# Create GRanges object with bins
+bin_length = "1000000"
+
+bin_intervals = dat_list[[bin_length]] %>% 
+  dplyr::select(CHROM, BIN_START, BIN_END) %>% 
+  # split into list by chromosome
+  split(., f = .$CHROM)
+
+# Replace END pos of final bin for each chromsome with actual end pos
+bin_intervals = lapply(1:length(bin_intervals), function(CHR){
+  # Get end position for target chromosome
+  end_pos = med_chr_lens %>% 
+    dplyr::filter(chr == CHR) %>% 
+    dplyr::pull(end)
+  # Replace final bin end position
+  out = bin_intervals[[CHR]]
+  out$BIN_END[nrow(out)] = end_pos
+  
+  return(out)
+}) %>% 
+  dplyr::bind_rows()
+
+# Convert to data frame
+bin_intervals = as.data.frame(bin_intervals)
+
+# Convert to GRanges
+bin_ranges = regioneR::toGRanges(bin_intervals)
+```
+
+### Repeats
+
+```{r}
+# Convert `hdrr_reps` to GRanges
+hdrr_ranges = GenomicRanges::makeGRangesFromDataFrame(hdrr_reps,
+                                                      keep.extra.columns = T,
+                                                      seqnames.field = "chr",
+                                                      start.field = "start",
+                                                      end.field = "end")
+
+# Get non-overlapping regions
+hdrr_covered = GenomicRanges::disjoin(hdrr_ranges)
+```
+
+### Find quantity of repeats overlapping bins
+
+```{r}
+overlaps = GenomicRanges::findOverlaps(bin_ranges, hdrr_covered)
+
+# Split into list by bin
+overlaps_list = lapply(unique(overlaps@from), function(BIN){
+  out = list()
+  # Get indexes of all repeat ranges overlapping the target BIN
+  out[["hits"]] = overlaps[overlaps@from == BIN]@to
+  # Extract those ranges from `hdrr_ranges`
+  out[["range_hits"]] = hdrr_covered[out[["hits"]]]
+    # Get number bases covered by each range
+  out[["widths"]] = out[["range_hits"]] %>% 
+    GenomicRanges::width(.) 
+  # Get summed widths
+  out[["summed"]] = out[["widths"]] %>% 
+    # Get total bases covered in bin
+    sum(.)
+  
+  return(out)
+})
+  
+overlaps_vec = purrr::map(overlaps_list, function(BIN){
+  BIN[["summed"]]
+}) %>% 
+  unlist(.)
+
+# Add as column to `bin_intervals`
+bin_intervals$REPEAT_COV = overlaps_vec
+
+# Caclulate proportion
+bin_intervals = bin_intervals %>%
+  dplyr::mutate(REPEAT_PROP = REPEAT_COV / (BIN_END - BIN_START + 1))
+```
+
+## Read in mapping quality scores
+
+```{r}
+in_file = "/nfs/research/birney/users/ian/mikk_genome/mapping_quality/mapping_quality.csv"
+
+mq_df = readr::read_csv(in_file,
+                        col_names = c("CHROM", "POS", "MQ"),
+                        col_types = c("cid")) %>% 
+  # remove 'MT'
+  dplyr::filter(!CHROM == "MT") %>% 
+  # make CHROM integer
+  dplyr::mutate(CHROM = as.integer(CHROM))
+
+# Bin and get means
+mq_list = mq_df %>% 
+  split(., f = .$CHROM)
+
+# Bin into 1 Mb intervals
+binned_mq_list = purrr::map(mq_list, function(CHR){
+  # Set intervals
+  intervals = seq(1, max(CHR$POS), by = 1000000)
+  # add final length
+  if (max(intervals) != max(CHR$POS)) {
+    intervals = c(intervals, max(CHR$POS))
+  }
+  # bin
+  CHR = CHR %>% 
+    dplyr::mutate(BIN = cut(POS,
+                            breaks = intervals,
+                            labels = F,
+                            include.lowest = T))
+})
+
+# calculate mean MQ within each bin
+mean_mq = purrr::map(binned_mq_list, function(CHR){
+  CHR %>% 
+    # replace Inf with NA
+    dplyr::mutate(MQ = dplyr::na_if(MQ, Inf)) %>% 
+    # Group by BIN
+    dplyr::group_by(BIN) %>% 
+    # Calculate mean MQ within each bin
+    dplyr::summarise(MEAN_MQ = mean(MQ, na.rm = T))
+}) %>% 
+  # bind into single data frame
+  dplyr::bind_rows(.id = "CHR")
+
+
+```
+
+## Bind data frames
+
+```{r}
+# Bind data frames
+pi_repeat_df = cbind(dat_list$`1000000`,
+                     PI_WK = wk_list[["1000000"]]$PI,
+                     REPEAT_PROP = bin_intervals$REPEAT_PROP,
+                     MEAN_MQ = mean_mq$MEAN_MQ)
+```
+
+## Pairs plot
+
+```{r}
+pairs_plot = GGally::ggpairs(pi_repeat_df, columns = c(5, 7, 8, 9),
+                             lower = list(continuous = wrap("points", alpha = 0.2, size = 0.5),
+                                          combo = wrap("dot_no_facet", alpha = 0.4)))
+
+plotly::ggplotly(pairs_plot)
+```
+
+
+## Circos
+
+### 1 Mb
+
+#### Rearrange data frames
+
+```{r}
+df_circos_1Mb = pi_repeat_df
+# take `BIN_END` from `bin_intervals` with chromosome end number for final bin
+df_circos_1Mb$BIN_END = bin_intervals$BIN_END
+```
+
+#### Plot
+
+```{r}
+out_plot = here::here("docs/plots/nucleotide_diversity", "20211001_circos_1Mb.png")
+```
+
+```{r}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(med_chr_lens) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(med_chr_lens,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Add MIKK Pi line
+circos.genomicTrack(df_circos_1Mb,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[2]],
+                      col = "#49A379",
+                      area = T,
+                      border = karyoploteR::darker("#49A379"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.021))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+circos.text(0, 0.01,
+        labels = expression(paste("MIKK (", pi, ")", sep = "")),
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex"))  
+
+# Add wild Kiyosu line
+circos.genomicTrack(df_circos_1Mb,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[4]],
+                      col = "#7A306C",
+                      area = T,
+                      border = karyoploteR::darker("#8A4F7D"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.021))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+circos.text(0, 0.01,
+        labels = expression(paste("Wild\nKiyosu (", pi, ")", sep = "")),
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex"))  
+
+# Add repeat content
+circos.genomicTrack(df_circos_1Mb,
+  panel.fun = function(region, value, ...) {
+    circos.genomicLines(region,
+                        value[[5]],
+                        type = "h",
+                        col = "#0C1B33",
+                        cex = 0.05,
+                        baseline = 0)
+  },
+  track.height = 0.1,
+  ylim = c(0,0.5),
+  bg.border = NA)
+
+circos.yaxis(side = "right",
+           at = c(0, .5, 1),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 5
+           )
+
+circos.text(0, 0.25,
+        labels = "Repeat\ncontent",
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex")) 
+
+# Add mean mapping quality
+circos.genomicTrack(df_circos_1Mb,
+  panel.fun = function(region, value, ...) {
+    circos.genomicLines(region,
+                        value[[6]],
+                        type = "h",
+                        col = "#FF6978",
+                        cex = 0.05,
+                        baseline = 20)
+  },
+  track.height = 0.1,
+  ylim = c(20,65),
+  bg.border = NA)
+
+circos.yaxis(side = "right",
+           at = c(20, 50),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 5
+           )
+
+circos.text(0, 40,
+        labels = "Mean MQ",
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex")) 
+
+# Add baseline
+#circos.xaxis(h = "bottom",
+#             labels = F,
+#             major.tick = F)
+
+# Print label in center
+text(0, 0, "Nucleotide diversity in\nMIKK and wild Kiyosu medaka,\nrepeat content,\nand mapping quality\nin 1 Mb windows")
+
+circos.clear()
+
+dev.off()
+```
+
+```{r}
+knitr::include_graphics(out_plot)
+```
+
+### 500 Kb
+
+#### Create data frame
+
+##### Repeats
+
+```{r}
+# Create GRanges object with bins
+bin_length = "500000"
+
+bin_intervals_500 = dat_list[[bin_length]] %>% 
+  dplyr::select(CHROM, BIN_START, BIN_END) %>% 
+  # split into list by chromosome
+  split(., f = .$CHROM)
+
+# Replace END pos of final bin for each chromsome with actual end pos
+bin_intervals_500 = lapply(1:length(bin_intervals_500), function(CHR){
+  # Get end position for target chromosome
+  end_pos = med_chr_lens %>% 
+    dplyr::filter(chr == CHR) %>% 
+    dplyr::pull(end)
+  # Replace final bin end position
+  out = bin_intervals_500[[CHR]]
+  out$BIN_END[nrow(out)] = end_pos
+  
+  return(out)
+}) %>% 
+  dplyr::bind_rows()
+
+# Convert to data frame
+bin_intervals_500 = as.data.frame(bin_intervals_500)
+
+# Convert to GRanges
+bin_ranges = regioneR::toGRanges(bin_intervals_500)
+  
+overlaps = GenomicRanges::findOverlaps(bin_ranges, hdrr_covered)
+
+# Split into list by bin
+overlaps_list = lapply(unique(overlaps@from), function(BIN){
+  out = list()
+  # Get indexes of all repeat ranges overlapping the target BIN
+  out[["hits"]] = overlaps[overlaps@from == BIN]@to
+  # Extract those ranges from `hdrr_ranges`
+  out[["range_hits"]] = hdrr_covered[out[["hits"]]]
+    # Get number bases covered by each range
+  out[["widths"]] = out[["range_hits"]] %>% 
+    GenomicRanges::width(.) 
+  # Get summed widths
+  out[["summed"]] = out[["widths"]] %>% 
+    # Get total bases covered in bin
+    sum(.)
+  
+  return(out)
+})
+  
+overlaps_vec = purrr::map(overlaps_list, function(BIN){
+  BIN[["summed"]]
+}) %>% 
+  unlist(.)
+
+# Add as column to `bin_intervals_500`
+bin_intervals_500$REPEAT_COV = overlaps_vec
+
+# Caclulate proportion
+bin_intervals_500 = bin_intervals_500 %>%
+  dplyr::mutate(REPEAT_PROP = REPEAT_COV / (BIN_END - BIN_START + 1))
+```
+
+##### MQ
+
+```{r}
+# Bin into 1 Mb intervals
+binned_mq_list_500 = purrr::map(mq_list, function(CHR){
+  # Set intervals
+  intervals = seq(1, max(CHR$POS), by = 500000)
+  # add final length
+  if (max(intervals) != max(CHR$POS)) {
+    intervals = c(intervals, max(CHR$POS))
+  }
+  # bin
+  CHR = CHR %>% 
+    dplyr::mutate(BIN = cut(POS,
+                            breaks = intervals,
+                            labels = F,
+                            include.lowest = T))
+})
+
+# calculate mean MQ within each bin
+mean_mq_500 = purrr::map(binned_mq_list_500, function(CHR){
+  CHR %>% 
+    # replace Inf with NA
+    dplyr::mutate(MQ = dplyr::na_if(MQ, Inf)) %>% 
+    # Group by BIN
+    dplyr::group_by(BIN) %>% 
+    # Calculate mean MQ within each bin
+    dplyr::summarise(MEAN_MQ = mean(MQ, na.rm = T))
+}) %>% 
+  # bind into single data frame
+  dplyr::bind_rows(.id = "CHR")
+
+```
+
+##### Final
+
+```{r}
+df_circos_500kb = cbind(dat_list$`500000`,
+                        PI_WK = wk_list[["500000"]]$PI,
+                        REPEAT_PROP = bin_intervals_500$REPEAT_PROP,
+                        MEAN_MQ = mean_mq_500$MEAN_MQ)
+# Add bin ends at the end of each chromosome to match real chromosome ends
+df_circos_500kb$BIN_END = bin_intervals_500$BIN_END
+```
+
+```{r}
+out_plot = here::here("docs/plots/nucleotide_diversity/20211001_circos_500kb.png")
+```
+
+```{r}
+png(out_plot,
+    width = 20,
+    height = 20,
+    units = "cm",
+    res = 500)
+
+# Set parameters
+## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
+circos.par(cell.padding = c(0, 0, 0, 0),
+           track.margin = c(0, 0),
+           gap.degree = c(rep(1, nrow(med_chr_lens) - 1), 6))
+# Initialize plot
+circos.initializeWithIdeogram(med_chr_lens,
+                              plotType = c("axis", "labels"),
+                              major.by = 1e7,
+                              axis.labels.cex = 0.25*par("cex"))
+
+# Add MIKK Pi line
+circos.genomicTrack(df_circos_500kb,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[2]],
+                      col = "#49A379",
+                      area = T,
+                      border = karyoploteR::darker("#49A379"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.023))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+circos.text(0, 0.01,
+        labels = expression(paste("MIKK (", pi, ")", sep = "")),
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex"))  
+
+# Add wild Kiyosu line
+circos.genomicTrack(df_circos_500kb,
+    panel.fun = function(region, value, ...){
+  circos.genomicLines(region,
+                      value[[4]],
+                      col = "#7A306C",
+                      area = T,
+                      border = karyoploteR::darker("#8A4F7D"))
+    },
+    track.height = 0.1,
+    bg.border = NA,
+    ylim = c(0, 0.023))
+
+circos.yaxis(side = "right",
+           at = c(.01, .02),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 2
+           )
+
+circos.text(0, 0.01,
+        labels = expression(paste("Wild\nKiyosu (", pi, ")", sep = "")),
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex"))  
+
+# Add repeat content
+circos.genomicTrack(df_circos_500kb,
+  panel.fun = function(region, value, ...) {
+    circos.genomicLines(region,
+                        value[[5]],
+                        type = "h",
+                        col = "#0C1B33",
+                        lwd = 0.4,
+                        cex = 0.05,
+                        baseline = 0)
+  },
+  track.height = 0.1,
+  ylim = c(0,0.65),
+  bg.border = NA)
+
+circos.yaxis(side = "right",
+           at = c(0, .5, 1),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 5
+           )
+
+circos.text(0, 0.325,
+        labels = "Repeat\ncontent",
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex")) 
+
+# Add mean mapping quality
+circos.genomicTrack(df_circos_500kb,
+  panel.fun = function(region, value, ...) {
+    circos.genomicLines(region,
+                        value[[6]],
+                        type = "h",
+                        col = "#FF6978",
+                        lwd = 0.4,
+                        cex = 0.05,
+                        baseline = 20)
+  },
+  track.height = 0.07,
+  ylim = c(20,65),
+  bg.border = NA)
+
+circos.yaxis(side = "right",
+           at = c(20, 50),
+           labels.cex = 0.25*par("cex"),
+           tick.length = 5
+           )
+
+circos.text(0, 40,
+        labels = "Mean MQ",
+        sector.index = "1",
+        facing = "clockwise",
+        adj = c(.5, 0),
+        cex = 0.4*par("cex")) 
+
+# Print label in center
+text(0, 0, "Nucleotide diversity in\nMIKK and wild Kiyosu medaka,\nwith repeat content\nand mapping quality\nin 500 kb windows")
+
+circos.clear()
+
+dev.off()
+```
+
+```{r}
+knitr::include_graphics(out_plot)
+```
+
+### Mean and median Pi
+
+#### 63 MIKK samples v 7 wild Kiyosu
+
+```{r}
+# MIKK 
+mean(df_circos_500kb$PI)
+median(df_circos_500kb$PI)
+# Wild median Pi
+mean(df_circos_500kb$PI_WK)
+median(df_circos_500kb$PI_WK)
+```
+
+#### 7 MIKK samples v 7 wild Kiyosu
+
+```{r}
+# Read in data
+mikk_7 = readr::read_delim("/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/random/500.windowed.pi",
+                  delim = "\t",
+                  col_types = c("ciiid")) %>% 
+  # Remove MT
+  dplyr::filter(CHROM != "MT") %>% 
+  # Make CHR an integer
+  dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+  # Create middle of bin
+  dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+
+# Mean
+mean(mikk_7$PI)
+median(mikk_7$PI)
+```
+
+
+# Per-individual
+
+## Read in data
+
+### MIKK
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/per_sample"
+
+in_files = list.files(in_dir, full.names = T)
+mikk_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(mikk_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+
+# reorder
+ordered_lines = tibble::tibble("LINE" = names(mikk_list)) %>% 
+  tidyr::separate(col = LINE, into = c("LINE", "SIB", "EXTRA"), sep = "_") %>% 
+  dplyr::mutate(LINE = as.integer(LINE)) %>% 
+  dplyr::arrange(LINE) %>% 
+  tidyr::unite(col = "ORIGINAL", sep = "_", na.rm = T) %>% 
+  dplyr::pull()
+
+mikk_list = mikk_list[order(match(names(mikk_list), ordered_lines))]
+
+# Bind rows
+mikk_df = mikk_list %>% 
+  dplyr::bind_rows(.id = "LINE") %>% 
+  # factor LINE to order
+  dplyr::mutate(LINE = factor(LINE, levels = names(mikk_list)))
+```
+
+### Wild
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild/per_sample"
+
+in_files = list.files(in_dir, full.names = T)
+wild_list = lapply(in_files, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(wild_list) = basename(in_files) %>%
+  str_remove(".windowed.pi")
+
+# Bind rows
+wild_df = wild_list %>% 
+  dplyr::bind_rows(.id = "LINE")
+```
+
+### Combine
+
+```{r}
+pi_df = list("MIKK" = mikk_df,
+             "WILD" = wild_df) %>% 
+  dplyr::bind_rows(.id = "POPULATION")
+```
+
+### Boxplot
+
+```{r}
+# Create palette
+pal = c("#49A379", "#8A4F7D")
+names(pal) = c("MIKK", "WILD")
+
+mikk_wild_boxplot_no_filter = pi_df %>% 
+  ggplot() +
+    geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
+    theme_bw() +
+    scale_fill_manual(name = "Population", values = pal) +
+    scale_colour_manual(name = "Population", values = darker(pal, 80)) +
+    ylab(expression(paste(log[10], "(", pi, ")", sep = ""))) +
+    ggtitle("Nucleotide diversity in 500 kb bins (MAPQ >= 50)")
+
+mikk_wild_boxplot_no_filter
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211006_mikk_wild_boxplot_no_filter.png"),
+       plot = mikk_wild_boxplot_no_filter,
+       device = "png",
+       width = 8,
+       height = 6,
+       units = "in",
+       dpi = 400)
+```
+
+### All chromosomes
+
+```{r, eval = F}
+purrr::map(1:24, function(CHR){
+    # Create plot
+    plot_df = mikk_df %>% 
+      # Filter for target CHROM
+      dplyr::filter(CHROM == CHR) %>% 
+      # Create Mb column
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6)
+    out_plot = plot_df %>% 
+      ggplot() +
+        geom_col(aes(Mb, PI, fill = PI)) +
+        facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+        theme_bw() +
+        theme(text = element_text(size = 5)) +
+        ylim(c(0, max(mikk_df$PI))) +
+        xlab("500 kb window start position (Mb)") +
+        ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+        ggtitle(paste("Chromosome ", CHR, sep = "")) +
+        scale_fill_viridis(name = expression(pi), limits = c(0,max(mikk_df$PI)))
+        
+    
+    # Adjust width dimensions of plot based on length of chromosome
+    w_dim = mikk_df %>% 
+      dplyr::filter(CHROM == CHR) %>% 
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6) %>% 
+      dplyr::pull(Mb) %>% 
+      max(.)
+    w_dim = w_dim * 0.26
+    # Save
+    ggsave(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr", paste(CHR, ".png", sep = "")),
+           plot = out_plot,
+           device = "png",
+           width = w_dim,
+           height = 20,
+           units = "in",
+           dpi = 400)
+})
+```
+
+```{r}
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/1.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/2.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/22.png"))
+```
+
+### chr1 and 22 for supplementary figures
+
+```{r, eval = F}
+target_chrs = c(1, 22)
+# Create plot
+final_plot_df = mikk_df %>% 
+  # Filter for target CHROM
+  dplyr::filter(CHROM %in% target_chrs) %>% 
+  # Create Mb column
+  dplyr::mutate(Mb = (BIN_START - 1) / 1e6)
+out_plot = final_plot_df %>% 
+  ggplot() +
+    geom_col(aes(Mb, PI, fill = PI)) +
+    facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+    theme_bw() +
+    theme(text = element_text(size = 5)) +
+    ylim(c(0, max(mikk_df$PI))) +
+    xlab("500 kb window start position (Mb)") +
+    ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+    scale_fill_viridis(name = expression(pi), limits = c(0,max(mikk_df$PI)))
+
+out_plot 
+
+# Save
+ggsave(here::here("docs/plots/nucleotide_diversity/20211013_chrs_1_22.png"),
+       plot = out_plot,
+       device = "png",
+       width = 15,
+       height = 20,
+       units = "in",
+       dpi = 400)
+
+```
+
+```{r}
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/1.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/2.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr/22.png"))
+```
+
+## Investigate QC stats for sample MIKK10_1 to determine appropriate cutoffs
+
+```{r}
+qc_file = "/hps/nobackup/birney/users/ian/mikk_genome/qc_stats/10_1.csv"
+
+qc_df = readr::read_csv(qc_file,
+                        col_names = c("CHROM", "POS", "DP", "MQ", "QD", "GQ"),
+                        col_types = c("ciiddi")) %>% 
+  # Filter for non-missing GQ
+  dplyr::filter(complete.cases(GQ)) %>% 
+  # Filter out MT
+  dplyr::filter(CHROM != "MT") %>% 
+  # Re-class CHROM
+  dplyr::mutate(CHROM = factor(CHROM, levels = 1:24))
+```
+
+### Plot
+
+```{r}
+qc_pairs = qc_df %>%
+  # take sample to prevent over-plotting
+  dplyr::slice_sample(n = 1e5) %>% 
+  # create log10 for `DP`
+  dplyr::mutate(LOG_10_DP = log10(DP)) %>% 
+  GGally::ggpairs(.,
+                  columns = c(7, 4, 5, 6),
+                  lower = list(continuous = wrap("points", alpha = 0.2, size = 0.5),
+                               combo = wrap("dot_no_facet", alpha = 0.4)))
+
+qc_pairs
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211006_qc_pairs.png"),
+       plot = qc_pairs,
+       device = "png",
+       width = 10,
+       height = 6,
+       units = "in",
+       dpi = 400)
+```
+
+How many calls have DP < x?
+
+```{r}
+# Total variants
+nrow(qc_df)
+
+# Number of variants with DP < x
+length(which(qc_df$DP < 10))
+length(which(qc_df$DP < 20))
+length(which(qc_df$DP < 30))
+length(which(qc_df$DP < 40))
+
+```
+
+So few! 
+
+Try GQ >= 40 & DP >= 40 & MQ >= 50.
+
+## Read in nucleotide diversity for filtered variants
+
+### MIKK
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/mikk/filtered"
+
+in_files_mikk_filt = list.files(in_dir, full.names = T)
+mikk_list_filt = lapply(in_files_mikk_filt, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(mikk_list_filt) = basename(in_files_mikk_filt) %>%
+  str_remove(".windowed.pi")
+
+# reorder
+ordered_lines = tibble::tibble("LINE" = names(mikk_list_filt)) %>% 
+  tidyr::separate(col = LINE, into = c("LINE", "SIB", "EXTRA"), sep = "_") %>% 
+  dplyr::mutate(LINE = as.integer(LINE)) %>% 
+  dplyr::arrange(LINE) %>% 
+  tidyr::unite(col = "ORIGINAL", sep = "_", na.rm = T) %>% 
+  dplyr::pull()
+
+mikk_list_filt = mikk_list_filt[order(match(names(mikk_list_filt), ordered_lines))]
+
+# Bind rows
+mikk_df_filt = mikk_list_filt %>% 
+  dplyr::bind_rows(.id = "LINE") %>% 
+  # factor LINE to order
+  dplyr::mutate(LINE = factor(LINE, levels = names(mikk_list_filt)))
+```
+
+### Wild
+
+```{r}
+# Set location of data
+in_dir = "/nfs/research/birney/users/ian/mikk_genome/nucleotide_divergence/wild/filtered"
+
+in_files_wild_filt = list.files(in_dir, full.names = T)
+wild_list_filt = lapply(in_files_wild_filt, function(IN_FILE) {
+  # Read in 
+  readr::read_delim(IN_FILE,
+                    delim = "\t",
+                    col_types = c("ciiid")) %>% 
+    # Remove MT
+    dplyr::filter(CHROM != "MT") %>% 
+    # Make CHR an integer
+    dplyr::mutate(CHROM = as.integer(CHROM)) %>% 
+    # Create middle of bin
+    dplyr::mutate(BIN_MID = ((BIN_END - BIN_START - 1) / 2) + BIN_START )
+})
+names(wild_list_filt) = basename(in_files_wild_filt) %>%
+  str_remove(".windowed.pi")
+
+# Bind rows
+wild_df_filt = wild_list_filt %>% 
+  dplyr::bind_rows(.id = "LINE")
+```
+
+### Combine
+
+```{r}
+pi_df_filt = list("MIKK" = mikk_df_filt,
+                  "WILD" = wild_df_filt) %>% 
+  dplyr::bind_rows(.id = "POPULATION")
+```
+
+### All chromosomes
+
+```{r, eval = F}
+purrr::map(1:24, function(CHR){
+    # Create plot
+    plot_df = mikk_df_filt %>% 
+      # Filter for target CHROM
+      dplyr::filter(CHROM == CHR) %>% 
+      # Create Mb column
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6)
+    
+    out_plot = plot_df %>% 
+      ggplot() +
+        geom_col(aes(Mb, PI, fill = PI)) +
+        facet_grid(rows = vars(LINE), cols = vars(CHROM)) +
+        theme_bw() +
+        theme(text = element_text(size = 5)) +
+        ylim(c(0, max(mikk_df$PI))) +
+        xlab("500 kb window start position (Mb)") +
+        ylab(expression(paste("Nucleotide diversity (", pi, ")", sep = ""))) +
+        ggtitle(paste("Chromosome ", CHR, sep = "")) +
+        scale_fill_viridis(name = expression(pi), limits = c(0,max(mikk_df$PI)))
+        
+    
+    # Adjust width dimensions of plot based on length of chromosome
+    w_dim = mikk_df_filt %>% 
+      dplyr::filter(CHROM == CHR) %>% 
+      dplyr::mutate(Mb = (BIN_START - 1) / 1e6) %>% 
+      dplyr::pull(Mb) %>% 
+      max(.)
+    w_dim = w_dim * 0.26
+    # Save
+    ggsave(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr_filtered", paste(CHR, ".png", sep = "")),
+           plot = out_plot,
+           device = "png",
+           width = w_dim,
+           height = 20,
+           units = "in",
+           dpi = 400)
+})
+```
+
+```{r, fig.show = "hold", out.width = '50%'}
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr_filtered/1.png"))
+knitr::include_graphics(here::here("docs/plots/nucleotide_diversity/20211006_pi_per_chr_filtered/22.png"))
+```
+
+
+### Boxplots
+
+```{r}
+# source `darker` function
+source("https://gist.githubusercontent.com/brettellebi/c5015ee666cdf8d9f7e25fa3c8063c99/raw/91e601f82da6c614b4983d8afc4ef399fa58ed4b/karyoploteR_lighter_darker.R")
+
+# What is the median for MIKK v WILD?
+pi_df_filt %>% 
+  dplyr::group_by(POPULATION) %>% 
+  dplyr::summarise(MEAN_PI = mean(PI, na.rm = T),
+                   MEDIAN_PI = median(PI, na.rm = T))
+
+# Together
+mikk_wild_boxplot = pi_df_filt %>% 
+  ggplot() +
+    geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
+    theme_bw() +
+    scale_fill_manual(name = "Population", values = pal) +
+    scale_colour_manual(name = "Population", values = darker(pal, 80)) +
+    ylab(expression(paste(log[10], "(", pi, ")", sep = ""))) +
+    ggtitle("Nucleotide diversity in 500 kb bins (MAPQ >= 50 & GQ >= 40 & DP >= 40 )")
+
+mikk_wild_boxplot
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211006_mikk_wild_boxplot.png"),
+       plot = mikk_wild_boxplot,
+       device = "png",
+       width = 8,
+       height = 6,
+       units = "in",
+       dpi = 400)
+```
+
+#### Take only 7 MIKK samples
+
+```{r}
+set.seed(13)
+# Pull out 7 random MIKK samples
+mikk_random_samples = pi_df_filt %>% 
+  dplyr::filter(POPULATION == "MIKK") %>% 
+  dplyr::distinct(LINE) %>%
+  dplyr::slice_sample(n = 7) %>% 
+  dplyr::pull(LINE)
+  
+# Plot
+mikk_wild_boxplot_samp = pi_df_filt %>% 
+  dplyr::filter(POPULATION == "WILD" | LINE %in% mikk_random_samples) %>% 
+  ggplot() +
+    geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.1) +
+    theme_bw() +
+    scale_fill_manual(name = "Population", values = pal) +
+    scale_colour_manual(name = "Population", values = darker(pal, 80)) +
+    ylab(expression(paste(log[10], "(", pi, ")", sep = ""))) +
+    ggtitle("Nucleotide diversity in 500 kb bins (MAPQ >= 50 & GQ >= 40 & DP >= 40 )\n7 MIKK lines & 7 wild Kiyosu samples")
+
+mikk_wild_boxplot_samp
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211011_mikk_wild_boxplot_sampled.png"),
+       plot = mikk_wild_boxplot_samp,
+       device = "png",
+       width = 8,
+       height = 6,
+       units = "in",
+       dpi = 400)
+```
+
+#### Faceted
+
+```{r}
+mikk_wild_boxplot_facet = pi_df_filt %>% 
+  ggplot() +
+    geom_violin(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION)) +
+    geom_boxplot(aes(POPULATION, log10(PI), colour = POPULATION, fill = POPULATION), width = 0.05) +
+    theme_bw() +
+    scale_fill_manual(name = "Population", values = pal) +
+    scale_colour_manual(name = "Population", values = darker(pal, 80)) +
+    ylab(expression(paste(log[10], "(", pi, ")", sep = ""))) +
+    facet_wrap(vars(CHROM), nrow = 4, ncol = 6) +
+    guides(colour = "none", fill = "none") +
+    ggtitle("Nucleotide diversity in 500 kb bins (MAPQ >= 50 & GQ >= 40 & DP >= 40 )")
+
+mikk_wild_boxplot_facet
+```
+
+```{r, eval = F}
+ggsave(here::here("docs/plots/nucleotide_diversity/20211006_mikk_wild_boxplot_facet.png"),
+       plot = mikk_wild_boxplot_facet,
+       device = "png",
+       width = 8,
+       height = 6,
+       units = "in",
+       dpi = 400)
+```

@@ -4,6 +4,8 @@ target_dir:
     "../introgression/release-102"
 r-base:
     "../sing_conts/r-base_4.0.4.sif"
+lts_dir:
+    /nfs/research/birney/users/ian/mikk_genome
 rscript_command:
     "Rscript --no-save --no-restore --no-environ --no-site-file "
 segments_script:

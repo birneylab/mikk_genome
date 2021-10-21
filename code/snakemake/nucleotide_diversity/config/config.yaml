@@ -1,0 +1,49 @@
+####################
+# Config files
+####################
+
+####################
+# Locations
+####################
+samples_cram:
+    data/20200227_cram2line_no-sibs_cram-only.txt
+samples:
+    data/20200227_cram2line_no-sibs.txt
+samples_line_only:
+    data/20200227_cram2line_no-sibs_line-only.txt
+random_7_mikk:
+    code/snakemake/nucleotide_diversity/config/random_7_mikk.txt
+kiyosu_samples_cram:
+    data/20211001_cram2line_kiyosu-wild_cram-only.txt
+kiyosu_samples:
+    data/20211001_cram2line_kiyosu-wild.txt
+kiyosu_samples_only:
+    data/20211001_cram2line-kiyosu-wild_sample-only.txt
+mikk_vcf:
+    /nfs/research/birney/projects/indigene/datafreeze/14-03-2019/vcf/medaka_inbred_panel_ensembl_new_reference_release_94.vcf.gz
+working_dir:
+    /hps/nobackup/birney/users/ian/mikk_genome
+lts_dir:
+    /nfs/research/birney/users/ian/mikk_genome
+
+####################
+# Containers
+####################
+bcftools:
+    docker://quay.io/biocontainers/bcftools:1.13--h3a49de5_0
+vcftools:
+    docker://quay.io/biocontainers/vcftools:0.1.16--h9a82719_5
+
+####################
+# Parameters
+####################
+window_size:
+    - 100000
+    - 500000
+    - 1000000
+min_DP:
+    40
+min_MQ:
+    50
+min_GQ:
+    40

@@ -1,0 +1,74 @@
+include: "rules/00_common.smk"
+include: "rules/01_mikk.smk"
+include: "rules/02_wild_kiyosu.smk"
+
+##### Target rules #####
+
+rule all:
+    input:
+###################
+# 01_mikk.smk
+###################
+# index
+        os.path.join(config["working_dir"], "vcfs/mikk_no-sibs_line-id.vcf.gz.tbi"),
+# nucleotide_divergence
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/all/{window_size}.windowed.pi"),
+                window_size = config["window_size"]
+        ),
+# pi_random_7
+        os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/random/500.windowed.pi"),
+# mapping_quality
+        os.path.join(config["lts_dir"], "mapping_quality/mapping_quality.csv"),
+# split_mikk
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz"),
+                mikk_sample = MIKK_SAMPLES
+        ),
+# index_per_sample_mikk
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/mikk/{mikk_sample}.vcf.gz.tbi"),
+                mikk_sample = MIKK_SAMPLES
+        ),
+# qc_stats
+        os.path.join(config["working_dir"], "qc_stats/10_1.csv"),
+# filter_mikk
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/filtered/mikk/{mikk_sample}.vcf.gz"),
+                mikk_sample = MIKK_SAMPLES
+        ),
+## nd_per_sample_mikk
+#        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/per_sample/{mikk_sample}.windowed.pi"),
+#                mikk_sample = MIKK_SAMPLES
+#        ),
+# nd_filtered_mikk
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/mikk/filtered/{mikk_sample}.windowed.pi"),
+                mikk_sample = MIKK_SAMPLES
+        ),
+# nd_filtered_mikk_all
+        os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/mikk.windowed.pi"),
+###################
+# 02_wild_kiyosu.smk
+###################
+# nucleotide_divergence_kw
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild_kiyosu/{window_size}.windowed.pi"),
+                window_size = config["window_size"]
+        ),
+# split_wild
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/wild/{wild_sample}.vcf.gz"),
+                wild_sample = WILD_SAMPLES
+        ),
+# index_per_sample_wild
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/wild/{wild_sample}.vcf.gz.tbi"),
+                wild_sample = WILD_SAMPLES
+        ),
+# filter_wild
+        expand(os.path.join(config["working_dir"], "vcfs/per_sample/filtered/wild/{wild_sample}.vcf.gz"),
+                wild_sample = WILD_SAMPLES
+        ),
+## nd_per_sample_wild
+#        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild/per_sample/{wild_sample}.windowed.pi"),
+#                wild_sample = WILD_SAMPLES
+#        ),
+# nd_filtered_wild
+        expand(os.path.join(config["lts_dir"], "nucleotide_divergence/wild/filtered/{wild_sample}.windowed.pi"),
+                wild_sample = WILD_SAMPLES
+        ),
+# nd_filtered_wild_all
+        os.path.join(config["lts_dir"], "nucleotide_divergence/filtered_all/wild.windowed.pi")

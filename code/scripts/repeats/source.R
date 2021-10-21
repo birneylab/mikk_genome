@@ -10,6 +10,8 @@ library(cowplot)
 library(scales)
 library(karyoploteR)
 library(circlize)
+library(DT)
+library(magick)
 
 #############################
 # Functions
@@ -28,6 +30,8 @@ round.choose <- function(x, roundTo, dir = 1) {
 #############################
 # Variables
 #############################
+
+lts_dir = "/nfs/research/birney/users/ian/mikk_genome/repeats"
 
 chroms = read.table(here::here("data/Oryzias_latipes.ASM223467v1.dna.toplevel.fa_chr_counts.txt")) %>% 
   dplyr::select(chr = V1, end = V2) %>% 
