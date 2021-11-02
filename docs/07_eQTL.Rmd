@@ -29,7 +29,7 @@ library(here)
 #htmltools::includeHTML(here::here("docs/eQTL/code/LIMIX_eQTL_analysis.html"))
 ```
 
-[please click here](/hps/software/users/birney/ian/repos/MIKK_genome_main_paper/eQTL/code/LIMIX_eQTL_analysis.html)
+[please click here](/hps/software/users/birney/ian/repos/MIKK_genome_main_paper/docs/eQTL/code/LIMIX_eQTL_analysis.html)
 
-# Test
+# Now including from docs folder
 
