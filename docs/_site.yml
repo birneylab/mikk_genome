@@ -5,18 +5,20 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Fecundity"
-      href: 01_Fecundity.html
-    - text: "Linkage Disequilibrium"
-      href: 02_LD_decay.html
-    - text: "Nucleotide diversity"
-      href: 03_Nucleotide_diversity.html
-    - text: "Introgression"
-      href: 04_Introgression.html
-    - text: "Repeat Elements"
-      href: 05_Repeats.html
-    - text: "Structural variation"
-      href: 06_Structural_variation.html
+    - text: "eQTL"
+      href: eQTL/code/LIMIX_eQTL_analysis.html
+#    - text: "Fecundity"
+#      href: 01_Fecundity.html
+#    - text: "Linkage Disequilibrium"
+#      href: 02_LD_decay.html
+#    - text: "Nucleotide diversity"
+#      href: 03_Nucleotide_diversity.html
+#    - text: "Introgression"
+#      href: 04_Introgression.html
+#    - text: "Repeat Elements"
+#      href: 05_Repeats.html
+#    - text: "Structural variation"
+#      href: 06_Structural_variation.html
 output:
   html_document:
     theme: flatly

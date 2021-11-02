@@ -15,8 +15,8 @@
 
 <title>Structural variants</title>
 
-<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
-<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -35,18 +35,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
-<script src="site_libs/plotly-binding-4.9.4.1/plotly.js"></script>
-<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
-<link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
-<script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
-<link href="site_libs/plotly-htmlwidgets-css-1.57.1/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="site_libs/plotly-main-1.57.1/plotly-latest.min.js"></script>
-<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="site_libs/datatables-binding-0.18/datatables.js"></script>
-<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -418,22 +406,7 @@ div.tocify {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="01_Fecundity.html">Fecundity</a>
-</li>
-<li>
-  <a href="02_LD_decay.html">Linkage Disequilibrium</a>
-</li>
-<li>
-  <a href="03_Nucleotide_diversity.html">Nucleotide diversity</a>
-</li>
-<li>
-  <a href="04_Introgression.html">Introgression</a>
-</li>
-<li>
-  <a href="05_Repeats.html">Repeat Elements</a>
-</li>
-<li>
-  <a href="06_Structural_variation.html">Structural variation</a>
+  <a href="eQTL/code/LIMIX_eQTL_analysis.html">eQTL</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -1495,7 +1468,7 @@ div.tocify {
 <span id="cb64-62"><a href="#cb64-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb64-63"><a href="#cb64-63" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210325_sv_dels_lines.png" width="3149" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210325_sv_dels_lines.png" width="3149" /></p>
 </div>
 <div id="ins" class="section level3" number="2.5.2">
 <h3 number="2.5.2"><span class="header-section-number">2.5.2</span> INS</h3>
@@ -1575,7 +1548,7 @@ div.tocify {
 <span id="cb68-62"><a href="#cb68-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-63"><a href="#cb68-63" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210325_sv_ins_lines.png" width="3149" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210325_sv_ins_lines.png" width="3149" /></p>
 </div>
 <div id="dup" class="section level3" number="2.5.3">
 <h3 number="2.5.3"><span class="header-section-number">2.5.3</span> DUP</h3>
@@ -1654,7 +1627,7 @@ div.tocify {
 <span id="cb72-62"><a href="#cb72-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-63"><a href="#cb72-63" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210325_sv_dups_lines.png" width="3149" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210325_sv_dups_lines.png" width="3149" /></p>
 </div>
 <div id="inv" class="section level3" number="2.5.4">
 <h3 number="2.5.4"><span class="header-section-number">2.5.4</span> INV</h3>
@@ -1732,7 +1705,7 @@ div.tocify {
 <span id="cb76-62"><a href="#cb76-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb76-63"><a href="#cb76-63" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210325_sv_invs_lines.png" width="3149" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210325_sv_invs_lines.png" width="3149" /></p>
 </div>
 <div id="tra" class="section level3" number="2.5.5">
 <h3 number="2.5.5"><span class="header-section-number">2.5.5</span> TRA</h3>
@@ -1797,7 +1770,7 @@ div.tocify {
 <span id="cb79-56"><a href="#cb79-56" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb79-57"><a href="#cb79-57" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">list.files</span>(out_dir, <span class="at">full.names =</span> T))</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210326_tras/11-1.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/117-2.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/134-1.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/134-2.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/4-1.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/69-1.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/7-1.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/79-2.png" width="33%" height="33%" /><img src="plots/sv_analysis/20210326_tras/80-1.png" width="33%" height="33%" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/11-1.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/117-2.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/134-1.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/134-2.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/4-1.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/69-1.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/7-1.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/79-2.png" width="33%" height="33%" /><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210326_tras/80-1.png" width="33%" height="33%" /></p>
 </div>
 </div>
 </div>
@@ -2153,7 +2126,7 @@ div.tocify {
 <span id="cb100-93"><a href="#cb100-93" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-94"><a href="#cb100-94" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210323_circos_hdrr_alignments.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210323_circos_hdrr_alignments.png" width="3937" /></p>
 </div>
 <div id="hni" class="section level3" number="5.3.4">
 <h3 number="5.3.4"><span class="header-section-number">5.3.4</span> HNI</h3>
@@ -2271,7 +2244,7 @@ div.tocify {
 <span id="cb105-94"><a href="#cb105-94" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb105-95"><a href="#cb105-95" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210323_circos_hni_alignments.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210323_circos_hni_alignments.png" width="3937" /></p>
 </div>
 </div>
 <div id="histograms-showing-distribution-of-identity" class="section level3" number="5.3.5">
@@ -2393,7 +2366,7 @@ div.tocify {
 <span id="cb111-69"><a href="#cb111-69" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb111-70"><a href="#cb111-70" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210324_circos_131_siblines_HNI.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210324_circos_131_siblines_HNI.png" width="3937" /></p>
 </div>
 <div id="hdrr-and-hni" class="section level2" number="6.2">
 <h2 number="6.2"><span class="header-section-number">6.2</span> HdrR and HNI</h2>
@@ -2485,7 +2458,7 @@ div.tocify {
 <span id="cb114-85"><a href="#cb114-85" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb114-86"><a href="#cb114-86" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210324_circos_131_siblines_HdrR_HNI.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210324_circos_131_siblines_HdrR_HNI.png" width="3937" /></p>
 </div>
 <div id="with-hdrr-hni-and-kaga" class="section level2" number="6.3">
 <h2 number="6.3"><span class="header-section-number">6.3</span> 131-1 with HdrR, HNI and Kaga</h2>
@@ -2585,7 +2558,7 @@ div.tocify {
 <span id="cb118-73"><a href="#cb118-73" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb118-74"><a href="#cb118-74" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210330_circos_131-1_HdrR_HNI_Kaga_HSOK.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210330_circos_131-1_HdrR_HNI_Kaga_HSOK.png" width="3937" /></p>
 <p>More introgression with HNI or Kaga?</p>
 <div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>intro_mikk<span class="sc">$</span><span class="st">`</span><span class="at">131_1</span><span class="st">`</span> <span class="sc">%&gt;%</span></span>
 <span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">bind_rows</span>() <span class="sc">%&gt;%</span></span>
@@ -2689,7 +2662,7 @@ div.tocify {
 <span id="cb122-85"><a href="#cb122-85" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
 <p>Example plot (all lines other than 131-1 look nearly identical).</p>
 <div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;docs/plots/sv_analysis/20210330_circos_mikk/106_2.png&quot;</span>))</span></code></pre></div>
-<p><img src="plots/sv_analysis/20210330_circos_mikk/106_2.png" width="3937" /></p>
+<p><img src="/hps/software/users/birney/ian/repos/mikk_genome/docs/plots/sv_analysis/20210330_circos_mikk/106_2.png" width="3937" /></p>
 </div>
 </div>
 <div id="intersection-with-repeats" class="section level1" number="7">
