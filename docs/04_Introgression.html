@@ -10,11 +10,11 @@
 
 
 
-<meta name="date" content="2021-10-20" />
+<meta name="date" content="2021-11-02" />
 
 <title>Introgression</title>
 
-<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -422,6 +422,9 @@ div.tocify {
 <li>
   <a href="06_Structural_variation.html">Structural variation</a>
 </li>
+<li>
+  <a href="eQTL/code/LIMIX_eQTL_analysis.html">eQTL</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -435,7 +438,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introgression</h1>
-<h4 class="date">2021-10-20</h4>
+<h4 class="date">2021-11-02</h4>
 
 </div>
 
@@ -984,8 +987,7 @@ div.tocify {
 <span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="fu">expression</span>(<span class="fu">paste</span>(<span class="st">&quot;Mean &quot;</span>, <span class="fu">italic</span>(<span class="st">&quot;f&quot;</span>), <span class="st">&quot; statistic&quot;</span>))) <span class="sc">+</span></span>
 <span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_cowplot</span>(<span class="at">font_size =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
 <span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> pal_abba)</span></code></pre></div>
-<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
-## &quot;none&quot;)` instead.</code></pre>
+<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; = &quot;none&quot;)` instead.</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fstat_plot</span></code></pre></div>
 <p><img src="04_Introgression_files/figure-html/unnamed-chunk-26-1.svg" width="672" /></p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>out_file <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210315_f_stat&quot;</span>)</span>
@@ -1449,7 +1451,7 @@ div.tocify {
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(window_length_kb <span class="sc">==</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(p1, p2)</span></code></pre></div>
 <pre><code>## Rows: 12862 Columns: 13</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+<pre><code>## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (2): p1, p2
 ## dbl (11): scaffold, start, end, mid, sites, sitesUsed, ABBA, BABA, D, fd, fdM</code></pre>
