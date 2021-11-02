@@ -31,5 +31,5 @@ library(here)
 
 [please click here](.eQTL/code/LIMIX_eQTL_analysis.html)
 
-# Now including from docs folder
+# Now including from docs folder with shortened path
 
