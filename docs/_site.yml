@@ -6,7 +6,7 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "eQTL"
-      href: eQTL/code/LIMIX_eQTL_analysis.html
+      href: 07_eQTL.html
 #    - text: "Fecundity"
 #      href: 01_Fecundity.html
 #    - text: "Linkage Disequilibrium"

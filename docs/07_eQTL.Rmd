@@ -10,8 +10,6 @@ output:
     keep_md: false
 #    pandoc_args: --lua-filter=color-text.lua
     highlight: pygments 
-#    includes:
-#      after_body: /hps/software/users/birney/ian/repos/MIKK_genome_main_paper/docs/eQTL/code/LIMIX_eQTL_analysis.html
 ---
 
 
@@ -24,13 +22,14 @@ library(here)
 # Code
 
 ```{r}
-shiny::includeHTML("/hps/software/users/birney/ian/repos/MIKK_genome_main_paper/docs/eQTL/code/LIMIX_eQTL_analysis.html")
+#shiny::includeHTML("/hps/software/users/birney/ian/repos/MIKK_genome_main_paper/docs/eQTL/code/LIMIX_eQTL_analysis.html")
 ```
-
 
 ```{r, echo=FALSE}
 #htmltools::includeHTML(here::here("docs/eQTL/code/LIMIX_eQTL_analysis.html"))
 ```
 
 [please click here](/hps/software/users/birney/ian/repos/MIKK_genome_main_paper/eQTL/code/LIMIX_eQTL_analysis.html)
+
+# Test
 
