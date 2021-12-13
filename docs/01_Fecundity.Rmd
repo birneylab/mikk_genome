@@ -143,7 +143,7 @@ out3 = ggplot(test) +
     scale_fill_manual(values = reviewer_pal) +
     scale_x_continuous(breaks = unique(test$GENERATION),
                        labels = paste("F", unique(test$GENERATION), sep = "")) +
-    theme_cowplot(font_size = 10) +
+    theme_cowplot(font_size = 14) +
     xlab("Generation") +
     ylab("Number of MIKK panel lines") +
     labs(fill = "Status") +
@@ -171,8 +171,8 @@ names(date_recode) = c("2/19", "7/20")
 recode_vec_1 = c(0, 1, 2, 3, 4, 5)
 names(recode_vec_1) = c(0, "o", "x", "x/", "xx", "xxx")
 recode_vec_2 = c("Not producing",
-                 "Do not produce every day; <3 eggs when they do",
-                 "Do not produce every day; <5 eggs when they do",
+                 "<3 eggs; not every day",
+                 "<5 eggs; not every day",
                  "1-3 eggs per day",
                  "1-5 eggs per day",
                  "5-10 eggs per day")
@@ -223,73 +223,13 @@ fec_count = final_hor_df %>%
     geom_histogram(aes(KEY, fill = KEY),
                    stat = "count") +
     scale_fill_viridis_d() +
-    theme_cowplot(font_size = 10) +
+    theme_cowplot(font_size = 14) +
     xlab("Fecundity") +
     ylab("Number of MIKK panel lines") +
     guides(fill = F) +
-    theme(axis.text = element_text(size = 5.5))
+    theme(axis.text = element_text(size = 10))
 
 fec_count
-```
-
-# Final figure
-
-```{r, fig.width=18.75, fig.height=7}
-final = ggdraw() +
-  draw_plot(out2, x = 0, y = 0, width = .55, height = 1) +
-  draw_plot(fec_count, x = .55, y = 0, width = .45, height = 1) +
-  draw_plot_label(label = c("A", "B"), size = 15,
-                  x = c(0, 0.55), y = c(1, 1))
-
-final
-```
-
-```{r, eval = F}
-# SVG
-ggsave(here("plots", "fecundity", "20210301_final_figure.svg"),
-       device = "svg",
-       units = "cm",
-       height = 11.2,
-       width = 30)
-
-# PNG
-ggsave(here("plots", "fecundity", "20210301_final_figure.png"),
-       device = "png",
-       dpi = 400,
-       units = "cm",
-       height = 11.2,
-       width = 30)
-```
-
-## New
-
-```{r, fig.width=18.75, fig.height=7}
-final = ggdraw() +
-  draw_plot(out3, x = 0, y = 0, width = .55, height = 1) +
-  draw_plot(fec_count, x = .55, y = 0, width = .45, height = 1) +
-  draw_plot_label(label = c("A", "B"), size = 15,
-                  x = c(0, 0.55), y = c(1, 1))
-
-final
-```
-
-```{r, eval = F}
-# SVG
-ggsave(here("plots", "fecundity", "20211012_final_figure.svg"),
-       final,
-       device = "svg",
-       units = "cm",
-       height = 11.2,
-       width = 30)
-
-# PNG
-ggsave(here("plots", "fecundity", "20211012_final_figure.png"),
-       final,
-       device = "png",
-       dpi = 400,
-       units = "cm",
-       height = 11.2,
-       width = 30)
 ```
 
 # Add eye measurement data
@@ -337,7 +277,7 @@ eye_dens = eye_df_filt %>%
     scale_fill_manual(values = gender_pal_2) +
     scale_colour_manual(values = darker(gender_pal_2, 70)) +
     facet_wrap(vars(gender)) +
-    theme_cowplot(font_size = 10) +
+    theme_cowplot(font_size = 14) +
     guides(fill = "none", colour = "none") +
     xlab("Mean relative eye size") +
     ylab("Density")
@@ -361,7 +301,8 @@ eye_df_filt_f %>%
     geom_col(aes(line, MEAN_EYE, fill = line)) +
     scale_fill_viridis_d(option = "magma") +
     theme_cowplot() +
-    guides(fill = "none")
+    guides(fill = "none") +
+    theme(axis.text.x = element_text(size = 5, angle = 45, hjust = 1))
 ```
 
 ## Compile
@@ -371,7 +312,7 @@ final = ggdraw() +
   draw_plot(out3, x = 0, y = 0.45, width = .55, height = 0.55) +
   draw_plot(fec_count, x = .55, y = 0.45, width = .45, height = 0.55) +
   draw_plot(eye_dens, x = 0, y = 0, width = 1, height = 0.45) +
-  draw_plot_label(label = c("A", "B", "C"), size = 15,
+  draw_plot_label(label = c("A", "B", "C"), size = 20,
                   x = c(0, 0.55, 0), y = c(1, 1, 0.45))
 
 final
@@ -379,7 +320,7 @@ final
 
 ```{r, eval = F}
 # SVG
-ggsave(here::here("docs/plots/fecundity/20211020_final_figure.svg"),
+ggsave(here::here("docs/plots/fecundity/20211213_final_figure.svg"),
        final,
        device = "svg",
        units = "in",
@@ -387,7 +328,7 @@ ggsave(here::here("docs/plots/fecundity/20211020_final_figure.svg"),
        width = 16)
 
 # PNG
-ggsave(here::here("docs/plots/fecundity/20211020_final_figure.png"),
+ggsave(here::here("docs/plots/fecundity/20211213_final_figure.png"),
        final,
        device = "png",
        dpi = 400,
