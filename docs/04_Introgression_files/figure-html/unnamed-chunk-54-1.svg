@@ -178,7 +178,11 @@
   <path d="M 287.46875 53.070312 L 397.761719 53.070312 L 397.761719 72.042969 L 287.46875 72.042969 Z M 287.46875 53.070312 "/>
 </clipPath>
 </defs>
+<<<<<<< HEAD
 <g id="surface5426">
+=======
+<g id="surface2881">
+>>>>>>> 1f72b2c38317bbf9e22e15671a199f851eaded2e
 <rect x="0" y="0" width="504" height="360" style="fill:rgb(100%,100%,100%);fill-opacity:1;stroke:none;"/>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(95.294118%,71.372549%,12.156863%);fill-opacity:1;" d="M 57.949219 167.070312 L 59.953125 167.070312 L 59.953125 153.097656 L 57.949219 153.097656 Z M 57.949219 167.070312 "/>
 <path style=" stroke:none;fill-rule:nonzero;fill:rgb(95.294118%,71.372549%,12.156863%);fill-opacity:1;" d="M 59.957031 167.070312 L 61.960938 167.070312 L 61.960938 143.113281 L 59.957031 143.113281 Z M 59.957031 167.070312 "/>
