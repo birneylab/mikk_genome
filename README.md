@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/339670967.svg)](https://zenodo.org/badge/latestdoi/339670967)
+
 # MIKK panel genome analysis
 
 Repo for the papers describing the MIKK panel genome by the Birney Group (EMBL-EBI), Wittbrodt Group (COS Heidelberg), and Loosli Group (KIT).
