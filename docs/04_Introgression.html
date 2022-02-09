@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2021-12-13" />
+<meta name="date" content="2022-02-09" />
 
 <title>Introgression</title>
 
@@ -435,7 +435,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introgression</h1>
-<h4 class="date">2021-12-13</h4>
+<h4 class="date">2022-02-09</h4>
 
 </div>
 
@@ -1448,7 +1448,7 @@ div.tocify {
 <span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(window_length_kb <span class="sc">==</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(p1, p2)</span></code></pre></div>
 <pre><code>## Rows: 12862 Columns: 13</code></pre>
-<pre><code>## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr  (2): p1, p2
 ## dbl (11): scaffold, start, end, mid, sites, sitesUsed, ABBA, BABA, D, fd, fdM</code></pre>
@@ -1736,8 +1736,11 @@ div.tocify {
 <span id="cb65-75"><a href="#cb65-75" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb65-76"><a href="#cb65-76" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/introgression/20210427_introgression_circos_MIKK_ABBA_p1-icab.png" width="1968" /> ### Final for paper (with iCab as yellow)</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>out_plot <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;docs/plots/introgression/20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png&quot;</span>)</span></code></pre></div>
+<p><img src="plots/introgression/20210427_introgression_circos_MIKK_ABBA_p1-icab.png" width="1968" /></p>
+</div>
+<div id="final-for-paper-with-icab-as-yellow" class="section level3" number="6.1.3">
+<h3 number="6.1.3"><span class="header-section-number">6.1.3</span> Final for paper (with iCab as yellow)</h3>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>out_plot <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(<span class="st">&quot;docs/plots/introgression/20220209_introgression_circos_MIKK_ABBA_p1-hdrr.png&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>target_list <span class="ot">=</span> mikk_abba_final[[<span class="st">&quot;hdrr&quot;</span>]]</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Reset palette</span></span>
@@ -1745,21 +1748,21 @@ div.tocify {
 <span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pal_abba) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;iCab&quot;</span>, <span class="st">&quot;HdrR&quot;</span>, <span class="st">&quot;HSOK&quot;</span>, <span class="st">&quot;HNI&quot;</span>, <span class="st">&quot;melastigma&quot;</span>, <span class="st">&quot;javanicus&quot;</span>, <span class="st">&quot;Kaga&quot;</span>)</span>
 <span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(out_plot,</span>
-<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">20</span>,</span>
-<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">20</span>,</span>
-<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
-<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">500</span>)</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">8.5</span>,</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="fl">8.5</span>,</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">units =</span> <span class="st">&quot;in&quot;</span>,</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">res =</span> <span class="dv">700</span>)</span>
 <span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set parameters</span></span>
 <span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)</span></span>
 <span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.par</span>(<span class="at">cell.padding =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
 <span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">track.margin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
-<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">gap.degree =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(chroms) <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">6</span>))</span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">gap.degree =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(chroms) <span class="sc">-</span> <span class="dv">1</span>), <span class="dv">9</span>))</span>
 <span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize plot</span></span>
 <span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.initializeWithIdeogram</span>(chroms,</span>
 <span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>                              <span class="at">plotType =</span> <span class="fu">c</span>(<span class="st">&quot;axis&quot;</span>, <span class="st">&quot;labels&quot;</span>),</span>
 <span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>                              <span class="at">major.by =</span> <span class="fl">1e7</span>,</span>
-<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a>                              <span class="at">axis.labels.cex =</span> <span class="fl">0.25</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
+<span id="cb68-22"><a href="#cb68-22" aria-hidden="true" tabindex="-1"></a>                              <span class="at">axis.labels.cex =</span> <span class="fl">0.45</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
 <span id="cb68-23"><a href="#cb68-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-24"><a href="#cb68-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Print label in center</span></span>
 <span id="cb68-25"><a href="#cb68-25" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="st">&quot;MIKK panel</span><span class="sc">\n</span><span class="st">introgression with</span><span class="sc">\n</span><span class="st">iCab, HNI,</span><span class="sc">\n</span><span class="st">and</span><span class="sc">\n</span><span class="st">HSOK&quot;</span>)</span>
@@ -1793,7 +1796,7 @@ div.tocify {
 <span id="cb68-53"><a href="#cb68-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add axis for introgression</span></span>
 <span id="cb68-54"><a href="#cb68-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">circos.yaxis</span>(<span class="at">side =</span> <span class="st">&quot;right&quot;</span>,</span>
 <span id="cb68-55"><a href="#cb68-55" aria-hidden="true" tabindex="-1"></a>             <span class="at">at =</span> <span class="fu">c</span>(.<span class="dv">5</span>, <span class="dv">1</span>),</span>
-<span id="cb68-56"><a href="#cb68-56" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels.cex =</span> <span class="fl">0.25</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>),</span>
+<span id="cb68-56"><a href="#cb68-56" aria-hidden="true" tabindex="-1"></a>             <span class="at">labels.cex =</span> <span class="fl">0.5</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>),</span>
 <span id="cb68-57"><a href="#cb68-57" aria-hidden="true" tabindex="-1"></a>             <span class="at">tick.length =</span> <span class="dv">2</span></span>
 <span id="cb68-58"><a href="#cb68-58" aria-hidden="true" tabindex="-1"></a>             )</span>
 <span id="cb68-59"><a href="#cb68-59" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -1803,8 +1806,8 @@ div.tocify {
 <span id="cb68-63"><a href="#cb68-63" aria-hidden="true" tabindex="-1"></a>              <span class="at">labels =</span> <span class="fu">expression</span>(<span class="fu">italic</span>(f[d])),</span>
 <span id="cb68-64"><a href="#cb68-64" aria-hidden="true" tabindex="-1"></a>              <span class="at">sector.index =</span> <span class="st">&quot;chr1&quot;</span>,</span>
 <span id="cb68-65"><a href="#cb68-65" aria-hidden="true" tabindex="-1"></a><span class="co">#              facing = &quot;clockwise&quot;,</span></span>
-<span id="cb68-66"><a href="#cb68-66" aria-hidden="true" tabindex="-1"></a>              <span class="at">adj =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="fl">0.5</span>),</span>
-<span id="cb68-67"><a href="#cb68-67" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.4</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
+<span id="cb68-66"><a href="#cb68-66" aria-hidden="true" tabindex="-1"></a>              <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">0.5</span>),</span>
+<span id="cb68-67"><a href="#cb68-67" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.8</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))</span>
 <span id="cb68-68"><a href="#cb68-68" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb68-69"><a href="#cb68-69" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb68-70"><a href="#cb68-70" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add y-axis label for introgression</span></span>
@@ -1813,21 +1816,21 @@ div.tocify {
 <span id="cb68-73"><a href="#cb68-73" aria-hidden="true" tabindex="-1"></a>              <span class="at">sector.index =</span> <span class="st">&quot;chr1&quot;</span>,</span>
 <span id="cb68-74"><a href="#cb68-74" aria-hidden="true" tabindex="-1"></a>              <span class="at">facing =</span> <span class="st">&quot;clockwise&quot;</span>,</span>
 <span id="cb68-75"><a href="#cb68-75" aria-hidden="true" tabindex="-1"></a>              <span class="at">adj =</span> <span class="fu">c</span>(.<span class="dv">5</span>, <span class="dv">0</span>),</span>
-<span id="cb68-76"><a href="#cb68-76" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.6</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))  </span>
+<span id="cb68-76"><a href="#cb68-76" aria-hidden="true" tabindex="-1"></a>              <span class="at">cex =</span> <span class="fl">0.7</span><span class="sc">*</span><span class="fu">par</span>(<span class="st">&quot;cex&quot;</span>))  </span>
 <span id="cb68-77"><a href="#cb68-77" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb68-78"><a href="#cb68-78" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-79"><a href="#cb68-79" aria-hidden="true" tabindex="-1"></a><span class="fu">circos.clear</span>()</span>
 <span id="cb68-80"><a href="#cb68-80" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-81"><a href="#cb68-81" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(out_plot)</span></code></pre></div>
-<p><img src="plots/introgression/20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png" width="1968" /></p>
+<p><img src="plots/introgression/20220209_introgression_circos_MIKK_ABBA_p1-hdrr.png" width="2975" /></p>
 </div>
 </div>
 <div id="re-do-final-figure-just-tree-schema-and-circos" class="section level2" number="6.2">
 <h2 number="6.2"><span class="header-section-number">6.2</span> Re-do final figure (just tree, schema, and circos)</h2>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>abba_diagram <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210505_abba_diagram.png&quot;</span>)</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;tree_oryzias_latipes_with_ancestor.png&quot;</span>)</span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>circos_abba <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png&quot;</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>circos_abba <span class="ot">=</span> here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20220209_introgression_circos_MIKK_ABBA_p1-hdrr.png&quot;</span>)</span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>final_abba <span class="ot">=</span> <span class="fu">ggdraw</span>() <span class="sc">+</span></span>
 <span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(tree,</span>
@@ -1837,16 +1840,16 @@ div.tocify {
 <span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(abba_diagram,</span>
 <span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">width =</span> .<span class="dv">4</span>, <span class="at">height =</span> .<span class="dv">55</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">125</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
 <span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_plot_label</span>(<span class="at">label =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>), <span class="at">size =</span> <span class="dv">25</span>,</span>
-<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">4</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">6</span>, <span class="dv">1</span>), <span class="at">color =</span> <span class="st">&quot;#4f0943&quot;</span>)  </span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">4</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">6</span>, <span class="dv">1</span>))  </span>
 <span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>final_abba</span></code></pre></div>
 <p><img src="04_Introgression_files/figure-html/unnamed-chunk-68-1.svg" width="672" /></p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20210505_introgression_final_figure.png&quot;</span>),</span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">35</span>,</span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">21.875</span>,</span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>,</span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="dv">500</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(here<span class="sc">::</span><span class="fu">here</span>(plots_dir, <span class="st">&quot;20220209_introgression_final_figure.pdf&quot;</span>),</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">device =</span> <span class="st">&quot;pdf&quot;</span>,</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">38</span>,</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">23.6</span>,</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">units =</span> <span class="st">&quot;cm&quot;</span>)</span></code></pre></div>
 </div>
 <div id="re-do-final-figure" class="section level2" number="6.3">
 <h2 number="6.3"><span class="header-section-number">6.3</span> Re-do final figure</h2>

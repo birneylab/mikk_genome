@@ -143,7 +143,7 @@ out3 = ggplot(test) +
     scale_fill_manual(values = reviewer_pal) +
     scale_x_continuous(breaks = unique(test$GENERATION),
                        labels = paste("F", unique(test$GENERATION), sep = "")) +
-    theme_cowplot(font_size = 14) +
+    theme_cowplot(font_size = 16) +
     xlab("Generation") +
     ylab("Number of MIKK panel lines") +
     labs(fill = "Status") +
@@ -178,6 +178,7 @@ recode_vec_2 = c("Not producing",
                  "5-10 eggs per day")
 names(recode_vec_2) = c(0, 1, 2, 3, 4, 5)
 recode_vec_3 = gsub("; ", ";\n", recode_vec_2)
+recode_vec_3 = gsub("eggs per", "eggs\nper", recode_vec_3)
 
 # Tidy
 
@@ -210,6 +211,7 @@ knitr::kable(head(semi_out))
 # Process data
 final_hor_df = semi_out %>% 
   dplyr::mutate(KEY = gsub("; ", ";\n", KEY),
+                KEY = gsub("eggs per", "eggs\nper", KEY),
                 KEY = factor(KEY, levels = recode_vec_3)) %>% 
   dplyr::filter(DATE == "Jul 2020") %>% 
   dplyr::mutate(STRAIN = factor(STRAIN, levels=unique(STRAIN[order(KEY,decreasing = T)]))) %>% 
@@ -223,11 +225,11 @@ fec_count = final_hor_df %>%
     geom_histogram(aes(KEY, fill = KEY),
                    stat = "count") +
     scale_fill_viridis_d() +
-    theme_cowplot(font_size = 14) +
+    theme_cowplot(font_size = 16) +
     xlab("Fecundity") +
     ylab("Number of MIKK panel lines") +
     guides(fill = F) +
-    theme(axis.text = element_text(size = 10))
+    theme(axis.text = element_text(size = 14))
 
 fec_count
 ```
@@ -277,7 +279,7 @@ eye_dens = eye_df_filt %>%
     scale_fill_manual(values = gender_pal_2) +
     scale_colour_manual(values = darker(gender_pal_2, 70)) +
     facet_wrap(vars(gender)) +
-    theme_cowplot(font_size = 14) +
+    theme_cowplot(font_size = 16) +
     guides(fill = "none", colour = "none") +
     xlab("Mean relative eye size") +
     ylab("Density")
@@ -312,7 +314,7 @@ final = ggdraw() +
   draw_plot(out3, x = 0, y = 0.45, width = .55, height = 0.55) +
   draw_plot(fec_count, x = .55, y = 0.45, width = .45, height = 0.55) +
   draw_plot(eye_dens, x = 0, y = 0, width = 1, height = 0.45) +
-  draw_plot_label(label = c("A", "B", "C"), size = 20,
+  draw_plot_label(label = c("A", "B", "C"), size = 24,
                   x = c(0, 0.55, 0), y = c(1, 1, 0.45))
 
 final
@@ -320,15 +322,15 @@ final
 
 ```{r, eval = F}
 # SVG
-ggsave(here::here("docs/plots/fecundity/20211213_final_figure.svg"),
+ggsave(here::here("docs/plots/fecundity/20220209_final_figure.pdf"),
        final,
-       device = "svg",
+       device = "pdf",
        units = "in",
        height = 12,
        width = 16)
 
 # PNG
-ggsave(here::here("docs/plots/fecundity/20211213_final_figure.png"),
+ggsave(here::here("docs/plots/fecundity/20220209_final_figure.png"),
        final,
        device = "png",
        dpi = 400,

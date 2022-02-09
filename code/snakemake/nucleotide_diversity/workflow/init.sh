@@ -27,7 +27,7 @@ snakemake \
 module load singularity-3.7.0-gcc-9.3.0-dp5ffrp
 cd /hps/software/users/birney/ian/repos/mikk_genome
 # Set container path
-CONT=/hps/software/users/birney/ian/containers/mikk_genome/nucleotide_diversity/R_4.1.0.sif
+CONT=/hps/nobackup/birney/users/ian/containers/mikk_genome/nucleotide_diversity/R_4.1.0.sif
 
 singularity build --remote \
     $CONT \
@@ -37,6 +37,7 @@ singularity build --remote \
 ssh proxy-codon
 bsub -M 20000 -Is bash
 module load singularity-3.7.0-gcc-9.3.0-dp5ffrp 
+CONT=/hps/nobackup/birney/users/ian/containers/mikk_genome/nucleotide_diversity/R_4.1.0.sif
 singularity shell --bind /hps/software/users/birney/ian/rstudio_db:/var/lib/rstudio-server \
                   --bind /hps/software/users/birney/ian/tmp:/tmp \
                   --bind /hps/software/users/birney/ian/run:/run \

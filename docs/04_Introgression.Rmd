@@ -1199,10 +1199,11 @@ dev.off()
 ```{r}
 knitr::include_graphics(out_plot)
 ```
+
 ### Final for paper (with iCab as yellow)
 
 ```{r}
-out_plot = here::here("docs/plots/introgression/20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png")
+out_plot = here::here("docs/plots/introgression/20220209_introgression_circos_MIKK_ABBA_p1-hdrr.png")
 ```
 
 ```{r, eval = F}
@@ -1213,21 +1214,21 @@ pal_abba <- c("#F3B61F", "#F3B61F", "#631E68", "#F6673A", "#F33A56", "#55B6B0", 
 names(pal_abba) <- c("iCab", "HdrR", "HSOK", "HNI", "melastigma", "javanicus", "Kaga")
 
 png(out_plot,
-    width = 20,
-    height = 20,
-    units = "cm",
-    res = 500)
+    width = 8.5,
+    height = 8.5,
+    units = "in",
+    res = 700)
 
 # Set parameters
 ## Decrease cell padding from default c(0.02, 1.00, 0.02, 1.00)
 circos.par(cell.padding = c(0, 0, 0, 0),
            track.margin = c(0, 0),
-           gap.degree = c(rep(1, nrow(chroms) - 1), 6))
+           gap.degree = c(rep(1, nrow(chroms) - 1), 9))
 # Initialize plot
 circos.initializeWithIdeogram(chroms,
                               plotType = c("axis", "labels"),
                               major.by = 1e7,
-                              axis.labels.cex = 0.25*par("cex"))
+                              axis.labels.cex = 0.45*par("cex"))
 
 # Print label in center
 text(0, 0, "MIKK panel\nintrogression with\niCab, HNI,\nand\nHSOK")
@@ -1261,7 +1262,7 @@ purrr::map(target_list, function(P2){
   # Add axis for introgression
   circos.yaxis(side = "right",
              at = c(.5, 1),
-             labels.cex = 0.25*par("cex"),
+             labels.cex = 0.5*par("cex"),
              tick.length = 2
              )
   
@@ -1271,8 +1272,8 @@ purrr::map(target_list, function(P2){
               labels = expression(italic(f[d])),
               sector.index = "chr1",
 #              facing = "clockwise",
-              adj = c(3, 0.5),
-              cex = 0.4*par("cex"))
+              adj = c(2.5, 0.5),
+              cex = 0.8*par("cex"))
   }
   
   # Add y-axis label for introgression
@@ -1281,7 +1282,7 @@ purrr::map(target_list, function(P2){
               sector.index = "chr1",
               facing = "clockwise",
               adj = c(.5, 0),
-              cex = 0.6*par("cex"))  
+              cex = 0.7*par("cex"))  
 })
 
 circos.clear()
@@ -1299,7 +1300,7 @@ knitr::include_graphics(out_plot)
 ```{r}
 abba_diagram = here::here(plots_dir, "20210505_abba_diagram.png")
 tree = here::here(plots_dir, "tree_oryzias_latipes_with_ancestor.png")
-circos_abba = here::here(plots_dir, "20210505_introgression_circos_MIKK_ABBA_p1-hdrr.png")
+circos_abba = here::here(plots_dir, "20220209_introgression_circos_MIKK_ABBA_p1-hdrr.png")
 
 final_abba = ggdraw() +
   draw_image(tree,
@@ -1309,18 +1310,18 @@ final_abba = ggdraw() +
   draw_image(abba_diagram,
           x = 0, y = 0, width = .4, height = .55, vjust = 0, hjust = -.125, scale = 1.2) +
   draw_plot_label(label = c("A", "B", "C"), size = 25,
-                  x = c(0, 0, .4), y = c(1, .6, 1), color = "#4f0943")  
+                  x = c(0, 0, .4), y = c(1, .6, 1))  
 
 
 final_abba
 ```
 
 ```{r, eval = F}
-ggsave(here::here(plots_dir, "20210505_introgression_final_figure.png"),
-       width = 35,
-       height = 21.875,
-       units = "cm",
-       dpi = 500)
+ggsave(here::here(plots_dir, "20220209_introgression_final_figure.pdf"),
+       device = "pdf",
+       width = 38,
+       height = 23.6,
+       units = "cm")
 ```
 
 ## Re-do final figure
